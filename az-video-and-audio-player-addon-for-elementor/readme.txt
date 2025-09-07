@@ -2,22 +2,16 @@
 Contributors: azplugins
 Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
-Tested up to: 5.7
-Requires PHP: 4.4
-Stable tag: 1.0.6
+Tested up to: 6.8
+Requires PHP: 7.4
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-"AZ Video and Audio Player Addon for Elementor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices.
+A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices.
 
 == Description ==
-Update: Premium Features are now available as free within this plugin from "Version: 2.0.1"
-
 "AZ Video and Audio Player Addon for Elementor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon has lots of customization optios, using those options you can change the player settings how you want.
-
-You can see the players demo here : [Live Demo](http://demo.azplugins.com/video-and-audio-player/)
-
-For Support / Suggestion OR any other query. Please feel free to [Contact Us Here](https://azplugins.com/contact-us/)
 
 == Features: ==
 * Supports youtube video
@@ -76,6 +70,9 @@ For Support / Suggestion OR any other query. Please feel free to [Contact Us Her
 * 20+ Syling options
 
 == Changelog ==
+= Version: 2.0.3 =
+* Updated the plyr library to latest version
+
 = Version: 1.0.0 =
 * Initial Release
 
@@ -111,11 +108,11 @@ iv. Drag and Drop the the desired addon to your page, play with the options and 
 2. Palyer With YouTube Video
 3. Palyer With Vimeo Video
 4. Default (HTML5) Player
-5. Color Customization (pro)
+5. Color Customization
 6. Multiple Players in one page
 7. Autio Player Examples
 8. Video Player widget/addon options
 9. Video Player widget/addon options
-10. Video Player widget/addon styling options (pro)
+10. Video Player widget/addon styling options
 11. Audio Player widget/addon options
-12. Audio Player widget/addon styling options (pro)
+12. Audio Player widget/addon styling options

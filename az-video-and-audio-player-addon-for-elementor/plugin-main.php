@@ -1,11 +1,11 @@
 <?php
 /**
 Plugin Name: AZ Video and Audio Player Addon for Elementor
-Plugin URI: http://demo.azplugins.com/video-and-audio-player
+Plugin URI: 
 Description: Video & Audio player addon for Elementor
-Version: 2.0.1
+Version: 2.0.3
 Author: AZ Plugins
-Author URI: https://azplugins.com
+Author URI: 
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: vapfem
