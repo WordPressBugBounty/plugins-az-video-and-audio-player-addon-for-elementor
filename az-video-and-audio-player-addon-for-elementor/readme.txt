@@ -1,17 +1,17 @@
-=== AZ Video and Audio Player Addon for Elementor  ===
+=== AZ Video and Audio Player for Elementor, Gutenberg and Classic Editor  ===
 Contributors: azplugins
 Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.0.3
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices.
 
 == Description ==
-"AZ Video and Audio Player Addon for Elementor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon has lots of customization optios, using those options you can change the player settings how you want.
+"AZ Video and Audio Player for Elementor, Gutenberg and Classic Editor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon and shortcode support that has lots of customization optios, using those options you can change the player settings how you want.
 
 == Features: ==
 * Supports youtube video
@@ -33,10 +33,11 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * Define initial speed
 * Display your own preview thumbnail for video
 * Very lightweight
+* Shortcode support for displaying video & audio player anywhere including Gutenberg, Classic Editor, Elementor, WPBakery Page Builder etc.
 * No impact on website speed
 * Works with all themes
 
-== Video Player Widget/Addon Options == 
+== Video Player Elementor Widget/Addon Options == 
 
 * Video Type (YouTube/Vimeo/HTML5)
 * Youtube Video ID
@@ -59,7 +60,7 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * Show/Hide control options (Play, Play Large, Progress Bar, Current Time, Mute Volume, Caption, Settings Icon, PIP, AIR Play, Full Screen) and
 * Design customize options
 
-== Audio Player Widget/Addon Options == 
+== Audio Player Elementor Widget/Addon Options == 
 * Audio Source (Upload Audio/Audio Link)
 * Autoplay
 * Loop
@@ -70,6 +71,11 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * 20+ Syling options
 
 == Changelog ==
+= Version: 2.1.0 =
+* Added: Shortcode support for Audio & Video Player
+* Improved: Code optimization and minor improvements
+* Updated: Language translation file
+
 = Version: 2.0.3 =
 * Updated the plyr library to latest version
 

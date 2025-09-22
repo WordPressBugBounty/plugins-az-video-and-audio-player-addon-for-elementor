@@ -1,9 +1,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: AZ Video and Audio Player for Elementor\n"
+"Project-Id-Version: AZ Video and Audio Player Addon for Elementor, Gutenberg "
+"& Classic Editor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-04 09:12+0000\n"
+"POT-Creation-Date: 2025-09-21 10:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,492 +14,1290 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.1; wp-5.3.2"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30\n"
+"X-Domain: vapfem"
 
-#: includes/em-init.php:122
-#, php-format
-msgid "\"%1$s\" requires \"%2$s\" to be installed and activated."
+#: includes/views/html-video-tab.php:108 includes/views/html-audio-tab.php:100
+msgid " tab for complete list of available parameters."
 msgstr ""
 
 #. 1: Plugin name 2: PHP 3: Required PHP version
-#: includes/em-init.php:90 includes/em-init.php:106
+#. 1: Plugin name 2: Elementor 3: Required Elementor version
+#: includes/init.php:99 includes/init.php:116
 #, php-format
 msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
 msgstr ""
 
-#: includes/widgets/audio-player.php:156 includes/widgets/video-player.php:393
+#: includes/widgets/audio-player.php:174 includes/widgets/video-player.php:428
 msgid "0.5"
 msgstr ""
 
-#: includes/widgets/audio-player.php:157 includes/widgets/video-player.php:394
+#: includes/widgets/audio-player.php:175 includes/widgets/video-player.php:429
 msgid "0.75"
 msgstr ""
 
-#: includes/widgets/audio-player.php:158 includes/widgets/video-player.php:395
+#: includes/widgets/audio-player.php:176 includes/widgets/video-player.php:430
 msgid "1"
 msgstr ""
 
-#: includes/widgets/audio-player.php:159 includes/widgets/video-player.php:396
+#: includes/widgets/audio-player.php:177 includes/widgets/video-player.php:431
 msgid "1.25"
 msgstr ""
 
-#: includes/widgets/audio-player.php:160 includes/widgets/video-player.php:397
+#: includes/widgets/audio-player.php:178 includes/widgets/video-player.php:432
 msgid "1.5"
 msgstr ""
 
-#: includes/widgets/video-player.php:161 includes/widgets/video-player.php:187
-#: includes/widgets/video-player.php:415
+#: includes/widgets/video-player.php:179 includes/widgets/video-player.php:205
+#: includes/widgets/video-player.php:453
 msgid "1080"
 msgstr ""
 
-#: includes/widgets/video-player.php:162 includes/widgets/video-player.php:416
+#: includes/widgets/video-player.php:180 includes/widgets/video-player.php:454
 msgid "1440"
 msgstr ""
 
-#: includes/widgets/video-player.php:163 includes/widgets/video-player.php:417
+#: includes/widgets/video-player.php:486
+msgid "16:9"
+msgstr ""
+
+#: includes/widgets/video-player.php:181 includes/widgets/video-player.php:455
 msgid "2160"
 msgstr ""
 
-#: includes/widgets/video-player.php:156 includes/widgets/video-player.php:410
+#: includes/widgets/video-player.php:174 includes/widgets/video-player.php:448
 msgid "240"
 msgstr ""
 
-#: includes/widgets/video-player.php:164 includes/widgets/video-player.php:418
+#: includes/widgets/video-player.php:182 includes/widgets/video-player.php:456
 msgid "2880"
 msgstr ""
 
-#: includes/widgets/video-player.php:157 includes/widgets/video-player.php:411
+#: includes/widgets/video-player.php:175 includes/widgets/video-player.php:449
 msgid "360"
 msgstr ""
 
-#: includes/widgets/video-player.php:165 includes/widgets/video-player.php:419
+#: includes/widgets/video-player.php:183 includes/widgets/video-player.php:457
 msgid "4320"
 msgstr ""
 
-#: includes/widgets/video-player.php:158 includes/widgets/video-player.php:412
+#: includes/widgets/video-player.php:176 includes/widgets/video-player.php:450
 msgid "480"
 msgstr ""
 
-#: includes/widgets/video-player.php:159 includes/widgets/video-player.php:179
-#: includes/widgets/video-player.php:413
+#: includes/widgets/video-player.php:177 includes/widgets/video-player.php:197
+#: includes/widgets/video-player.php:451
 msgid "576"
 msgstr ""
 
-#: includes/widgets/video-player.php:160 includes/widgets/video-player.php:183
-#: includes/widgets/video-player.php:414
+#: includes/views/html-sidebar.php:22
+msgid "7+ Years Experience"
+msgstr ""
+
+#: includes/widgets/video-player.php:178 includes/widgets/video-player.php:201
+#: includes/widgets/video-player.php:452
 msgid "720"
 msgstr ""
 
-#: includes/widgets/video-player.php:89
+#: includes/widgets/video-player.php:77
 msgid "76979871"
 msgstr ""
 
-#: includes/widgets/video-player.php:445
+#: includes/views/html-hire-page.php:116
+msgid ""
+"<strong>Free 15–30 min Discovery Call</strong><br> I'll understand what's "
+"driving your project and give you clarity on how to move forward."
+msgstr ""
+
+#: includes/views/html-hire-page.php:101
+msgid "[Schedule Here]"
+msgstr ""
+
+#: includes/views/html-video-tab.php:20 includes/views/html-video-tab.php:40
+#: includes/views/html-video-tab.php:80 includes/views/html-audio-tab.php:20
+#: includes/views/html-audio-tab.php:40 includes/views/html-audio-tab.php:60
+msgid "Action"
+msgstr ""
+
+#: includes/widgets/video-player.php:92
+msgid "Add Custom Poster"
+msgstr ""
+
+#: includes/views/html-video-tab.php:79 includes/views/html-audio-tab.php:59
+msgid "Advanced Shortcode"
+msgstr ""
+
+#: includes/widgets/video-player.php:511
 msgid "Airplay"
 msgstr ""
 
-#: includes/widgets/video-player.php:484
+#: includes/widgets/audio-player.php:213
+msgid "Airplay Icon"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:74
+#: includes/views/html-available-options-tab.php:220
+msgid "All controls"
+msgstr ""
+
+#: includes/widgets/video-player.php:573
 msgid "All Icon Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:45 includes/widgets/audio-player.php:65
+#: includes/views/html-video-tab.php:107 includes/views/html-audio-tab.php:99
+#: includes/views/html-available-options-tab.php:10
+msgid "All Shortcode Options"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:18
+msgid "Audio"
+msgstr ""
+
+#: includes/widgets/audio-player.php:46 includes/widgets/audio-player.php:66
 msgid "Audio Link"
 msgstr ""
 
-#: includes/widgets/audio-player.php:9
+#: includes/views/html-audio-tab.php:10
+#: includes/views/html-elementor-tab.php:34
+#: includes/widgets/audio-player.php:11
 msgid "Audio Player"
 msgstr ""
 
-#: includes/widgets/audio-player.php:40
+#: includes/widgets/audio-player.php:41
 msgid "Audio Source"
 msgstr ""
 
-#: includes/widgets/audio-player.php:83 includes/widgets/video-player.php:200
+#: includes/views/html-audio-tab.php:38
+msgid "Audio Type"
+msgstr ""
+
+#: includes/class-audio-shortcode.php:106
+msgid "Audio URL is required."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:207
+#: includes/widgets/audio-player.php:192
+msgid "Auto"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:43
+msgid "Auto-start playback when page loads"
+msgstr ""
+
+#: includes/widgets/audio-player.php:87 includes/widgets/video-player.php:218
 msgid "Autoplay"
 msgstr ""
 
-#: includes/widgets/audio-player.php:85 includes/widgets/video-player.php:202
-msgid "Autoplay the media on load."
+#: includes/views/html-available-options-tab.php:236
+msgid "Autoplay Browser Policy:"
 msgstr ""
 
-#. Name of the plugin
-msgid "AZ Video and Audio Player for Elementor"
+#: includes/widgets/video-player.php:220
+msgid ""
+"Autoplay varies for each user by an intelligent system of the browsers. If "
+"you experience Autoplay does not work from your browser. Enable the "
+"\"Muted\" option below. <br><br>Muted autoplay is always allowed."
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:14
+msgid "Available Widgets"
+msgstr ""
+
+#: includes/views/html-hire-page.php:24
+msgid "Avoids bloated plugins and creates lightweight, future-proof solutions."
 msgstr ""
 
 #. Author of the plugin
-msgid "AZ_Plugins"
+msgid "AZ Plugins"
 msgstr ""
 
-#: includes/widgets/video-player.php:304
+#. Name of the plugin
+msgid ""
+"AZ Video and Audio Player Addon for Elementor, Gutenberg & Classic Editor"
+msgstr ""
+
+#: includes/widgets/video-player.php:336
 msgid "Back To Start After End"
 msgstr ""
 
-#: includes/widgets/video-player.php:306
+#: includes/widgets/video-player.php:338
 msgid "Back to start after end of playing"
 msgstr ""
 
-#: includes/widgets/audio-player.php:363
+#: includes/widgets/audio-player.php:467 includes/widgets/video-player.php:804
 msgid "Bar Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:249
+#: includes/widgets/audio-player.php:339 includes/widgets/video-player.php:676
 msgid "Bar Color 1"
 msgstr ""
 
-#: includes/widgets/audio-player.php:264
+#: includes/widgets/audio-player.php:354 includes/widgets/video-player.php:691
 msgid "Bar Color 2"
 msgstr ""
 
-#: includes/widgets/audio-player.php:375
+#: includes/widgets/audio-player.php:479 includes/widgets/video-player.php:816
 msgid "Bar Empty Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:182 includes/widgets/audio-player.php:297
-#: includes/widgets/audio-player.php:399
+#: includes/widgets/audio-player.php:325 includes/widgets/audio-player.php:453
+#: includes/widgets/video-player.php:662 includes/widgets/video-player.php:790
+msgid "Bar Pointer Color"
+msgstr ""
+
+#: includes/views/html-video-tab.php:19 includes/views/html-audio-tab.php:19
+msgid "Basic Shortcode"
+msgstr ""
+
+#: includes/widgets/audio-player.php:259 includes/widgets/audio-player.php:387
+#: includes/widgets/audio-player.php:503 includes/widgets/video-player.php:596
+#: includes/widgets/video-player.php:724 includes/widgets/video-player.php:840
 msgid "BG Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:231 includes/widgets/audio-player.php:346
-#: includes/widgets/audio-player.php:448
+#: includes/views/html-hire-page.php:120
+msgid "Book a Discovery Call"
+msgstr ""
+
+#: includes/widgets/audio-player.php:308 includes/widgets/audio-player.php:436
+#: includes/widgets/audio-player.php:552 includes/widgets/video-player.php:645
+#: includes/widgets/video-player.php:773 includes/widgets/video-player.php:889
 msgid "Border"
 msgstr ""
 
-#: includes/widgets/video-player.php:74
+#: includes/widgets/video-player.php:59
 msgid "bTqVqk7FSmY"
 msgstr ""
 
-#: includes/widgets/audio-player.php:276
+#: includes/widgets/audio-player.php:366 includes/widgets/video-player.php:703
 msgid "Buffered Bar Color"
 msgstr ""
 
-#: includes/widgets/video-player.php:442
+#: includes/views/html-hire-page.php:21
+msgid ""
+"Builds clean, scalable WordPress solutions that grow with your business."
+msgstr ""
+
+#: includes/views/html-hire-page.php:58
+msgid "Built for the long run, easy for you or future devs to work with."
+msgstr ""
+
+#: includes/views/html-hire-page.php:54
+msgid "Business-Focused Approach"
+msgstr ""
+
+#: includes/widgets/video-player.php:508
 msgid "Caption"
 msgstr ""
 
-#: includes/widgets/video-player.php:250
+#: includes/views/html-hire-page.php:58
+msgid "Clean, Maintainable Code"
+msgstr ""
+
+#: includes/widgets/video-player.php:282
 msgid "Click (or tap) of the video container will toggle play/pause."
 msgstr ""
 
-#: includes/widgets/video-player.php:248
+#: includes/views/html-available-options-tab.php:152
+msgid "Click anywhere on video to play/pause"
+msgstr ""
+
+#: includes/widgets/video-player.php:280
 msgid "Click To Play"
 msgstr ""
 
-#: includes/widgets/video-player.php:431
+#: includes/views/html-available-options-tab.php:11
+msgid ""
+"Complete reference of all available shortcode options for both video and "
+"audio player."
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:68
+msgid "Configure & Style"
+msgstr ""
+
+#: includes/views/html-sidebar.php:32
+msgid "Contact"
+msgstr ""
+
+#: includes/widgets/audio-player.php:203 includes/widgets/video-player.php:497
 msgid "Control Options"
 msgstr ""
 
-#: includes/widgets/video-player.php:439
+#: includes/views/html-video-tab.php:26 includes/views/html-video-tab.php:47
+#: includes/views/html-video-tab.php:52 includes/views/html-video-tab.php:57
+#: includes/views/html-video-tab.php:67 includes/views/html-video-tab.php:90
+#: includes/views/html-video-tab.php:99 includes/views/html-audio-tab.php:26
+#: includes/views/html-audio-tab.php:47 includes/views/html-audio-tab.php:67
+#: includes/views/html-audio-tab.php:75 includes/views/html-audio-tab.php:83
+#: includes/views/html-audio-tab.php:91
+msgid "Copy"
+msgstr ""
+
+#: includes/views/html-sidebar.php:37
+msgid "Copy Email"
+msgstr ""
+
+#: includes/views/html-sidebar.php:16
+msgid "Create Support Ticket"
+msgstr ""
+
+#: includes/widgets/video-player.php:505
 msgid "Current Time"
 msgstr ""
 
-#: includes/widgets/video-player.php:252
+#: includes/widgets/video-player.php:105
+msgid "Custom Poster For Video"
+msgstr ""
+
+#: includes/views/html-sidebar.php:11
+msgid "Customer Support"
+msgstr ""
+
+#: includes/widgets/audio-player.php:234 includes/widgets/video-player.php:533
+msgid "Debug Mode"
+msgstr ""
+
+#: includes/widgets/audio-player.php:226 includes/widgets/video-player.php:525
+msgid "Debugging"
+msgstr ""
+
+#: includes/views/html-hire-page.php:46
+msgid "Deep WooCommerce & WordPress Expertise"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:20
+msgid "Default"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:123
+msgid "Default playback speed"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:200
+msgid "Default quality when the video plays"
+msgstr ""
+
+#: includes/views/html-video-tab.php:39 includes/views/html-audio-tab.php:39
+msgid "Demo Shortcode"
+msgstr ""
+
+#: includes/views/html-video-tab.php:32 includes/views/html-audio-tab.php:32
+msgid "Demo Shortcodes"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:21
+msgid "Description"
+msgstr ""
+
+#: includes/views/html-hire-page.php:50
+msgid "Direct Collaboration"
+msgstr ""
+
+#: includes/widgets/video-player.php:284
 msgid "Disable"
 msgstr ""
 
-#: includes/widgets/audio-player.php:141 includes/widgets/video-player.php:361
+#: includes/widgets/audio-player.php:159 includes/widgets/video-player.php:396
 msgid ""
 "Display a seek tooltip to indicate on click where the media would seek to."
 msgstr ""
 
-#: includes/widgets/video-player.php:345
+#: includes/views/html-elementor-tab.php:35
+msgid "Display and customize audio players with full styling control"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:24
+msgid "Display and customize video players with full styling control"
+msgstr ""
+
+#: includes/widgets/video-player.php:380
 msgid "Display Control Labels"
 msgstr ""
 
-#: includes/widgets/video-player.php:347
+#: includes/widgets/video-player.php:382
 msgid "Display control labels as tooltips on :hover & :focus"
 msgstr ""
 
-#: includes/widgets/audio-player.php:139 includes/widgets/video-player.php:359
+#: includes/widgets/audio-player.php:157 includes/widgets/video-player.php:394
 msgid "Display Seek Tooltip"
 msgstr ""
 
-#: includes/widgets/audio-player.php:113 includes/widgets/video-player.php:264
+#: includes/widgets/audio-player.php:131 includes/widgets/video-player.php:296
 msgid ""
 "Display the current time as a countdown rather than an incremental counter."
 msgstr ""
 
-#: includes/widgets/audio-player.php:111 includes/widgets/video-player.php:262
+#: includes/widgets/audio-player.php:129 includes/widgets/video-player.php:294
 msgid "Display Time As Countdown"
 msgstr ""
 
-#: includes/widgets/video-player.php:577
+#: includes/class-player-renderer.php:236
 msgid "Download"
 msgstr ""
 
-#: includes/em-init.php:108 includes/em-init.php:124
+#: includes/widgets/audio-player.php:214
+msgid "Download Button"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:61
+msgid "Drag & Drop"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:62
+msgid "Drag the widget to your desired location on the page"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:48
+msgid "Edit any page or post with Elementor"
+msgstr ""
+
+#: includes/init.php:118
 msgid "Elementor"
 msgstr ""
 
-#: includes/widgets/video-player.php:251
+#: includes/views/html-elementor-tab.php:10
+msgid "Elementor Integration"
+msgstr ""
+
+#: includes/views/html-hire-page.php:126
+msgid "Email Me"
+msgstr ""
+
+#: includes/views/html-sidebar.php:35
+msgid "Email:"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:143
+#: includes/views/html-available-options-tab.php:191
+msgid "Empty"
+msgstr ""
+
+#: includes/widgets/video-player.php:283
 msgid "Enable"
 msgstr ""
 
-#: includes/widgets/video-player.php:375
+#: includes/widgets/video-player.php:469
+msgid "Enable Custom Ratio"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:131
+msgid "Enable debug mode for troubleshooting"
+msgstr ""
+
+#: includes/widgets/video-player.php:410
 msgid "Enable Fullscreen Toggle"
 msgstr ""
 
-#: includes/widgets/video-player.php:377
+#: includes/views/html-available-options-tab.php:176
+msgid "Enable fullscreen toggle button"
+msgstr ""
+
+#: includes/widgets/video-player.php:412
 msgid "Enable fullscreen when double click on the player"
 msgstr ""
 
-#: includes/widgets/video-player.php:320
+#: includes/widgets/audio-player.php:236 includes/widgets/video-player.php:535
+msgid ""
+"Enable it when the player does not work properly. When debug is enable, the "
+"browser will show the informations about this player in the browser console. "
+"This is helpful for developer."
+msgstr ""
+
+#: includes/widgets/video-player.php:355
 msgid "Enable keyboard shortcuts for focused players only"
 msgstr ""
 
-#: includes/widgets/video-player.php:332
+#: includes/widgets/video-player.php:367
 msgid "Enable Keyboard Shortcuts Globally"
 msgstr ""
 
-#: includes/widgets/video-player.php:318
+#: includes/views/html-available-options-tab.php:107
+msgid "Enable keyboard shortcuts globally on page"
+msgstr ""
+
+#: includes/widgets/video-player.php:353
 msgid "Enable Keyboard Shortcuts On Focus"
 msgstr ""
 
-#: includes/widgets/video-player.php:446
+#: includes/views/html-available-options-tab.php:99
+msgid "Enable keyboard shortcuts when player is focused"
+msgstr ""
+
+#: includes/widgets/audio-player.php:103 includes/widgets/video-player.php:234
+msgid ""
+"Enable this to start playback muted. This is also usefull if you experience "
+"autoplay is not working from your browser."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:206
+msgid "etc."
+msgstr ""
+
+#: includes/views/html-hire-page.php:92
+msgid ""
+"Every project starts with a quick conversation. I'll listen, understand "
+"what's really driving your project, and give you clarity on how to move "
+"forward."
+msgstr ""
+
+#: includes/views/html-video-tab.php:78 includes/views/html-audio-tab.php:58
+msgid "Example Type"
+msgstr ""
+
+#: includes/views/html-hire-page.php:23
+msgid "Focuses on your business goals, not just technical tasks."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:239
+msgid "for autoplay to work reliably"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:208
+msgid ""
+"Force an aspect ratio for all videos. The format is 'w:h' - e.g. '16:9' or "
+"'4:3'. If this is not specified then the default for HTML5 and Vimeo is to "
+"use the native resolution of the video. As dimensions are not available from "
+"YouTube via SDK, 16:9 is forced as a sensible default."
+msgstr ""
+
+#: includes/widgets/video-player.php:470
+msgid "Force an aspect ratio."
+msgstr ""
+
+#: includes/views/html-sidebar.php:42
+msgid "Free 15-30 minute Discovery Call Available"
+msgstr ""
+
+#: includes/widgets/video-player.php:512
 msgid "Fullscreen"
 msgstr ""
 
-#: includes/widgets/audio-player.php:32 includes/widgets/video-player.php:34
+#: includes/widgets/audio-player.php:33 includes/widgets/video-player.php:34
 msgid "General Options"
 msgstr ""
 
-#: includes/widgets/video-player.php:294
-msgid "Hide"
+#: includes/class-menu.php:82
+msgid "Go to Menu"
 msgstr ""
 
-#: includes/widgets/video-player.php:290
+#: includes/views/html-sidebar.php:13
+msgid ""
+"Having issues with the plugin? Create a support ticket in our official forum."
+msgstr ""
+
+#: includes/views/html-hire-page.php:102
+msgid "helloalberuni@gmail.com"
+msgstr ""
+
+#: includes/views/html-sidebar.php:25
+msgid "Hi! I'm the developer behind this plugin."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:160
+msgid "Hide all controls after 2 seconds of inactivity"
+msgstr ""
+
+#: includes/widgets/video-player.php:322
 msgid "Hide Control Icons After 2s"
 msgstr ""
 
-#: includes/widgets/video-player.php:292
+#: includes/widgets/video-player.php:324
 msgid ""
 "Hide video controls automatically after 2s of no mouse or focus movement,"
 msgstr ""
 
-#: includes/widgets/audio-player.php:206 includes/widgets/audio-player.php:321
-#: includes/widgets/audio-player.php:423
+#: includes/class-menu.php:70 includes/class-menu.php:71
+msgid "Hire Me"
+msgstr ""
+
+#: includes/widgets/audio-player.php:283 includes/widgets/audio-player.php:411
+#: includes/widgets/audio-player.php:527 includes/widgets/video-player.php:620
+#: includes/widgets/video-player.php:748 includes/widgets/video-player.php:864
 msgid "Hover BG Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:218 includes/widgets/audio-player.php:333
-#: includes/widgets/audio-player.php:435
+#: includes/widgets/audio-player.php:295 includes/widgets/audio-player.php:423
+#: includes/widgets/audio-player.php:539 includes/widgets/video-player.php:632
+#: includes/widgets/video-player.php:760 includes/widgets/video-player.php:876
 msgid "Hover Icon Color"
+msgstr ""
+
+#: includes/views/html-hire-page.php:71
+msgid "How I Can Help You"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:229
+msgid "How much audio to preload"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:42
+msgid "How to Use"
 msgstr ""
 
 #: includes/widgets/video-player.php:48
 msgid "HTML5"
 msgstr ""
 
-#. URI of the plugin
-msgid "http://demo.azplugins.com/video-and-audio-player"
+#: includes/views/html-video-tab.php:61
+msgid "HTML5 <br>Multiple Quality <br>Self Hosted / CDN"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "https://azplugins.com"
+#: includes/views/html-audio-tab.php:45
+msgid "HTML5 Audio:"
 msgstr ""
 
-#: includes/widgets/audio-player.php:67 includes/widgets/video-player.php:136
+#: includes/views/html-video-tab.php:55
+msgid "HTML5: <br>Self Hosted / CDN"
+msgstr ""
+
+#: includes/widgets/audio-player.php:68
+msgid "https://example.com/music-name.mp3"
+msgstr ""
+
+#: includes/views/html-hire-page.php:103
+msgid "https://helloalberuni.com"
+msgstr ""
+
+#: includes/widgets/video-player.php:154
 msgid "https://your-link.com"
 msgstr ""
 
-#: includes/widgets/audio-player.php:194 includes/widgets/audio-player.php:309
-#: includes/widgets/audio-player.php:411
+#: includes/views/html-hire-page.php:54
+msgid "I care about your revenue and goals, not just \"completing tasks.\""
+msgstr ""
+
+#: includes/views/html-hire-page.php:42
+msgid ""
+"I don't just build sites, I actually create the tools other developers use, "
+"so you can be confident your code is rock-solid."
+msgstr ""
+
+#: includes/views/html-sidebar.php:28
+msgid ""
+"I help businesses, educators, and content creators with high-quality "
+"WordPress development — from small fixes, feature enhancements to complete "
+"custom websites. Let's talk about your project goals."
+msgstr ""
+
+#: includes/views/html-hire-page.php:46
+msgid "I know the ecosystem inside out, helping you avoid costly mistakes."
+msgstr ""
+
+#: includes/views/html-hire-page.php:72
+msgid ""
+"I specialize in helping businesses, educators, and content creators with:"
+msgstr ""
+
+#: includes/widgets/audio-player.php:271 includes/widgets/audio-player.php:399
+#: includes/widgets/audio-player.php:515 includes/widgets/video-player.php:608
+#: includes/widgets/video-player.php:736 includes/widgets/video-player.php:852
 msgid "Icon Color"
 msgstr ""
 
-#: includes/widgets/video-player.php:406
-msgid "Initial Quality"
+#: includes/views/html-elementor-tab.php:15
+msgid "If you are using Elementor, you have access to two dedicated widgets:"
 msgstr ""
 
-#: includes/widgets/audio-player.php:152 includes/widgets/video-player.php:389
-msgid "Initial Speed"
-msgstr ""
-
-#: includes/widgets/video-player.php:227
-msgid "Initial Volume"
-msgstr ""
-
-#: includes/widgets/audio-player.php:97 includes/widgets/video-player.php:214
-msgid "Loop"
-msgstr ""
-
-#: includes/widgets/audio-player.php:99 includes/widgets/video-player.php:216
-msgid "Loop the current media. "
-msgstr ""
-
-#: includes/widgets/video-player.php:440
-msgid "Mute"
-msgstr ""
-
-#: includes/widgets/audio-player.php:87 includes/widgets/audio-player.php:101
-#: includes/widgets/audio-player.php:115 includes/widgets/audio-player.php:143
-#: includes/widgets/video-player.php:204 includes/widgets/video-player.php:218
-#: includes/widgets/video-player.php:266 includes/widgets/video-player.php:308
-#: includes/widgets/video-player.php:322 includes/widgets/video-player.php:335
-#: includes/widgets/video-player.php:349 includes/widgets/video-player.php:363
-#: includes/widgets/video-player.php:379
-msgid "No"
-msgstr ""
-
-#: includes/widgets/audio-player.php:519
-msgid "No Audio File Selected/Uploaded"
-msgstr ""
-
-#: includes/widgets/audio-player.php:457
-msgid "Others"
-msgstr ""
-
-#: includes/em-init.php:92
-msgid "PHP"
+#: includes/views/html-elementor-tab.php:55
+msgid ""
+"In the widget panel, search for \"Video Player\" or \"Audio Player\". You "
+"will see a badge called \"LEAN\" above the widget title."
 msgstr ""
 
 #: includes/widgets/video-player.php:444
+msgid "Initial Quality"
+msgstr ""
+
+#: includes/widgets/audio-player.php:170 includes/widgets/video-player.php:424
+msgid "Initial Speed"
+msgstr ""
+
+#: includes/widgets/video-player.php:259
+msgid "Initial Volume"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:67
+msgid "Initial volume level (0 = muted, 1 = full volume)"
+msgstr ""
+
+#: includes/views/html-hire-page.php:90 includes/views/html-hire-page.php:110
+msgid "Let's Talk"
+msgstr ""
+
+#: includes/widgets/audio-player.php:115 includes/widgets/video-player.php:246
+msgid "Loop"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:51
+msgid "Loop playback when media ends"
+msgstr ""
+
+#: includes/widgets/audio-player.php:117 includes/widgets/video-player.php:248
+msgid "Loop the current media. "
+msgstr ""
+
+#: includes/views/html-audio-tab.php:78
+msgid "Lower Volume on Initial Load:"
+msgstr ""
+
+#: includes/widgets/audio-player.php:193
+msgid "Metadata"
+msgstr ""
+
+#: includes/views/html-video-tab.php:93 includes/views/html-audio-tab.php:70
+msgid "Minimal Controls:"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:237
+msgid ""
+"Modern browsers block autoplay with sound enabled to improve user experience "
+"and reduce unwanted audio. If you set"
+msgstr ""
+
+#: includes/views/html-video-tab.php:85
+msgid "Multiple Quality (Self Hosted / CDN):"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:192
+msgid "Multiple quality sources for HTML5 video"
+msgstr ""
+
+#: includes/widgets/video-player.php:506
+msgid "Mute"
+msgstr ""
+
+#: includes/widgets/audio-player.php:210
+msgid "Mute Icon"
+msgstr ""
+
+#: includes/widgets/audio-player.php:101 includes/widgets/video-player.php:232
+msgid "Muted"
+msgstr ""
+
+#: includes/views/html-hire-page.php:62
+msgid "My work powers 133,000+ websites."
+msgstr ""
+
+#: includes/views/html-sidebar.php:23
+msgid "Need a WordPress Developer?"
+msgstr ""
+
+#: includes/views/html-video-tab.php:106 includes/views/html-audio-tab.php:98
+msgid "Need more customization? Check the 👉"
+msgstr ""
+
+#: includes/widgets/audio-player.php:91 includes/widgets/audio-player.php:105
+#: includes/widgets/audio-player.php:119 includes/widgets/audio-player.php:133
+#: includes/widgets/audio-player.php:161 includes/widgets/audio-player.php:238
+#: includes/widgets/video-player.php:95 includes/widgets/video-player.php:222
+#: includes/widgets/video-player.php:236 includes/widgets/video-player.php:250
+#: includes/widgets/video-player.php:298 includes/widgets/video-player.php:326
+#: includes/widgets/video-player.php:340 includes/widgets/video-player.php:357
+#: includes/widgets/video-player.php:370 includes/widgets/video-player.php:384
+#: includes/widgets/video-player.php:398 includes/widgets/video-player.php:414
+#: includes/widgets/video-player.php:473 includes/widgets/video-player.php:537
+msgid "No"
+msgstr ""
+
+#: includes/views/html-hire-page.php:50
+msgid "No agencies, no hand-offs. You work directly with me."
+msgstr ""
+
+#: includes/views/html-audio-tab.php:86
+msgid "No Download:"
+msgstr ""
+
+#: includes/widgets/audio-player.php:194
+msgid "None"
+msgstr ""
+
+#: includes/widgets/audio-player.php:89
+msgid ""
+"Note: Mobile browsers don’t allow autoplay for Audio. Some desktop or laptop "
+"browsers also automatically block videos from automatically playing or may "
+"automatically mute the audio."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:81
+msgid "Number (seconds)"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:47
+msgid "Open Elementor Editor"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:16
+msgid "Option Name"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:240
+msgid "Or rely on user interaction (click to play) for audio-enabled playback"
+msgstr ""
+
+#: includes/views/html-video-tab.php:73 includes/views/html-audio-tab.php:53
+msgid "Other Examples"
+msgstr ""
+
+#: includes/widgets/audio-player.php:561 includes/widgets/video-player.php:898
+msgid "Others"
+msgstr ""
+
+#: includes/init.php:101
+msgid "PHP"
+msgstr ""
+
+#: includes/widgets/video-player.php:510
 msgid "PIP"
 msgstr ""
 
-#: includes/widgets/video-player.php:437
+#: includes/widgets/video-player.php:503
 msgid "Play"
 msgstr ""
 
-#: includes/widgets/audio-player.php:173
+#: includes/widgets/audio-player.php:208 includes/widgets/audio-player.php:250
+#: includes/widgets/video-player.php:587
 msgid "Play Icon"
 msgstr ""
 
-#: includes/widgets/video-player.php:436
+#: includes/widgets/video-player.php:502
 msgid "Play Large"
 msgstr ""
 
-#: includes/widgets/video-player.php:57
-msgid "Poster For Video"
+#: includes/views/html-hire-page.php:42
+msgid "Plugin Developer First"
 msgstr ""
 
-#: includes/widgets/video-player.php:460 includes/widgets/video-player.php:469
+#: includes/views/html-available-options-tab.php:19
+msgid "Possible Values"
+msgstr ""
+
+#: includes/widgets/audio-player.php:187
+msgid "Preload"
+msgstr ""
+
+#: includes/widgets/video-player.php:549 includes/widgets/video-player.php:558
 msgid "Primary Color"
 msgstr ""
 
-#: includes/widgets/video-player.php:438
+#: includes/widgets/audio-player.php:209 includes/widgets/video-player.php:504
 msgid "Progress Bar"
 msgstr ""
 
-#: includes/widgets/video-player.php:108
+#: includes/widgets/video-player.php:126
 msgid "Put Video Link"
 msgstr ""
 
-#: includes/widgets/video-player.php:75 includes/widgets/video-player.php:90
+#: includes/widgets/video-player.php:60 includes/widgets/video-player.php:78
 msgid "Put your video id here"
 msgstr ""
 
-#: includes/widgets/audio-player.php:240
+#: includes/views/html-video-tab.php:14 includes/views/html-audio-tab.php:14
+msgid "Quick Start"
+msgstr ""
+
+#: includes/widgets/video-player.php:483
+msgid "Ratio"
+msgstr ""
+
+#: includes/views/html-hire-page.php:111
+msgid "Ready to discuss your project?"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:34
+msgid "Required"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:168
+msgid "Reset video to start when playback ends"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:54
+msgid "Search for Widgets"
+msgstr ""
+
+#: includes/widgets/audio-player.php:317 includes/widgets/video-player.php:654
 msgid "Seek Progress Bar"
 msgstr ""
 
-#: includes/widgets/audio-player.php:125 includes/widgets/video-player.php:276
+#: includes/widgets/audio-player.php:143 includes/widgets/video-player.php:308
 msgid "Seek Time"
 msgstr ""
 
-#: includes/widgets/video-player.php:155
+#: includes/widgets/video-player.php:173
 msgid "Select"
 msgstr ""
 
-#: includes/widgets/audio-player.php:390
+#: includes/views/html-audio-tab.php:65
+msgid "Self Hosted / CDN:"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:69
+msgid "Set your media source and customize the styling using the Style tab"
+msgstr ""
+
+#: includes/widgets/audio-player.php:494 includes/widgets/video-player.php:831
 msgid "Setting Icon"
 msgstr ""
 
-#: includes/widgets/video-player.php:443
+#: includes/widgets/audio-player.php:212 includes/widgets/video-player.php:509
 msgid "Settings Icon"
 msgstr ""
 
-#: includes/widgets/video-player.php:293
-msgid "Show"
+#: includes/views/html-available-options-tab.php:91
+msgid "Show remaining time instead of elapsed time"
 msgstr ""
 
-#: includes/em-init.php:91 includes/em-init.php:107 includes/em-init.php:123
-msgid "Smart Player For Elementor"
+#: includes/views/html-available-options-tab.php:115
+msgid "Show time tooltip when hovering over progress bar"
 msgstr ""
 
-#: includes/widgets/audio-player.php:127 includes/widgets/video-player.php:278
+#: includes/views/html-available-options-tab.php:184
+msgid "Show tooltips on control buttons"
+msgstr ""
+
+#: includes/widgets/audio-player.php:188
+msgid ""
+"Specifies how the the audio should be loaded when the page loads. <a "
+"target=\"_blank\" href=\"https://www.w3schools.com/tags/att_audio_preload."
+"asp\">Learn More</a>"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:59
+msgid "Start with audio muted"
+msgstr ""
+
+#: includes/views/html-audio-tab.php:11
+msgid ""
+"Supports HTML5 audio files (MP3, WAV, OGG) for podcasts, music, and audio "
+"content"
+msgstr ""
+
+#: includes/views/html-video-tab.php:11
+msgid "Supports YouTube, Vimeo, and HTML5 videos (MP4, WebM)"
+msgstr ""
+
+#: includes/views/html-hire-page.php:84
+msgid "tailored to your business goals"
+msgstr ""
+
+#: includes/views/html-audio-tab.php:33
+msgid "Test the audio player by copying these ready-to-use shortcodes"
+msgstr ""
+
+#: includes/views/html-video-tab.php:33
+msgid "Test the players by copying these ready-to-use shortcodes"
+msgstr ""
+
+#: includes/widgets/video-player.php:484
+msgid "The format is 'w:h' - e.g. 16:9 or 4:3 or other"
+msgstr ""
+
+#: includes/widgets/audio-player.php:145 includes/widgets/video-player.php:310
 msgid "The time, in seconds, to seek when a user hits fast forward or rewind."
 msgstr ""
 
-#: includes/widgets/audio-player.php:466
+#: includes/views/html-available-options-tab.php:237
+msgid "the video/audio may not start automatically. To ensure autoplay works:"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:241
+msgid "This is a browser security feature, not a plugin limitation"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:144
+msgid "Thumbnail image shown before video plays"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:83
+msgid "Time to skip when using fast forward/rewind"
+msgstr ""
+
+#: includes/widgets/audio-player.php:570 includes/widgets/video-player.php:907
 msgid "Timer Color"
 msgstr ""
 
-#: includes/widgets/audio-player.php:44 includes/widgets/audio-player.php:53
+#: includes/views/html-hire-page.php:97
+msgid ""
+"To ensure top quality, I take on only a few new client projects each month."
+msgstr ""
+
+#: includes/views/html-hire-page.php:62
+msgid "Trusted Worldwide"
+msgstr ""
+
+#: includes/views/html-hire-page.php:142
+msgid "Typical Response Time"
+msgstr ""
+
+#: includes/widgets/audio-player.php:45 includes/widgets/audio-player.php:54
 msgid "Upload Audio"
 msgstr ""
 
-#: includes/widgets/video-player.php:107 includes/widgets/video-player.php:115
+#: includes/widgets/video-player.php:125 includes/widgets/video-player.php:133
 msgid "Upload Video"
 msgstr ""
 
-#: includes/widgets/audio-player.php:250
+#: includes/views/html-available-options-tab.php:35
+msgid "URL of the media file or YouTube/Vimeo URL"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:190
+msgid "url1|quality1,url2|quality2"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:239
+msgid "Use"
+msgstr ""
+
+#: includes/views/html-elementor-tab.php:11
+msgid ""
+"Use our dedicated Elementor widgets to display and customize video and audio "
+"players anywhere on your website"
+msgstr ""
+
+#: includes/widgets/audio-player.php:340 includes/widgets/video-player.php:677
 msgid ""
 "Use RGB color with some opacity. E.g: rgba(255,68,115,0.60). Otherwise "
 "buffer color will now show."
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:142
+msgid "Valid image URL"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:33
+msgid "Valid URL"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:17
+msgid "Video"
+msgstr ""
+
+#: includes/init.php:100 includes/init.php:117 includes/class-menu.php:58
+#: includes/class-menu.php:59
+msgid "Video & Audio Player"
 msgstr ""
 
 #. Description of the plugin
 msgid "Video & Audio player addon for Elementor"
 msgstr ""
 
-#: includes/widgets/video-player.php:134
-msgid "Video Link"
-msgstr ""
-
-#: includes/widgets/video-player.php:173
-msgid "Video List"
-msgstr ""
-
-#: includes/widgets/video-player.php:11
-msgid "Video Player"
+#: includes/class-settings-page.php:53
+msgid "Video & Audio Player Guide"
 msgstr ""
 
 #: includes/widgets/video-player.php:152
+msgid "Video Link"
+msgstr ""
+
+#: includes/widgets/video-player.php:191
+msgid "Video List"
+msgstr ""
+
+#: includes/views/html-video-tab.php:10
+#: includes/views/html-elementor-tab.php:23
+#: includes/widgets/video-player.php:12
+msgid "Video Player"
+msgstr ""
+
+#: includes/widgets/video-player.php:170
 msgid "Video Size"
 msgstr ""
 
-#: includes/widgets/video-player.php:103
+#: includes/widgets/video-player.php:121
 msgid "Video Source"
 msgstr ""
 
-#: includes/widgets/video-player.php:42
+#: includes/views/html-video-tab.php:38 includes/widgets/video-player.php:42
 msgid "Video Type"
+msgstr ""
+
+#: includes/class-video-shortcode.php:117
+msgid "Video URL is required."
+msgstr ""
+
+#: includes/views/html-hire-page.php:135
+msgid "View Portfolio"
 msgstr ""
 
 #: includes/widgets/video-player.php:47
 msgid "Vimeo"
 msgstr ""
 
-#: includes/widgets/video-player.php:87
+#: includes/widgets/video-player.php:75
 msgid "Vimeo Video ID"
 msgstr ""
 
-#: includes/widgets/video-player.php:441
+#: includes/views/html-video-tab.php:50
+msgid "Vimeo:"
+msgstr ""
+
+#: includes/widgets/video-player.php:507
 msgid "Volume"
 msgstr ""
 
-#: includes/widgets/audio-player.php:355
+#: includes/widgets/audio-player.php:211 includes/widgets/audio-player.php:445
+#: includes/widgets/video-player.php:782
 msgid "Volume Bar"
 msgstr ""
 
-#: includes/widgets/audio-player.php:289
+#: includes/widgets/audio-player.php:379 includes/widgets/video-player.php:716
 msgid "Volume Icon"
 msgstr ""
 
-#: includes/widgets/audio-player.php:86 includes/widgets/audio-player.php:100
-#: includes/widgets/audio-player.php:114 includes/widgets/audio-player.php:142
-#: includes/widgets/video-player.php:203 includes/widgets/video-player.php:217
-#: includes/widgets/video-player.php:265 includes/widgets/video-player.php:307
-#: includes/widgets/video-player.php:321 includes/widgets/video-player.php:334
-#: includes/widgets/video-player.php:348 includes/widgets/video-player.php:362
-#: includes/widgets/video-player.php:378
+#: includes/views/html-hire-page.php:37
+msgid "What Makes Me Different"
+msgstr ""
+
+#: includes/views/html-hire-page.php:17
+msgid ""
+"When you hire me, you're not just getting a site built. You're partnering "
+"with someone who:"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:75
+msgid "Which control buttons to show"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:221
+msgid "Which control buttons to show (audio-specific)"
+msgstr ""
+
+#: includes/views/html-hire-page.php:14
+msgid "Why Work With Me?"
+msgstr ""
+
+#: includes/views/html-hire-page.php:143
+msgid "Within 24 hours"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:237
+msgid "without"
+msgstr ""
+
+#: includes/views/html-hire-page.php:8
+msgid "WordPress Development Services"
+msgstr ""
+
+#: includes/views/html-hire-page.php:22
+msgid ""
+"Writes code that follows WordPress standards — easy to maintain and extend."
+msgstr ""
+
+#: includes/widgets/audio-player.php:90 includes/widgets/audio-player.php:104
+#: includes/widgets/audio-player.php:118 includes/widgets/audio-player.php:132
+#: includes/widgets/audio-player.php:160 includes/widgets/audio-player.php:237
+#: includes/widgets/video-player.php:94 includes/widgets/video-player.php:221
+#: includes/widgets/video-player.php:235 includes/widgets/video-player.php:249
+#: includes/widgets/video-player.php:297 includes/widgets/video-player.php:325
+#: includes/widgets/video-player.php:339 includes/widgets/video-player.php:356
+#: includes/widgets/video-player.php:369 includes/widgets/video-player.php:383
+#: includes/widgets/video-player.php:397 includes/widgets/video-player.php:413
+#: includes/widgets/video-player.php:472 includes/widgets/video-player.php:536
 msgid "Yes"
+msgstr ""
+
+#: includes/class-player-renderer.php:185
+msgid "Your browser does not support the audio element."
 msgstr ""
 
 #: includes/widgets/video-player.php:46
 msgid "Youtube"
 msgstr ""
 
-#: includes/widgets/video-player.php:72
+#: includes/widgets/video-player.php:57
 msgid "Youtube Video ID"
+msgstr ""
+
+#: includes/views/html-video-tab.php:45
+msgid "YouTube:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:76
+msgid "⚡ Speed Optimization & Performance Tuning"
+msgstr ""
+
+#: includes/views/html-hire-page.php:84
+msgid "➕ More"
+msgstr ""
+
+#: includes/views/html-hire-page.php:103
+msgid "🌍 View My Portfolio"
+msgstr ""
+
+#: includes/views/html-hire-page.php:78
+msgid "🌐 Brand New Websites (corporate, eCommerce, LMS, membership sites)"
+msgstr ""
+
+#: includes/class-settings-page.php:64
+msgid "🎨 Elementor Integration"
+msgstr ""
+
+#: includes/views/html-hire-page.php:81
+msgid "🎨 WordPress Theme Customization"
+msgstr ""
+
+#: includes/class-settings-page.php:62
+msgid "🎵 Audio Player"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:213
+msgid "🎵 Audio-Only Options"
+msgstr ""
+
+#: includes/views/html-hire-page.php:96
+msgid "👉 Free 15–30 minute Discovery Call"
+msgstr ""
+
+#: includes/views/html-hire-page.php:101
+msgid "📅 Book a Discovery Call"
+msgstr ""
+
+#: includes/views/html-hire-page.php:82
+msgid "📊 Google Analytics (GA4) Integration"
+msgstr ""
+
+#: includes/class-settings-page.php:63
+msgid "📋 All Shortcode Options"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:27
+msgid "📋 Common Options (Both Video & Audio)"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:235
+msgid "📝 Note:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:102
+msgid "📧 Email Me"
+msgstr ""
+
+#: includes/views/html-hire-page.php:83
+msgid "📱 Responsive Design Implementation"
+msgstr ""
+
+#: includes/class-settings-page.php:61
+msgid "📺 Video Player"
+msgstr ""
+
+#: includes/views/html-available-options-tab.php:136
+msgid "📺 Video-Only Options"
+msgstr ""
+
+#: includes/views/html-hire-page.php:80
+msgid "🔄 Site Migration & Hosting Setup"
+msgstr ""
+
+#: includes/views/html-hire-page.php:79
+msgid "🔒 Security Audits & Hardening"
+msgstr ""
+
+#: includes/views/html-hire-page.php:75
+msgid "🔧 Troubleshooting & Bug Fixes"
+msgstr ""
+
+#: includes/views/html-hire-page.php:77
+msgid "🛒 WooCommerce Setup & Customization"
 msgstr ""

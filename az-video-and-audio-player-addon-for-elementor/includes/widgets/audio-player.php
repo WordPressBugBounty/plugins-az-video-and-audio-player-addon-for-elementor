@@ -1,4 +1,6 @@
 <?php
+use VAPFEM\Player_Renderer;
+
 class VAPFEM_Audio_Player extends Elementor\Widget_Base {
 
     public function get_name() {
@@ -20,7 +22,6 @@ class VAPFEM_Audio_Player extends Elementor\Widget_Base {
     public function get_script_depends() {
         return [
             'plyr',
-            'plyr-polyfilled',
             'vapfem-main',
         ];
     }
@@ -579,58 +580,51 @@ class VAPFEM_Audio_Player extends Elementor\Widget_Base {
     }
 
     protected function render() {
-        $settings    = $this->get_settings_for_display();
+        $settings = $this->get_settings_for_display();
 
-        // audio link
-        if($settings['src_type'] == 'upload'){
-            $audio_link = $settings['audio_upload']['url'];
+        // Adapter: Convert Elementor settings to flattened config
+        $config = $this->elementor_to_audio_config_adapter($settings);
+
+        // Use renderer
+        $renderer = Player_Renderer::get_instance();
+        $renderer->render_audio_player($config);
+    }
+
+    /**
+     * Convert Elementor settings to flattened audio config format
+     */
+    private function elementor_to_audio_config_adapter($settings) {
+        return [
+            'url'                => $this->get_audio_source($settings),
+            'autoplay'           => $settings['autoplay'] === 'true',
+            'muted'              => $settings['muted'] === 'true',
+            'loop'               => $settings['loop'] === 'true',
+            'invert_time'        => $settings['invert_time'] === 'true',
+            'seek_time'          => intval($settings['seek_time']),
+            'tooltips_seek'      => $settings['tooltips_seek'] === 'true',
+            'speed_selected'     => $this->convert_speed($settings),
+            'preload'            => $settings['preload'],
+            'controls'           => $settings['controls'],
+            'debug_mode'         => $settings['debug_mode'] === 'true',
+        ];
+    }
+
+    /**
+     * Get audio source URL based on source type
+     */
+    private function get_audio_source($settings) {
+        if ($settings['src_type'] === 'upload') {
+            return isset($settings['audio_upload']['url']) ? $settings['audio_upload']['url'] : '';
         } else {
-            $audio_link = $settings['audio_link']['url'];
+            return isset($settings['audio_link']['url']) ? $settings['audio_link']['url'] : '';
         }
+    }
 
-        $autoplay = $settings['autoplay'] == 'true' ? 'true' : 'false';
-        $muted = $settings['muted'] == 'true' ? 'true' : 'false';
-        $loop = $settings['loop'] == 'true' ? 'true' : 'false';
-        $seek_time = $settings['seek_time'];
-        $tooltips_seek = $settings['tooltips_seek'] == 'true' ? 'true' : 'false';
-        $invert_time = $settings['invert_time'] == 'true' ? 'true' : 'false';
-        $speed_selected = $settings['speed_selected'];
-        $speed_selected = substr($speed_selected, 6 );
-        $preload = $settings['preload'];
-        $controls = $settings['controls'];
-        $debug_mode = $settings['debug_mode'] == 'true' ? 'true' : 'false';
-
-        // data settings
-        $data_settings = array();
-        $data_settings['muted'] = $muted;
-        $data_settings['seek_time'] = $seek_time;
-        $data_settings['tooltips_seek'] = $tooltips_seek;
-        $data_settings['invertTime'] = $invert_time;
-        $data_settings['speed_selected'] = $speed_selected;
-        $data_settings['controls'] = $controls;
-        $data_settings['debug_mode'] = $debug_mode;
-
-        if($audio_link):
-            $arr = explode('.', $audio_link);
-            $file_ext = end($arr);
-        ?>
-        <audio
-            class="vapfem_player vapfem_audio" 
-            data-settings='<?php echo wp_json_encode($data_settings); ?>' 
-            <?php echo esc_attr($autoplay == 'true' ? 'autoplay allow="autoplay"' : ''); ?>
-            <?php echo esc_attr($loop == 'true' ? 'loop' : ''); ?> 
-            preload="<?php echo esc_attr($preload); ?>"
-        >
-            <source
-                src="<?php echo esc_url($audio_link); ?>"
-                type="audio/<?php echo esc_attr($file_ext); ?>"
-            />
-        </audio>
-        <?php
-        else:
-            echo '<div class="vapfem_not_found">';
-            echo "<span>". esc_html__('No Audio File Selected/Uploaded', 'vapfem') ."</span>";
-            echo '</div>';
-        endif;
+    /**
+     * Convert Elementor speed format to clean format
+     */
+    private function convert_speed($settings) {
+        $speed = $settings['speed_selected'] ?? 'speed_1';
+        return substr($speed, 6); // Remove 'speed_' prefix
     }
 }

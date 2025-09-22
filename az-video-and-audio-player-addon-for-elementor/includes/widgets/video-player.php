@@ -1,5 +1,6 @@
 <?php
 use Elementor\Modules\DynamicTags\Module as TagsModule;
+use VAPFEM\Player_Renderer;
 
 class VAPFEM_Video_Player extends \Elementor\Widget_Base {
 
@@ -22,7 +23,6 @@ class VAPFEM_Video_Player extends \Elementor\Widget_Base {
     public function get_script_depends() {
         return [
             'plyr',
-            'plyr-polyfilled',
             'vapfem-main',
         ];
     }
@@ -516,7 +516,7 @@ class VAPFEM_Video_Player extends \Elementor\Widget_Base {
             ]
         );
 
-        
+
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -917,143 +917,116 @@ class VAPFEM_Video_Player extends \Elementor\Widget_Base {
     }
 
     protected function render() {
-        $settings    = $this->get_settings_for_display();
-        $video_type = $settings['video_type'];
-        $custom_poster = $settings['custom_poster'];
-        $poster = $settings['poster'];
-        $poster = isset($poster['url']) ? $poster['url'] : '';
-        $youtube_video_id = $settings['youtube_video_id'];
-        $vimeo_video_id = $settings['vimeo_video_id'];
-        $autoplay = $settings['autoplay'] == 'true' ? 'true' : 'false';
-        $muted = $settings['muted'] == 'true' ? 'true' : 'false';
-        $loop = $settings['loop'] == 'true' ? 'true' : 'false';
-        $video_list = $settings['video_list'];
-        $volume = $settings['volume'];
-        $volume = $settings['volume']['size'];
-        $volume = (int) $volume / 100;
-        $click_to_play = $settings['click_to_play'] == 'true' ? 'true' : 'false';
-        $seek_time = $settings['seek_time'];
-        $hide_controls = $settings['hide_controls'] == 'true' ? 'true' : 'false';
-        $reset_on_end = $settings['reset_on_end'] == 'true' ? 'true' : 'false';
-        $keyboard_focused = $settings['keyboard_focused'] == 'true' ? 'true' : 'false';
-        $keyboard_global = $settings['keyboard_global'] == 'true' ? 'true' : 'false';
-        $tooltips_controls = $settings['tooltips_controls'] == 'true' ? 'true' : 'false';
-        $tooltips_seek = $settings['tooltips_seek'] == 'true' ? 'true' : 'false';
-        $invert_time = $settings['invert_time'] == 'true' ? 'true' : 'false';
-        $fullscreen_enabled = $settings['fullscreen_enabled'] == 'true' ? 'true' : 'false';
-        $speed_selected = $settings['speed_selected'];
-        $speed_selected = substr($speed_selected, 6 );
-        $quality_default = $settings['quality_default'];
-        $controls = $settings['controls'];
-        $custom_ratio = $settings['custom_ratio'];
-        $ratio = $settings['ratio'];
-        $ratio = ( $custom_ratio && $settings['ratio'] ) ? $ratio : 'null';
-        $debug_mode = $settings['debug_mode'] == 'true' ? 'true' : 'false';
+        $settings = $this->get_settings_for_display();
 
-        // data settings
-        $data_settings = array();
-        $data_settings['seek_time'] = $seek_time;
-        $data_settings['volume'] = $volume;
-        $data_settings['muted'] = $muted;
-        $data_settings['clickToPlay'] = $click_to_play;
-        $data_settings['keyboard_focused'] = $keyboard_focused;
-        $data_settings['keyboard_global'] = $keyboard_global;
-        $data_settings['tooltips_controls'] = $tooltips_controls;
-        $data_settings['hideControls'] = $hide_controls;
-        $data_settings['resetOnEnd'] = $reset_on_end;
-        $data_settings['tooltips_seek'] = $tooltips_seek;
-        $data_settings['invertTime'] = $invert_time;
-        $data_settings['fullscreen_enabled'] = $fullscreen_enabled;
-        $data_settings['speed_selected'] = $speed_selected;
-        $data_settings['quality_default'] = $quality_default;
-        $data_settings['controls'] = $controls;
-        $data_settings['ratio'] = $ratio;
-        $data_settings['debug_mode'] = $debug_mode;
+        // Adapter: Convert Elementor settings to flattened config
+        $config = $this->elementor_to_config_adapter($settings);
 
-        if($video_type == 'html5'):
-        ?>
-        <video
-            poster="<?php echo esc_attr($poster); ?>"
-            class="vapfem_player vapfem_video"
-            <?php echo esc_attr($autoplay == 'true' ? 'autoplay' : ''); ?>
-            <?php echo esc_attr($muted == 'true' ? 'muted' : ''); ?>
-            <?php echo esc_attr($loop == 'true' ? 'loop' : ''); ?>
-            data-settings='<?php echo wp_json_encode($data_settings); ?>'
-        >
+        // Use new renderer
+        $renderer = Player_Renderer::get_instance();
+        $renderer->render_video_player($config);
+    }
 
-            <?php
-            $video_link = '';
-            foreach($video_list as $item):
-                if($item['src_type'] == 'upload'){
-                    $video_link = $item['video_upload'];
-                    $video_link = $video_link['url'];
-                } else {
-                    $video_link = $item['video_link'];
-                    $video_link = $video_link['url'];
-                }
+    /**
+     * Convert Elementor settings to flattened config format
+     */
+    private function elementor_to_config_adapter($settings) {
+        return [
+            'video_type'         => $settings['video_type'],
+            'video_id'           => $this->get_video_id($settings),
+            'poster'         => $this->get_poster_url($settings),
+            'sources'            => $this->convert_video_list($settings),
+            'autoplay'           => $settings['autoplay'] === 'true',
+            'muted'              => $settings['muted'] === 'true',
+            'loop'               => $settings['loop'] === 'true',
+            'volume'             => $this->convert_volume($settings),
+            'click_to_play'      => $settings['click_to_play'] === 'true',
+            'invert_time'        => $settings['invert_time'] === 'true',
+            'seek_time'          => intval($settings['seek_time']),
+            'hide_controls'      => $settings['hide_controls'] === 'true',
+            'reset_on_end'       => $settings['reset_on_end'] === 'true',
+            'keyboard_focused'   => $settings['keyboard_focused'] === 'true',
+            'keyboard_global'    => $settings['keyboard_global'] === 'true',
+            'fullscreen_enabled' => $settings['fullscreen_enabled'] === 'true',
+            'tooltips_controls'  => $settings['tooltips_controls'] === 'true',
+            'tooltips_seek'      => $settings['tooltips_seek'] === 'true',
+            'speed_selected'     => $this->convert_speed($settings),
+            'quality_default'    => $settings['quality_default'],
+            'ratio'              => $this->get_ratio($settings),
+            'controls'           => $settings['controls'],
+            'debug_mode'         => $settings['debug_mode'] === 'true',
+        ];
+    }
 
-               $extension = $ext = pathinfo($video_link, PATHINFO_EXTENSION);
-               $size = $item['video_size'];
-            ?>
-            <!-- Video files -->
-            <source
-                src="<?php echo esc_url($video_link); ?>"
-                type="video/<?php echo esc_attr($extension); ?>"
-                size="<?php echo esc_attr($size); ?>"
-            />
+    /**
+     * Get video ID based on video type
+     */
+    private function get_video_id($settings) {
+        switch ($settings['video_type']) {
+            case 'youtube':
+                return $settings['youtube_video_id'];
+            case 'vimeo':
+                return $settings['vimeo_video_id'];
+            default:
+                return '';
+        }
+    }
 
-            <?php endforeach; ?>
+    /**
+     * Get poster URL from Elementor media control
+     */
+    private function get_poster_url($settings) {
+        $poster = $settings['poster'] ?? [];
+        return isset($poster['url']) ? $poster['url'] : '';
+    }
 
-            <!-- Fallback for browsers that don't support the <video> element -->
-            <a href="<?php echo esc_url($video_link); ?>"
-                ><?php echo esc_html__('Download', 'vapfem'); ?></a
-            >
-        </video>
-        <?php
-        elseif($video_type == 'youtube'):
-            ?>
-            
-            <div class="plyr__video-embed vapfem_player vapfem_video"
-                data-settings='<?php echo wp_json_encode($data_settings); ?>'
-            >
-                <iframe
-                    src="https://www.youtube.com/embed/<?php echo esc_attr($youtube_video_id); ?>?autoplay=<?php echo esc_attr($autoplay); ?>&amp;loop=<?php echo esc_attr($loop) ?>&amp;origin=<?php echo esc_url(get_home_url()); ?>&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-                    allowfullscreen
-                    allowtransparency
-                    allow="autoplay"
-                    ></iframe>
-            </div>
+    /**
+     * Convert Elementor video list to simple format
+     */
+    private function convert_video_list($settings) {
+        $video_list = $settings['video_list'] ?? [];
+        $html5_list = [];
 
-            <?php if($custom_poster && $poster): ?>
-            <style type="text/css">
-                .plyr__poster{
-                    background-image: url('<?php echo esc_attr($poster) ?>') !important;
-                }
-            </style>
-            <?php endif; ?>
+        foreach ($video_list as $item) {
+            $url = '';
+            if ($item['src_type'] === 'upload') {
+                $url = isset($item['video_upload']['url']) ? $item['video_upload']['url'] : '';
+            } else {
+                $url = isset($item['video_link']['url']) ? $item['video_link']['url'] : '';
+            }
 
-        <?php
-        elseif($video_type == 'vimeo'):
-            ?>
-            
-            <div class="plyr__video-embed vapfem_player vapfem_video"
-                data-settings='<?php echo wp_json_encode($data_settings); ?>'
-            >
-                <iframe
-                    src="https://player.vimeo.com/video/<?php echo esc_attr($vimeo_video_id) ?>?autoplay=<?php echo esc_attr($autoplay); ?>&amp;loop=<?php echo esc_attr($loop) ?>&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media"
-                    allowfullscreen
-                    allowtransparency
-                    allow="autoplay"
-                    ></iframe>
-            </div>
-            <?php if($custom_poster && $poster): ?>
-            <style type="text/css">
-                .plyr__poster{
-                    background-image: url('<?php echo esc_attr($poster) ?>') !important;
-                }
-            </style>
-            <?php endif; ?>
-        <?php
-        endif;
+            if (!empty($url)) {
+                $html5_list[] = [
+                    'url' => $url,
+                    'size' => $item['video_size'] ?? ''
+                ];
+            }
+        }
+
+        return $html5_list;
+    }
+
+    /**
+     * Convert Elementor volume percentage to decimal
+     */
+    private function convert_volume($settings) {
+        $volume = $settings['volume'] ?? ['size' => 100];
+        return floatval($volume['size']) / 100;
+    }
+
+    /**
+     * Convert Elementor speed format to clean format
+     */
+    private function convert_speed($settings) {
+        $speed = $settings['speed_selected'] ?? 'speed_1';
+        return substr($speed, 6); // Remove 'speed_' prefix
+    }
+
+    /**
+     * Get custom ratio if enabled
+     */
+    private function get_ratio($settings) {
+        $custom_ratio = $settings['custom_ratio'] === 'true';
+        return $custom_ratio && !empty($settings['ratio']) ? $settings['ratio'] : '';
     }
 }

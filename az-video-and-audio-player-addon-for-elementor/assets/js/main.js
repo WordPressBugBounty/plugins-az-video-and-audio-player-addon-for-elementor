@@ -3,29 +3,42 @@
 
     var VideoPlayerJS = function ($scope, $) {
 
-        var nodeList = document.querySelectorAll('.vapfem_player.vapfem_video');
+        var nodeList = document.querySelectorAll('.vapfem-player.vapfem-video');
 
         for (var i = 0; i < nodeList.length; i++) {
             var item = nodeList[i];
-            var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
+
+            // Validate element exists and has data-settings
+            if (!item || !item.getAttribute('data-settings')) {
+                console.warn('Invalid player element or missing data-settings:', item);
+                continue;
+            }
+
+            try {
+                var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
+            } catch (e) {
+                console.error('Failed to parse player settings:', e);
+                continue;
+            }
+
             var controls = plyrSettings.controls ? plyrSettings.controls : ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'];
             var settings = plyrSettings.settings ? plyrSettings.settings : ['captions', 'quality', 'speed', 'loop'];
             var seekTime = plyrSettings.seek_time ? parseInt(plyrSettings.seek_time) : 100;
-            var volume = parseFloat(plyrSettings.volume);
-            var muted = plyrSettings.muted == 'true' ? true : false;
-            var clickToPlay = plyrSettings.clickToPlay == 'false' ? false : true;
-            var hideControls = plyrSettings.hideControls == 'false' ? false : true;
-            var resetOnEnd = plyrSettings.resetOnEnd == 'false' ? false : true;
-            var keyboard_focused = plyrSettings.keyboard_focused == 'false' ? false : true;
-            var keyboard_global = plyrSettings.keyboard_global == 'true' ? true : false;
-            var tooltips_controls = plyrSettings.tooltips_controls == 'true' ? true : false;
-            var tooltips_seek = plyrSettings.tooltips_seek == 'false' ? false : true;
-            var invertTime = plyrSettings.invertTime == 'false' ? false : true;
-            var fullscreen_enabled = plyrSettings.fullscreen_enabled == 'false' ? false : true;
+            var volume = parseFloat(plyrSettings.volume) || 1;
+            var muted = Boolean(plyrSettings.muted);
+            var clickToPlay = Boolean(plyrSettings.clickToPlay);
+            var hideControls = Boolean(plyrSettings.hideControls);
+            var resetOnEnd = Boolean(plyrSettings.resetOnEnd);
+            var keyboard_focused = Boolean(plyrSettings.keyboard_focused);
+            var keyboard_global = Boolean(plyrSettings.keyboard_global);
+            var tooltips_controls = Boolean(plyrSettings.tooltips_controls);
+            var tooltips_seek = Boolean(plyrSettings.tooltips_seek);
+            var invertTime = Boolean(plyrSettings.invertTime);
+            var fullscreen_enabled = Boolean(plyrSettings.fullscreen_enabled);
             var speed_selected = plyrSettings.speed_selected ? parseFloat(plyrSettings.speed_selected) : 1;
-            var quality_default = plyrSettings.quality_default ? parseInt(plyrSettings.quality_default) : 720;
+            var quality_default = plyrSettings.quality_default ? parseInt(plyrSettings.quality_default) : 576;
             var ratio = plyrSettings.ratio;
-            var debug_mode = plyrSettings.debug_mode == 'true' ? true : false;
+            var debug_mode = Boolean(plyrSettings.debug_mode);
 
             const player = new Plyr(item, {
                 debug: debug_mode,
@@ -51,19 +64,32 @@
 
     var AudioPlayerJS = function ($scope, $) {
 
-        var nodeList = document.querySelectorAll('.vapfem_player.vapfem_audio');
+        var nodeList = document.querySelectorAll('.vapfem-player.vapfem-audio');
 
         for (var i = 0; i < nodeList.length; i++) {
             var item = nodeList[i];
-            var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
+
+            // Validate element exists and has data-settings
+            if (!item || !item.getAttribute('data-settings')) {
+                console.warn('Invalid audio player element or missing data-settings:', item);
+                continue;
+            }
+
+            try {
+                var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
+            } catch (e) {
+                console.error('Failed to parse audio player settings:', e);
+                continue;
+            }
+
             var controls = plyrSettings.controls ? plyrSettings.controls : ['play', 'progress', 'mute', 'volume', 'settings'];
-            var muted = plyrSettings.muted == 'true' ? true : false;
+            var muted = Boolean(plyrSettings.muted);
             var seekTime = plyrSettings.seek_time ? parseInt(plyrSettings.seek_time) : 100;
-            var tooltips_controls = plyrSettings.tooltips_controls == 'true' ? true : false;
-            var tooltips_seek = plyrSettings.tooltips_seek == 'false' ? false : true;
-            var invertTime = plyrSettings.invertTime == 'false' ? false : true;
+            var tooltips_controls = Boolean(plyrSettings.tooltips_controls);
+            var tooltips_seek = Boolean(plyrSettings.tooltips_seek);
+            var invertTime = Boolean(plyrSettings.invertTime);
             var speed_selected = plyrSettings.speed_selected ? parseFloat(plyrSettings.speed_selected) : 1;
-            var debug_mode = plyrSettings.debug_mode == 'true' ? true : false;
+            var debug_mode = Boolean(plyrSettings.debug_mode);
 
             const player = new Plyr(item, {
                 debug: debug_mode,
@@ -77,10 +103,18 @@
         }
     }
 
-    // Run this code under Elementor.
-    $(window).on('elementor/frontend/init', function () {
-        elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_video_player.default', VideoPlayerJS);
-        elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_audio_player.default', AudioPlayerJS);
+    // Universal initialization for shortcodes and non-Elementor contexts
+    $(document).ready(function() {
+        VideoPlayerJS();
+        AudioPlayerJS();
     });
+
+    // Run this code under Elementor context (dual compatibility)
+    if (typeof elementorFrontend !== 'undefined') {
+        $(window).on('elementor/frontend/init', function () {
+            elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_video_player.default', VideoPlayerJS);
+            elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_audio_player.default', AudioPlayerJS);
+        });
+    }
 
 })(jQuery);

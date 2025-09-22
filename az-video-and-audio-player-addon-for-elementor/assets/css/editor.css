@@ -3,7 +3,7 @@
   position: relative;
 }
 .elementor-element .icon .az_icon::after {
-    content: "AZ";
+    content: "LEAN";
     font-size: 11px;
     position: absolute;
     right: 5px;
