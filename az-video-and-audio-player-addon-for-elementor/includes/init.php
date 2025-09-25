@@ -9,7 +9,7 @@ use \Elementor\Plugin as Plugin;
 
 class Elementor_Init {
 
-	const VERSION = "2.1.0";
+	const VERSION = "2.1.1";
 	const MINIMUM_ELEMENTOR_VERSION = "2.0.0";
 	const MINIMUM_PHP_VERSION = "5.6";
 

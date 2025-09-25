@@ -4,7 +4,7 @@ Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,10 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * 20+ Syling options
 
 == Changelog ==
+
+= Version: 2.1.1 =
+* Improved: Cache busting mechanism for assets
+
 = Version: 2.1.0 =
 * Added: Shortcode support for Audio & Video Player
 * Improved: Code optimization and minor improvements

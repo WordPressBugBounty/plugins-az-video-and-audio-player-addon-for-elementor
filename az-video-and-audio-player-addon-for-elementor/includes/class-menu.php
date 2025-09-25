@@ -79,7 +79,7 @@ class Menu {
      * Add plugin action links
      */
     public function add_plugin_action_links($links) {
-        $guide_link = '<a href="' . esc_url(admin_url('admin.php?page=vapfem-guide')) . '">' . esc_html__('Go to Menu', 'vapfem') . '</a>';
+        $guide_link = '<a href="' . esc_url(admin_url('admin.php?page=vapfem-guide')) . '">' . esc_html__('How to Use', 'vapfem') . '</a>';
         $links[] = $guide_link;
 
         return $links;

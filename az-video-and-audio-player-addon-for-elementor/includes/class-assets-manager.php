@@ -19,6 +19,11 @@ class Assets_Manager {
     private static $instance = null;
 
     /**
+     * Version of the plugin
+     */
+    private $version;
+
+    /**
      * Track if assets have been loaded to prevent duplicates
      */
     private $assets_loaded = false;
@@ -49,6 +54,12 @@ class Assets_Manager {
      * Initialize assets management
      */
     public function init() {
+        if( defined( 'WP_DEBUG' ) && WP_DEBUG ){
+			$this->version = time();
+		} else {
+			$this->version = VAPFEM_VERSION;
+		}
+
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
         add_action('wp_enqueue_scripts', array($this, 'conditional_enqueue'), 20); // Later priority for early detection
         add_action('elementor/frontend/after_register_scripts', array($this, 'register_scripts'));
@@ -73,7 +84,7 @@ class Assets_Manager {
             'plyr',
             VAPFEM_URI . '/assets/js/plyr.min.js',
             array('jquery'),
-            Elementor_Init::VERSION,
+            $this->version,
             true
         );
 
@@ -81,7 +92,7 @@ class Assets_Manager {
             'plyr-polyfilled',
             VAPFEM_URI . '/assets/js/plyr.polyfilled.min.js',
             array('jquery'),
-            Elementor_Init::VERSION,
+            $this->version,
             true
         );
 
@@ -89,7 +100,7 @@ class Assets_Manager {
             'vapfem-main',
             VAPFEM_URI . '/assets/js/main.js',
             array('jquery'),
-            Elementor_Init::VERSION,
+            $this->version,
             true
         );
     }
@@ -102,14 +113,14 @@ class Assets_Manager {
             'plyr',
             VAPFEM_URI . '/assets/css/plyr.css',
             array(),
-            Elementor_Init::VERSION
+            $this->version
         );
 
         wp_register_style(
             'vapfem-main',
             VAPFEM_URI . '/assets/css/main.css',
             array(),
-            Elementor_Init::VERSION
+            $this->version
         );
     }
 
@@ -121,14 +132,14 @@ class Assets_Manager {
             'vapfem-admin',
             VAPFEM_URI . '/assets/css/admin.css',
             array(),
-            Elementor_Init::VERSION
+            $this->version
         );
 
         wp_register_script(
             'vapfem-admin',
             VAPFEM_URI . '/assets/js/admin.js',
             array('jquery'),
-            Elementor_Init::VERSION,
+            $this->version,
             true
         );
     }
@@ -234,8 +245,8 @@ class Assets_Manager {
         </style>';
 
         // Load full CSS via link tag
-        echo '<link rel="stylesheet" id="plyr-css" href="' . esc_url(VAPFEM_URI . '/assets/css/plyr.css') . '?ver=' . esc_attr(Elementor_Init::VERSION) . '" type="text/css" media="all" />';
-        echo '<link rel="stylesheet" id="vapfem-main-css" href="' . esc_url(VAPFEM_URI . '/assets/css/main.css') . '?ver=' . esc_attr(Elementor_Init::VERSION) . '" type="text/css" media="all" />';
+        echo '<link rel="stylesheet" id="plyr-css" href="' . esc_url(VAPFEM_URI . '/assets/css/plyr.css') . '?ver=' . esc_attr($this->version) . '" type="text/css" media="all" />';
+        echo '<link rel="stylesheet" id="vapfem-main-css" href="' . esc_url(VAPFEM_URI . '/assets/css/main.css') . '?ver=' . esc_attr($this->version) . '" type="text/css" media="all" />';
     }
 }
 
