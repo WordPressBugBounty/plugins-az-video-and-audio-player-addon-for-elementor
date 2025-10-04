@@ -1,10 +1,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: AZ Video and Audio Player Addon for Elementor, Gutenberg "
-"& Classic Editor\n"
+"Project-Id-Version: AZ Video and Audio Player for Elementor, Gutenberg & "
+"Classic Editor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-21 10:57+0000\n"
+"POT-Creation-Date: 2025-10-04 06:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30\n"
+"X-Loco-Version: 2.8.0; wp-6.8.3; php-8.0.30\n"
 "X-Domain: vapfem"
 
 #: includes/views/html-video-tab.php:108 includes/views/html-audio-tab.php:100
@@ -26,6 +26,10 @@ msgstr ""
 #: includes/init.php:99 includes/init.php:116
 #, php-format
 msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
+msgstr ""
+
+#: includes/views/html-hire-page.php:84
+msgid "+ More"
 msgstr ""
 
 #: includes/widgets/audio-player.php:174 includes/widgets/video-player.php:428
@@ -212,8 +216,7 @@ msgid "AZ Plugins"
 msgstr ""
 
 #. Name of the plugin
-msgid ""
-"AZ Video and Audio Player Addon for Elementor, Gutenberg & Classic Editor"
+msgid "AZ Video and Audio Player for Elementor, Gutenberg & Classic Editor"
 msgstr ""
 
 #: includes/widgets/video-player.php:336
@@ -255,7 +258,7 @@ msgstr ""
 msgid "BG Color"
 msgstr ""
 
-#: includes/views/html-hire-page.php:120
+#: includes/views/html-hire-page.php:101 includes/views/html-hire-page.php:120
 msgid "Book a Discovery Call"
 msgstr ""
 
@@ -263,6 +266,10 @@ msgstr ""
 #: includes/widgets/audio-player.php:552 includes/widgets/video-player.php:645
 #: includes/widgets/video-player.php:773 includes/widgets/video-player.php:889
 msgid "Border"
+msgstr ""
+
+#: includes/views/html-hire-page.php:78
+msgid "Brand New Websites (Corporate / eCommerce / LMS / Membership sites)"
 msgstr ""
 
 #: includes/widgets/video-player.php:59
@@ -283,7 +290,7 @@ msgid "Built for the long run, easy for you or future devs to work with."
 msgstr ""
 
 #: includes/views/html-hire-page.php:54
-msgid "Business-Focused Approach"
+msgid "Business Focused Approach:"
 msgstr ""
 
 #: includes/widgets/video-player.php:508
@@ -291,7 +298,7 @@ msgid "Caption"
 msgstr ""
 
 #: includes/views/html-hire-page.php:58
-msgid "Clean, Maintainable Code"
+msgid "Clean, Maintainable Code:"
 msgstr ""
 
 #: includes/widgets/video-player.php:282
@@ -363,7 +370,7 @@ msgid "Debugging"
 msgstr ""
 
 #: includes/views/html-hire-page.php:46
-msgid "Deep WooCommerce & WordPress Expertise"
+msgid "Deep WordPress Expertise:"
 msgstr ""
 
 #: includes/views/html-available-options-tab.php:20
@@ -391,7 +398,7 @@ msgid "Description"
 msgstr ""
 
 #: includes/views/html-hire-page.php:50
-msgid "Direct Collaboration"
+msgid "Direct Collaboration:"
 msgstr ""
 
 #: includes/widgets/video-player.php:284
@@ -460,7 +467,7 @@ msgstr ""
 msgid "Elementor Integration"
 msgstr ""
 
-#: includes/views/html-hire-page.php:126
+#: includes/views/html-hire-page.php:102 includes/views/html-hire-page.php:126
 msgid "Email Me"
 msgstr ""
 
@@ -577,8 +584,8 @@ msgstr ""
 msgid "General Options"
 msgstr ""
 
-#: includes/class-menu.php:82
-msgid "Go to Menu"
+#: includes/views/html-hire-page.php:82
+msgid "Google Analytics (GA4) Integration"
 msgstr ""
 
 #: includes/views/html-sidebar.php:13
@@ -631,7 +638,7 @@ msgstr ""
 msgid "How much audio to preload"
 msgstr ""
 
-#: includes/views/html-elementor-tab.php:42
+#: includes/class-menu.php:82 includes/views/html-elementor-tab.php:42
 msgid "How to Use"
 msgstr ""
 
@@ -675,8 +682,8 @@ msgstr ""
 
 #: includes/views/html-sidebar.php:28
 msgid ""
-"I help businesses, educators, and content creators with high-quality "
-"WordPress development — from small fixes, feature enhancements to complete "
+"I help businesses, educators, and content creators with high quality "
+"WordPress development. From small fixes, feature enhancements to complete "
 "custom websites. Let's talk about your project goals."
 msgstr ""
 
@@ -865,7 +872,7 @@ msgid "Play Large"
 msgstr ""
 
 #: includes/views/html-hire-page.php:42
-msgid "Plugin Developer First"
+msgid "Plugin Developer First:"
 msgstr ""
 
 #: includes/views/html-available-options-tab.php:19
@@ -912,8 +919,16 @@ msgstr ""
 msgid "Reset video to start when playback ends"
 msgstr ""
 
+#: includes/views/html-hire-page.php:83
+msgid "Responsive Design Implementation"
+msgstr ""
+
 #: includes/views/html-elementor-tab.php:54
 msgid "Search for Widgets"
+msgstr ""
+
+#: includes/views/html-hire-page.php:79
+msgid "Security Audits & Hardening"
 msgstr ""
 
 #: includes/widgets/audio-player.php:317 includes/widgets/video-player.php:654
@@ -956,11 +971,19 @@ msgstr ""
 msgid "Show tooltips on control buttons"
 msgstr ""
 
+#: includes/views/html-hire-page.php:80
+msgid "Site Migration & Hosting Setup"
+msgstr ""
+
 #: includes/widgets/audio-player.php:188
 msgid ""
 "Specifies how the the audio should be loaded when the page loads. <a "
 "target=\"_blank\" href=\"https://www.w3schools.com/tags/att_audio_preload."
 "asp\">Learn More</a>"
+msgstr ""
+
+#: includes/views/html-hire-page.php:76
+msgid "Speed Optimization & Performance Tuning"
 msgstr ""
 
 #: includes/views/html-available-options-tab.php:59
@@ -1022,8 +1045,12 @@ msgid ""
 "To ensure top quality, I take on only a few new client projects each month."
 msgstr ""
 
+#: includes/views/html-hire-page.php:75
+msgid "Troubleshooting & Bug Fixes"
+msgstr ""
+
 #: includes/views/html-hire-page.php:62
-msgid "Trusted Worldwide"
+msgid "Trusted Worldwide:"
 msgstr ""
 
 #: includes/views/html-hire-page.php:142
@@ -1080,7 +1107,7 @@ msgid "Video & Audio Player"
 msgstr ""
 
 #. Description of the plugin
-msgid "Video & Audio player addon for Elementor"
+msgid "Video & Audio player for Elementor, Gutenberg & Classic Editor"
 msgstr ""
 
 #: includes/class-settings-page.php:53
@@ -1113,8 +1140,8 @@ msgstr ""
 msgid "Video Type"
 msgstr ""
 
-#: includes/class-video-shortcode.php:117
-msgid "Video URL is required."
+#: includes/views/html-hire-page.php:103
+msgid "View My Portfolio"
 msgstr ""
 
 #: includes/views/html-hire-page.php:135
@@ -1176,13 +1203,21 @@ msgstr ""
 msgid "without"
 msgstr ""
 
+#: includes/views/html-hire-page.php:77
+msgid "WooCommerce Setup & Customization"
+msgstr ""
+
 #: includes/views/html-hire-page.php:8
 msgid "WordPress Development Services"
 msgstr ""
 
+#: includes/views/html-hire-page.php:81
+msgid "WordPress Theme Customization"
+msgstr ""
+
 #: includes/views/html-hire-page.php:22
 msgid ""
-"Writes code that follows WordPress standards — easy to maintain and extend."
+"Writes code that follows WordPress standards, easy to maintain and extend."
 msgstr ""
 
 #: includes/widgets/audio-player.php:90 includes/widgets/audio-player.php:104
@@ -1214,28 +1249,8 @@ msgstr ""
 msgid "YouTube:"
 msgstr ""
 
-#: includes/views/html-hire-page.php:76
-msgid "⚡ Speed Optimization & Performance Tuning"
-msgstr ""
-
-#: includes/views/html-hire-page.php:84
-msgid "➕ More"
-msgstr ""
-
-#: includes/views/html-hire-page.php:103
-msgid "🌍 View My Portfolio"
-msgstr ""
-
-#: includes/views/html-hire-page.php:78
-msgid "🌐 Brand New Websites (corporate, eCommerce, LMS, membership sites)"
-msgstr ""
-
 #: includes/class-settings-page.php:64
 msgid "🎨 Elementor Integration"
-msgstr ""
-
-#: includes/views/html-hire-page.php:81
-msgid "🎨 WordPress Theme Customization"
 msgstr ""
 
 #: includes/class-settings-page.php:62
@@ -1250,14 +1265,6 @@ msgstr ""
 msgid "👉 Free 15–30 minute Discovery Call"
 msgstr ""
 
-#: includes/views/html-hire-page.php:101
-msgid "📅 Book a Discovery Call"
-msgstr ""
-
-#: includes/views/html-hire-page.php:82
-msgid "📊 Google Analytics (GA4) Integration"
-msgstr ""
-
 #: includes/class-settings-page.php:63
 msgid "📋 All Shortcode Options"
 msgstr ""
@@ -1270,34 +1277,10 @@ msgstr ""
 msgid "📝 Note:"
 msgstr ""
 
-#: includes/views/html-hire-page.php:102
-msgid "📧 Email Me"
-msgstr ""
-
-#: includes/views/html-hire-page.php:83
-msgid "📱 Responsive Design Implementation"
-msgstr ""
-
 #: includes/class-settings-page.php:61
 msgid "📺 Video Player"
 msgstr ""
 
 #: includes/views/html-available-options-tab.php:136
 msgid "📺 Video-Only Options"
-msgstr ""
-
-#: includes/views/html-hire-page.php:80
-msgid "🔄 Site Migration & Hosting Setup"
-msgstr ""
-
-#: includes/views/html-hire-page.php:79
-msgid "🔒 Security Audits & Hardening"
-msgstr ""
-
-#: includes/views/html-hire-page.php:75
-msgid "🔧 Troubleshooting & Bug Fixes"
-msgstr ""
-
-#: includes/views/html-hire-page.php:77
-msgid "🛒 WooCommerce Setup & Customization"
 msgstr ""

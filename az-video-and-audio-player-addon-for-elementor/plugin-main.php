@@ -3,7 +3,7 @@
 Plugin Name: AZ Video and Audio Player for Elementor, Gutenberg & Classic Editor
 Plugin URI: 
 Description: Video & Audio player for Elementor, Gutenberg & Classic Editor
-Version: 2.1.1
+Version: 2.1.2
 Author: AZ Plugins
 Author URI: 
 License: GPLv2
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 /**
  * Define path
  */
-define( 'VAPFEM_VERSION', '2.1.1' );
+define( 'VAPFEM_VERSION', '2.1.2' );
 define( 'VAPFEM_URI', plugins_url('', __FILE__) );
 define( 'VAPFEM_DIR', dirname( __FILE__ ) );
 

@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
             <?php echo esc_html__('Hi! I\'m the developer behind this plugin.', 'vapfem'); ?>
             <br>
             <br>
-            <?php echo esc_html__('I help businesses, educators, and content creators with high-quality WordPress development — from small fixes, feature enhancements to complete custom websites. Let\'s talk about your project goals.', 'vapfem'); ?>
+            <?php echo esc_html__('I help businesses, educators, and content creators with high quality WordPress development. From small fixes, feature enhancements to complete custom websites. Let\'s talk about your project goals.', 'vapfem'); ?>
         </div>
 
         <div class="contact-section">

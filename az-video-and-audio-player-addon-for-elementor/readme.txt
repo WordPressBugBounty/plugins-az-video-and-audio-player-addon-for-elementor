@@ -4,7 +4,7 @@ Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,9 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * 20+ Syling options
 
 == Changelog ==
+= Version: 2.1.2 =
+* Improved: Cross browser compatibility
+* Updated: Language translation file
 
 = Version: 2.1.1 =
 * Improved: Cache busting mechanism for assets
@@ -114,15 +117,19 @@ iv. Drag and Drop the the desired addon to your page, play with the options and 
 
 
 == Screenshots ==
-1. Banner
-2. Palyer With YouTube Video
-3. Palyer With Vimeo Video
-4. Default (HTML5) Player
-5. Color Customization
-6. Multiple Players in one page
-7. Autio Player Examples
-8. Video Player widget/addon options
-9. Video Player widget/addon options
-10. Video Player widget/addon styling options
-11. Audio Player widget/addon options
-12. Audio Player widget/addon styling options
+1. Plugin Activation - Easy installation and activation process
+2. YouTube Video Player - Playing YouTube videos with custom controls
+3. Vimeo Video Player - Vimeo video integration with player controls
+4. HTML5 Video Player - Native HTML5 video player with custom poster
+5. Video Color Customization - Customizing player colors to match your brand
+6. Multiple Players - Multiple video players on a single page
+7. Audio Player Examples - Various audio player implementations
+8. How to Use Video Player - Step-by-step video player setup guide
+9. How to Use Audio Player - Step-by-step audio player setup guide
+10. All Available Shortcode Options - Complete shortcode reference
+11. Elementor Integration - Video player widget in Elementor editor
+12. Elementor Video Player Addon Options - Video player widget settings
+13. Elementor Video Player Addon Options - Additional video player settings
+14. Elementor Video Player Styling Options - Video player design customization
+15. Elementor Audio Player Addon Options - Audio player widget settings
+16. Elementor Audio Player Styling Options - Audio player design customization
