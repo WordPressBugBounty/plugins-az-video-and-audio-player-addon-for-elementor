@@ -1,76 +1,146 @@
-=== AZ Video and Audio Player for Elementor, Gutenberg and Classic Editor  ===
+=== Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor  ===
 Contributors: azplugins
 Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.1.2
+Stable tag: 3.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices.
+WordPress Video Player & Audio Player plugin - simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices
 
 == Description ==
-"AZ Video and Audio Player for Elementor, Gutenberg and Classic Editor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon and shortcode support that has lots of customization optios, using those options you can change the player settings how you want.
+"Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon and shortcode support that has lots of customization options, using those options you can change the player settings how you want.
 
-== Features: ==
-* Supports youtube video
-* Supports vimeo video
-* Supports HTML5 Video & Audio
-* Supports MP3 & MP4
-* Customize player colors to match with your brand colors
-* Compatible on all mobile & desktop devices
-* Fullscreen
-* Keyboard shortcuts
-* Supports picture-in-picture mode
-* Adjust speed on the fly
+Version 3.0.0 marks a major milestone: our rebranding checkpoint and major update. We've rebranded our plugin under the LeanPlugins brand and made significant improvements to make it more performance-focused and aligned with our brand philosophy.
+
+👉 [Live Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
+👉 [Purchase Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing)
+
+== Features ==
+
+**Player Management:**
+* **Global Player Settings** - Set default behavior once for all players
+* **Player Manager** - Create and manage players through admin interface
+* **Per-Player Configuration** - Override global settings for individual players
+* **Admin Columns** - View all players at a glance with Player Type, Source Type, Source, Autoplay status, and copy-ready Shortcode
+* **Preview Player** - Preview your player before publishing directly from the players list or from the player edit page
+* **Simple Shortcode** - [lean_player id="123"] to embed anywhere
+
+**Video Sources:**
+* YouTube video support
+* Vimeo video support
+* HTML5 video (upload or URL/CDN)
+
+**Audio Sources:**
+* Supported formats: MP3, OGG, WAV, M4A, AAC
+* Audio streaming support (MP3, AAC streams)
+* Media library upload or direct URL/streaming URL
+
+**Playback Options:**
 * Autoplay
-* Loop
-* Initial Volume
-* Change seek time length
-* Enable/Disable control icons after 2 second
-* Enable/Disable control labels
-* Define initial speed
-* Display your own preview thumbnail for video
-* Very lightweight
-* Shortcode support for displaying video & audio player anywhere including Gutenberg, Classic Editor, Elementor, WPBakery Page Builder etc.
-* No impact on website speed
+* Start Muted
+* Initial Volume control (0-100%)
+* Loop playback
+* Default Playback Speed (0.5x to 4x)
+* Time Display Format - Countdown or elapsed time [PRO]
+* Skip Amount - Set forward/back jump time (1-60 seconds) [PRO]
+* Reset to start when finished
+
+**Player Controls:**
+* Fullscreen button
+* Click to play/pause
+* Picture-in-picture (PIP) mode
+* Keyboard shortcuts
+* Custom Player Controls - Show/hide and reorder controls (play-large, play, progress, current-time, mute, volume, captions, settings, pip, airplay, fullscreen, download) [PRO]
+* Auto-Hide Controls - Hide controls during playback [PRO]
+
+**Design & Styling:**
+* Display your own preview thumbnail
+* Primary Color customization - Match player with your brand colors [PRO]
+* Compatible on all mobile & desktop devices
+* Very lightweight - no major impact on website speed
 * Works with all themes
 
-== Video Player Elementor Widget/Addon Options == 
+**Integration:**
+* Elementor widgets (video & audio)
+* Block Editor (Gutenberg) support
+* Classic Editor support
+* Shortcode support everywhere
+
+== Video Player Elementor Widget/Addon Options (All FREE) ==
 
 * Video Type (YouTube/Vimeo/HTML5)
-* Youtube Video ID
-* Vimeo Video ID
-* Vimeo Video ID
-* Enable/Disable Autoplay
-* Enable/Disable Loop
-* Initial Volume
-* Click To Play
-* Display Time As Countdown
-* Seek Time
-* Hide Control Icons After 2 second
-* Back To Start After End
-* Enable Keyboard Shortcuts On Focus
-* Enable Keyboard Shortcuts Globally
-* Display Control Labels
-* Display Seek Tooltip
-* Enable Fullscreen Toggle
-* Initial Speed
-* Show/Hide control options (Play, Play Large, Progress Bar, Current Time, Mute Volume, Caption, Settings Icon, PIP, AIR Play, Full Screen) and
-* Design customize options
-
-== Audio Player Elementor Widget/Addon Options == 
-* Audio Source (Upload Audio/Audio Link)
+* YouTube Video URL
+* Vimeo Video URL
+* HTML5 Video (Upload or URL)
+* Display Preview Thumbnail
 * Autoplay
+* Start Muted
+* Initial Volume
 * Loop
-* Display Time As Countdown
-* Seek Time
-* Display Seek Tooltip
-* Initial Speed and
-* 20+ Syling options
+* Click To Play/Pause
+* Fullscreen Toggle
+* Default Playback Speed
+* Picture-in-picture (PIP)
+* Keyboard Shortcuts
+* Reset To Start After End
+* 20+ Design & Styling options
+
+== Audio Player Elementor Widget/Addon Options (All FREE) ==
+
+* Audio Source (Upload, URL, or Streaming URL) - Supported formats: MP3, OGG, WAV, M4A, AAC, and audio streams (MP3, AAC streams)
+* Autoplay
+* Start Muted
+* Initial Volume
+* Loop
+* Default Playback Speed
+* 20+ Styling options
 
 == Changelog ==
+= Version: 3.0.7 =
+Fixed: Play Large button were not showing for very newly created video player
+
+= Version: 3.0.6 =
+Added: Support for AAC(p) audio streaming URLs
+
+= Version: 3.0.5 =
+Fixed: Widget does not load in the elementor planel
+Improved: Assets management, Assets were loading on all pages
+- Added: Preview Player feature - Preview players directly from the players list or edit page
+
+= Version: 3.0.4 =
+- Added: A new filter hook leanpl/metabox/field_config
+- Added: Support for M4A and AAC audio files
+- Enhancement: On Elementor editor mode shortcode does not render
+
+= Version: 3.0.3 =
+- Fixed: Installed time overwrite on activation issue
+- Added: FAQs
+
+= Version: 3.0.2 =
+- Fixed: Dual plugin activation issue
+
+= Version: 3.0.0 =
+* Major: Rebranded plugin under LeanPlugins brand
+* Major: Renamed from "AZ Video & Audio Player" to "Lean Player - Video & Audio Player for WordPress"
+* Added: Global Player Settings - Set default behavior for all players across your site
+* Added: Player Manager - Create and manage players through intuitive admin interface
+* Added: Simple shortcode system - [lean_player id="123"]
+* Improved: Performance optimizations and code restructuring
+* Improved: Aligned with LeanPlugins brand philosophy
+* Note: All existing shortcodes remain backward compatible
+
+= Version: 2.1.5 =
+* Added: Dynamic tags support for both audio and video player
+
+= Version: 2.1.4 =
+* Fixed: Flush of Unstyled Content (FOUC) issue on admin pages
+
+= Version: 2.1.3 =
+* Security: Improved output escaping in admin notices
+
 = Version: 2.1.2 =
 * Improved: Cross browser compatibility
 * Updated: Language translation file
@@ -90,13 +160,13 @@ A simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player 
 * Initial Release
 
 == Installation ==
-This section describes how to install the "AZ Video and Audio Player Addon for Elementor" plugin and get it working.
+This section describes how to install the "Lean Player - Video and Audio Player for WordPress" plugin and get it working.
 
 = 1) Install =
 
 i. Go to the WordPress Dashboard "Add New Plugin" section.
 
-ii. Search For "Image Hover Effects For Elementor".
+ii. Search For "Lean Player - Video & Audio Player for WordPress".
 
 iii. Install, then Activate it.
 
@@ -115,6 +185,91 @@ iii. 2 new addons called "Video Player" & "Audio Player" will be appear in Eleme
 
 iv. Drag and Drop the the desired addon to your page, play with the options and relax!
 
+== FAQ ==
+
+= How do I use the shortcode? =
+
+You can use the simple shortcode format: [lean_player id="123"]
+
+Replace "123" with your player's ID. You can find the shortcode for each player in the Players list in your WordPress admin. The shortcode works in:
+
+* Posts and pages
+* Widgets
+* Classic Editor
+* Block Editor (Gutenberg)
+* Anywhere shortcodes are supported
+
+= What video and audio formats are supported? =
+
+**Video Sources:**
+* YouTube videos (via URL)
+* Vimeo videos (via URL)
+* HTML5 video files (MP4, WebM, OGG)
+
+**Audio Sources:**
+* Supported formats: MP3, OGG, WAV, M4A, AAC
+* Audio streaming support for live streams (MP3, AAC streams)
+
+You can upload files through the WordPress media library, use direct URLs/CDN links, or stream live audio from streaming URLs.
+
+= Does this work with Elementor? =
+
+Yes! The plugin provides two Elementor widgets:
+
+* **Video Player** - Add YouTube, Vimeo, or HTML5 videos
+* **Audio Player** - Add audio files (MP3, OGG, WAV, M4A, AAC)
+
+Both widgets appear in the "General" category in the Elementor editor. You can customize all player settings directly from the Elementor widget panel.
+
+= Is the player compatible with all devices and browsers? =
+
+Yes, the player is designed to work across:
+
+* All modern browsers (Chrome, Firefox, Safari, Edge)
+* Mobile devices (iOS and Android)
+* Tablets and desktops
+* All WordPress themes
+
+The player is lightweight and won't significantly impact your website's loading speed.
+
+= Can I create multiple players with different settings? =
+
+Yes! You can create unlimited players through the Player Manager in your WordPress admin. Each player can have its own:
+
+* Source (video URL or audio file)
+* Autoplay settings
+* Volume settings
+* Control options
+* Styling options
+
+You can also set Global Player Settings to define default behavior for all players, then override those defaults for individual players as needed.
+
+= How do I preview a player before publishing? =
+
+You can preview your player in two ways:
+
+* **From the Players List**: Click "Preview Player" in the row actions next to any player in the All Players list
+* **From the Edit Screen**: Use the "Preview Player" button in the publish box when editing a player
+
+The preview opens in a new tab, showing only the player without your site's header, footer, or sidebar for a clean preview experience.
+
+= Does this plugin use any third-party services? =
+
+Yes. When you deactivate this plugin, a feedback modal appears. If you choose to submit feedback, these 5 pieces of information are sent to our server:
+
+* Your deactivation reason (from the options provided)
+* Your optional comment (if you write one)
+* Plugin version
+* WordPress version
+* PHP version
+
+This feedback helps us understand real-world issues and prioritize fixes. You can click "Skip & Deactivate" to skip feedback entirely.
+
+Service Used: Supabase (https://supabase.com/)
+Privacy Policy: https://supabase.com/privacy
+Terms of Service: https://supabase.com/terms
+
+The feedback is only sent when you click "Submit & Deactivate". Nothing is collected during normal plugin usage.
 
 == Screenshots ==
 1. Plugin Activation - Easy installation and activation process
@@ -124,12 +279,13 @@ iv. Drag and Drop the the desired addon to your page, play with the options and 
 5. Video Color Customization - Customizing player colors to match your brand
 6. Multiple Players - Multiple video players on a single page
 7. Audio Player Examples - Various audio player implementations
-8. How to Use Video Player - Step-by-step video player setup guide
-9. How to Use Audio Player - Step-by-step audio player setup guide
-10. All Available Shortcode Options - Complete shortcode reference
-11. Elementor Integration - Video player widget in Elementor editor
-12. Elementor Video Player Addon Options - Video player widget settings
-13. Elementor Video Player Addon Options - Additional video player settings
-14. Elementor Video Player Styling Options - Video player design customization
-15. Elementor Audio Player Addon Options - Audio player widget settings
-16. Elementor Audio Player Styling Options - Audio player design customization
+8. All Players list - View and manage all created players
+9. Create a new Video / Audio Player - Player creation interface
+10. Create a new Video / Audio Player - Player creation interface (part 2)
+11. Create a new Video / Audio Player - Player creation interface (part 3)
+12. Create a new Video / Audio Player - Player creation interface (part 4)
+13. Global options to define common options for all players - Global settings configuration
+14. Global options to define common options for all players - Global settings (part 2)
+15. Global options to define common options for all players - Global settings (part 3)
+16. Elementor Integration - Video player widget in Elementor editor
+17. Elementor Integration - Audio player widget in Elementor editor

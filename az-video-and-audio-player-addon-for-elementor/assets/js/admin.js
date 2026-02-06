@@ -1,299 +1,149 @@
 /**
  * Admin JavaScript for Video & Audio Player
- * 
- * Table of contents:
- * ==================
- * 1. Tab Navigation
- * 2. Copy to Clipboard
- * 3. Utility Functions
- * 4. Initialization
  */
 
 (function($) {
     'use strict';
-
-    /**
-     * VAPFEM Admin Object
-     */
-    var VAPFEMAdmin = {
+    
+    $(document).ready(function() {
+        // Only run on lean_player post type
+        if (!$('body').hasClass('post-type-lean_player')) {
+            return;
+        }
         
-        /**
-         * Initialize all admin functionality
-         */
-        init: function() {
-            this.initTabNavigation();
-            this.initCopyToClipboard();
-            this.initTabLinks();
-            this.initUrlPersistence();
-        },
-
-        /**
-         * 1. Tab Navigation
-         * Handle tab switching functionality
-         */
-        initTabNavigation: function() {
-            $('.nav-tab').on('click', function(e) {
-                e.preventDefault();
-                
-                var $this = $(this);
-                var targetTab = $this.data('tab');
-                
-                // Switch to the target tab
-                VAPFEMAdmin.switchToTab(targetTab);
-                
-                // Update URL hash without page reload
-                var newHash = '#' + targetTab;
-                if (window.location.hash !== newHash) {
-                    // Use replaceState to avoid adding to browser history
-                    history.replaceState(null, null, newHash);
-                }
-            });
-        },
-
-        /**
-         * Tab link functionality (for reference links)
-         */
-        initTabLinks: function() {
-            $('.vapfem-admin__tab-link').on('click', function(e) {
-                e.preventDefault();
-                
-                var $this = $(this);
-                var targetTab = $this.data('tab');
-                
-                // Switch to the target tab
-                VAPFEMAdmin.switchToTab(targetTab);
-                
-                // Update URL hash without page reload
-                var newHash = '#' + targetTab;
-                if (window.location.hash !== newHash) {
-                    // Use replaceState to avoid adding to browser history
-                    history.replaceState(null, null, newHash);
-                }
-            });
-        },
-
-        /**
-         * URL Persistence
-         * Handle URL hash changes and tab persistence
-         */
-        initUrlPersistence: function() {
-            // Handle initial page load
-            this.handleHashChange();
+        // Fix sticky positioning by ensuring parent has proper height
+        function fixStickyPositioning() {
+            var $postBody = $('#post-body.metabox-holder.columns-2');
+            var $container1 = $('#postbox-container-1');
             
-            // Handle browser back/forward buttons
-            $(window).on('hashchange', function() {
-                VAPFEMAdmin.handleHashChange();
-            });
-        },
-
-        /**
-         * Handle hash change events
-         */
-        handleHashChange: function() {
-            var hash = window.location.hash;
-            
-            if (hash) {
-                // Check if it's a tab hash
-                var tabHash = hash.replace('#support', '').replace('#', '');
-                var validTabs = ['video-player', 'audio-player', 'elementor-integration', 'all-options'];
+            if ($postBody.length && $container1.length) {
+                // Force post-body to have height based on its content
+                var container2Height = $('#postbox-container-2').outerHeight() || 0;
+                var container1Height = $container1.outerHeight() || 0;
+                var maxHeight = Math.max(container1Height, container2Height);
                 
-                if (validTabs.indexOf(tabHash) !== -1) {
-                    VAPFEMAdmin.switchToTab(tabHash);
-                    
-                    // If there's a #support hash, scroll to support section
-                    if (hash.indexOf('#support') !== -1) {
-                        setTimeout(function() {
-                            VAPFEMAdmin.scrollToElement('.vapfem-admin-support', 20);
-                        }, 100);
+                if (maxHeight > 0) {
+                    $postBody.css('min-height', maxHeight + 'px');
+                }
+            }
+        }
+        
+        // Run on load and after a short delay to ensure content is rendered
+        fixStickyPositioning();
+        setTimeout(fixStickyPositioning, 100);
+        setTimeout(fixStickyPositioning, 500);
+        // Map field names to their conditional requirements
+        var conditionalFields = {
+            '_youtube_url': { showIf: '_video_type', showValue: 'youtube' },
+            '_vimeo_url': { showIf: '_video_type', showValue: 'vimeo' },
+            '_html5_source_type': { showIf: '_video_type', showValue: 'html5' },
+            '_video_source': { showIf: '_html5_source_type', showValue: 'upload' },
+            '_html5_video_url': { showIf: '_html5_source_type', showValue: 'link' },
+            '_audio_source': { showIf: '_audio_source_type', showValue: 'upload' },
+            '_html5_audio_url': { showIf: '_audio_source_type', showValue: 'link' }
+        };
+        
+        // Add conditional classes to field rows
+        function setupConditionalFields() {
+            $.each(conditionalFields, function(fieldName, condition) {
+                var $field = $('input[name="' + fieldName + '"], textarea[name="' + fieldName + '"], select[name="' + fieldName + '"]');
+                if ($field.length) {
+                    var $tr = $field.closest('tr');
+                    if ($tr.length && !$tr.hasClass('lpl-conditional-field')) {
+                        $tr.addClass('lpl-conditional-field')
+                           .attr('data-show-if', condition.showIf)
+                           .attr('data-show-value', condition.showValue);
                     }
                 }
-            } else {
-                // If no hash, default to video-player tab
-                VAPFEMAdmin.switchToTab('video-player');
-            }
-        },
-
-        /**
-         * Switch to a specific tab
-         * @param {string} targetTab - Tab to switch to
-         */
-        switchToTab: function(targetTab) {
-            // Update active tab
-            $('.nav-tab').removeClass('nav-tab-active');
-            $('.nav-tab[data-tab="' + targetTab + '"]').addClass('nav-tab-active');
-            
-            // Show target content
-            $('.vapfem-tab-content').removeClass('vapfem-tab-content--active');
-            $('#' + targetTab).addClass('vapfem-tab-content--active');
-        },
-
-        /**
-         * 2. Copy to Clipboard
-         * Handle copy functionality for shortcodes
-         */
-        initCopyToClipboard: function() {
-            $('.vapfem-admin-copy-btn, .vapfem-copy-button').on('click', function() {
-                var $btn = $(this);
-                var textToCopy = $btn.data('copy');
-                var originalText = $btn.text();
-
-                VAPFEMAdmin.copyToClipboard(textToCopy, $btn, originalText);
             });
-        },
-
-        /**
-         * Copy text to clipboard with fallback
-         * @param {string} text - Text to copy
-         * @param {jQuery} $button - Button element
-         * @param {string} originalText - Original button text
-         */
-        copyToClipboard: function(text, $button, originalText) {
-            // Create temporary textarea
-            var $temp = $('<textarea>');
-            $('body').append($temp);
-            $temp.val(text).select();
-
-            try {
-                // Try modern clipboard API first
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(text).then(function() {
-                        VAPFEMAdmin.showCopySuccess($button, originalText);
-                    }).catch(function() {
-                        // Fallback to execCommand
-                        VAPFEMAdmin.fallbackCopy(text, $button, originalText);
-                    });
-                } else {
-                    // Fallback to execCommand
-                    VAPFEMAdmin.fallbackCopy(text, $button, originalText);
-                }
-            } catch (err) {
-                console.error('Copy failed:', err);
-                VAPFEMAdmin.showCopyError($button, originalText);
-            }
-
-            $temp.remove();
-        },
-
-        /**
-         * Fallback copy method using execCommand
-         * @param {string} text - Text to copy
-         * @param {jQuery} $button - Button element
-         * @param {string} originalText - Original button text
-         */
-        fallbackCopy: function(text, $button, originalText) {
-            try {
-                var success = document.execCommand('copy');
-                if (success) {
-                    VAPFEMAdmin.showCopySuccess($button, originalText);
-                } else {
-                    VAPFEMAdmin.showCopyError($button, originalText);
-                }
-            } catch (err) {
-                console.error('Fallback copy failed:', err);
-                VAPFEMAdmin.showCopyError($button, originalText);
-            }
-        },
-
-        /**
-         * Show copy success feedback
-         * @param {jQuery} $button - Button element
-         * @param {string} originalText - Original button text
-         */
-        showCopySuccess: function($button, originalText) {
-            $button.addClass('vapfem-copy-button--copied').text('Copied!');
-            
-            setTimeout(function() {
-                $button.removeClass('vapfem-copy-button--copied').text(originalText);
-            }, 2000);
-        },
-
-        /**
-         * Show copy error feedback
-         * @param {jQuery} $button - Button element
-         * @param {string} originalText - Original button text
-         */
-        showCopyError: function($button, originalText) {
-            $button.text('Select & Copy');
-            
-            setTimeout(function() {
-                $button.text(originalText);
-            }, 2000);
-        },
-
-        /**
-         * 3. Utility Functions
-         * Helper functions for admin functionality
-         */
-
-        /**
-         * Show notification message
-         * @param {string} message - Message to show
-         * @param {string} type - Type of notification (success, error, warning, info)
-         */
-        showNotification: function(message, type) {
-            type = type || 'info';
-            
-            var $notification = $('<div class="notice notice-' + type + ' is-dismissible"><p>' + message + '</p></div>');
-            
-            $('.wrap').first().prepend($notification);
-            
-            // Auto-dismiss after 5 seconds
-            setTimeout(function() {
-                $notification.fadeOut(function() {
-                    $(this).remove();
-                });
-            }, 5000);
-        },
-
-        /**
-         * Smooth scroll to element
-         * @param {string} selector - CSS selector
-         * @param {number} offset - Offset from top
-         */
-        scrollToElement: function(selector, offset) {
-            offset = offset || 0;
-            var $target = $(selector);
-            
-            if ($target.length) {
-                $('html, body').animate({
-                    scrollTop: $target.offset().top - offset
-                }, 500);
-            }
-        },
-
-        /**
-         * Debounce function
-         * @param {Function} func - Function to debounce
-         * @param {number} wait - Wait time in milliseconds
-         * @param {boolean} immediate - Execute immediately
-         */
-        debounce: function(func, wait, immediate) {
-            var timeout;
-            return function() {
-                var context = this, args = arguments;
-                var later = function() {
-                    timeout = null;
-                    if (!immediate) func.apply(context, args);
-                };
-                var callNow = immediate && !timeout;
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-                if (callNow) func.apply(context, args);
-            };
         }
-    };
-
-    /**
-     * 4. Initialization
-     * Initialize when document is ready
-     */
-    $(document).ready(function() {
-        VAPFEMAdmin.init();
+        
+        // Update conditional sections and fields visibility
+        function updateConditionalElements() {
+            var playerType = $('select[name="_player_type"]').val() || 
+                           $('input[name="_player_type"]:checked').val();
+            var videoType = $('select[name="_video_type"]').val() || 
+                          $('input[name="_video_type"]:checked').val();
+            var html5SourceType = $('select[name="_html5_source_type"]').val() || 
+                                $('input[name="_html5_source_type"]:checked').val();
+            var audioSourceType = $('select[name="_audio_source_type"]').val() || 
+                                $('input[name="_audio_source_type"]:checked').val();
+            
+            // Update conditional sections
+            $('.lpl-conditional-section').each(function() {
+                var $section = $(this);
+                var showIf = $section.data('show-if');
+                var showValue = $section.data('show-value');
+                var shouldShow = false;
+                
+                if (showIf === '_player_type') {
+                    shouldShow = playerType === showValue;
+                } else if (showIf === '_video_type') {
+                    shouldShow = videoType === showValue;
+                } else if (showIf === '_html5_source_type') {
+                    // For HTML5 source type sections, also check that video_type is 'html5'
+                    shouldShow = (videoType === 'html5') && (html5SourceType === showValue);
+                } else if (showIf === '_audio_source_type') {
+                    // For audio source type sections, also check that player_type is 'audio'
+                    shouldShow = (playerType === 'audio') && (audioSourceType === showValue);
+                }
+                
+                if (shouldShow) {
+                    $section.show();
+                } else {
+                    $section.hide();
+                }
+            });
+            
+            // Update conditional field rows (tr elements)
+            $('tr.lpl-conditional-field').each(function() {
+                var $field = $(this);
+                var showIf = $field.data('show-if');
+                var showValue = $field.data('show-value');
+                var shouldShow = false;
+                
+                if (showIf === '_player_type') {
+                    shouldShow = playerType === showValue;
+                } else if (showIf === '_video_type') {
+                    shouldShow = videoType === showValue;
+                } else if (showIf === '_html5_source_type') {
+                    // For HTML5 source type fields, also check that video_type is 'html5'
+                    shouldShow = (videoType === 'html5') && (html5SourceType === showValue);
+                } else if (showIf === '_audio_source_type') {
+                    // For audio source type fields, also check that player_type is 'audio'
+                    shouldShow = (playerType === 'audio') && (audioSourceType === showValue);
+                }
+                
+                if (shouldShow) {
+                    $field.show();
+                } else {
+                    $field.hide();
+                }
+            });
+        }
+        
+        // Setup conditional fields on page load
+        setupConditionalFields();
+        
+        // Initial state
+        updateConditionalElements();
+        
+        // Watch for changes to player type, video type, HTML5 source type, and audio source type
+        $(document).on('change', 'select[name="_player_type"], input[name="_player_type"]', function() {
+            updateConditionalElements();
+        });
+        
+        $(document).on('change', 'select[name="_video_type"], input[name="_video_type"]', function() {
+            updateConditionalElements();
+        });
+        
+        $(document).on('change', 'select[name="_html5_source_type"], input[name="_html5_source_type"]', function() {
+            updateConditionalElements();
+        });
+        
+        $(document).on('change', 'select[name="_audio_source_type"], input[name="_audio_source_type"]', function() {
+            updateConditionalElements();
+        });
     });
-
-    /**
-     * Make VAPFEMAdmin available globally for debugging
-     */
-    window.VAPFEMAdmin = VAPFEMAdmin;
-
+    
 })(jQuery);

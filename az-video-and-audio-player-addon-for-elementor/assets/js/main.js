@@ -1,120 +1,268 @@
 (function($){
 "use strict";
 
-    var VideoPlayerJS = function ($scope, $) {
+    // Initialize on document ready
+    $(document).ready(function() {
+        initializeAllPlayers();
+    });
 
-        var nodeList = document.querySelectorAll('.vapfem-player.vapfem-video');
+    // Setup Elementor integration
+    $(window).on('elementor/frontend/init', function () {
+        // initializeDemoButtons();
+        elementorFrontend.hooks.addAction('frontend/element_ready/vapfem_video_player.default', initializeVideoPlayers);
+        elementorFrontend.hooks.addAction('frontend/element_ready/vapfem_audio_player.default', initializeAudioPlayers);
 
-        for (var i = 0; i < nodeList.length; i++) {
-            var item = nodeList[i];
+        // For shortcodes
+        elementorFrontend.hooks.addAction('frontend/element_ready/widget', initializeAllPlayers);
+    });
 
-            // Validate element exists and has data-settings
-            if (!item || !item.getAttribute('data-settings')) {
-                console.warn('Invalid player element or missing data-settings:', item);
-                continue;
-            }
+    /**
+     * Parse player settings from data attribute
+     * 
+     * @param {HTMLElement} element Player element
+     * @returns {Object|null} Parsed settings or null if invalid
+     */
+    function parsePlayerSettings(element) {
+        if (!element || !element.getAttribute('data-settings')) {
+            console.warn('Invalid player element or missing data-settings:', element);
+            return null;
+        }
 
-            try {
-                var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
-            } catch (e) {
-                console.error('Failed to parse player settings:', e);
-                continue;
-            }
-
-            var controls = plyrSettings.controls ? plyrSettings.controls : ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'];
-            var settings = plyrSettings.settings ? plyrSettings.settings : ['captions', 'quality', 'speed', 'loop'];
-            var seekTime = plyrSettings.seek_time ? parseInt(plyrSettings.seek_time) : 100;
-            var volume = parseFloat(plyrSettings.volume) || 1;
-            var muted = Boolean(plyrSettings.muted);
-            var clickToPlay = Boolean(plyrSettings.clickToPlay);
-            var hideControls = Boolean(plyrSettings.hideControls);
-            var resetOnEnd = Boolean(plyrSettings.resetOnEnd);
-            var keyboard_focused = Boolean(plyrSettings.keyboard_focused);
-            var keyboard_global = Boolean(plyrSettings.keyboard_global);
-            var tooltips_controls = Boolean(plyrSettings.tooltips_controls);
-            var tooltips_seek = Boolean(plyrSettings.tooltips_seek);
-            var invertTime = Boolean(plyrSettings.invertTime);
-            var fullscreen_enabled = Boolean(plyrSettings.fullscreen_enabled);
-            var speed_selected = plyrSettings.speed_selected ? parseFloat(plyrSettings.speed_selected) : 1;
-            var quality_default = plyrSettings.quality_default ? parseInt(plyrSettings.quality_default) : 576;
-            var ratio = plyrSettings.ratio;
-            var debug_mode = Boolean(plyrSettings.debug_mode);
-
-            const player = new Plyr(item, {
-                debug: debug_mode,
-                controls: controls,
-                settings: ['captions', 'quality', 'speed', 'loop'],
-                seekTime: seekTime,
-                volume: volume,
-                muted: muted,
-                clickToPlay: clickToPlay,
-                hideControls: hideControls,
-                resetOnEnd: resetOnEnd,
-                keyboard: { focused: keyboard_focused, global: keyboard_global },
-                invertTime: invertTime,
-                tooltips: { controls: tooltips_controls, seek: tooltips_seek },
-                fullscreen: { enabled: fullscreen_enabled, fallback: true, iosNative: false },
-                speed: { selected: speed_selected, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] },
-                quality: { default: quality_default, options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240] },
-                ratio: ratio
-            });
-        }      
-    }
-
-
-    var AudioPlayerJS = function ($scope, $) {
-
-        var nodeList = document.querySelectorAll('.vapfem-player.vapfem-audio');
-
-        for (var i = 0; i < nodeList.length; i++) {
-            var item = nodeList[i];
-
-            // Validate element exists and has data-settings
-            if (!item || !item.getAttribute('data-settings')) {
-                console.warn('Invalid audio player element or missing data-settings:', item);
-                continue;
-            }
-
-            try {
-                var plyrSettings = JSON.parse(item.getAttribute('data-settings'));
-            } catch (e) {
-                console.error('Failed to parse audio player settings:', e);
-                continue;
-            }
-
-            var controls = plyrSettings.controls ? plyrSettings.controls : ['play', 'progress', 'mute', 'volume', 'settings'];
-            var muted = Boolean(plyrSettings.muted);
-            var seekTime = plyrSettings.seek_time ? parseInt(plyrSettings.seek_time) : 100;
-            var tooltips_controls = Boolean(plyrSettings.tooltips_controls);
-            var tooltips_seek = Boolean(plyrSettings.tooltips_seek);
-            var invertTime = Boolean(plyrSettings.invertTime);
-            var speed_selected = plyrSettings.speed_selected ? parseFloat(plyrSettings.speed_selected) : 1;
-            var debug_mode = Boolean(plyrSettings.debug_mode);
-
-            const player = new Plyr(item, {
-                debug: debug_mode,
-                controls: controls,
-                muted: muted,
-                seekTime: seekTime,
-                invertTime: invertTime,
-                tooltips: { controls: tooltips_controls, seek: tooltips_seek },
-                speed: { selected: speed_selected, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] },
-            });
+        try {
+            return JSON.parse(element.getAttribute('data-settings'));
+        } catch (e) {
+            console.error('Failed to parse player settings:', e);
+            return null;
         }
     }
 
-    // Universal initialization for shortcodes and non-Elementor contexts
-    $(document).ready(function() {
-        VideoPlayerJS();
-        AudioPlayerJS();
-    });
+    /**
+     * Get boolean value from settings with default
+     * 
+     * @param {Object} settings Settings object
+     * @param {string} key Setting key
+     * @param {boolean} defaultValue Default value if not set
+     * @returns {boolean}
+     */
+    function getBooleanSetting(settings, key, defaultValue) {
+        return settings[key] !== undefined ? Boolean(settings[key]) : defaultValue;
+    }
 
-    // Run this code under Elementor context (dual compatibility)
-    if (typeof elementorFrontend !== 'undefined') {
-        $(window).on('elementor/frontend/init', function () {
-            elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_video_player.default', VideoPlayerJS);
-            elementorFrontend.hooks.addAction( 'frontend/element_ready/vapfem_audio_player.default', AudioPlayerJS);
-        });
+    /**
+     * Get number value from settings with default
+     * 
+     * @param {Object} settings Settings object
+     * @param {string} key Setting key
+     * @param {number} defaultValue Default value if not set
+     * @returns {number}
+     */
+    function getNumberSetting(settings, key, defaultValue) {
+        return settings[key] !== undefined ? parseFloat(settings[key]) : defaultValue;
+    }
+
+    /**
+     * Get integer value from settings with default
+     * 
+     * @param {Object} settings Settings object
+     * @param {string} key Setting key
+     * @param {number} defaultValue Default value if not set
+     * @returns {number}
+     */
+    function getIntegerSetting(settings, key, defaultValue) {
+        return settings[key] !== undefined ? parseInt(settings[key], 10) : defaultValue;
+    }
+
+    /**
+     * Check if debug mode is enabled
+     * 
+     * @param {Object} settings Player settings
+     * @returns {boolean}
+     */
+    function isDebugModeEnabled(settings) {
+        var playerDebugMode = getBooleanSetting(settings, 'debug_mode', false);
+        var envDebugMode = (typeof leanpl_params !== 'undefined' && leanpl_params.debugMode) || false;
+        return playerDebugMode || envDebugMode;
+    }
+
+    /**
+     * Build common player configuration
+     * 
+     * @param {Object} settings Player settings
+     * @returns {Object} Common config object
+     */
+    function buildCommonConfig(settings) {
+        var debugMode = isDebugModeEnabled(settings);
+        var storageEnabled = getBooleanSetting(settings, 'storage_enabled', true);
+        
+        // Disable storage in debug mode
+        if (debugMode) {
+            storageEnabled = false;
+        }
+
+        return {
+            autoplay: getBooleanSetting(settings, 'autoplay', false),
+            storage: { enabled: storageEnabled, key: 'plyr' },
+            debug: debugMode,
+            volume: getNumberSetting(settings, 'volume', 1),
+            muted: getBooleanSetting(settings, 'muted', false),
+            seekTime: getIntegerSetting(settings, 'seek_time', 10),
+            invertTime: getBooleanSetting(settings, 'invertTime', false),
+            tooltips: {
+                controls: getBooleanSetting(settings, 'tooltips_controls', false),
+                seek: getBooleanSetting(settings, 'tooltips_seek', true)
+            },
+            speed: {
+                selected: getNumberSetting(settings, 'speed_selected', 1),
+                options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4]
+            }
+        };
+    }
+
+    /**
+     * Build video-specific configuration
+     * 
+     * @param {Object} settings Player settings
+     * @param {Object} commonConfig Common config object
+     * @returns {Object} Complete video config
+     */
+    function buildVideoConfig(settings, commonConfig) {
+        var defaultControls = ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'];
+        var controls = settings.controls || defaultControls;
+        var defaultSettings = ['captions', 'quality', 'speed', 'loop'];
+        
+        var videoConfig = {
+            autoplay: commonConfig.autoplay,
+            storage: commonConfig.storage,
+            debug: commonConfig.debug,
+            controls: controls,
+            settings: defaultSettings,
+            volume: commonConfig.volume,
+            muted: commonConfig.muted,
+            seekTime: commonConfig.seekTime,
+            clickToPlay: getBooleanSetting(settings, 'clickToPlay', true),
+            hideControls: getBooleanSetting(settings, 'hideControls', false),
+            resetOnEnd: getBooleanSetting(settings, 'resetOnEnd', false),
+            keyboard: {
+                focused: getBooleanSetting(settings, 'keyboard_focused', true),
+                global: getBooleanSetting(settings, 'keyboard_global', false)
+            },
+            invertTime: commonConfig.invertTime,
+            tooltips: commonConfig.tooltips,
+            fullscreen: {
+                enabled: getBooleanSetting(settings, 'fullscreen_enabled', true),
+                fallback: true,
+                iosNative: false
+            },
+            speed: commonConfig.speed,
+            quality: {
+                default: getIntegerSetting(settings, 'quality_default', 576),
+                options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240]
+            },
+            ratio: settings.ratio || ''
+        };
+
+        return videoConfig;
+    }
+
+    /**
+     * Build audio-specific configuration
+     * 
+     * @param {Object} settings Player settings
+     * @param {Object} commonConfig Common config object
+     * @returns {Object} Complete audio config
+     */
+    function buildAudioConfig(settings, commonConfig) {
+        var defaultControls = ['play', 'progress', 'mute', 'volume', 'settings'];
+        var controls = settings.controls || defaultControls;
+        
+        var audioConfig = {
+            autoplay: commonConfig.autoplay,
+            storage: commonConfig.storage,
+            debug: commonConfig.debug,
+            controls: controls,
+            volume: commonConfig.volume,
+            muted: commonConfig.muted,
+            seekTime: commonConfig.seekTime,
+            invertTime: commonConfig.invertTime,
+            tooltips: commonConfig.tooltips,
+            speed: commonConfig.speed
+        };
+
+        return audioConfig;
+    }
+
+    /**
+     * Log player configuration if debug mode is enabled
+     * 
+     * @param {string} playerType Type of player ('video' or 'audio')
+     * @param {Object} config Player configuration
+     * @param {Object} settings Player settings
+     */
+    function logConfigIfDebug(playerType, config, settings) {
+        if (isDebugModeEnabled(settings)) {
+            var typeLabel = playerType.charAt(0).toUpperCase() + playerType.slice(1);
+            console.log('[LEANPL ' + typeLabel + ' Player Config]', config);
+        }
+    }
+
+    /**
+     * Initialize video players
+     * 
+     * @param {jQuery} $scope Optional scope element (for Elementor)
+     * @param {jQuery} $ jQuery instance
+     */
+    function initializeVideoPlayers($scope, $) {
+        var playerElements = document.querySelectorAll('.lpl-player.lpl-player--video');
+
+        for (var i = 0; i < playerElements.length; i++) {
+            var element = playerElements[i];
+            var settings = parsePlayerSettings(element);
+
+            if (!settings) {
+                continue;
+            }
+
+            var commonConfig = buildCommonConfig(settings);
+            var videoConfig = buildVideoConfig(settings, commonConfig);
+            
+            logConfigIfDebug('video', videoConfig, settings);
+            
+            var player = new Plyr(element, videoConfig);
+        }
+    }
+
+    /**
+     * Initialize audio players
+     * 
+     * @param {jQuery} $scope Optional scope element (for Elementor)
+     * @param {jQuery} $ jQuery instance
+     */
+    function initializeAudioPlayers($scope, $) {
+        var playerElements = document.querySelectorAll('.lpl-player.lpl-player--audio');
+
+        for (var i = 0; i < playerElements.length; i++) {
+            var element = playerElements[i];
+            var settings = parsePlayerSettings(element);
+
+            if (!settings) {
+                continue;
+            }
+
+            var commonConfig = buildCommonConfig(settings);
+            var audioConfig = buildAudioConfig(settings, commonConfig);
+            
+            logConfigIfDebug('audio', audioConfig, settings);
+            
+            var player = new Plyr(element, audioConfig);
+        }
+    }
+
+    /**
+     * Initialize all players (for shortcodes and non-Elementor contexts)
+     */
+    function initializeAllPlayers() {
+        initializeVideoPlayers();
+        initializeAudioPlayers();
     }
 
 })(jQuery);

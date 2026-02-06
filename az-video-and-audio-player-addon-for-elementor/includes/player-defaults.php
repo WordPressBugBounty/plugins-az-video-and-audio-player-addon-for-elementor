@@ -50,7 +50,7 @@ return [
         'autoplay' => false,
         'muted' => false,
         'loop' => false,
-        'volume' => 1.0, // A number, between 0 and 1, representing the initial volume of the player.
+        'volume' => 100, // Stored as 0-100 (UI format), converted to 0-1 by Config_Merger for Plyr
         'invert_time' => true,
         'seek_time' => 10, // The time, in seconds, to seek when a user hits fast forward or rewind.
 
@@ -60,10 +60,38 @@ return [
 
         // Tooltips & UI
         'tooltips_seek' => true,
-        'speed_selected' => '1', // options: 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4
+        // Note: Tooltips are converted to object format { controls: boolean, seek: boolean } in JavaScript
+        // - controls: Display control labels as tooltips on :hover & :focus (e.g., play icon, mute/unmute, pip)
+        // - seek: Display a seek tooltip to indicate on click where the media would seek to
+        'speed_selected' => '1', // Default playback speed. Options: 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4
+        // Note: Speed is converted to object format { selected: value, options: [...] } in JavaScript
+        // YouTube and Vimeo will ignore/hide options outside 0.5-2 range automatically
 
-        // Basic controls (common to both)
-        'controls' => ['play', 'progress', 'mute', 'volume', 'settings'],
+        // Default controls
+        'controls' => [
+            'play-large',
+            // 'restart',
+            // 'rewind',
+            'play',
+            // 'fast-forward',
+            'progress',
+            'current-time',
+            // 'duration',
+            'mute',
+            'volume',
+            'captions',
+            'settings',
+            'pip',
+            'airplay',
+            // 'download',
+            'fullscreen',
+        ],
+
+        // Storage
+        'storage_enabled' => true, // Allow use of local storage to store user settings
+
+        // Styling
+        'primary_color' => '#00b3ff', // Primary accent color for player controls (Plyr's default blue)
 
         // Debugging
         'debug_mode' => false,
@@ -81,17 +109,15 @@ return [
         'hide_controls' => false,
         'reset_on_end' => false,
         'fullscreen_enabled' => true,
-        'tooltips_controls' => false,
+        'tooltips_controls' => false, // Display control labels as tooltips on :hover & :focus (e.g., play icon, mute/unmute, pip)
 
         // HTML5 video specific
         'sources' => array(), // See $source array example above
         'quality_default' => '576', // options: 4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240
 
         // Aspect ratio
-        'ratio' => '',
-
-        // Video-specific controls
-        'controls' => ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
+        'ratio' => ''
+        // Video specific controls (intentionally not using)
     ],
 
     // 🎵 AUDIO: Audio-specific settings only
@@ -102,7 +128,6 @@ return [
         // Audio-specific behavior
         'preload' => 'metadata', // 'auto', 'metadata', 'none'
 
-        // Audio-specific controls (no video controls like fullscreen, pip, etc.)
-        'controls' => ['play', 'progress', 'mute', 'volume', 'settings', 'airplay', 'download'],
-    ]
+        // Audio-specific controls (intentionally not using)
+    ],
 ];

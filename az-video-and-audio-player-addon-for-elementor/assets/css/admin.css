@@ -17,9 +17,37 @@ Table of contents:
 
 /* 1. General Layout & Structure
 ================================================== */
+/* Override core */
+.post-type-lean_player #preview-action,
+.post-type-lean_player #visibility{
+    display: none;
+}
+
+.post-type-lean_player .lpl-preview-metabox{
+    display:flex;
+    align-items: flex-start;
+    justify-content: start;
+    margin-bottom: 5px;
+    flex-direction: column;
+}
+
+.post-type-lean_player a.preview.button{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.lpl-hire-page{
+    padding: 20px;
+}
+
+.lpl-hire-page .lpl-heading-1{
+    margin-top:0;
+}
 
 /* Layout Classes - For positioning only */
-.vapfem-layout--two-column {
+.lpl-layout--two-column {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -27,26 +55,26 @@ Table of contents:
     margin-top: 20px;
 }
 
-.vapfem-layout__main {
+.lpl-layout__main {
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1;
     min-width: 0; /* Prevents flex item from overflowing */
 }
 
-.vapfem-layout__sidebar {
+.lpl-layout__sidebar {
     width: 310px;
     -ms-flex-negative: 0;
         flex-shrink: 0;
 }
 
 /* Get Support Card Styles */
-.vapfem-admin__support {
+.lpl-admin__support {
     margin-bottom: 20px;
 }
 
 /* Professional Service Card Styles */
-.vapfem-admin__service {
+.lpl-admin__service {
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -60,13 +88,13 @@ Table of contents:
     border: 1px solid #e8e8e8;
 }
 
-.vapfem-admin__service:hover {
+.lpl-admin__service:hover {
     -webkit-transform: translateY(-8px);
             transform: translateY(-8px);
     box-shadow: 0 12px 40px rgba(0,0,0,0.12);
 }
 
-.vapfem-admin__service:before {
+.lpl-admin__service:before {
     content: '';
     position: absolute;
     top: 0;
@@ -77,7 +105,7 @@ Table of contents:
     background: linear-gradient(90deg, #FF9A9E 100%, #FECFEF 100%, #FECFEF 100%);
 }
 
-.vapfem-service__badge {
+.lpl-service__badge {
     background: #FFF5F5;
     color: #E53E3E;
     border: 1px solid #FED7D7;
@@ -91,7 +119,7 @@ Table of contents:
     margin: 10px 0 16px 0;
 }
 
-.vapfem-service__heading {
+.lpl-service__heading {
     font-size: 22px;
     margin: 0 0 16px 0;
     color: #2D3748;
@@ -99,14 +127,14 @@ Table of contents:
     line-height: 1.2;
 }
 
-.vapfem-service__description {
+.lpl-service__description {
     font-size: 14px;
     line-height: 1.5;
     color: #4A5568;
     margin-bottom: 20px;
 }
 
-.vapfem-service__contact-heading {
+.lpl-service__contact-heading {
     font-size: 15px;
     color: #2D3748;
     margin-bottom: 16px;
@@ -115,7 +143,7 @@ Table of contents:
     letter-spacing: 0.5px;
 }
 
-.vapfem-service__contact-item {
+.lpl-service__contact-item {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -127,19 +155,19 @@ Table of contents:
     color: #4A5568;
 }
 
-.vapfem-service__contact-icon {
+.lpl-service__contact-icon {
     width: 16px;
     margin-right: 10px;
     color: #E53E3E;
 }
 
-.vapfem-service__link {
+.lpl-service__link {
     color: #E53E3E;
     text-decoration: none;
     font-weight: 500;
 }
 
-.vapfem-service__link:hover {
+.lpl-service__link:hover {
     color: #C53030;
     text-decoration: underline;
 }
@@ -147,19 +175,19 @@ Table of contents:
 /* 2. Typography & Text Styles
 ================================================== */
 
-.vapfem-admin ul{
+.lpl-admin ul{
     list-style: disc;
     -webkit-padding-start: 1.625em;
        -moz-padding-start: 1.625em;
             padding-inline-start: 1.625em;
 }
 
-.vapfem-admin ul li{
+.lpl-admin ul li{
     border-color: #0D0D0D;
 }
 
 /* Custom Heading Classes - BEM Convention */
-.vapfem-heading-1 {
+.lpl-heading-1 {
     font-size: 24px;
     font-weight: 700;
     color: #212529;
@@ -167,14 +195,14 @@ Table of contents:
     line-height: 1.2;
 }
 
-.vapfem-heading-2 {
+.lpl-heading-2 {
     font-size: 20px;
     font-weight: 600;
     margin: 0 0 16px 0;
     line-height: 1.2;
 }
 
-.vapfem-heading-3 {
+.lpl-heading-3 {
     font-size: 18px;
     font-weight: 600;
     color: #212529;
@@ -182,38 +210,38 @@ Table of contents:
     line-height: 1.2;
 }
 
-.vapfem-admin__main-title {
+.lpl-admin__main-title {
     font-size: 24px;
     font-weight: 600;
     color: #212529;
 }
 
-.vapfem-admin__subtitle {
+.lpl-admin__subtitle {
     font-size: 14px;
     color: #6c757d;
     font-style: italic;
     margin: -15px 0 15px 0;
 }
 
-.vapfem-admin__section-title {
+.lpl-admin__section-title {
     font-size: 18px;
     font-weight: 600;
     color: #212529;
     margin: 30px 0 20px 0;
 }
 
-.vapfem-admin__section-title:first-of-type {
+.lpl-admin__section-title:first-of-type {
     margin-top: 20px;
 }
 
-.vapfem-admin__footer-text {
+.lpl-admin__footer-text {
     font-size: 14px;
     color: #495057;
     margin: 30px 0 0 0;
 }
 
 /* Footer Text Professional Card Style */
-.vapfem-admin__footer-text--card {
+.lpl-admin__footer-text--card {
     color: #2D3748;
     background: #F7FAFC;
     border: 1px solid #E2E8F0;
@@ -224,7 +252,7 @@ Table of contents:
     line-height: 1.6;
 }
 
-.vapfem-admin__footer-text--card a {
+.lpl-admin__footer-text--card a {
     color: #E53E3E;
     text-decoration: none;
     font-weight: 600;
@@ -232,39 +260,16 @@ Table of contents:
     transition: all 0.3s ease;
 }
 
-.vapfem-admin__footer-text--card a:hover {
+.lpl-admin__footer-text--card a:hover {
     color: #C53030;
     text-decoration: underline;
 }
 
-/* 3. Tab Navigation
-================================================== */
-
-.vapfem-tab-content {
-    display: none;
-    margin-top: 20px;
-}
-
-.vapfem-tab-content--active {
-    display: block;
-}
-
-.vapfem-admin__tab-link {
-    color: #0d6efd;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.vapfem-admin__tab-link:hover {
-    text-decoration: underline;
-}
-
-/* 4. Cards & Content Sections
+/* 3. Cards & Content Sections
 ================================================== */
 
 /* Basic card styling */
-.vapfem-card {
+.lpl-card {
     background-color: #fff;
     padding: 20px;
     border-radius: 4px;
@@ -272,12 +277,12 @@ Table of contents:
 }
 
 /* Service card variations */
-.vapfem-admin__service--highlight {
+.lpl-admin__service--highlight {
     border-left: 4px solid #00a0d2;
 }
 
 /* Sidebar Service Card - No left border */
-.vapfem-service--sidebar {
+.lpl-service--sidebar {
     border-left: none;
 }
 
@@ -285,13 +290,13 @@ Table of contents:
 ================================================== */
 
 /* Shortcode Tables */
-.vapfem-shortcode-table {
+.lpl-shortcode-table {
     width: 100%;
     border-collapse: collapse;
     margin: 0 0 20px 0;
 }
 
-.vapfem-shortcode-table th {
+.lpl-shortcode-table th {
     background: #e9ecef;
     border: 1px solid #dee2e6;
     padding: 12px;
@@ -303,22 +308,22 @@ Table of contents:
     letter-spacing: 0.5px;
 }
 
-.vapfem-shortcode-table th:first-child {
+.lpl-shortcode-table th:first-child {
     width: 125px;
 }
 
-.vapfem-shortcode-table td {
+.lpl-shortcode-table td {
     border: 1px solid #dee2e6;
     padding: 12px;
     vertical-align: middle;
     background: white;
 }
 
-.vapfem-shortcode-table tbody tr:nth-child(even) td {
+.lpl-shortcode-table tbody tr:nth-child(even) td {
     background: #f8f9fa;
 }
 
-.vapfem-shortcode-table code {
+.lpl-shortcode-table code {
     font-size: 12px;
     color: #212529;
     background: transparent;
@@ -329,210 +334,224 @@ Table of contents:
     line-height: 1.4;
 }
 
-.vapfem-shortcode-table td:first-child {
+.lpl-shortcode-table td:first-child {
     color: #495057;
     min-width: 120px;
 }
 
-.vapfem-shortcode-table__action-column {
+.lpl-shortcode-table__action-column {
     width: 80px;
     text-align: center;
 }
 
 /* Options Table (for compatibility) */
-.vapfem-options-table {
+.lpl-options-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-.vapfem-options-table th,
-.vapfem-options-table td {
+.lpl-options-table th,
+.lpl-options-table td {
     padding: 12px;
     text-align: left;
     border: 1px solid #ddd;
     vertical-align: top;
 }
 
-.vapfem-options-table th {
+.lpl-options-table th {
     background: #f1f1f1;
     font-weight: 600;
 }
 
-.vapfem-options-table code {
+.lpl-options-table code {
     background: #f8f9fa;
     padding: 2px 6px;
     border-radius: 3px;
     font-size: 12px;
 }
 
-.vapfem-options-table__section-header td {
+.lpl-options-table__section-header td {
     background: #e8f4fd;
     font-weight: 600;
     border-top: 2px solid #0073aa;
 }
 
-/* 6. Buttons & Interactive Elements
-================================================== */
-
-.vapfem-copy-button {
-    background: #0d6efd;
-    border: 1px solid #0d6efd;
-    border-radius: 4px;
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 12px;
-    cursor: pointer;
-    -webkit-transition: background-color 0.2s;
-    transition: background-color 0.2s;
-}
-
-.vapfem-copy-button:hover {
-    background: #0b5ed7;
-    border-color: #0b5ed7;
-}
-
-.vapfem-copy-button--copied {
-    background: #198754;
-    border-color: #198754;
-    color: white;
-}
-
-/* 7. Service & Contact Sections (Guide Page)
+/* 6. Service & Contact Sections (Guide Page)
 ================================================== */
 
 /* Info Block Component - BEM Structure */
-.vapfem-info-block {
+.lpl-info-block {
     margin-top: 25px;
     padding: 20px;
     border-radius: 6px;
 }
 
-.vapfem-info-block h3,
-.vapfem-info-block .vapfem-heading-3 {
+.lpl-info-block h3,
+.lpl-info-block .lpl-heading-3 {
     margin-top: 0;
 }
 
-.vapfem-info-block ul {
+.lpl-info-block ul {
     margin: 10px 0;
+    padding-left: 15px;
+    list-style: disc;
 }
 
-.vapfem-info-block li {
+.lpl-info-block li {
     margin-bottom: 8px;
 }
 
 /* Info Block Modifiers */
-.vapfem-info-block--note {
+.lpl-info-block--note {
     background: #f0f6fc;
     border: 1px solid #c8e1ff;
 }
 
-.vapfem-info-block--note h3,
-.vapfem-info-block--note .vapfem-heading-3 {
+.lpl-info-block--note h3,
+.lpl-info-block--note .lpl-heading-3 {
     color: #0969da;
 }
 
-.vapfem-info-block--contact {
+.lpl-info-block--contact {
     background: #f0f9ff;
     border-top: 1px solid #bae6fd;
     margin-top: 0;
     border-radius: 0;
 }
 
-.vapfem-info-block--contact h3,
-.vapfem-info-block--contact .vapfem-heading-3 {
+.lpl-info-block--contact h3,
+.lpl-info-block--contact .lpl-heading-3 {
     color: #0369a1;
 }
 
-/* 8. Hire Me Page Styles
+.lpl-info-block--success {
+    border: 1px solid #86efac;
+}
+
+.lpl-info-block--success h3,
+.lpl-info-block--success .lpl-heading-3 {
+    color: #16a34a;
+}
+
+.lpl-info-block--outline {
+    background: transparent;
+    border: 1px solid #c8e1ff;
+}
+
+.lpl-info-block--outline h3,
+.lpl-info-block--outline .lpl-heading-3 {
+    color: #0969da;
+}
+
+.lpl-info-block--success-outline {
+    background: transparent;
+    border: 1px solid #86efac;
+}
+
+.lpl-info-block--success-outline h3,
+.lpl-info-block--success-outline .lpl-heading-3 {
+    color: #16a34a;
+}
+
+/* 8. Hire Me Page Styles - Matching lex-settings color scheme
 ================================================== */
-.video-audio-player_page_vapfem-hire-me  .vapfem-admin, 
-.video-audio-player_page_vapfem-hire-me .vapfem-admin p{
+
+/* Page background to match settings framework */
+.lean_player-settings_page_lean_player-hire-me {
+    background-color: #F3F5FA;
+}
+
+.lean_player-settings_page_lean_player-hire-me  .lpl-admin, 
+.lean_player-settings_page_lean_player-hire-me .lpl-admin p{
     font-size: 16px;
     line-height: 1.5;
-    color: #0D0D0D;
+    color: #1d2327;
 }
 
 /* Layout Classes - Grid Layout for Hire Me Page */
-.vapfem-layout--grid-sidebar {
+.lpl-layout--grid-sidebar {
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: 1fr 300px;
         grid-template-columns: 1fr 300px;
-    gap: 20px;
+    gap: 24px;
     -ms-grid-row-align: start;
         align-items: start;
 }
 
-.vapfem-layout__content {
+.lpl-layout__content {
     background: #fff;
-    border: 1px solid #c3c4c7;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Section separator */
-.vapfem-section-separator {
+.lpl-section-separator {
     border: none;
-    border-top: 1px solid #c3c4c7;
-    margin: 05px 0;
+    border-top: 1px solid #dcdcde;
+    margin: 24px 0;
     opacity: 0.7;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
 }
 
 /* Hire Me Page Sections */
-.vapfem-hire__section {
-    padding: 20px;
+.lpl-hire__section {
+    padding: 24px;
 }
 
-.vapfem-hire__section:last-of-type {
+.lpl-hire__section:last-of-type {
     border-bottom: none;
 }
 
-.vapfem-hire__heading {
+.lpl-hire__heading {
     font-size: 18px;
     font-weight: 600;
     color: #1d2327;
     margin-bottom: 15px;
-    border-bottom: 1px solid #c3c4c7;
+    border-bottom: 1px solid #dcdcde;
     padding-bottom: 8px;
 }
 
 /* Intro text styling */
-.vapfem-hire__intro-text {
+.lpl-hire__intro-text {
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 20px;
-    color: #3c434a;
+    color: #50575e;
 }
 
-.vapfem-hire__intro-text strong {
+.lpl-hire__intro-text strong {
     font-weight: 600;
     color: #1d2327;
 }
 
 /* Highlight callout section */
-.vapfem-hire__highlight-callout {
-    background: #f6f7f7;
-    border-left: 4px solid #72aee6;
+.lpl-hire__highlight-callout {
+    background: #F8F7FC;
+    border-left: 4px solid #5344F4;
     padding: 16px 20px;
     margin: 20px 0;
     font-size: 14px;
     line-height: 1.5;
+    border-radius: 4px;
+    margin-bottom: 0;
 }
 
-.vapfem-hire__highlight-callout p {
+.lpl-hire__highlight-callout p {
     margin-bottom: 10px;
+    color: #50575e;
 }
 
-.vapfem-hire__highlight-callout p:last-child {
+.lpl-hire__highlight-callout p:last-child {
     margin-bottom: 0;
     font-weight: 600;
     color: #1d2327;
 }
 
 /* Feature list styling */
-.vapfem-features {
+.lpl-features {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -542,7 +561,7 @@ Table of contents:
             flex-direction: column;
 }
 
-.vapfem-features__item {
+.lpl-features__item {
     padding: 5px 0;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -552,7 +571,7 @@ Table of contents:
             align-items: flex-start;
 }
 
-.vapfem-features__check {
+.lpl-features__check {
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
@@ -564,7 +583,7 @@ Table of contents:
             justify-content: center;
     width: 18px;
     height: 18px;
-    background: #0d6efd;
+    background: #5344F4;
     border-radius: 50%;
     margin-right: 12px;
     margin-top: 1px;
@@ -573,7 +592,7 @@ Table of contents:
     position: relative;
 }
 
-.vapfem-features__check:before {
+.lpl-features__check:before {
     content: '✓';
     color: white;
     font-size: 12px;
@@ -581,13 +600,13 @@ Table of contents:
     line-height: 1;
 }
 
-.vapfem-features__item strong {
+.lpl-features__item strong {
     color: #1d2327;
     font-weight: 600;
 }
 
 /* Services checklist styling */
-.vapfem-services {
+.lpl-services {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -595,7 +614,7 @@ Table of contents:
     margin: 20px 0;
 }
 
-.vapfem-services__column {
+.lpl-services__column {
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1;
@@ -609,7 +628,7 @@ Table of contents:
     gap: 12px;
 }
 
-.vapfem-services__item {
+.lpl-services__item {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -621,10 +640,10 @@ Table of contents:
     border: none;
 }
 
-.vapfem-services__check {
+.lpl-services__check {
     width: 20px;
     height: 20px;
-    background: #2271b1;
+    background: #5344F4;
     color: white;
     border-radius: 50%;
     display: -webkit-box;
@@ -644,18 +663,18 @@ Table of contents:
     margin-top: 2px;
 }
 
-.vapfem-services__item strong {
+.lpl-services__item strong {
     font-weight: 600;
     color: #1d2327;
 }
 
 /* Contact section styling */
-.vapfem-contact {
+.lpl-contact {
     background: #f6f7f7;
     padding: 20px;
 }
 
-.vapfem-contact__heading {
+.lpl-contact__heading {
     font-size: 18px;
     font-weight: 600;
     color: #1d2327;
@@ -664,13 +683,13 @@ Table of contents:
     padding-bottom: 0;
 }
 
-.vapfem-contact__text {
+.lpl-contact__text {
     font-size: 14px;
     line-height: 1.6;
     color: #3c434a;
 }
 
-.vapfem-contact__buttons {
+.lpl-contact__buttons {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -680,102 +699,100 @@ Table of contents:
 }
 
 /* Strategy call styling */
-.vapfem-strategy-call {
+.lpl-strategy-call {
     margin: 20px 0;
 }
 
 /* Sidebar widget styling - Let's Talk Widget */
-.vapfem-sidebar-widget {
+.lpl-sidebar-widget {
     background: #fff;
-    border: 1px solid #c3c4c7;
-    border-radius: 4px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.vapfem-sidebar__widget-header {
-    background: -webkit-linear-gradient(315deg, #2271b1, #135e96);
-    background: linear-gradient(135deg, #2271b1, #135e96);
+.lpl-sidebar-widget:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.lpl-sidebar__widget-header {
+    background: #5344F4;
     color: #fff;
     padding: 20px;
     text-align: center;
     position: relative;
+    border-bottom: 1px solid transparent;
 }
 
-.vapfem-sidebar__widget-header:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid #135e96;
+.lpl-sidebar__widget-header:after {
+    display: none;
 }
 
-.vapfem-sidebar__widget-heading {
+.lpl-sidebar__widget-heading {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
+    color: #fff;
 }
 
-.vapfem-admin .vapfem-sidebar-widget .vapfem-sidebar__widget-tagline {
+.lpl-admin .lpl-sidebar-widget .lpl-sidebar__widget-tagline {
     color: #fff;
-    opacity: 0.9;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
+    opacity: 0.95;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
     font-style: italic;
     margin: 0;
     margin-top: -10px;
 }
 
-.vapfem-sidebar__widget-content {
-    padding: 25px 20px 20px;
+.lpl-sidebar__widget-content {
+    padding: 24px 20px 20px;
 }
 
-.vapfem-sidebar__widget-text {
+.lpl-sidebar__widget-text {
     margin-block: 20px;
     margin-top: 0;
     text-align: center;
+    color: #50575e;
 }
 
-.vapfem-primary-button {
+.lpl-primary-button {
     display: block;
     text-align: center;
     text-decoration: none;
-    padding: 12px 15px;
+    padding: 10px 20px;
     margin-bottom: 15px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     color: #fff;
-    background: #2271b1;
-    border: 1px solid #2271b1;
-    border-radius: 4px;
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.vapfem-primary-button:focus {
+.lpl-primary-button:focus {
     outline: none;
     color: #fff;
 }
 
-.vapfem-primary-button:hover {
+.lpl-primary-button:hover {
     color: #fff;
-    background: #135e96;
-    border-color: #135e96;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
     -webkit-transform: translateY(-1px);
             transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(34, 113, 177, 0.3);
 }
 
-.vapfem-contact__methods {
+.lpl-contact__methods {
     margin-bottom: 20px;
 }
 
-.vapfem-contact__item {
+.lpl-contact__item {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -785,28 +802,28 @@ Table of contents:
     padding: 12px 15px;
     margin-bottom: 8px;
     font-size: 13px;
-    color: #3c434a;
+    color: #50575e;
     background: transparent;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dcdcde;
     border-radius: 4px;
     text-decoration: none;
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.vapfem-contact__item:hover {
-    color: #2271b1;
-    border-color: #2271b1;
+.lpl-contact__item:hover {
+    color: #5344F4;
+    border-color: #5344F4;
     -webkit-transform: translateY(-1px);
             transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(83, 68, 244, 0.15);
 }
 
-.vapfem-contact__item:last-child {
+.lpl-contact__item:last-child {
     margin-bottom: 0;
 }
 
-.vapfem-contact__item .vapfem-contact__icon {
+.lpl-contact__item .lpl-contact__icon {
     width: 20px;
     margin-right: 10px;
     font-size: 16px;
@@ -815,37 +832,49 @@ Table of contents:
         flex-shrink: 0;
 }
 
-.vapfem-contact__text {
+.lpl-contact__text {
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1;
     line-height: 1.4;
 }
 
-.vapfem-contact__label {
+.lpl-contact__label {
     display: block;
     margin-bottom: 2px;
     font-weight: 600;
+    color: #1d2327;
 }
 
-.vapfem-contact__description {
+.lpl-contact__description {
     font-size: 13px;
+    color: #50575e;
 }
 
-.vapfem-trust-badge {
+.lpl-contact__description a {
+    color: #5344F4;
+    text-decoration: none;
+}
+
+.lpl-contact__description a:hover {
+    color: #4235D9;
+    text-decoration: underline;
+}
+
+.lpl-trust-badge {
     margin-top: 15px;
     padding-top: 15px;
     text-align: center;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #dcdcde;
 }
 
-.vapfem-trust-badge__text {
+.lpl-trust-badge__text {
     margin-bottom: 5px;
     font-size: 12px;
-    color: #646970;
+    color: #6b7280;
 }
 
-.vapfem-trust-badge__value {
+.lpl-trust-badge__value {
     font-size: 14px;
     font-weight: 600;
     color: #00a32a;
@@ -855,20 +884,20 @@ Table of contents:
 ================================================== */
 
 @media (max-width: 1024px) {
-    .vapfem-layout--two-column {
+    .lpl-layout--two-column {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
             -ms-flex-direction: column;
                 flex-direction: column;
     }
 
-    .vapfem-layout__sidebar {
+    .lpl-layout__sidebar {
         width: 100%;
         margin-top: 20px;
     }
 
     /* Hire Me Page Responsive */
-    .vapfem-layout--grid-sidebar {
+    .lpl-layout--grid-sidebar {
         -ms-grid-columns: 1fr;
             grid-template-columns: 1fr;
         gap: 20px;
@@ -876,39 +905,34 @@ Table of contents:
 }
 
 @media (max-width: 782px) {
-    .vapfem-shortcode-table {
+    .lpl-shortcode-table {
         font-size: 12px;
     }
 
-    .vapfem-shortcode-table th,
-    .vapfem-shortcode-table td {
+    .lpl-shortcode-table th,
+    .lpl-shortcode-table td {
         padding: 8px;
     }
 
-    .vapfem-shortcode-table code {
+    .lpl-shortcode-table code {
         font-size: 10px;
     }
 
-    .vapfem-copy-button {
-        font-size: 11px;
-        padding: 4px 8px;
-    }
-
-    .vapfem-admin__main-title {
+    .lpl-admin__main-title {
         font-size: 20px;
     }
 
-    .vapfem-admin__section-title {
+    .lpl-admin__section-title {
         font-size: 16px;
     }
 
     /* Hire Me Page Mobile Responsive */
-    .vapfem-features {
+    .lpl-features {
         -ms-grid-columns: 1fr;
             grid-template-columns: 1fr;
     }
 
-    .vapfem-services {
+    .lpl-services {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
             -ms-flex-direction: column;
@@ -916,7 +940,7 @@ Table of contents:
         gap: 20px;
     }
 
-    .vapfem-contact__buttons {
+    .lpl-contact__buttons {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
             -ms-flex-direction: column;
@@ -929,7 +953,7 @@ Table of contents:
 
 
 /* Text highlight styling - Notion-like yellow highlight */
-.vapfem-text-highlight {
+.lpl-text-highlight {
     background: -webkit-linear-gradient(330deg, #fef3c7 0%, #fde68a 100%);
     background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
     background-color: #fef3c7;
@@ -943,7 +967,7 @@ Table of contents:
 }
 
 /* Light yellow highlight variation - subtle emphasis */
-.vapfem-text-highlight--light {
+.lpl-text-highlight--light {
     background: -webkit-linear-gradient(330deg, #fefce8 0%, #fef3c7 100%);
     background: linear-gradient(120deg, #fefce8 0%, #fef3c7 100%);
     background-color: #fefce8;
@@ -957,7 +981,7 @@ Table of contents:
 }
 
 /* Very light yellow highlight variation - minimal emphasis */
-.vapfem-text-highlight--minimal {
+.lpl-text-highlight--minimal {
     background: -webkit-linear-gradient(330deg, #fffbeb 0%, #fefce8 100%);
     background: linear-gradient(120deg, #fffbeb 0%, #fefce8 100%);
     background-color: #fffbeb;
@@ -970,179 +994,68 @@ Table of contents:
     display: inline;
 }
 
-.vapfem-list__item {
+.lpl-list__item {
     margin-bottom: 10px;
 }
 
 /* Margin utilities */
-.vapfem-margin-block--20 {
+.lpl-margin-block--20 {
     margin-block: 20px;
 }
 
 /* List styling overrides for contact sections */
-.vapfem-contact ul,
-.vapfem-contact ul li {
+.lpl-contact ul,
+.lpl-contact ul li {
     list-style: none;
     padding-left: 0;
 }
 
-#adminmenu  li.toplevel_page_vapfem-guide ul li:nth-child(3) a:not(.current) {
+#adminmenu  li.toplevel_page_lean_player-settings ul li:nth-child(6) a:not(.current) {
     color: #90ff32;
 }
 
-/* 11. Elementor Integration Tab Styles
+/* 10. Metabox Sections
 ================================================== */
-
-/* Elementor Widgets Container */
-.vapfem-elementor-widgets {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr;
-        grid-template-columns: 1fr;
-    gap: 20px;
-    margin: 20px 0;
+.post-php #poststuff h2,
+.post-new-php #poststuff h2{
+    padding: 15px 12px;
+}
+.post-php .lex-settings-section__title,
+.post-new-php .lex-settings-section__title {
+    background: #5344f412;
+    font-weight: bold !important;
+    font-size: 12px !important;
+    border-left: 4px solid var(--lex-color-primary);
 }
 
-/* Individual Widget Card */
-.vapfem-elementor-widget {
-    background: #fff;
-    border: 1px solid #e1e5e9;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
+.post-php .lex-settings-section,
+.post-new-php .lex-settings-section{
+    margin-left: -12px;
+    margin-right: -12px;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.vapfem-elementor-widget:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    -webkit-transform: translateY(-2px);
-            transform: translateY(-2px);
+/* Hide conditional sections by default - JavaScript will show them */
+.lpl-conditional-section {
+    display: none;
 }
 
-/* Widget Header */
-.vapfem-elementor-widget__header {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: start;
-        -ms-flex-align: start;
-            align-items: flex-start;
-    gap: 16px;
+/* Sticky Postbox Container - Only for lean_player post type
+================================================== */
+/* Fix post-body height issue for sticky positioning */
+body.post-type-lean_player #post-body.metabox-holder.columns-2 {
+    min-height: 1px;
+    overflow: visible;
 }
 
-.vapfem-elementor-widget__icon {
-    font-size: 32px;
-    line-height: 1;
-    -ms-flex-negative: 0;
-        flex-shrink: 0;
-}
-
-.vapfem-elementor-widget__info {
-    -webkit-box-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-}
-
-.vapfem-elementor-widget__name {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 8px;
-}
-
-.vapfem-elementor-widget__description {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-
-/* How to Use Steps */
-.vapfem-elementor-steps {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr;
-        grid-template-columns: 1fr;
-    gap: 20px;
-    margin: 20px 0;
-}
-
-.vapfem-elementor-step {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: start;
-        -ms-flex-align: start;
-            align-items: flex-start;
-    gap: 16px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border-left: 4px solid #007cba;
-}
-
-.vapfem-elementor-step__number {
-    background: #007cba;
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    font-weight: 600;
-    font-size: 14px;
-    -ms-flex-negative: 0;
-        flex-shrink: 0;
-}
-
-.vapfem-elementor-step__content {
-    -webkit-box-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-}
-
-.vapfem-elementor-step__title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-}
-
-.vapfem-elementor-step__description {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-
-/* Responsive Design for Elementor Tab */
-@media (max-width: 768px) {
-    .vapfem-elementor-widgets {
-        -ms-grid-columns: 1fr;
-            grid-template-columns: 1fr;
-    }
-    
-    .vapfem-elementor-widget__header {
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
-        text-align: center;
-    }
-    
-    .vapfem-elementor-step {
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-                flex-direction: column;
-        text-align: center;
-    }
+/* Make postbox-container-1 sticky - Only for lean_player post type */
+body.post-type-lean_player #postbox-container-1 {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 32px; /* WordPress admin bar height */
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    z-index: 1;
+    align-self: flex-start;
 }

@@ -1,0 +1,8 @@
+31 Dec 2025
+- Moved upgrade modal markup to assets manager
+
+22 Dec 2025
+- Multiple checkbox field sorting support added for metabox as well
+
+25 Nov 2025
+- Added: Page_check_callback support

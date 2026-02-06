@@ -1,0 +1,235 @@
+/**
+ * LEX Copy to Clipboard Component
+ * Reusable copy button component with visual feedback
+ * 
+ * Usage - Basic:
+ * <button data-lex-copy="text-to-copy" class="lex-copy-button">
+ *     <span class="dashicons dashicons-admin-page"></span>
+ *     Copy
+ * </button>
+ * 
+ * Usage - With Variants:
+ * <button data-lex-copy="text" class="lex-copy-button lex-copy-button--secondary lex-copy-button--small">
+ *     Copy
+ * </button>
+ * 
+ * NOTE: data-lex-copy attribute activates the copy functionality
+ *       CSS classes are only for styling
+ */
+
+/* ============================================
+   CSS VARIABLES
+   ============================================ */
+:root {
+    --lex-copy-bg: var(--lex-color-primary, #5344F4);
+    --lex-copy-bg-hover: var(--lex-color-primary-hover, #4235D9);
+    --lex-copy-color: #fff;
+    --lex-copy-border-radius: var(--lex-border-radius, 4px);
+    --lex-copy-padding: 6px 12px;
+    --lex-copy-padding-small: 4px 8px;
+    --lex-copy-font-size: var(--lex-font-size-small, 13px);
+    --lex-copy-font-weight: var(--lex-font-weight-medium, 500);
+    --lex-copy-success-bg: var(--lex-color-success, #00a32a);
+    --lex-copy-success-color: #fff;
+    --lex-copy-transition: all 0.2s ease;
+}
+
+/* ============================================
+   BASE COPY BUTTON
+   ============================================ */
+.lex-copy-button,
+button.lex-copy-button {
+    /* Reset WordPress core button styles */
+    border: 1px solid transparent;
+    border-radius: var(--lex-copy-border-radius);
+    box-shadow: none;
+    background: var(--lex-copy-bg);
+    color: var(--lex-copy-color);
+    font-family: inherit;
+    font-size: var(--lex-copy-font-size);
+    font-weight: var(--lex-copy-font-weight);
+    line-height: 1;
+    margin: 0;
+    padding: var(--lex-copy-padding);
+    text-decoration: none;
+    text-shadow: none;
+    vertical-align: baseline;
+    justify-content: center;
+    align-items: center;
+    
+    /* Custom styles */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lex-spacing-xs, 4px);
+    cursor: pointer;
+    transition: var(--lex-copy-transition);
+    box-sizing: border-box;
+    white-space: nowrap;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.lex-copy-button:hover,
+.lex-copy-button:focus,
+button.lex-copy-button:hover,
+button.lex-copy-button:focus {
+    background: var(--lex-copy-bg-hover);
+    border: 1px solid transparent;
+    color: var(--lex-copy-color);
+    text-decoration: none;
+    text-shadow: none;
+    box-shadow: 0 2px 8px rgba(83, 68, 244, 0.25);
+    outline: none;
+}
+
+.lex-copy-button:active,
+button.lex-copy-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 4px rgba(83, 68, 244, 0.3);
+}
+
+.lex-copy-button:disabled,
+button.lex-copy-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: var(--lex-copy-bg);
+}
+
+/* Icon styling */
+.lex-copy-button .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+
+/* ============================================
+   VARIANT: OUTLINE
+   ============================================ */
+.lex-copy-button--outline,
+button.lex-copy-button--outline {
+    background: none;
+    background-color: transparent;
+    border: 1px solid var(--lex-color-primary, #5344F4);
+    color: var(--lex-color-primary, #5344F4);
+}
+
+.lex-copy-button--outline:hover,
+.lex-copy-button--outline:focus,
+button.lex-copy-button--outline:hover,
+button.lex-copy-button--outline:focus {
+    border: 1px solid var(--lex-color-primary, #5344F4);
+    background: var(--lex-color-primary, #5344F4);
+    color: #fff;
+}
+
+.lex-copy-button--outline:active,
+button.lex-copy-button--outline:active {
+    background: var(--lex-color-primary-hover, #4235D9);
+    border-color: var(--lex-color-primary-hover, #4235D9);
+    transform: translateY(1px);
+    box-shadow: 0 1px 4px rgba(83, 68, 244, 0.3);
+}
+
+.lex-copy-button--outline:disabled,
+button.lex-copy-button--outline:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background: transparent;
+    border-color: var(--lex-color-primary, #5344F4);
+}
+
+/* ============================================
+   SUCCESS STATE (Copied!)
+   ============================================ */
+.lex-copy-button--copied,
+button.lex-copy-button--copied {
+    background: var(--lex-copy-success-bg);
+    border-color: transparent;
+    color: var(--lex-copy-success-color);
+    box-shadow: none;
+}
+
+.lex-copy-button--copied:hover,
+button.lex-copy-button--copied:hover {
+    background: var(--lex-copy-success-bg);
+    border-color: transparent;
+}
+
+/* ============================================
+   VARIANT: SECONDARY
+   ============================================ */
+.lex-copy-button--secondary,
+button.lex-copy-button--secondary {
+    background: #fff;
+    border: 1px solid var(--lex-border-color, #dcdcde);
+    color: var(--lex-color-text, #50575e);
+}
+
+.lex-copy-button--secondary:hover,
+.lex-copy-button--secondary:focus,
+button.lex-copy-button--secondary:hover,
+button.lex-copy-button--secondary:focus {
+    background: #f9f9fa;
+    border-color: var(--lex-border-color-hover, #a7aaad);
+    color: var(--lex-color-text-hover, #1d2327);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   VARIANT: SMALL
+   ============================================ */
+.lex-copy-button--small,
+button.lex-copy-button--small {
+    padding: var(--lex-copy-padding-small);
+    font-size: 12px;
+}
+
+.lex-copy-button--small .dashicons,
+button.lex-copy-button--small .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+/* ============================================
+   VARIANT: BLOCK (Full Width)
+   ============================================ */
+.lex-copy-button--block,
+button.lex-copy-button--block {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ============================================
+   FOCUS STATES
+   ============================================ */
+.lex-copy-button:focus,
+button.lex-copy-button:focus {
+    outline: 2px solid var(--lex-color-primary-light, rgba(83, 68, 244, 0.1));
+    outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media screen and (max-width: 782px) {
+    .lex-copy-button,
+    button.lex-copy-button {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+    
+    .lex-copy-button .dashicons,
+    button.lex-copy-button .dashicons {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+}
+

@@ -1,41 +1,84 @@
 <?php
-namespace VAPFEM;
+namespace LeanPL;
 
 /**
- * Assets Manager Class
- * Handles registration and enqueuing of all plugin assets
+ * Unified Assets Manager
+ * 
+ * Single source of truth for ALL plugin assets across:
+ * - Frontend (shortcodes, widgets)
+ * - Elementor Editor
+ * - Elementor Preview
+ * - Admin pages
+ * 
+ * DRY Principle: All asset definitions, registration, and enqueuing in ONE place
  */
-
-// Prevent direct access
-if (!defined('ABSPATH')) {
-    exit;
-}
-
 class Assets_Manager {
 
-    /**
-     * Instance of this class
-     */
     private static $instance = null;
-
-    /**
-     * Version of the plugin
-     */
     private $version;
-
-    /**
-     * Track if assets have been loaded to prevent duplicates
-     */
     private $assets_loaded = false;
-
-    /**
-     * Track if we're doing late loading (after wp_enqueue_scripts)
-     */
     private $late_loading = false;
+    private $loaded = [];
 
     /**
-     * Get instance
+     * Asset definitions - SINGLE SOURCE OF TRUTH
+     * All asset paths, handles, and dependencies defined here
      */
+    private $assets = [
+        'scripts' => [
+            'plyr' => [
+                'file' => '/assets/js/plyr.min.js',
+                'deps' => ['jquery'],
+                'in_footer' => true,
+                'contexts' => ['frontend'],
+            ],
+            'plyr-polyfilled' => [
+                'file' => '/assets/js/plyr.polyfilled.min.js',
+                'deps' => ['jquery'],
+                'in_footer' => true,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-main' => [
+                'file' => '/assets/js/main.js',
+                'deps' => ['jquery', 'plyr'],
+                'in_footer' => true,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-admin' => [
+                'file' => '/assets/js/admin.js',
+                'deps' => ['jquery'],
+                'in_footer' => true,
+                'contexts' => ['admin'],
+            ],
+        ],
+        'styles' => [
+            'plyr' => [
+                'file' => '/assets/css/plyr.css',
+                'deps' => [],
+                'in_footer' => false,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-main' => [
+                'file' => '/assets/css/main.css',
+                'deps' => ['plyr'],
+                'in_footer' => false,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-editor' => [
+                'file' => '/assets/css/editor.css',
+                'deps' => [],
+                'in_footer' => false,
+                'contexts' => ['elementor-editor'],
+            ],
+            'leanpl-admin' => [
+                'file' => '/assets/css/admin.css',
+                'deps' => [],
+                'in_footer' => false,
+                'contexts' => ['admin'],
+            ],
+        ],
+    ];
+
     public static function get_instance() {
         if (null === self::$instance) {
             self::$instance = new self();
@@ -43,212 +86,138 @@ class Assets_Manager {
         return self::$instance;
     }
 
-    /**
-     * Constructor
-     */
     private function __construct() {
         $this->init();
     }
 
     /**
-     * Initialize assets management
+     * Initialize the assets manager
      */
     public function init() {
-        if( defined( 'WP_DEBUG' ) && WP_DEBUG ){
-			$this->version = time();
-		} else {
-			$this->version = VAPFEM_VERSION;
-		}
+        $this->version = leanpl_get_version();
 
-        add_action('wp_enqueue_scripts', array($this, 'register_assets'));
-        add_action('wp_enqueue_scripts', array($this, 'conditional_enqueue'), 20); // Later priority for early detection
-        add_action('elementor/frontend/after_register_scripts', array($this, 'register_scripts'));
-        add_action('elementor/frontend/after_enqueue_styles', array($this, 'register_styles'));
-        add_action('admin_enqueue_scripts', array($this, 'register_admin_assets'));
+        // -- Register all assets --
+        add_action('admin_enqueue_scripts', [$this, 'register_all']);
+        add_action('wp_enqueue_scripts', [$this, 'register_all']);
+
+        // -- Load admin assets --
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        
+        // -- Load frontend assets --
+        add_action('wp_enqueue_scripts', [$this, 'common_frontend_enqueue']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_if_shortcode'], 20);
+
+        // -- Load Elementor assets --
+        // Note: Widget frontend assets are loaded via widget registration, so we don't need to load them here.
+        //       But we need to register the assets for the editor.
+        add_action('elementor/editor/after_enqueue_scripts', [$this, 'register_n_enqueue_elementor_editor_assets']);
     }
 
     /**
-     * Register all plugin assets (scripts and styles)
-     * Called during wp_enqueue_scripts for shortcode context
+     * Register all assets
      */
-    public function register_assets() {
-        $this->register_scripts();
-        $this->register_styles();
+    public function register_all() {
+        foreach ($this->assets['styles'] as $handle => $config) {
+            $url = LEANPL_URI . $config['file'];
+            $deps = $config['deps'];
+            $in_footer = $config['in_footer'];
+
+            wp_register_style($handle, $url, $deps, $this->version, $in_footer);
+        }
+
+        foreach ($this->assets['scripts'] as $handle => $config) {
+            $url = LEANPL_URI . $config['file'];
+            $deps = $config['deps'];
+            $in_footer = $config['in_footer'];
+
+            wp_register_script($handle, $url, $deps, $this->version, $in_footer);
+        }
+    }
+
+    public function enqueue_admin_assets($hook) {
+        if (!leanpl_is_our_admin_page()) {
+            return;
+        }
+        
+        $this->load_assets_by_context('admin');
+    }
+
+    public function common_frontend_enqueue() {
+        // Enqueue jQuery first, other plugins may remove it from the queue
+        wp_enqueue_script('jquery');
+
+        // Localization
+        wp_localize_script('jquery', 'leanpl_params', [
+            'version' => $this->version,
+            'debugMode' => leanpl_is_test_mode() || leanpl_is_debug_mode(),
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+        ]);
     }
 
     /**
-     * Register all plugin scripts
+     * Load by context
+     * 
+     * @param string $context The context to load the assets for
+     * @return void
      */
-    public function register_scripts() {
-        wp_register_script(
-            'plyr',
-            VAPFEM_URI . '/assets/js/plyr.min.js',
-            array('jquery'),
-            $this->version,
-            true
-        );
 
-        wp_register_script(
-            'plyr-polyfilled',
-            VAPFEM_URI . '/assets/js/plyr.polyfilled.min.js',
-            array('jquery'),
-            $this->version,
-            true
-        );
+    public function load_assets_by_context($context) {
+        foreach ($this->assets['styles'] as $handle => $config) {
+            // Skip if not for this context
+            if (!in_array($context, $config['contexts'])) {
+                continue;
+            }
 
-        wp_register_script(
-            'vapfem-main',
-            VAPFEM_URI . '/assets/js/main.js',
-            array('jquery'),
-            $this->version,
-            true
-        );
+            // Enqueue it
+            wp_enqueue_style($handle);
+        }
+
+        foreach ($this->assets['scripts'] as $handle => $config) {
+            // Skip if not for this context
+            if (!in_array($context, $config['contexts'])) {
+                continue;
+            }
+
+            // Enqueue it
+            wp_enqueue_script($handle);
+        }
     }
 
     /**
-     * Register all plugin styles
+     * Load if shortcode is found in the post content
+     * 
+     * Note: this will not support do_shortcode() usage
+     * @return void
      */
-    public function register_styles() {
-        wp_register_style(
-            'plyr',
-            VAPFEM_URI . '/assets/css/plyr.css',
-            array(),
-            $this->version
-        );
-
-        wp_register_style(
-            'vapfem-main',
-            VAPFEM_URI . '/assets/css/main.css',
-            array(),
-            $this->version
-        );
-    }
-
-    /**
-     * Register admin-specific assets
-     */
-    public function register_admin_assets() {
-        wp_register_style(
-            'vapfem-admin',
-            VAPFEM_URI . '/assets/css/admin.css',
-            array(),
-            $this->version
-        );
-
-        wp_register_script(
-            'vapfem-admin',
-            VAPFEM_URI . '/assets/js/admin.js',
-            array('jquery'),
-            $this->version,
-            true
-        );
-    }
-
-    /**
-     * Early detection method - scan post content for shortcodes
-     * Called during wp_enqueue_scripts hook
-     */
-    public function conditional_enqueue() {
-        // Skip if already loaded or in admin
+    public function enqueue_if_shortcode() {
         if ($this->assets_loaded || is_admin()) {
             return;
         }
 
-        global $post;
+        global $post; // might be null for 404 pages
 
-        // Check if current post contains lean_video shortcode
-        if ($post && has_shortcode($post->post_content, 'lean_video')) {
-            $this->enqueue_player_assets();
+        // Fixed: Attempt to read property on null
+        if ($post && ( 
+                has_shortcode( $post->post_content, 'lean_video' ) ||
+                has_shortcode( $post->post_content, 'lean_audio' ) || 
+                has_shortcode( $post->post_content, 'lean_player' )
+            )
+        ) {
+            $this->load_assets_by_context('frontend');
         }
     }
 
     /**
-     * Enqueue player assets when needed
-     * Called from shortcodes or widgets on demand
+     * Load Elementor editor assets
      */
-    public function enqueue_player_assets() {
-        // Prevent duplicate loading
-        if ($this->assets_loaded) {
-            return;
-        }
+    public function register_n_enqueue_elementor_editor_assets() {
+        // Register all assets again because in the current hooks the assets are not registered via wp_enqueue_scripts
+        $this->register_all();
 
-        wp_enqueue_script('plyr');
-        wp_enqueue_script('vapfem-main');
-        wp_enqueue_style('plyr');
-        wp_enqueue_style('vapfem-main');
-
-        $this->assets_loaded = true;
-    }
-
-    /**
-     * Ensure assets are loaded - runtime safety net
-     * Called by shortcode execution to handle edge cases
-     */
-    public function ensure_assets_loaded() {
-        // Skip if already loaded
-        if ($this->assets_loaded) {
-            return;
-        }
-
-        // Check if we're past wp_enqueue_scripts hook
-        if (did_action('wp_enqueue_scripts')) {
-            // Too late for normal enqueuing - use fallback
-            $this->late_loading = true;
-            $this->inline_critical_assets();
-        } else {
-            // Still time for normal enqueuing
-            $this->enqueue_player_assets();
-        }
-    }
-
-    /**
-     * Fallback for late loading scenarios
-     * Inline critical CSS and enqueue JS immediately
-     */
-    private function inline_critical_assets() {
-        // Prevent duplicate loading
-        if ($this->assets_loaded) {
-            return;
-        }
-
-        // Inline critical CSS to prevent FOUC
-        add_action('wp_footer', array($this, 'output_critical_css'), 1);
-
-        // Enqueue JS in footer (still works after wp_enqueue_scripts)
-        wp_enqueue_script('plyr');
-        wp_enqueue_script('vapfem-main');
-
-        $this->assets_loaded = true;
-    }
-
-    /**
-     * Output critical CSS inline to prevent FOUC
-     */
-    public function output_critical_css() {
-        if (!$this->late_loading) {
-            return;
-        }
-
-        echo '<style id="vapfem-critical-css">
-            .vapfem-player {
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .vapfem-player.plyr--ready {
-                opacity: 1;
-            }
-            .vapfem-player video,
-            .vapfem-player iframe {
-                width: 100%;
-                height: auto;
-            }
-        </style>';
-
-        // Load full CSS via link tag
-        echo '<link rel="stylesheet" id="plyr-css" href="' . esc_url(VAPFEM_URI . '/assets/css/plyr.css') . '?ver=' . esc_attr($this->version) . '" type="text/css" media="all" />';
-        echo '<link rel="stylesheet" id="vapfem-main-css" href="' . esc_url(VAPFEM_URI . '/assets/css/main.css') . '?ver=' . esc_attr($this->version) . '" type="text/css" media="all" />';
+        // Load assets for Elementor editor
+        $this->load_assets_by_context('elementor-editor');
     }
 }
 
-// Initialize assets manager
+// Initialize
 Assets_Manager::get_instance();

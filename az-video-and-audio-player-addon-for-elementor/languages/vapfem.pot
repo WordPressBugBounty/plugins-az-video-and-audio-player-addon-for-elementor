@@ -1,1286 +1,2341 @@
-#, fuzzy
+# Copyright (C) 2025 LeanPlugins
+# This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: AZ Video and Audio Player for Elementor, Gutenberg & "
-"Classic Editor\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-04 06:23+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor 3.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.0; wp-6.8.3; php-8.0.30\n"
-"X-Domain: vapfem"
-
-#: includes/views/html-video-tab.php:108 includes/views/html-audio-tab.php:100
-msgid " tab for complete list of available parameters."
-msgstr ""
-
-#. 1: Plugin name 2: PHP 3: Required PHP version
-#. 1: Plugin name 2: Elementor 3: Required Elementor version
-#: includes/init.php:99 includes/init.php:116
-#, php-format
-msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
-msgstr ""
-
-#: includes/views/html-hire-page.php:84
-msgid "+ More"
-msgstr ""
-
-#: includes/widgets/audio-player.php:174 includes/widgets/video-player.php:428
-msgid "0.5"
-msgstr ""
-
-#: includes/widgets/audio-player.php:175 includes/widgets/video-player.php:429
-msgid "0.75"
-msgstr ""
-
-#: includes/widgets/audio-player.php:176 includes/widgets/video-player.php:430
-msgid "1"
-msgstr ""
-
-#: includes/widgets/audio-player.php:177 includes/widgets/video-player.php:431
-msgid "1.25"
-msgstr ""
-
-#: includes/widgets/audio-player.php:178 includes/widgets/video-player.php:432
-msgid "1.5"
-msgstr ""
-
-#: includes/widgets/video-player.php:179 includes/widgets/video-player.php:205
-#: includes/widgets/video-player.php:453
-msgid "1080"
-msgstr ""
-
-#: includes/widgets/video-player.php:180 includes/widgets/video-player.php:454
-msgid "1440"
-msgstr ""
-
-#: includes/widgets/video-player.php:486
-msgid "16:9"
-msgstr ""
-
-#: includes/widgets/video-player.php:181 includes/widgets/video-player.php:455
-msgid "2160"
-msgstr ""
-
-#: includes/widgets/video-player.php:174 includes/widgets/video-player.php:448
-msgid "240"
-msgstr ""
-
-#: includes/widgets/video-player.php:182 includes/widgets/video-player.php:456
-msgid "2880"
-msgstr ""
-
-#: includes/widgets/video-player.php:175 includes/widgets/video-player.php:449
-msgid "360"
-msgstr ""
-
-#: includes/widgets/video-player.php:183 includes/widgets/video-player.php:457
-msgid "4320"
-msgstr ""
-
-#: includes/widgets/video-player.php:176 includes/widgets/video-player.php:450
-msgid "480"
-msgstr ""
-
-#: includes/widgets/video-player.php:177 includes/widgets/video-player.php:197
-#: includes/widgets/video-player.php:451
-msgid "576"
-msgstr ""
-
-#: includes/views/html-sidebar.php:22
-msgid "7+ Years Experience"
-msgstr ""
-
-#: includes/widgets/video-player.php:178 includes/widgets/video-player.php:201
-#: includes/widgets/video-player.php:452
-msgid "720"
-msgstr ""
-
-#: includes/widgets/video-player.php:77
-msgid "76979871"
-msgstr ""
-
-#: includes/views/html-hire-page.php:116
-msgid ""
-"<strong>Free 15–30 min Discovery Call</strong><br> I'll understand what's "
-"driving your project and give you clarity on how to move forward."
-msgstr ""
-
-#: includes/views/html-hire-page.php:101
-msgid "[Schedule Here]"
-msgstr ""
-
-#: includes/views/html-video-tab.php:20 includes/views/html-video-tab.php:40
-#: includes/views/html-video-tab.php:80 includes/views/html-audio-tab.php:20
-#: includes/views/html-audio-tab.php:40 includes/views/html-audio-tab.php:60
-msgid "Action"
-msgstr ""
-
-#: includes/widgets/video-player.php:92
-msgid "Add Custom Poster"
-msgstr ""
-
-#: includes/views/html-video-tab.php:79 includes/views/html-audio-tab.php:59
-msgid "Advanced Shortcode"
-msgstr ""
-
-#: includes/widgets/video-player.php:511
-msgid "Airplay"
-msgstr ""
-
-#: includes/widgets/audio-player.php:213
-msgid "Airplay Icon"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:74
-#: includes/views/html-available-options-tab.php:220
-msgid "All controls"
-msgstr ""
-
-#: includes/widgets/video-player.php:573
-msgid "All Icon Color"
-msgstr ""
-
-#: includes/views/html-video-tab.php:107 includes/views/html-audio-tab.php:99
-#: includes/views/html-available-options-tab.php:10
-msgid "All Shortcode Options"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:18
-msgid "Audio"
-msgstr ""
-
-#: includes/widgets/audio-player.php:46 includes/widgets/audio-player.php:66
-msgid "Audio Link"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:10
-#: includes/views/html-elementor-tab.php:34
-#: includes/widgets/audio-player.php:11
-msgid "Audio Player"
-msgstr ""
-
-#: includes/widgets/audio-player.php:41
-msgid "Audio Source"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:38
-msgid "Audio Type"
-msgstr ""
-
-#: includes/class-audio-shortcode.php:106
-msgid "Audio URL is required."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:207
-#: includes/widgets/audio-player.php:192
-msgid "Auto"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:43
-msgid "Auto-start playback when page loads"
-msgstr ""
-
-#: includes/widgets/audio-player.php:87 includes/widgets/video-player.php:218
-msgid "Autoplay"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:236
-msgid "Autoplay Browser Policy:"
-msgstr ""
-
-#: includes/widgets/video-player.php:220
-msgid ""
-"Autoplay varies for each user by an intelligent system of the browsers. If "
-"you experience Autoplay does not work from your browser. Enable the "
-"\"Muted\" option below. <br><br>Muted autoplay is always allowed."
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:14
-msgid "Available Widgets"
-msgstr ""
-
-#: includes/views/html-hire-page.php:24
-msgid "Avoids bloated plugins and creates lightweight, future-proof solutions."
-msgstr ""
-
-#. Author of the plugin
-msgid "AZ Plugins"
-msgstr ""
-
-#. Name of the plugin
-msgid "AZ Video and Audio Player for Elementor, Gutenberg & Classic Editor"
-msgstr ""
-
-#: includes/widgets/video-player.php:336
-msgid "Back To Start After End"
-msgstr ""
-
-#: includes/widgets/video-player.php:338
-msgid "Back to start after end of playing"
-msgstr ""
-
-#: includes/widgets/audio-player.php:467 includes/widgets/video-player.php:804
-msgid "Bar Color"
-msgstr ""
-
-#: includes/widgets/audio-player.php:339 includes/widgets/video-player.php:676
-msgid "Bar Color 1"
-msgstr ""
-
-#: includes/widgets/audio-player.php:354 includes/widgets/video-player.php:691
-msgid "Bar Color 2"
-msgstr ""
-
-#: includes/widgets/audio-player.php:479 includes/widgets/video-player.php:816
-msgid "Bar Empty Color"
-msgstr ""
-
-#: includes/widgets/audio-player.php:325 includes/widgets/audio-player.php:453
-#: includes/widgets/video-player.php:662 includes/widgets/video-player.php:790
-msgid "Bar Pointer Color"
-msgstr ""
-
-#: includes/views/html-video-tab.php:19 includes/views/html-audio-tab.php:19
-msgid "Basic Shortcode"
-msgstr ""
-
-#: includes/widgets/audio-player.php:259 includes/widgets/audio-player.php:387
-#: includes/widgets/audio-player.php:503 includes/widgets/video-player.php:596
-#: includes/widgets/video-player.php:724 includes/widgets/video-player.php:840
-msgid "BG Color"
-msgstr ""
-
-#: includes/views/html-hire-page.php:101 includes/views/html-hire-page.php:120
-msgid "Book a Discovery Call"
-msgstr ""
-
-#: includes/widgets/audio-player.php:308 includes/widgets/audio-player.php:436
-#: includes/widgets/audio-player.php:552 includes/widgets/video-player.php:645
-#: includes/widgets/video-player.php:773 includes/widgets/video-player.php:889
-msgid "Border"
-msgstr ""
-
-#: includes/views/html-hire-page.php:78
-msgid "Brand New Websites (Corporate / eCommerce / LMS / Membership sites)"
-msgstr ""
-
-#: includes/widgets/video-player.php:59
-msgid "bTqVqk7FSmY"
-msgstr ""
-
-#: includes/widgets/audio-player.php:366 includes/widgets/video-player.php:703
-msgid "Buffered Bar Color"
-msgstr ""
-
-#: includes/views/html-hire-page.php:21
-msgid ""
-"Builds clean, scalable WordPress solutions that grow with your business."
-msgstr ""
-
-#: includes/views/html-hire-page.php:58
-msgid "Built for the long run, easy for you or future devs to work with."
-msgstr ""
-
-#: includes/views/html-hire-page.php:54
-msgid "Business Focused Approach:"
-msgstr ""
-
-#: includes/widgets/video-player.php:508
-msgid "Caption"
-msgstr ""
-
-#: includes/views/html-hire-page.php:58
-msgid "Clean, Maintainable Code:"
-msgstr ""
-
-#: includes/widgets/video-player.php:282
-msgid "Click (or tap) of the video container will toggle play/pause."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:152
-msgid "Click anywhere on video to play/pause"
-msgstr ""
-
-#: includes/widgets/video-player.php:280
-msgid "Click To Play"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:11
-msgid ""
-"Complete reference of all available shortcode options for both video and "
-"audio player."
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:68
-msgid "Configure & Style"
-msgstr ""
-
-#: includes/views/html-sidebar.php:32
-msgid "Contact"
-msgstr ""
-
-#: includes/widgets/audio-player.php:203 includes/widgets/video-player.php:497
-msgid "Control Options"
-msgstr ""
-
-#: includes/views/html-video-tab.php:26 includes/views/html-video-tab.php:47
-#: includes/views/html-video-tab.php:52 includes/views/html-video-tab.php:57
-#: includes/views/html-video-tab.php:67 includes/views/html-video-tab.php:90
-#: includes/views/html-video-tab.php:99 includes/views/html-audio-tab.php:26
-#: includes/views/html-audio-tab.php:47 includes/views/html-audio-tab.php:67
-#: includes/views/html-audio-tab.php:75 includes/views/html-audio-tab.php:83
-#: includes/views/html-audio-tab.php:91
-msgid "Copy"
-msgstr ""
-
-#: includes/views/html-sidebar.php:37
-msgid "Copy Email"
-msgstr ""
-
-#: includes/views/html-sidebar.php:16
-msgid "Create Support Ticket"
-msgstr ""
-
-#: includes/widgets/video-player.php:505
-msgid "Current Time"
-msgstr ""
-
-#: includes/widgets/video-player.php:105
-msgid "Custom Poster For Video"
-msgstr ""
-
-#: includes/views/html-sidebar.php:11
-msgid "Customer Support"
-msgstr ""
-
-#: includes/widgets/audio-player.php:234 includes/widgets/video-player.php:533
-msgid "Debug Mode"
-msgstr ""
-
-#: includes/widgets/audio-player.php:226 includes/widgets/video-player.php:525
-msgid "Debugging"
-msgstr ""
-
-#: includes/views/html-hire-page.php:46
-msgid "Deep WordPress Expertise:"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:20
-msgid "Default"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:123
-msgid "Default playback speed"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:200
-msgid "Default quality when the video plays"
-msgstr ""
-
-#: includes/views/html-video-tab.php:39 includes/views/html-audio-tab.php:39
-msgid "Demo Shortcode"
-msgstr ""
-
-#: includes/views/html-video-tab.php:32 includes/views/html-audio-tab.php:32
-msgid "Demo Shortcodes"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:21
-msgid "Description"
-msgstr ""
-
-#: includes/views/html-hire-page.php:50
-msgid "Direct Collaboration:"
-msgstr ""
-
-#: includes/widgets/video-player.php:284
-msgid "Disable"
-msgstr ""
-
-#: includes/widgets/audio-player.php:159 includes/widgets/video-player.php:396
-msgid ""
-"Display a seek tooltip to indicate on click where the media would seek to."
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:35
-msgid "Display and customize audio players with full styling control"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:24
-msgid "Display and customize video players with full styling control"
-msgstr ""
-
-#: includes/widgets/video-player.php:380
-msgid "Display Control Labels"
-msgstr ""
-
-#: includes/widgets/video-player.php:382
-msgid "Display control labels as tooltips on :hover & :focus"
-msgstr ""
-
-#: includes/widgets/audio-player.php:157 includes/widgets/video-player.php:394
-msgid "Display Seek Tooltip"
-msgstr ""
-
-#: includes/widgets/audio-player.php:131 includes/widgets/video-player.php:296
-msgid ""
-"Display the current time as a countdown rather than an incremental counter."
-msgstr ""
-
-#: includes/widgets/audio-player.php:129 includes/widgets/video-player.php:294
-msgid "Display Time As Countdown"
-msgstr ""
-
-#: includes/class-player-renderer.php:236
-msgid "Download"
-msgstr ""
-
-#: includes/widgets/audio-player.php:214
-msgid "Download Button"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:61
-msgid "Drag & Drop"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:62
-msgid "Drag the widget to your desired location on the page"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:48
-msgid "Edit any page or post with Elementor"
-msgstr ""
-
-#: includes/init.php:118
-msgid "Elementor"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:10
-msgid "Elementor Integration"
-msgstr ""
-
-#: includes/views/html-hire-page.php:102 includes/views/html-hire-page.php:126
-msgid "Email Me"
-msgstr ""
-
-#: includes/views/html-sidebar.php:35
-msgid "Email:"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:143
-#: includes/views/html-available-options-tab.php:191
-msgid "Empty"
-msgstr ""
-
-#: includes/widgets/video-player.php:283
-msgid "Enable"
-msgstr ""
-
-#: includes/widgets/video-player.php:469
-msgid "Enable Custom Ratio"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:131
-msgid "Enable debug mode for troubleshooting"
-msgstr ""
-
-#: includes/widgets/video-player.php:410
-msgid "Enable Fullscreen Toggle"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:176
-msgid "Enable fullscreen toggle button"
-msgstr ""
-
-#: includes/widgets/video-player.php:412
-msgid "Enable fullscreen when double click on the player"
-msgstr ""
-
-#: includes/widgets/audio-player.php:236 includes/widgets/video-player.php:535
-msgid ""
-"Enable it when the player does not work properly. When debug is enable, the "
-"browser will show the informations about this player in the browser console. "
-"This is helpful for developer."
-msgstr ""
-
-#: includes/widgets/video-player.php:355
-msgid "Enable keyboard shortcuts for focused players only"
-msgstr ""
-
-#: includes/widgets/video-player.php:367
-msgid "Enable Keyboard Shortcuts Globally"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:107
-msgid "Enable keyboard shortcuts globally on page"
-msgstr ""
-
-#: includes/widgets/video-player.php:353
-msgid "Enable Keyboard Shortcuts On Focus"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:99
-msgid "Enable keyboard shortcuts when player is focused"
-msgstr ""
-
-#: includes/widgets/audio-player.php:103 includes/widgets/video-player.php:234
-msgid ""
-"Enable this to start playback muted. This is also usefull if you experience "
-"autoplay is not working from your browser."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:206
-msgid "etc."
-msgstr ""
-
-#: includes/views/html-hire-page.php:92
-msgid ""
-"Every project starts with a quick conversation. I'll listen, understand "
-"what's really driving your project, and give you clarity on how to move "
-"forward."
-msgstr ""
-
-#: includes/views/html-video-tab.php:78 includes/views/html-audio-tab.php:58
-msgid "Example Type"
-msgstr ""
-
-#: includes/views/html-hire-page.php:23
-msgid "Focuses on your business goals, not just technical tasks."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:239
-msgid "for autoplay to work reliably"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:208
-msgid ""
-"Force an aspect ratio for all videos. The format is 'w:h' - e.g. '16:9' or "
-"'4:3'. If this is not specified then the default for HTML5 and Vimeo is to "
-"use the native resolution of the video. As dimensions are not available from "
-"YouTube via SDK, 16:9 is forced as a sensible default."
-msgstr ""
-
-#: includes/widgets/video-player.php:470
-msgid "Force an aspect ratio."
-msgstr ""
-
-#: includes/views/html-sidebar.php:42
-msgid "Free 15-30 minute Discovery Call Available"
-msgstr ""
-
-#: includes/widgets/video-player.php:512
-msgid "Fullscreen"
-msgstr ""
-
-#: includes/widgets/audio-player.php:33 includes/widgets/video-player.php:34
-msgid "General Options"
-msgstr ""
-
-#: includes/views/html-hire-page.php:82
-msgid "Google Analytics (GA4) Integration"
-msgstr ""
-
-#: includes/views/html-sidebar.php:13
-msgid ""
-"Having issues with the plugin? Create a support ticket in our official forum."
-msgstr ""
-
-#: includes/views/html-hire-page.php:102
-msgid "helloalberuni@gmail.com"
-msgstr ""
-
-#: includes/views/html-sidebar.php:25
-msgid "Hi! I'm the developer behind this plugin."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:160
-msgid "Hide all controls after 2 seconds of inactivity"
-msgstr ""
-
-#: includes/widgets/video-player.php:322
-msgid "Hide Control Icons After 2s"
-msgstr ""
-
-#: includes/widgets/video-player.php:324
-msgid ""
-"Hide video controls automatically after 2s of no mouse or focus movement,"
-msgstr ""
-
-#: includes/class-menu.php:70 includes/class-menu.php:71
-msgid "Hire Me"
-msgstr ""
-
-#: includes/widgets/audio-player.php:283 includes/widgets/audio-player.php:411
-#: includes/widgets/audio-player.php:527 includes/widgets/video-player.php:620
-#: includes/widgets/video-player.php:748 includes/widgets/video-player.php:864
-msgid "Hover BG Color"
-msgstr ""
-
-#: includes/widgets/audio-player.php:295 includes/widgets/audio-player.php:423
-#: includes/widgets/audio-player.php:539 includes/widgets/video-player.php:632
-#: includes/widgets/video-player.php:760 includes/widgets/video-player.php:876
-msgid "Hover Icon Color"
-msgstr ""
-
-#: includes/views/html-hire-page.php:71
-msgid "How I Can Help You"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:229
-msgid "How much audio to preload"
-msgstr ""
-
-#: includes/class-menu.php:82 includes/views/html-elementor-tab.php:42
-msgid "How to Use"
-msgstr ""
-
-#: includes/widgets/video-player.php:48
-msgid "HTML5"
-msgstr ""
-
-#: includes/views/html-video-tab.php:61
-msgid "HTML5 <br>Multiple Quality <br>Self Hosted / CDN"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:45
-msgid "HTML5 Audio:"
-msgstr ""
-
-#: includes/views/html-video-tab.php:55
-msgid "HTML5: <br>Self Hosted / CDN"
-msgstr ""
-
-#: includes/widgets/audio-player.php:68
-msgid "https://example.com/music-name.mp3"
-msgstr ""
-
-#: includes/views/html-hire-page.php:103
-msgid "https://helloalberuni.com"
-msgstr ""
-
-#: includes/widgets/video-player.php:154
-msgid "https://your-link.com"
-msgstr ""
-
-#: includes/views/html-hire-page.php:54
-msgid "I care about your revenue and goals, not just \"completing tasks.\""
-msgstr ""
-
-#: includes/views/html-hire-page.php:42
-msgid ""
-"I don't just build sites, I actually create the tools other developers use, "
-"so you can be confident your code is rock-solid."
-msgstr ""
-
-#: includes/views/html-sidebar.php:28
-msgid ""
-"I help businesses, educators, and content creators with high quality "
-"WordPress development. From small fixes, feature enhancements to complete "
-"custom websites. Let's talk about your project goals."
-msgstr ""
-
-#: includes/views/html-hire-page.php:46
-msgid "I know the ecosystem inside out, helping you avoid costly mistakes."
-msgstr ""
-
-#: includes/views/html-hire-page.php:72
-msgid ""
-"I specialize in helping businesses, educators, and content creators with:"
-msgstr ""
-
-#: includes/widgets/audio-player.php:271 includes/widgets/audio-player.php:399
-#: includes/widgets/audio-player.php:515 includes/widgets/video-player.php:608
-#: includes/widgets/video-player.php:736 includes/widgets/video-player.php:852
-msgid "Icon Color"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:15
-msgid "If you are using Elementor, you have access to two dedicated widgets:"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:55
-msgid ""
-"In the widget panel, search for \"Video Player\" or \"Audio Player\". You "
-"will see a badge called \"LEAN\" above the widget title."
-msgstr ""
-
-#: includes/widgets/video-player.php:444
-msgid "Initial Quality"
-msgstr ""
-
-#: includes/widgets/audio-player.php:170 includes/widgets/video-player.php:424
-msgid "Initial Speed"
-msgstr ""
-
-#: includes/widgets/video-player.php:259
-msgid "Initial Volume"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:67
-msgid "Initial volume level (0 = muted, 1 = full volume)"
-msgstr ""
-
-#: includes/views/html-hire-page.php:90 includes/views/html-hire-page.php:110
-msgid "Let's Talk"
-msgstr ""
-
-#: includes/widgets/audio-player.php:115 includes/widgets/video-player.php:246
-msgid "Loop"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:51
-msgid "Loop playback when media ends"
-msgstr ""
-
-#: includes/widgets/audio-player.php:117 includes/widgets/video-player.php:248
-msgid "Loop the current media. "
-msgstr ""
-
-#: includes/views/html-audio-tab.php:78
-msgid "Lower Volume on Initial Load:"
-msgstr ""
-
-#: includes/widgets/audio-player.php:193
-msgid "Metadata"
-msgstr ""
-
-#: includes/views/html-video-tab.php:93 includes/views/html-audio-tab.php:70
-msgid "Minimal Controls:"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:237
-msgid ""
-"Modern browsers block autoplay with sound enabled to improve user experience "
-"and reduce unwanted audio. If you set"
-msgstr ""
-
-#: includes/views/html-video-tab.php:85
-msgid "Multiple Quality (Self Hosted / CDN):"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:192
-msgid "Multiple quality sources for HTML5 video"
-msgstr ""
-
-#: includes/widgets/video-player.php:506
-msgid "Mute"
-msgstr ""
-
-#: includes/widgets/audio-player.php:210
-msgid "Mute Icon"
-msgstr ""
-
-#: includes/widgets/audio-player.php:101 includes/widgets/video-player.php:232
-msgid "Muted"
-msgstr ""
-
-#: includes/views/html-hire-page.php:62
-msgid "My work powers 133,000+ websites."
-msgstr ""
-
-#: includes/views/html-sidebar.php:23
-msgid "Need a WordPress Developer?"
-msgstr ""
-
-#: includes/views/html-video-tab.php:106 includes/views/html-audio-tab.php:98
-msgid "Need more customization? Check the 👉"
-msgstr ""
-
-#: includes/widgets/audio-player.php:91 includes/widgets/audio-player.php:105
-#: includes/widgets/audio-player.php:119 includes/widgets/audio-player.php:133
-#: includes/widgets/audio-player.php:161 includes/widgets/audio-player.php:238
-#: includes/widgets/video-player.php:95 includes/widgets/video-player.php:222
-#: includes/widgets/video-player.php:236 includes/widgets/video-player.php:250
-#: includes/widgets/video-player.php:298 includes/widgets/video-player.php:326
-#: includes/widgets/video-player.php:340 includes/widgets/video-player.php:357
-#: includes/widgets/video-player.php:370 includes/widgets/video-player.php:384
-#: includes/widgets/video-player.php:398 includes/widgets/video-player.php:414
-#: includes/widgets/video-player.php:473 includes/widgets/video-player.php:537
-msgid "No"
-msgstr ""
-
-#: includes/views/html-hire-page.php:50
-msgid "No agencies, no hand-offs. You work directly with me."
-msgstr ""
-
-#: includes/views/html-audio-tab.php:86
-msgid "No Download:"
-msgstr ""
-
-#: includes/widgets/audio-player.php:194
-msgid "None"
-msgstr ""
-
-#: includes/widgets/audio-player.php:89
-msgid ""
-"Note: Mobile browsers don’t allow autoplay for Audio. Some desktop or laptop "
-"browsers also automatically block videos from automatically playing or may "
-"automatically mute the audio."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:81
-msgid "Number (seconds)"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:47
-msgid "Open Elementor Editor"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:16
-msgid "Option Name"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:240
-msgid "Or rely on user interaction (click to play) for audio-enabled playback"
-msgstr ""
-
-#: includes/views/html-video-tab.php:73 includes/views/html-audio-tab.php:53
-msgid "Other Examples"
-msgstr ""
-
-#: includes/widgets/audio-player.php:561 includes/widgets/video-player.php:898
-msgid "Others"
-msgstr ""
-
-#: includes/init.php:101
-msgid "PHP"
-msgstr ""
-
-#: includes/widgets/video-player.php:510
-msgid "PIP"
-msgstr ""
-
-#: includes/widgets/video-player.php:503
-msgid "Play"
-msgstr ""
-
-#: includes/widgets/audio-player.php:208 includes/widgets/audio-player.php:250
-#: includes/widgets/video-player.php:587
-msgid "Play Icon"
-msgstr ""
-
-#: includes/widgets/video-player.php:502
-msgid "Play Large"
-msgstr ""
-
-#: includes/views/html-hire-page.php:42
-msgid "Plugin Developer First:"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:19
-msgid "Possible Values"
-msgstr ""
-
-#: includes/widgets/audio-player.php:187
-msgid "Preload"
-msgstr ""
-
-#: includes/widgets/video-player.php:549 includes/widgets/video-player.php:558
-msgid "Primary Color"
-msgstr ""
-
-#: includes/widgets/audio-player.php:209 includes/widgets/video-player.php:504
-msgid "Progress Bar"
-msgstr ""
-
-#: includes/widgets/video-player.php:126
-msgid "Put Video Link"
-msgstr ""
-
-#: includes/widgets/video-player.php:60 includes/widgets/video-player.php:78
-msgid "Put your video id here"
-msgstr ""
-
-#: includes/views/html-video-tab.php:14 includes/views/html-audio-tab.php:14
-msgid "Quick Start"
-msgstr ""
-
-#: includes/widgets/video-player.php:483
-msgid "Ratio"
-msgstr ""
-
-#: includes/views/html-hire-page.php:111
-msgid "Ready to discuss your project?"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:34
-msgid "Required"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:168
-msgid "Reset video to start when playback ends"
-msgstr ""
-
-#: includes/views/html-hire-page.php:83
-msgid "Responsive Design Implementation"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:54
-msgid "Search for Widgets"
-msgstr ""
-
-#: includes/views/html-hire-page.php:79
-msgid "Security Audits & Hardening"
-msgstr ""
-
-#: includes/widgets/audio-player.php:317 includes/widgets/video-player.php:654
-msgid "Seek Progress Bar"
-msgstr ""
-
-#: includes/widgets/audio-player.php:143 includes/widgets/video-player.php:308
-msgid "Seek Time"
-msgstr ""
-
-#: includes/widgets/video-player.php:173
-msgid "Select"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:65
-msgid "Self Hosted / CDN:"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:69
-msgid "Set your media source and customize the styling using the Style tab"
-msgstr ""
-
-#: includes/widgets/audio-player.php:494 includes/widgets/video-player.php:831
-msgid "Setting Icon"
-msgstr ""
-
-#: includes/widgets/audio-player.php:212 includes/widgets/video-player.php:509
-msgid "Settings Icon"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:91
-msgid "Show remaining time instead of elapsed time"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:115
-msgid "Show time tooltip when hovering over progress bar"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:184
-msgid "Show tooltips on control buttons"
-msgstr ""
-
-#: includes/views/html-hire-page.php:80
-msgid "Site Migration & Hosting Setup"
-msgstr ""
-
-#: includes/widgets/audio-player.php:188
-msgid ""
-"Specifies how the the audio should be loaded when the page loads. <a "
-"target=\"_blank\" href=\"https://www.w3schools.com/tags/att_audio_preload."
-"asp\">Learn More</a>"
-msgstr ""
-
-#: includes/views/html-hire-page.php:76
-msgid "Speed Optimization & Performance Tuning"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:59
-msgid "Start with audio muted"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:11
-msgid ""
-"Supports HTML5 audio files (MP3, WAV, OGG) for podcasts, music, and audio "
-"content"
-msgstr ""
-
-#: includes/views/html-video-tab.php:11
-msgid "Supports YouTube, Vimeo, and HTML5 videos (MP4, WebM)"
-msgstr ""
-
-#: includes/views/html-hire-page.php:84
-msgid "tailored to your business goals"
-msgstr ""
-
-#: includes/views/html-audio-tab.php:33
-msgid "Test the audio player by copying these ready-to-use shortcodes"
-msgstr ""
-
-#: includes/views/html-video-tab.php:33
-msgid "Test the players by copying these ready-to-use shortcodes"
-msgstr ""
-
-#: includes/widgets/video-player.php:484
-msgid "The format is 'w:h' - e.g. 16:9 or 4:3 or other"
-msgstr ""
-
-#: includes/widgets/audio-player.php:145 includes/widgets/video-player.php:310
-msgid "The time, in seconds, to seek when a user hits fast forward or rewind."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:237
-msgid "the video/audio may not start automatically. To ensure autoplay works:"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:241
-msgid "This is a browser security feature, not a plugin limitation"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:144
-msgid "Thumbnail image shown before video plays"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:83
-msgid "Time to skip when using fast forward/rewind"
-msgstr ""
-
-#: includes/widgets/audio-player.php:570 includes/widgets/video-player.php:907
-msgid "Timer Color"
-msgstr ""
-
-#: includes/views/html-hire-page.php:97
-msgid ""
-"To ensure top quality, I take on only a few new client projects each month."
-msgstr ""
-
-#: includes/views/html-hire-page.php:75
-msgid "Troubleshooting & Bug Fixes"
-msgstr ""
-
-#: includes/views/html-hire-page.php:62
-msgid "Trusted Worldwide:"
-msgstr ""
-
-#: includes/views/html-hire-page.php:142
-msgid "Typical Response Time"
-msgstr ""
-
-#: includes/widgets/audio-player.php:45 includes/widgets/audio-player.php:54
-msgid "Upload Audio"
-msgstr ""
-
-#: includes/widgets/video-player.php:125 includes/widgets/video-player.php:133
-msgid "Upload Video"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:35
-msgid "URL of the media file or YouTube/Vimeo URL"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:190
-msgid "url1|quality1,url2|quality2"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:239
-msgid "Use"
-msgstr ""
-
-#: includes/views/html-elementor-tab.php:11
-msgid ""
-"Use our dedicated Elementor widgets to display and customize video and audio "
-"players anywhere on your website"
-msgstr ""
-
-#: includes/widgets/audio-player.php:340 includes/widgets/video-player.php:677
-msgid ""
-"Use RGB color with some opacity. E.g: rgba(255,68,115,0.60). Otherwise "
-"buffer color will now show."
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:142
-msgid "Valid image URL"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:33
-msgid "Valid URL"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:17
-msgid "Video"
-msgstr ""
-
-#: includes/init.php:100 includes/init.php:117 includes/class-menu.php:58
-#: includes/class-menu.php:59
-msgid "Video & Audio Player"
+"POT-Creation-Date: 2025-12-11T06:45:31+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: vapfem\n"
+
+#. Plugin Name of the plugin
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:18
+msgid "Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://leanplugins.com/"
 msgstr ""
 
 #. Description of the plugin
 msgid "Video & Audio player for Elementor, Gutenberg & Classic Editor"
 msgstr ""
 
-#: includes/class-settings-page.php:53
-msgid "Video & Audio Player Guide"
+#. Author of the plugin
+msgid "LeanPlugins"
 msgstr ""
 
-#: includes/widgets/video-player.php:152
-msgid "Video Link"
+#: includes/admin/class-deactivation-feedback.php:80
+msgid "Deactivation Feedback requires plugin_basename, plugin_slug, plugin_version, and prefix."
 msgstr ""
 
-#: includes/widgets/video-player.php:191
-msgid "Video List"
+#: includes/admin/class-deactivation-feedback.php:81
+msgid "Missing Required Parameters"
 msgstr ""
 
-#: includes/views/html-video-tab.php:10
-#: includes/views/html-elementor-tab.php:23
-#: includes/widgets/video-player.php:12
-msgid "Video Player"
+#: includes/admin/class-deactivation-feedback.php:89
+msgid "Prefix must contain at least one alphanumeric character."
 msgstr ""
 
-#: includes/widgets/video-player.php:170
-msgid "Video Size"
+#: includes/admin/class-deactivation-feedback.php:90
+msgid "Invalid Prefix"
 msgstr ""
 
-#: includes/widgets/video-player.php:121
-msgid "Video Source"
+#: includes/admin/class-deactivation-feedback.php:146
+msgid "Deactivating..."
 msgstr ""
 
-#: includes/views/html-video-tab.php:38 includes/widgets/video-player.php:42
+#: includes/admin/class-deactivation-feedback.php:158
+#: includes/admin/class-deactivation-feedback.php:184
+#: includes/admin/class-deactivation-feedback.php:228
+msgid "I no longer need the plugin"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:162
+msgid "I was just testing it out"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:166
+#: includes/admin/class-deactivation-feedback.php:180
+#: includes/admin/class-deactivation-feedback.php:218
+#: includes/admin/class-deactivation-feedback.php:240
+msgid "It's a temporary deactivation"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:170
+#: includes/admin/class-deactivation-feedback.php:188
+#: includes/admin/class-deactivation-feedback.php:214
+#: includes/admin/class-deactivation-feedback.php:232
+msgid "I'm switching to a different plugin"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:171
+#: includes/admin/class-deactivation-feedback.php:189
+#: includes/admin/class-deactivation-feedback.php:215
+#: includes/admin/class-deactivation-feedback.php:233
+msgid "Please share which plugin (optional)"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:174
+#: includes/admin/class-deactivation-feedback.php:192
+#: includes/admin/class-deactivation-feedback.php:210
+#: includes/admin/class-deactivation-feedback.php:236
+msgid "I couldn't get the plugin to work"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:175
+#: includes/admin/class-deactivation-feedback.php:193
+#: includes/admin/class-deactivation-feedback.php:211
+#: includes/admin/class-deactivation-feedback.php:237
+msgid "We're sorry to hear. Can you let us know what didn't work? (optional)"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:196
+#: includes/admin/class-deactivation-feedback.php:206
+#: includes/admin/class-deactivation-feedback.php:224
+msgid "The plugin doesn't have the features I need"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:197
+#: includes/admin/class-deactivation-feedback.php:207
+#: includes/admin/class-deactivation-feedback.php:225
+msgid "What features are you looking for? (optional)"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:202
+msgid "I'm deactivating because"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:203
+msgid "Please share your reason (optional)"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:288
+msgid "Quick Feedback"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:289
+msgid "If you have a moment, please share why you are deactivating this plugin:"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:290
+msgid "Submit & Deactivate"
+msgstr ""
+
+#: includes/admin/class-deactivation-feedback.php:291
+msgid "Skip & Deactivate"
+msgstr ""
+
+#: includes/admin/class-menu.php:100
+#: includes/admin/class-menu.php:188
+#: includes/admin/class-menu.php:189
+msgid "Lean Player"
+msgstr ""
+
+#: includes/admin/class-menu.php:101
+msgid "Video & Audio Player"
+msgstr ""
+
+#: includes/admin/class-menu.php:107
+msgid "Legacy Shortcodes"
+msgstr ""
+
+#: includes/admin/class-menu.php:127
+msgid "General Settings"
+msgstr ""
+
+#: includes/admin/class-menu.php:135
+msgid "Styling"
+msgstr ""
+
+#: includes/admin/class-menu.php:143
+msgid "Import/Export"
+msgstr ""
+
+#: includes/admin/class-menu.php:151
+#: includes/admin/class-menu.php:200
+#: includes/admin/class-menu.php:201
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:13
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:13
+msgid "Quick Start"
+msgstr ""
+
+#: includes/admin/class-menu.php:159
+msgid "Video Player Shortcode"
+msgstr ""
+
+#: includes/admin/class-menu.php:167
+msgid "Audio Player Shortcode"
+msgstr ""
+
+#: includes/admin/class-menu.php:175
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:9
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:98
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:106
+msgid "All Shortcode Options"
+msgstr ""
+
+#: includes/admin/class-menu.php:210
+#: includes/admin/class-menu.php:211
+#: includes/class-custom-posts.php:38
+msgid "All Players"
+msgstr ""
+
+#: includes/admin/class-menu.php:219
+#: includes/admin/class-menu.php:220
+#: includes/class-custom-posts.php:34
+msgid "Add New Player"
+msgstr ""
+
+#: includes/admin/class-menu.php:228
+#: includes/admin/class-menu.php:229
+#: includes/admin/class-menu.php:336
+#: includes/admin/class-menu.php:370
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-menu.php:238
+#: includes/admin/class-menu.php:239
+msgid "Hire Me"
+msgstr ""
+
+#: includes/admin/class-menu.php:361
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/admin/class-menu.php:371
+msgid "Settings framework not available."
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:48
+#: includes/class-metaboxes.php:49
+msgid "Player Type"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:49
+msgid "Source Type"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:50
+msgid "Source"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:51
+#: includes/class-metaboxes.php:146
+#: includes/elementor/widgets/audio-player.php:91
+#: includes/elementor/widgets/video-player.php:236
+#: includes/libs/lex-settings-new/config/tabs/settings.php:28
+msgid "Autoplay"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:52
+#: includes/class-metaboxes.php:351
+msgid "Shortcode"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:128
+#: includes/admin/class-player-table-columns.php:182
+msgid "Media ID: "
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:216
+#: includes/class-metaboxes.php:150
+#: includes/class-metaboxes.php:161
+#: includes/class-metaboxes.php:172
+#: includes/class-metaboxes.php:192
+#: includes/class-metaboxes.php:245
+#: includes/class-metaboxes.php:267
+#: includes/class-metaboxes.php:279
+#: includes/class-metaboxes.php:291
+#: includes/class-metaboxes.php:304
+#: includes/class-metaboxes.php:315
+#: includes/elementor/widgets/audio-player.php:94
+#: includes/elementor/widgets/audio-player.php:108
+#: includes/elementor/widgets/audio-player.php:122
+#: includes/elementor/widgets/audio-player.php:136
+#: includes/elementor/widgets/audio-player.php:164
+#: includes/elementor/widgets/audio-player.php:241
+#: includes/elementor/widgets/video-player.php:100
+#: includes/elementor/widgets/video-player.php:239
+#: includes/elementor/widgets/video-player.php:253
+#: includes/elementor/widgets/video-player.php:267
+#: includes/elementor/widgets/video-player.php:315
+#: includes/elementor/widgets/video-player.php:343
+#: includes/elementor/widgets/video-player.php:357
+#: includes/elementor/widgets/video-player.php:374
+#: includes/elementor/widgets/video-player.php:387
+#: includes/elementor/widgets/video-player.php:401
+#: includes/elementor/widgets/video-player.php:415
+#: includes/elementor/widgets/video-player.php:431
+#: includes/elementor/widgets/video-player.php:490
+#: includes/elementor/widgets/video-player.php:554
+#: includes/libs/lex-settings-new/config/tabs/settings.php:58
+#: includes/libs/lex-settings-new/config/tabs/settings.php:146
+#: includes/libs/lex-settings-new/config/tabs/settings.php:155
+#: includes/libs/lex-settings-new/config/tabs/settings.php:165
+#: includes/libs/lex-settings-new/config/tabs/settings.php:176
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:218
+#: includes/class-metaboxes.php:151
+#: includes/class-metaboxes.php:162
+#: includes/class-metaboxes.php:173
+#: includes/class-metaboxes.php:193
+#: includes/class-metaboxes.php:246
+#: includes/class-metaboxes.php:268
+#: includes/class-metaboxes.php:280
+#: includes/class-metaboxes.php:292
+#: includes/class-metaboxes.php:305
+#: includes/class-metaboxes.php:316
+#: includes/elementor/widgets/audio-player.php:95
+#: includes/elementor/widgets/audio-player.php:109
+#: includes/elementor/widgets/audio-player.php:123
+#: includes/elementor/widgets/audio-player.php:137
+#: includes/elementor/widgets/audio-player.php:165
+#: includes/elementor/widgets/audio-player.php:242
+#: includes/elementor/widgets/video-player.php:101
+#: includes/elementor/widgets/video-player.php:240
+#: includes/elementor/widgets/video-player.php:254
+#: includes/elementor/widgets/video-player.php:268
+#: includes/elementor/widgets/video-player.php:316
+#: includes/elementor/widgets/video-player.php:344
+#: includes/elementor/widgets/video-player.php:358
+#: includes/elementor/widgets/video-player.php:375
+#: includes/elementor/widgets/video-player.php:388
+#: includes/elementor/widgets/video-player.php:402
+#: includes/elementor/widgets/video-player.php:416
+#: includes/elementor/widgets/video-player.php:432
+#: includes/elementor/widgets/video-player.php:491
+#: includes/elementor/widgets/video-player.php:555
+msgid "No"
+msgstr ""
+
+#: includes/admin/class-player-table-columns.php:237
+#: includes/class-metaboxes.php:741
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:25
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:46
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:66
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:74
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:82
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:90
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:25
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:46
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:51
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:56
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:66
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:89
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:98
+msgid "Copy"
+msgstr ""
+
+#: includes/class-custom-posts.php:29
+msgctxt "Post type general name"
+msgid "Lean Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:30
+msgctxt "Post type singular name"
+msgid "Lean Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:31
+msgctxt "Admin Menu text"
+msgid "Lean Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:32
+msgctxt "Add New on Toolbar"
+msgid "Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:33
+msgid "Add New"
+msgstr ""
+
+#: includes/class-custom-posts.php:35
+msgid "New Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:36
+msgid "Edit Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:37
+msgid "View Player"
+msgstr ""
+
+#: includes/class-custom-posts.php:39
+msgid "Search Players"
+msgstr ""
+
+#: includes/class-custom-posts.php:40
+msgid "Parent Players:"
+msgstr ""
+
+#: includes/class-custom-posts.php:41
+msgid "No players found."
+msgstr ""
+
+#: includes/class-custom-posts.php:42
+msgid "No players found in Trash."
+msgstr ""
+
+#: includes/class-custom-posts.php:43
+msgid "Player Featured Image"
+msgstr ""
+
+#: includes/class-custom-posts.php:44
+msgid "Set featured image"
+msgstr ""
+
+#: includes/class-custom-posts.php:45
+msgid "Remove featured image"
+msgstr ""
+
+#: includes/class-custom-posts.php:46
+msgid "Use as featured image"
+msgstr ""
+
+#: includes/class-custom-posts.php:47
+msgid "Player archives"
+msgstr ""
+
+#: includes/class-custom-posts.php:48
+msgid "Insert into player"
+msgstr ""
+
+#: includes/class-custom-posts.php:49
+msgid "Uploaded to this player"
+msgstr ""
+
+#: includes/class-custom-posts.php:50
+msgid "Filter players list"
+msgstr ""
+
+#: includes/class-custom-posts.php:51
+msgid "Players list navigation"
+msgstr ""
+
+#: includes/class-custom-posts.php:52
+msgid "Players list"
+msgstr ""
+
+#: includes/class-demo-players.php:41
+msgid "Demo: YouTube Video Player"
+msgstr ""
+
+#: includes/class-demo-players.php:49
+msgid "Demo: Vimeo Video Player"
+msgstr ""
+
+#: includes/class-demo-players.php:57
+msgid "Demo: HTML5 Video Player"
+msgstr ""
+
+#: includes/class-demo-players.php:66
+msgid "Demo: YouTube Video Player - Auto Play (Muted)"
+msgstr ""
+
+#: includes/class-demo-players.php:76
+msgid "Demo: Audio / Podcast Player - Speed 1.25"
+msgstr ""
+
+#: includes/class-metaboxes.php:50
+msgid "Choose the type of player"
+msgstr ""
+
+#: includes/class-metaboxes.php:53
+#: includes/functions.php:505
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:16
+msgid "Video"
+msgstr ""
+
+#: includes/class-metaboxes.php:54
+#: includes/functions.php:503
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:17
+msgid "Audio"
+msgstr ""
+
+#: includes/class-metaboxes.php:61
+#: includes/elementor/widgets/video-player.php:42
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:37
 msgid "Video Type"
 msgstr ""
 
-#: includes/views/html-hire-page.php:103
-msgid "View My Portfolio"
+#: includes/class-metaboxes.php:62
+msgid "Choose the video source type"
 msgstr ""
 
-#: includes/views/html-hire-page.php:135
-msgid "View Portfolio"
+#: includes/class-metaboxes.php:65
+#: includes/functions.php:536
+#: includes/functions.php:552
+msgid "YouTube"
 msgstr ""
 
-#: includes/widgets/video-player.php:47
+#: includes/class-metaboxes.php:66
+#: includes/elementor/widgets/video-player.php:47
+#: includes/functions.php:538
 msgid "Vimeo"
 msgstr ""
 
-#: includes/widgets/video-player.php:75
-msgid "Vimeo Video ID"
+#: includes/class-metaboxes.php:67
+#: includes/class-metaboxes.php:100
+msgid "HTML5 Video File"
 msgstr ""
 
-#: includes/views/html-video-tab.php:50
-msgid "Vimeo:"
+#: includes/class-metaboxes.php:74
+msgid "YouTube URL or ID"
 msgstr ""
 
-#: includes/widgets/video-player.php:507
-msgid "Volume"
+#: includes/class-metaboxes.php:75
+msgid "Enter YouTube video URL (e.g., https://www.youtube.com/watch?v=bTqVqk7FSmY) or just the video ID"
 msgstr ""
 
-#: includes/widgets/audio-player.php:211 includes/widgets/audio-player.php:445
-#: includes/widgets/video-player.php:782
+#: includes/class-metaboxes.php:76
+msgid "https://www.youtube.com/watch?v=bTqVqk7FSmY"
+msgstr ""
+
+#: includes/class-metaboxes.php:81
+msgid "Vimeo URL or ID"
+msgstr ""
+
+#: includes/class-metaboxes.php:82
+msgid "Enter Vimeo video URL (e.g., https://vimeo.com/76979871) or just the video ID"
+msgstr ""
+
+#: includes/class-metaboxes.php:83
+msgid "https://vimeo.com/76979871"
+msgstr ""
+
+#: includes/class-metaboxes.php:88
+msgid "Video Source Type"
+msgstr ""
+
+#: includes/class-metaboxes.php:89
+msgid "Choose how to provide the video"
+msgstr ""
+
+#: includes/class-metaboxes.php:92
+#: includes/elementor/widgets/video-player.php:137
+#: includes/elementor/widgets/video-player.php:145
+msgid "Upload Video"
+msgstr ""
+
+#: includes/class-metaboxes.php:93
+msgid "Video Link (CDN/URL)"
+msgstr ""
+
+#: includes/class-metaboxes.php:101
+msgid "Select a video file from the media library"
+msgstr ""
+
+#: includes/class-metaboxes.php:102
+msgid "Select / Upload Video"
+msgstr ""
+
+#: includes/class-metaboxes.php:103
+#: includes/class-metaboxes.php:132
+#: includes/class-metaboxes.php:256
+msgid "Remove"
+msgstr ""
+
+#: includes/class-metaboxes.php:105
+msgid "No video selected"
+msgstr ""
+
+#: includes/class-metaboxes.php:110
+msgid "Video URL"
+msgstr ""
+
+#: includes/class-metaboxes.php:111
+msgid "Enter direct URL to video file (e.g., https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4)"
+msgstr ""
+
+#: includes/class-metaboxes.php:112
+msgid "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
+msgstr ""
+
+#: includes/class-metaboxes.php:117
+msgid "Audio Source Type"
+msgstr ""
+
+#: includes/class-metaboxes.php:118
+msgid "Choose how to provide the audio"
+msgstr ""
+
+#: includes/class-metaboxes.php:121
+#: includes/elementor/widgets/audio-player.php:46
+#: includes/elementor/widgets/audio-player.php:55
+msgid "Upload Audio"
+msgstr ""
+
+#: includes/class-metaboxes.php:122
+msgid "Audio Link (CDN/URL)"
+msgstr ""
+
+#: includes/class-metaboxes.php:129
+msgid "HTML5 Audio File"
+msgstr ""
+
+#: includes/class-metaboxes.php:130
+msgid "Select an audio file from the media library"
+msgstr ""
+
+#: includes/class-metaboxes.php:131
+msgid "Select / Upload Audio"
+msgstr ""
+
+#: includes/class-metaboxes.php:134
+msgid "No audio selected"
+msgstr ""
+
+#: includes/class-metaboxes.php:139
+msgid "Audio URL"
+msgstr ""
+
+#: includes/class-metaboxes.php:140
+msgid "Enter direct URL to audio file (e.g., https://download.samplelib.com/mp3/sample-15s.mp3)"
+msgstr ""
+
+#: includes/class-metaboxes.php:141
+msgid "https://download.samplelib.com/mp3/sample-15s.mp3"
+msgstr ""
+
+#: includes/class-metaboxes.php:147
+msgid "Try to start this player automatically when the page loads. <strong>If autoplay does not work, turn on \"Start Muted\" below.</strong> Most browsers only allow autoplay when sound is off. <a href=\"https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay\" target=\"_blank\" rel=\"noopener noreferrer\">Learn more about autoplay policies</a>."
+msgstr ""
+
+#: includes/class-metaboxes.php:149
+#: includes/class-metaboxes.php:160
+#: includes/class-metaboxes.php:171
+#: includes/class-metaboxes.php:203
+#: includes/class-metaboxes.php:232
+#: includes/class-metaboxes.php:266
+#: includes/class-metaboxes.php:278
+#: includes/class-metaboxes.php:290
+#: includes/class-metaboxes.php:303
+msgid "Use Global Option"
+msgstr ""
+
+#: includes/class-metaboxes.php:157
+#: includes/libs/lex-settings-new/config/tabs/settings.php:36
+msgid "Start Muted"
+msgstr ""
+
+#: includes/class-metaboxes.php:158
+msgid "Start this player with sound off. Required for autoplay in modern browsers."
+msgstr ""
+
+#: includes/class-metaboxes.php:168
+#: includes/elementor/widgets/audio-player.php:119
+#: includes/elementor/widgets/video-player.php:264
+#: includes/libs/lex-settings-new/config/tabs/settings.php:55
+msgid "Loop"
+msgstr ""
+
+#: includes/class-metaboxes.php:169
+#: includes/libs/lex-settings-new/config/tabs/settings.php:59
+msgid "Play again automatically when finished"
+msgstr ""
+
+#: includes/class-metaboxes.php:179
+#: includes/elementor/widgets/video-player.php:277
+#: includes/libs/lex-settings-new/config/tabs/settings.php:44
+msgid "Initial Volume"
+msgstr ""
+
+#: includes/class-metaboxes.php:180
+msgid "Choose how loud this player starts, from 0% (mute) to 100% (full volume). Viewers can still change the volume while watching."
+msgstr ""
+
+#: includes/class-metaboxes.php:189
+msgid "Storage"
+msgstr ""
+
+#: includes/class-metaboxes.php:190
+msgid "Allow use of local storage to store user settings (volume, speed, quality, etc.)"
+msgstr ""
+
+#: includes/class-metaboxes.php:200
+#: includes/libs/lex-settings-new/config/tabs/settings.php:65
+msgid "Default Playback Speed"
+msgstr ""
+
+#: includes/class-metaboxes.php:201
+msgid "Set the initial playback speed when this player loads. Many users now prefer listening to podcasts and videos at faster speeds (1.2x or 1.5x). <br><strong>Note:</strong> YouTube and Vimeo will ignore any options outside the 0.5-2 range, so options outside of this range will be hidden automatically."
+msgstr ""
+
+#: includes/class-metaboxes.php:204
+#: includes/libs/lex-settings-new/config/tabs/settings.php:68
+msgid "0.5x (Slow)"
+msgstr ""
+
+#: includes/class-metaboxes.php:205
+#: includes/libs/lex-settings-new/config/tabs/settings.php:69
+msgid "0.75x"
+msgstr ""
+
+#: includes/class-metaboxes.php:206
+#: includes/libs/lex-settings-new/config/tabs/settings.php:70
+msgid "1x (Normal)"
+msgstr ""
+
+#: includes/class-metaboxes.php:207
+#: includes/libs/lex-settings-new/config/tabs/settings.php:71
+msgid "1.25x"
+msgstr ""
+
+#: includes/class-metaboxes.php:208
+#: includes/libs/lex-settings-new/config/tabs/settings.php:72
+msgid "1.5x"
+msgstr ""
+
+#: includes/class-metaboxes.php:209
+#: includes/libs/lex-settings-new/config/tabs/settings.php:73
+msgid "1.75x"
+msgstr ""
+
+#: includes/class-metaboxes.php:210
+#: includes/libs/lex-settings-new/config/tabs/settings.php:74
+msgid "2x (Fast)"
+msgstr ""
+
+#: includes/class-metaboxes.php:211
+#: includes/libs/lex-settings-new/config/tabs/settings.php:75
+msgid "4x (Very Fast)"
+msgstr ""
+
+#: includes/class-metaboxes.php:217
+#: includes/libs/lex-settings-new/config/tabs/settings.php:121
+msgid "Skip Amount (Forward / Back)"
+msgstr ""
+
+#: includes/class-metaboxes.php:218
+#: includes/libs/lex-settings-new/config/tabs/settings.php:122
+msgid "How many seconds to skip forward or backward when viewers use keyboard shortcuts (arrow keys) for fast forward or rewind. For example, 10 seconds means each press of the arrow key jumps 10 seconds. Note: Clicking on the progress bar will still jump directly to that position."
+msgstr ""
+
+#: includes/class-metaboxes.php:229
+#: includes/libs/lex-settings-new/config/tabs/settings.php:108
+msgid "Time Display Format"
+msgstr ""
+
+#: includes/class-metaboxes.php:230
+#: includes/libs/lex-settings-new/config/tabs/settings.php:109
+msgid "Choose what the time display shows:<br>• <strong>Remaining Time (Countdown):</strong> counts down how much time is left (for example, \"-2:30\")<br>• <strong>Elapsed Time:</strong> counts up how much has already played (for example, \"2:30\").<br>Default: Remaining time."
+msgstr ""
+
+#: includes/class-metaboxes.php:233
+#: includes/libs/lex-settings-new/config/tabs/settings.php:111
+msgid "Remaining Time (Countdown)"
+msgstr ""
+
+#: includes/class-metaboxes.php:234
+#: includes/libs/lex-settings-new/config/tabs/settings.php:112
+msgid "Elapsed Time (Incremental)"
+msgstr ""
+
+#: includes/class-metaboxes.php:242
+msgid "Seek Tooltips"
+msgstr ""
+
+#: includes/class-metaboxes.php:243
+msgid "Display a seek tooltip to indicate on click where the media would seek to"
+msgstr ""
+
+#: includes/class-metaboxes.php:253
+msgid "Poster Image"
+msgstr ""
+
+#: includes/class-metaboxes.php:254
+msgid "Thumbnail image displayed before video playback starts"
+msgstr ""
+
+#: includes/class-metaboxes.php:255
+msgid "Select Image"
+msgstr ""
+
+#: includes/class-metaboxes.php:258
+msgid "No poster image selected"
+msgstr ""
+
+#: includes/class-metaboxes.php:263
+#: includes/libs/lex-settings-new/config/tabs/settings.php:153
+msgid "Click to Play / Pause"
+msgstr ""
+
+#: includes/class-metaboxes.php:264
+#: includes/libs/lex-settings-new/config/tabs/settings.php:156
+msgid "Allow clicking on the video to play or pause"
+msgstr ""
+
+#: includes/class-metaboxes.php:275
+#: includes/libs/lex-settings-new/config/tabs/settings.php:144
+msgid "Fullscreen Button"
+msgstr ""
+
+#: includes/class-metaboxes.php:276
+#: includes/libs/lex-settings-new/config/tabs/settings.php:147
+msgid "Show a fullscreen button on the player"
+msgstr ""
+
+#: includes/class-metaboxes.php:287
+#: includes/libs/lex-settings-new/config/tabs/settings.php:162
+msgid "Auto-Hide Controls"
+msgstr ""
+
+#: includes/class-metaboxes.php:288
+#: includes/libs/lex-settings-new/config/tabs/settings.php:166
+msgid "Hide controls while playing, show on hover or tap"
+msgstr ""
+
+#: includes/class-metaboxes.php:300
+#: includes/libs/lex-settings-new/config/tabs/settings.php:174
+msgid "Reset to Start When Finished"
+msgstr ""
+
+#: includes/class-metaboxes.php:301
+#: includes/libs/lex-settings-new/config/tabs/settings.php:177
+msgid "Reset video to the beginning after it finishes"
+msgstr ""
+
+#: includes/class-metaboxes.php:312
+msgid "Control Tooltips"
+msgstr ""
+
+#: includes/class-metaboxes.php:313
+msgid "Display control labels as tooltips on :hover & :focus. Examples: play icon, mute/unmute, pip, fullscreen, etc. By default, the labels are screen reader only."
+msgstr ""
+
+#: includes/class-metaboxes.php:323
+#: includes/elementor/widgets/audio-player.php:191
+msgid "Preload"
+msgstr ""
+
+#: includes/class-metaboxes.php:324
+msgid "How the audio should be loaded"
+msgstr ""
+
+#: includes/class-metaboxes.php:326
+msgid "Auto - Load entire audio file"
+msgstr ""
+
+#: includes/class-metaboxes.php:327
+msgid "Metadata - Load only metadata"
+msgstr ""
+
+#: includes/class-metaboxes.php:328
+msgid "None - Don't preload"
+msgstr ""
+
+#: includes/class-metaboxes.php:497
+msgid "VIDEO: Source Configuration"
+msgstr ""
+
+#: includes/class-metaboxes.php:596
+msgid "AUDIO: Source Configuration"
+msgstr ""
+
+#: includes/class-metaboxes.php:643
+msgid "Playback Options (Shared)"
+msgstr ""
+
+#: includes/class-metaboxes.php:667
+msgid "VIDEO: Video-Specific Options"
+msgstr ""
+
+#: includes/class-metaboxes.php:694
+msgid "AUDIO: Audio-Specific Options"
+msgstr ""
+
+#: includes/class-metaboxes.php:715
+msgid "Save the post to generate the shortcode."
+msgstr ""
+
+#: includes/class-metaboxes.php:747
+msgid "Paste this shortcode into any page, post, or widget to display the player."
+msgstr ""
+
+#: includes/class-player-renderer.php:213
+msgid "Your browser does not support the audio element."
+msgstr ""
+
+#: includes/class-player-renderer.php:264
+#: includes/libs/lex-settings-new/config/tabs/settings.php:99
+msgid "Download"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:12
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:9
+msgid "Audio Player"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:34
+#: includes/elementor/widgets/video-player.php:34
+msgid "General Options"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:42
+msgid "Audio Source"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:47
+#: includes/elementor/widgets/audio-player.php:67
+msgid "Audio Link"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:69
+msgid "https://example.com/music-name.mp3"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:93
+msgid "Note: Mobile browsers don’t allow autoplay for Audio. Some desktop or laptop browsers also automatically block videos from automatically playing or may automatically mute the audio."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:105
+#: includes/elementor/widgets/video-player.php:250
+msgid "Muted"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:107
+#: includes/elementor/widgets/video-player.php:252
+msgid "Enable this to start playback muted. This is also usefull if you experience autoplay is not working from your browser."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:121
+#: includes/elementor/widgets/video-player.php:266
+msgid "Loop the current media. "
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:133
+#: includes/elementor/widgets/video-player.php:312
+msgid "Display Time As Countdown"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:135
+#: includes/elementor/widgets/video-player.php:314
+msgid "Display the current time as a countdown rather than an incremental counter."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:147
+#: includes/elementor/widgets/video-player.php:326
+msgid "Seek Time"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:149
+#: includes/elementor/widgets/video-player.php:328
+msgid "The time, in seconds, to seek when a user hits fast forward or rewind."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:161
+#: includes/elementor/widgets/video-player.php:412
+msgid "Display Seek Tooltip"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:163
+#: includes/elementor/widgets/video-player.php:414
+msgid "Display a seek tooltip to indicate on click where the media would seek to."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:174
+#: includes/elementor/widgets/video-player.php:442
+msgid "Initial Speed"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:178
+#: includes/elementor/widgets/video-player.php:446
+msgid "0.5"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:179
+#: includes/elementor/widgets/video-player.php:447
+msgid "0.75"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:180
+#: includes/elementor/widgets/video-player.php:448
+msgid "1"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:181
+#: includes/elementor/widgets/video-player.php:449
+msgid "1.25"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:182
+#: includes/elementor/widgets/video-player.php:450
+msgid "1.5"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:192
+msgid "Specifies how the the audio should be loaded when the page loads. <a target=\"_blank\" href=\"https://www.w3schools.com/tags/att_audio_preload.asp\">Learn More</a>"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:196
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:206
+msgid "Auto"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:197
+msgid "Metadata"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:198
+msgid "None"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:207
+#: includes/elementor/widgets/video-player.php:515
+msgid "Control Options"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:212
+#: includes/elementor/widgets/audio-player.php:254
+#: includes/elementor/widgets/video-player.php:605
+msgid "Play Icon"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:213
+#: includes/elementor/widgets/video-player.php:522
+#: includes/libs/lex-settings-new/config/tabs/settings.php:90
+msgid "Progress Bar"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:214
+msgid "Mute Icon"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:215
+#: includes/elementor/widgets/audio-player.php:449
+#: includes/elementor/widgets/video-player.php:800
 msgid "Volume Bar"
 msgstr ""
 
-#: includes/widgets/audio-player.php:379 includes/widgets/video-player.php:716
+#: includes/elementor/widgets/audio-player.php:216
+#: includes/elementor/widgets/video-player.php:527
+#: includes/libs/lex-settings-new/config/tabs/settings.php:95
+msgid "Settings Icon"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:217
+msgid "Airplay Icon"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:218
+msgid "Download Button"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:230
+#: includes/elementor/widgets/video-player.php:543
+msgid "Debugging"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:238
+#: includes/elementor/widgets/video-player.php:551
+msgid "Debug Mode"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:240
+#: includes/elementor/widgets/video-player.php:553
+msgid "Enable it when the player does not work properly. When debug is enable, the browser will show the informations about this player in the browser console. This is helpful for developer."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:263
+#: includes/elementor/widgets/audio-player.php:391
+#: includes/elementor/widgets/audio-player.php:507
+#: includes/elementor/widgets/video-player.php:614
+#: includes/elementor/widgets/video-player.php:742
+#: includes/elementor/widgets/video-player.php:858
+msgid "BG Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:275
+#: includes/elementor/widgets/audio-player.php:403
+#: includes/elementor/widgets/audio-player.php:519
+#: includes/elementor/widgets/video-player.php:626
+#: includes/elementor/widgets/video-player.php:754
+#: includes/elementor/widgets/video-player.php:870
+msgid "Icon Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:287
+#: includes/elementor/widgets/audio-player.php:415
+#: includes/elementor/widgets/audio-player.php:531
+#: includes/elementor/widgets/video-player.php:638
+#: includes/elementor/widgets/video-player.php:766
+#: includes/elementor/widgets/video-player.php:882
+msgid "Hover BG Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:299
+#: includes/elementor/widgets/audio-player.php:427
+#: includes/elementor/widgets/audio-player.php:543
+#: includes/elementor/widgets/video-player.php:650
+#: includes/elementor/widgets/video-player.php:778
+#: includes/elementor/widgets/video-player.php:894
+msgid "Hover Icon Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:312
+#: includes/elementor/widgets/audio-player.php:440
+#: includes/elementor/widgets/audio-player.php:556
+#: includes/elementor/widgets/video-player.php:663
+#: includes/elementor/widgets/video-player.php:791
+#: includes/elementor/widgets/video-player.php:907
+msgid "Border"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:321
+#: includes/elementor/widgets/video-player.php:672
+msgid "Seek Progress Bar"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:329
+#: includes/elementor/widgets/audio-player.php:457
+#: includes/elementor/widgets/video-player.php:680
+#: includes/elementor/widgets/video-player.php:808
+msgid "Bar Pointer Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:343
+#: includes/elementor/widgets/video-player.php:694
+msgid "Bar Color 1"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:344
+#: includes/elementor/widgets/video-player.php:695
+msgid "Use RGB color with some opacity. E.g: rgba(255,68,115,0.60). Otherwise buffer color will now show."
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:358
+#: includes/elementor/widgets/video-player.php:709
+msgid "Bar Color 2"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:370
+#: includes/elementor/widgets/video-player.php:721
+msgid "Buffered Bar Color"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:383
+#: includes/elementor/widgets/video-player.php:734
 msgid "Volume Icon"
 msgstr ""
 
-#: includes/views/html-hire-page.php:37
-msgid "What Makes Me Different"
+#: includes/elementor/widgets/audio-player.php:471
+#: includes/elementor/widgets/video-player.php:822
+msgid "Bar Color"
 msgstr ""
 
-#: includes/views/html-hire-page.php:17
-msgid ""
-"When you hire me, you're not just getting a site built. You're partnering "
-"with someone who:"
+#: includes/elementor/widgets/audio-player.php:483
+#: includes/elementor/widgets/video-player.php:834
+msgid "Bar Empty Color"
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:75
+#: includes/elementor/widgets/audio-player.php:498
+#: includes/elementor/widgets/video-player.php:849
+msgid "Setting Icon"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:565
+#: includes/elementor/widgets/video-player.php:916
+msgid "Others"
+msgstr ""
+
+#: includes/elementor/widgets/audio-player.php:574
+#: includes/elementor/widgets/video-player.php:925
+msgid "Timer Color"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:12
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:9
+msgid "Video Player"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:46
+msgid "Youtube"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:48
+msgid "HTML5"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:57
+msgid "Youtube Video ID"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:59
+msgid "bTqVqk7FSmY"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:60
+#: includes/elementor/widgets/video-player.php:81
+msgid "Put your video id here"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:78
+msgid "Vimeo Video ID"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:80
+msgid "76979871"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:98
+msgid "Add Custom Poster"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:111
+msgid "Custom Poster For Video"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:133
+msgid "Video Source"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:138
+msgid "Put Video Link"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:164
+msgid "Video Link"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:166
+msgid "https://your-link.com"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:188
+msgid "Video Size"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:191
+msgid "Select"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:192
+#: includes/elementor/widgets/video-player.php:466
+msgid "240"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:193
+#: includes/elementor/widgets/video-player.php:467
+msgid "360"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:194
+#: includes/elementor/widgets/video-player.php:468
+msgid "480"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:195
+#: includes/elementor/widgets/video-player.php:215
+#: includes/elementor/widgets/video-player.php:469
+msgid "576"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:196
+#: includes/elementor/widgets/video-player.php:219
+#: includes/elementor/widgets/video-player.php:470
+msgid "720"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:197
+#: includes/elementor/widgets/video-player.php:223
+#: includes/elementor/widgets/video-player.php:471
+msgid "1080"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:198
+#: includes/elementor/widgets/video-player.php:472
+msgid "1440"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:199
+#: includes/elementor/widgets/video-player.php:473
+msgid "2160"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:200
+#: includes/elementor/widgets/video-player.php:474
+msgid "2880"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:201
+#: includes/elementor/widgets/video-player.php:475
+msgid "4320"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:209
+msgid "Video List"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:238
+msgid "Autoplay varies for each user by an intelligent system of the browsers. If you experience Autoplay does not work from your browser. Enable the \"Muted\" option below. <br><br>Muted autoplay is always allowed."
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:298
+msgid "Click To Play"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:300
+msgid "Click (or tap) of the video container will toggle play/pause."
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:301
+msgid "Enable"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:302
+msgid "Disable"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:340
+msgid "Hide Control Icons After 2s"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:342
+msgid "Hide video controls automatically after 2s of no mouse or focus movement,"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:354
+msgid "Back To Start After End"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:356
+msgid "Back to start after end of playing"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:371
+msgid "Enable Keyboard Shortcuts On Focus"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:373
+msgid "Enable keyboard shortcuts for focused players only"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:385
+msgid "Enable Keyboard Shortcuts Globally"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:398
+msgid "Display Control Labels"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:400
+msgid "Display control labels as tooltips on :hover & :focus"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:428
+msgid "Enable Fullscreen Toggle"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:430
+msgid "Enable fullscreen when double click on the player"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:462
+msgid "Initial Quality"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:487
+msgid "Enable Custom Ratio"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:488
+msgid "Force an aspect ratio."
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:501
+msgid "Ratio"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:502
+msgid "The format is 'w:h' - e.g. 16:9 or 4:3 or other"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:504
+msgid "16:9"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:517
+msgid "Add/Remove your prefered video control options"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:520
+msgid "Play Large"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:521
+#: includes/libs/lex-settings-new/config/tabs/settings.php:89
+msgid "Play"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:523
+#: includes/libs/lex-settings-new/config/tabs/settings.php:91
+msgid "Current Time"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:524
+#: includes/libs/lex-settings-new/config/tabs/settings.php:92
+msgid "Mute"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:525
+#: includes/libs/lex-settings-new/config/tabs/settings.php:93
+msgid "Volume"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:526
+msgid "Caption"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:528
+msgid "PIP"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:529
+#: includes/libs/lex-settings-new/config/tabs/settings.php:97
+msgid "Airplay"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:530
+msgid "Fullscreen"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:567
+#: includes/elementor/widgets/video-player.php:576
+msgid "Primary Color"
+msgstr ""
+
+#: includes/elementor/widgets/video-player.php:591
+msgid "All Icon Color"
+msgstr ""
+
+#: includes/functions.php:522
+#: includes/functions.php:544
+msgid "Uploaded File"
+msgstr ""
+
+#: includes/functions.php:524
+#: includes/functions.php:546
+msgid "External File"
+msgstr ""
+
+#: includes/functions.php:528
+msgid "Audio File"
+msgstr ""
+
+#: includes/functions.php:550
+msgid "HTML5 Video"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:10
+msgid "Complete reference of all available shortcode options for both video and audio player."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:15
+msgid "Option Name"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:18
+msgid "Possible Values"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:19
+msgid "Default"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:20
+msgid "Description"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:26
+msgid "📋 Common Options (Both Video & Audio)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:32
+msgid "Valid URL"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:33
+msgid "Required"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:34
+msgid "URL of the media file or YouTube/Vimeo URL"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:42
+msgid "Auto-start playback when page loads"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:50
+msgid "Loop playback when media ends"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:58
+msgid "Start with audio muted"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:66
+msgid "Initial volume level (0 = muted, 1 = full volume)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:73
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:219
+msgid "All controls"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:74
 msgid "Which control buttons to show"
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:221
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:80
+msgid "Number (seconds)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:82
+msgid "Time to skip when using fast forward/rewind"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:90
+msgid "Show remaining time instead of elapsed time"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:98
+msgid "Enable keyboard shortcuts when player is focused"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:106
+msgid "Enable keyboard shortcuts globally on page"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:114
+msgid "Show time tooltip when hovering over progress bar"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:122
+msgid "Default playback speed"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:130
+msgid "Enable debug mode for troubleshooting"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:135
+msgid "📺 Video-Only Options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:141
+msgid "Valid image URL"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:142
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:190
+msgid "Empty"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:143
+msgid "Thumbnail image shown before video plays"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:151
+msgid "Click anywhere on video to play/pause"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:159
+msgid "Hide all controls after 2 seconds of inactivity"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:167
+msgid "Reset video to start when playback ends"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:175
+msgid "Enable fullscreen toggle button"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:183
+msgid "Show tooltips on control buttons"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:189
+msgid "url1|quality1,url2|quality2"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:191
+msgid "Multiple quality sources for HTML5 video"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:199
+msgid "Default quality when the video plays"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:205
+msgid "etc."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:207
+msgid "Force an aspect ratio for all videos. The format is 'w:h' - e.g. '16:9' or '4:3'. If this is not specified then the default for HTML5 and Vimeo is to use the native resolution of the video. As dimensions are not available from YouTube via SDK, 16:9 is forced as a sensible default."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:212
+msgid "🎵 Audio-Only Options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:220
 msgid "Which control buttons to show (audio-specific)"
 msgstr ""
 
-#: includes/views/html-hire-page.php:14
-msgid "Why Work With Me?"
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:228
+msgid "How much audio to preload"
 msgstr ""
 
-#: includes/views/html-hire-page.php:143
-msgid "Within 24 hours"
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:234
+msgid "📝 Note:"
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:237
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:235
+msgid "Autoplay Browser Policy:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:236
+msgid "Modern browsers block autoplay with sound enabled to improve user experience and reduce unwanted audio. If you set"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:236
 msgid "without"
 msgstr ""
 
-#: includes/views/html-hire-page.php:77
-msgid "WooCommerce Setup & Customization"
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:236
+msgid "the video/audio may not start automatically. To ensure autoplay works:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:238
+msgid "Use"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:238
+msgid "for autoplay to work reliably"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:239
+msgid "Or rely on user interaction (click to play) for audio-enabled playback"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:240
+msgid "This is a browser security feature, not a plugin limitation"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:10
+msgid "Supports HTML5 audio files (MP3, WAV, OGG) for podcasts, music, and audio content"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:18
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:18
+msgid "Basic Shortcode"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:19
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:39
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:59
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:19
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:39
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:79
+msgid "Action"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:31
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:31
+msgid "Demo Shortcodes"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:32
+msgid "Test the audio player by copying these ready-to-use shortcodes"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:37
+msgid "Audio Type"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:38
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:38
+msgid "Demo Shortcode"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:44
+msgid "HTML5 Audio:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:52
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:72
+msgid "Other Examples"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:57
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:77
+msgid "Example Type"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:58
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:78
+msgid "Advanced Shortcode"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:64
+msgid "Self Hosted / CDN:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:69
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:92
+msgid "Minimal Controls:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:77
+msgid "Lower Volume on Initial Load:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:85
+msgid "No Download:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:97
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:105
+msgid "Need more customization? Check the 👉"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:99
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:107
+msgid " tab for complete list of available parameters."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:12
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:16
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:21
+msgid "Export Settings"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:23
+msgid "Download your current settings as a JSON file for backup."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:36
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:50
+msgid "Import Settings"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:42
+msgid "Upload Settings File"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/import-export.php:46
+msgid "Select a previously exported settings JSON file."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:9
+msgid "Quick Start Guide"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:10
+msgid "Welcome to the new and improved Video & Audio Player (Lean Player)! Get started in minutes."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:14
+msgid "We've Rebranded!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:15
+msgid "AZ Video & Audio Player is now \"Lean Player\""
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:16
+msgid "Version 3.0.0 marks a major milestone: our rebranding checkpoint and major update. We've rebranded our plugin under the LeanPlugins brand and renamed it from \"AZ Video & Audio Player\" to \"Lean Player - Video & Audio Player for WordPress\"."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:17
+msgid "This update includes significant improvements and restructuring to make the plugin more performance-focused and aligned with our LeanPlugins brand philosophy. The plugin now supports WordPress, Elementor, Block Editor, and Classic Editor."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:18
+msgid "Full name:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:23
+msgid "What's New in Version 3.0.0"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:24
+msgid "Version 3.0.0 is our rebranding checkpoint and major update. We're excited to introduce improvements that make creating and managing players easier than ever:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:26
+msgid "Global Player Settings:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:26
+msgid "Set default behavior once for all players across your site. No need to configure every player individually!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:27
+msgid "Simple Player Creation:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:27
+msgid "Create video and audio players through an intuitive interface without touching shortcode attributes."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:28
+msgid "One-Click Shortcode:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:28
+msgid "After creating a player, just copy and paste a simple shortcode anywhere on your site."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:29
+msgid "Backward Compatible:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:29
+msgid "Existing shortcodes continue to work perfectly!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:34
+msgid "How It Works (3 Simple Steps)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:38
+msgid "Step 1: Configure Global Defaults (Optional)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:39
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:45
+msgid "Go to"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:39
+msgid "Lean Player → Settings"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:39
+msgid "to set default behavior for all players. This is optional but saves time!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:40
+msgid "Examples: Default volume, autoplay settings, player controls, and more."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:44
+msgid "Step 2: Create Your Player"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:45
+msgid "Lean Player → Add New Player"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:47
+msgid "Choose player type (Video or Audio)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:48
+msgid "Add your media URL (YouTube, Vimeo, or direct file)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:49
+msgid "Customize player settings (or use global defaults)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:50
+msgid "Click Publish"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:55
+msgid "Step 3: Use the Shortcode"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:56
+msgid "After creating your player, copy the shortcode and paste it anywhere on your site:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:58
+msgid "Or use PHP in your templates:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:60
+msgid "Works in posts, pages, widgets, and more!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:65
+msgid "Two Ways to Create Players"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:66
+msgid "Plus: Elementor integration for page builder users"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:70
+msgid "Recommended: Use Player Manager"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:71
+msgid "Best for:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:71
+msgid "Most users, especially those who want a simple interface"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:73
+msgid "Visual interface, no code needed"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:74
+msgid "Inherit global settings automatically"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:75
+msgid "Manage all players in one place"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:76
+msgid "Simple shortcode:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:79
+msgid "Create Player Now"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:84
+msgid "Advanced: Direct Shortcodes (Legacy Method)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:85
+msgid "Good for:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:85
+msgid "Quick embed or programmatic use"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:87
+msgid "No admin interface needed"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:88
+msgid "Configure everything via shortcode attributes"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:89
+msgid "Perfect for dynamic/programmatic content"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:90
+msgid "Use:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:90
+msgid "or"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:93
+msgid "View Shortcode Options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:100
+msgid "Using with Elementor?"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:101
+msgid "Our Elementor widgets continue to work perfectly! You can still:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:103
+msgid "Drag and drop Video Player or Audio Player widgets"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:104
+msgid "Configure settings visually in Elementor"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:110
+msgid "What's Coming Next"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:111
+msgid "Version 3.0.0 is just the beginning! We're considering the following enhancements for future updates:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:113
+msgid "Player width setting"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:114
+msgid "Video start time option"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:115
+msgid "More styling options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:116
+msgid "More customization options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:117
+msgid "Subtitle and caption support"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:118
+msgid "Playlist support"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/quick-start.php:120
+msgid "Stay tuned for more exciting features!"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:21
+msgid "Shared Options (Video & Audio)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:23
+msgid "Set default behavior that applies to all video and audio players across your site, unless you override them at the widget or individual player level."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:29
+msgid "Try to start videos and audio automatically when the page loads. <strong>If autoplay does not work, turn on \"Muted\" below.</strong> Most browsers only allow autoplay when sound is off. <a href=\"https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay\" target=\"_blank\" rel=\"noopener noreferrer\">Learn more about autoplay policies</a>."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:30
+msgid "Yes - Start playing automatically when the page loads"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:37
+msgid "Start all players with sound off. Required for autoplay in modern browsers."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:38
+msgid "Yes - Start all players with sound off (muted)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:45
+msgid "Choose how loud the player starts, from 0% (mute) to 100% (full volume). Viewers can still change the volume while watching."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:56
+msgid "Automatically restart from the beginning when finished"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:66
+msgid "Set the initial playback speed when players load. Many users now prefer listening to podcasts and videos at faster speeds (1.2x or 1.5x). We recommend setting 1.25x as the global default—this will apply to all video and audio players site-wide, unless you override it at the widget or individual player level."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:82
+msgid "Player Controls"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:83
+msgid "Choose which buttons appear on the player (play, progress bar, volume, etc.). Check a control to show it, uncheck to hide it, and drag to change the order they appear in the control bar."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:88
+msgid "Play Large (Video Only)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:94
+msgid "Caption (Video Only)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:96
+msgid "PIP (Video Only)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:98
+msgid "Fullscreen (Video Only)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:137
+msgid "Video-Only Options"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:139
+msgid "Set default behavior that applies to all video players across your site, unless you override them at the widget or individual player level."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:145
+msgid "Show a button to expand video to fullscreen"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:154
+msgid "Allow clicking directly on video to play or pause"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:163
+msgid "Hide controls during playback; show on hover or tap"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:175
+msgid "Reset video to beginning when playback ends"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/styling.php:21
+msgid "Player Styling"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/styling.php:23
+msgid "Match player colors with your brand. These global styling options apply to all players site-wide, unless you override them at the widget or individual player level."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/styling.php:28
+msgid "Brand Color"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/styling.php:29
+msgid "Main accent color for player controls, progress bars, and interactive elements to match your brand."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:10
+msgid "Supports YouTube, Vimeo, and HTML5 videos (MP4, WebM)"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:32
+msgid "Test the players by copying these ready-to-use shortcodes"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:44
+msgid "YouTube:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:49
+msgid "Vimeo:"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:54
+msgid "HTML5: <br>Self Hosted / CDN"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:60
+msgid "HTML5 <br>Multiple Quality <br>Self Hosted / CDN"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:84
+msgid "Multiple Quality (Self Hosted / CDN):"
+msgstr ""
+
+#: includes/shortcodes/class-player-shortcode.php:80
+msgid "Player ID is required. Usage: [lean_player id=\"123\"]"
+msgstr ""
+
+#: includes/shortcodes/class-player-shortcode.php:87
+msgid "Player not found."
+msgstr ""
+
+#: includes/shortcodes/class-player-shortcode.php:93
+msgid "Player type is not set."
 msgstr ""
 
 #: includes/views/html-hire-page.php:8
 msgid "WordPress Development Services"
 msgstr ""
 
+#: includes/views/html-hire-page.php:14
+msgid "Why Work With Me?"
+msgstr ""
+
+#: includes/views/html-hire-page.php:17
+msgid "When you hire me, you're not just getting a site built. You're partnering with someone who:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:21
+msgid "Builds clean, scalable WordPress solutions that grow with your business."
+msgstr ""
+
+#: includes/views/html-hire-page.php:22
+msgid "Writes code that follows WordPress standards, easy to maintain and extend."
+msgstr ""
+
+#: includes/views/html-hire-page.php:23
+msgid "Focuses on your business goals, not just technical tasks."
+msgstr ""
+
+#: includes/views/html-hire-page.php:24
+msgid "Avoids bloated plugins and creates lightweight, future-proof solutions."
+msgstr ""
+
+#: includes/views/html-hire-page.php:37
+msgid "What Makes Me Different"
+msgstr ""
+
+#: includes/views/html-hire-page.php:42
+msgid "Plugin Developer First:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:42
+msgid "I don't just build sites, I actually create the tools other developers use, so you can be confident your code is rock-solid."
+msgstr ""
+
+#: includes/views/html-hire-page.php:46
+msgid "Deep WordPress Expertise:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:46
+msgid "I know the ecosystem inside out, helping you avoid costly mistakes."
+msgstr ""
+
+#: includes/views/html-hire-page.php:50
+msgid "Direct Collaboration:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:50
+msgid "No agencies, no hand-offs. You work directly with me."
+msgstr ""
+
+#: includes/views/html-hire-page.php:54
+msgid "Business Focused Approach:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:54
+msgid "I care about your revenue and goals, not just \"completing tasks.\""
+msgstr ""
+
+#: includes/views/html-hire-page.php:58
+msgid "Clean, Maintainable Code:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:58
+msgid "Built for the long run, easy for you or future devs to work with."
+msgstr ""
+
+#: includes/views/html-hire-page.php:62
+msgid "Trusted Worldwide:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:62
+msgid "My work powers 133,000+ websites."
+msgstr ""
+
+#: includes/views/html-hire-page.php:71
+msgid "How I Can Help You"
+msgstr ""
+
+#: includes/views/html-hire-page.php:72
+msgid "I specialize in helping businesses, educators, and content creators with:"
+msgstr ""
+
+#: includes/views/html-hire-page.php:75
+msgid "Troubleshooting & Bug Fixes"
+msgstr ""
+
+#: includes/views/html-hire-page.php:76
+msgid "Speed Optimization & Performance Tuning"
+msgstr ""
+
+#: includes/views/html-hire-page.php:77
+msgid "WooCommerce Setup & Customization"
+msgstr ""
+
+#: includes/views/html-hire-page.php:78
+msgid "Brand New Websites (Corporate / eCommerce / LMS / Membership sites)"
+msgstr ""
+
+#: includes/views/html-hire-page.php:79
+msgid "Security Audits & Hardening"
+msgstr ""
+
+#: includes/views/html-hire-page.php:80
+msgid "Site Migration & Hosting Setup"
+msgstr ""
+
 #: includes/views/html-hire-page.php:81
 msgid "WordPress Theme Customization"
 msgstr ""
 
-#: includes/views/html-hire-page.php:22
-msgid ""
-"Writes code that follows WordPress standards, easy to maintain and extend."
+#: includes/views/html-hire-page.php:82
+msgid "Google Analytics (GA4) Integration"
 msgstr ""
 
-#: includes/widgets/audio-player.php:90 includes/widgets/audio-player.php:104
-#: includes/widgets/audio-player.php:118 includes/widgets/audio-player.php:132
-#: includes/widgets/audio-player.php:160 includes/widgets/audio-player.php:237
-#: includes/widgets/video-player.php:94 includes/widgets/video-player.php:221
-#: includes/widgets/video-player.php:235 includes/widgets/video-player.php:249
-#: includes/widgets/video-player.php:297 includes/widgets/video-player.php:325
-#: includes/widgets/video-player.php:339 includes/widgets/video-player.php:356
-#: includes/widgets/video-player.php:369 includes/widgets/video-player.php:383
-#: includes/widgets/video-player.php:397 includes/widgets/video-player.php:413
-#: includes/widgets/video-player.php:472 includes/widgets/video-player.php:536
-msgid "Yes"
+#: includes/views/html-hire-page.php:83
+msgid "Responsive Design Implementation"
 msgstr ""
 
-#: includes/class-player-renderer.php:185
-msgid "Your browser does not support the audio element."
+#: includes/views/html-hire-page.php:84
+msgid "+ More"
 msgstr ""
 
-#: includes/widgets/video-player.php:46
-msgid "Youtube"
+#: includes/views/html-hire-page.php:84
+msgid "tailored to your business goals"
 msgstr ""
 
-#: includes/widgets/video-player.php:57
-msgid "Youtube Video ID"
+#: includes/views/html-hire-page.php:90
+#: includes/views/html-hire-page.php:110
+msgid "Let's Talk"
 msgstr ""
 
-#: includes/views/html-video-tab.php:45
-msgid "YouTube:"
-msgstr ""
-
-#: includes/class-settings-page.php:64
-msgid "🎨 Elementor Integration"
-msgstr ""
-
-#: includes/class-settings-page.php:62
-msgid "🎵 Audio Player"
-msgstr ""
-
-#: includes/views/html-available-options-tab.php:213
-msgid "🎵 Audio-Only Options"
+#: includes/views/html-hire-page.php:92
+msgid "Every project starts with a quick conversation. I'll listen, understand what's really driving your project, and give you clarity on how to move forward."
 msgstr ""
 
 #: includes/views/html-hire-page.php:96
-msgid "👉 Free 15–30 minute Discovery Call"
+msgid "👉 Book a Free Discovery Call"
 msgstr ""
 
-#: includes/class-settings-page.php:63
-msgid "📋 All Shortcode Options"
+#: includes/views/html-hire-page.php:97
+msgid "To ensure top quality, I take on only a few new client projects each month."
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:27
-msgid "📋 Common Options (Both Video & Audio)"
+#: includes/views/html-hire-page.php:101
+msgid "Schedule a Call"
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:235
-msgid "📝 Note:"
+#: includes/views/html-hire-page.php:101
+msgid "[Schedule Here]"
 msgstr ""
 
-#: includes/class-settings-page.php:61
-msgid "📺 Video Player"
+#: includes/views/html-hire-page.php:102
+#: includes/views/html-hire-page.php:126
+msgid "Email Me"
 msgstr ""
 
-#: includes/views/html-available-options-tab.php:136
-msgid "📺 Video-Only Options"
+#: includes/views/html-hire-page.php:102
+msgid "helloalberuni@gmail.com"
+msgstr ""
+
+#: includes/views/html-hire-page.php:103
+msgid "View My Portfolio"
+msgstr ""
+
+#: includes/views/html-hire-page.php:103
+msgid "https://helloalberuni.com"
+msgstr ""
+
+#: includes/views/html-hire-page.php:111
+msgid "Ready to discuss your project?"
+msgstr ""
+
+#: includes/views/html-hire-page.php:116
+msgid "We’ll explore your goals, challenges, and next steps to see how I can help."
+msgstr ""
+
+#: includes/views/html-hire-page.php:120
+msgid "Book a Discovery Call"
+msgstr ""
+
+#: includes/views/html-hire-page.php:135
+msgid "View Portfolio"
+msgstr ""
+
+#: includes/views/html-hire-page.php:142
+msgid "Typical Response Time"
+msgstr ""
+
+#: includes/views/html-hire-page.php:143
+msgid "Within 24 hours"
 msgstr ""

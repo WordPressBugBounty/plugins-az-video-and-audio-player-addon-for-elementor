@@ -1,5 +1,5 @@
 <?php
-namespace VAPFEM;
+namespace LeanPL;
 
 /**
  * Shared Player Renderer Class
@@ -19,11 +19,6 @@ class Player_Renderer {
     private static $instance = null;
 
     /**
-     * Default configuration values (loaded from file)
-     */
-    private static $default_config = null;
-
-    /**
      * Get instance
      */
     public static function get_instance() {
@@ -33,31 +28,6 @@ class Player_Renderer {
         return self::$instance;
     }
 
-    /**
-     * Get default configuration from file
-     */
-    private function get_default_config() {
-        if (null === self::$default_config) {
-            self::$default_config = include VAPFEM_DIR . '/includes/player-defaults.php';
-        }
-        return self::$default_config;
-    }
-
-    /**
-     * Get merged default configuration for video player
-     */
-    private function get_video_defaults() {
-        $defaults = $this->get_default_config();
-        return array_merge($defaults['shared'], $defaults['video']);
-    }
-
-    /**
-     * Get merged default configuration for audio player
-     */
-    private function get_audio_defaults() {
-        $defaults = $this->get_default_config();
-        return array_merge($defaults['shared'], $defaults['audio']);
-    }
 
     /**
      * Supported video types
@@ -88,15 +58,28 @@ class Player_Renderer {
    * @return void
    */
     public function render_video_player($config = []) {
-      $config = array_merge($this->get_video_defaults(), $config);
+      $config = Config_Merger::get_instance()->merge($config);
 
         if (!$this->is_valid_video_type($config['video_type'])) {
             $this->render_error('Invalid video type provided.');
             return;
         }
 
+        /**
+         * Fires before video player renders
+         * 
+         * Allows pro version to apply styling, enqueue scripts, modify config, etc.
+         * 
+         * @since 3.0.0
+         * @param array  $config      Player configuration array
+         * @param string $player_type Player type ('video' or 'audio')
+         */
+        do_action('leanpl/player/before_render', $config, 'video');
+
       // Build data settings
       $data_settings = [
+          'autoplay'            => $config['autoplay'],
+          'storage_enabled'     => $config['storage_enabled'],
           'seek_time'          => $config['seek_time'],
           'volume'             => $config['volume'],
           'muted'              => $config['muted'],
@@ -123,6 +106,22 @@ class Player_Renderer {
       } elseif ($config['video_type'] == 'vimeo') {
             $this->render_vimeo_player($config, $data_settings);
       }
+      
+      /**
+       * Fires after video player renders
+       * 
+       * Allows pro version to add analytics, tracking, custom scripts, etc.
+       * 
+       * @since 3.0.0
+       * @param array  $config      Player configuration array
+       * @param string $player_type Player type ('video' or 'audio')
+       */
+      do_action('leanpl/player/after_render', $config, 'video');
+      
+      // Output debug info if debug mode is enabled
+      if (leanpl_is_debug_mode()) {
+          echo Config_Merger::get_debug_output_html();
+      }
   }
 
   /**
@@ -132,15 +131,28 @@ class Player_Renderer {
    * @return void
    */
     public function render_audio_player($config = []) {
-        $config = array_merge($this->get_audio_defaults(), $config);
+        $config = Config_Merger::get_instance()->merge($config);
 
         if (empty($config['url'])) {
             $this->render_error('No audio source provided.');
             return;
         }
 
+        /**
+         * Fires before audio player renders
+         * 
+         * Allows pro version to apply styling, enqueue scripts, modify config, etc.
+         * 
+         * @since 3.0.0
+         * @param array  $config      Player configuration array
+         * @param string $player_type Player type ('video' or 'audio')
+         */
+        do_action('leanpl/player/before_render', $config, 'audio');
+
         // Build data settings for audio
         $data_settings = [
+            'autoplay'            => $config['autoplay'],
+            'storage_enabled'     => $config['storage_enabled'],
             'seek_time'          => $config['seek_time'],
             'volume'             => $config['volume'],
             'muted'              => $config['muted'],
@@ -154,6 +166,46 @@ class Player_Renderer {
         ];
 
         $this->render_html5_audio_markup($config, $data_settings);
+        
+        /**
+         * Fires after audio player renders
+         * 
+         * Allows pro version to add analytics, tracking, custom scripts, etc.
+         * 
+         * @since 3.0.0
+         * @param array  $config      Player configuration array
+         * @param string $player_type Player type ('video' or 'audio')
+         */
+        do_action('leanpl/player/after_render', $config, 'audio');
+        
+        // Output debug info if test mode is enabled
+        if (leanpl_is_test_mode()) {
+            echo Config_Merger::get_debug_output_html();
+        }
+    }
+
+    /**
+     * Get MIME type for audio file based on extension
+     *
+     * @param string $file_extension File extension (e.g., 'mp3', 'm4a', 'ogg')
+     * @return string MIME type (e.g., 'audio/mpeg', 'audio/mp4', 'audio/ogg')
+     */
+    private function get_audio_mime_type($file_extension) {
+        // Normalize extension to lowercase
+        $ext = strtolower($file_extension);
+        
+        // Map file extensions to correct MIME types
+        $mime_map = [
+            'mp3' => 'audio/mpeg',
+            'ogg' => 'audio/ogg',
+            'wav' => 'audio/wav',
+            'm4a' => 'audio/mp4',
+            'aac' => 'audio/aac',
+            'aacp' => 'audio/aac',
+        ];
+        
+        // Return mapped MIME type or default to audio/{extension}
+        return isset($mime_map[$ext]) ? $mime_map[$ext] : 'audio/' . $ext;
     }
 
     /**
@@ -170,9 +222,12 @@ class Player_Renderer {
             $path_info = pathinfo($config['url']);
             $file_extension = isset($path_info['extension']) ? $path_info['extension'] : 'mp3';
         }
+        
+        // Get correct MIME type for the file extension
+        $mime_type = $this->get_audio_mime_type($file_extension);
         ?>
         <audio
-            class="vapfem-player vapfem-audio"
+            class="lpl-player lpl-player--audio"
             data-settings='<?php echo wp_json_encode($data_settings); ?>'
             <?php echo $config['autoplay'] ? 'autoplay allow="autoplay"' : ''; ?>
             <?php echo $config['loop'] ? 'loop' : ''; ?>
@@ -180,7 +235,7 @@ class Player_Renderer {
         >
             <source
                 src="<?php echo esc_url($config['url']); ?>"
-                type="audio/<?php echo esc_attr($file_extension); ?>"
+                type="<?php echo esc_attr($mime_type); ?>"
             />
             <?php esc_html_e('Your browser does not support the audio element.', 'vapfem'); ?>
         </audio>
@@ -207,8 +262,8 @@ class Player_Renderer {
         }
         ?>
         <video
-              poster="<?php echo esc_attr($config['poster']); ?>"
-              class="vapfem-player vapfem-video"
+              <?php if (!empty($config['poster'])): ?>poster="<?php echo esc_attr($config['poster']); ?>"<?php endif; ?>
+              class="lpl-player lpl-player--video"
               <?php echo $config['autoplay'] ? 'autoplay' : ''; ?>
               <?php echo $config['muted'] ? 'muted' : ''; ?>
               <?php echo $config['loop'] ? 'loop' : ''; ?>
@@ -253,7 +308,7 @@ class Player_Renderer {
             return;
         }
         ?>
-        <div class="plyr__video-embed vapfem-player vapfem-video"
+        <div class="plyr__video-embed lpl-player lpl-player--video"
             data-settings='<?php echo wp_json_encode($data_settings); ?>'
         >
             <iframe
@@ -281,7 +336,7 @@ class Player_Renderer {
         }
 
         ?>
-        <div class="plyr__video-embed vapfem-player vapfem-video"
+        <div class="plyr__video-embed lpl-player lpl-player--video"
             data-settings='<?php echo wp_json_encode($data_settings); ?>'
         >
             <iframe
@@ -375,7 +430,7 @@ class Player_Renderer {
      */
     private function render_error($message) {
         printf(
-            '<div class="vapfem-player-error" style="padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 4px;">%s</div>',
+            '<div class="lpl-player__error" style="padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 4px;">%s</div>',
             esc_html($message)
         );
     }

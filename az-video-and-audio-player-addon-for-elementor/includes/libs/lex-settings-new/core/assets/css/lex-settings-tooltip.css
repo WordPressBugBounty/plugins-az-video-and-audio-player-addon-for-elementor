@@ -1,0 +1,342 @@
+/**
+ * LEX Tooltip System - CSS Only
+ * Lightweight, pure CSS tooltip component
+ * No JavaScript required!
+ * 
+ * Usage - Plain Text:
+ * <span class="lex-tooltip">
+ *     Label Text
+ *     <span class="dashicons dashicons-editor-help"></span>
+ *     <span class="lex-tooltip__text">Your tooltip text here</span>
+ * </span>
+ * 
+ * Usage - HTML Content:
+ * <span class="lex-tooltip">
+ *     Label Text
+ *     <span class="dashicons dashicons-editor-help"></span>
+ *     <span class="lex-tooltip__text">
+ *         <strong>Bold text</strong> and more...
+ *     </span>
+ * </span>
+ * 
+ * Positioning:
+ * Tooltips always appear on top (above the trigger element)
+ * 
+ * Defaults:
+ * - Font size: 12px (small, clean default)
+ * - Width: 300px max
+ * - Theme: Soft Dark (#2a2d3a)
+ */
+
+/* ============================================
+   CSS VARIABLES
+   ============================================ */
+:root {
+    --lex-tooltip-bg: #2a2d3a;
+    --lex-tooltip-color: #e5e7eb;
+    --lex-tooltip-max-width: 300px;
+    --lex-tooltip-padding: 12px 16px;
+    --lex-tooltip-border-radius: 6px;
+    --lex-tooltip-spacing: 8px;
+    --lex-tooltip-compact-width: 200px;
+    --lex-tooltip-wide-width: 400px;
+    --lex-tooltip-extra-wide-width: 500px;
+}
+
+/* ============================================
+   TOOLTIP TRIGGER
+   ============================================ */
+.lex-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: help;
+    z-index: 9999;
+    vertical-align: middle;
+}
+
+/* Ensure labels containing tooltips can overflow */
+label {
+    overflow: visible;
+}
+
+label .lex-tooltip {
+    position: relative;
+}
+
+.lex-tooltip > .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #8c8f94;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lex-tooltip:hover > .dashicons,
+.lex-tooltip:focus > .dashicons {
+    color: var(--lex-color-primary, #5344F4);
+}
+
+.lex-tooltip:focus {
+    outline: 2px solid rgba(83, 68, 244, 0.1);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ============================================
+   TOOLTIP TEXT
+   ============================================ */
+.lex-tooltip__text {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    z-index: 9999;
+    width: var(--lex-tooltip-max-width);
+    background-color: var(--lex-tooltip-bg);
+    color: var(--lex-tooltip-color);
+    text-align: left;
+    padding: var(--lex-tooltip-padding);
+    border-radius: var(--lex-tooltip-border-radius);
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 400;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Show tooltip on hover */
+.lex-tooltip:hover .lex-tooltip__text,
+.lex-tooltip:focus .lex-tooltip__text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ============================================
+   TOOLTIP ARROW
+   ============================================ */
+.lex-tooltip__text::after {
+    content: "";
+    position: absolute;
+    border-style: solid;
+}
+
+/* ============================================
+   POSITIONING - TOP (Always)
+   ============================================ */
+.lex-tooltip .lex-tooltip__text {
+    bottom: calc(100% + var(--lex-tooltip-spacing));
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+}
+
+.lex-tooltip:hover .lex-tooltip__text,
+.lex-tooltip:focus .lex-tooltip__text {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Arrow on bottom (pointing down) */
+.lex-tooltip .lex-tooltip__text::after {
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px 6px 0 6px;
+    border-color: var(--lex-tooltip-bg) transparent transparent transparent;
+}
+
+/* ============================================
+   THEME VARIATIONS
+   ============================================ */
+
+/* Soft Gray - Light & Gentle */
+.lex-tooltip--soft-gray .lex-tooltip__text {
+    --lex-tooltip-bg: #4b5563;
+    --lex-tooltip-color: #f9fafb;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Soft Gradient - Subtle Two-Tone */
+.lex-tooltip--soft-gradient .lex-tooltip__text {
+    background: linear-gradient(135deg, #2a2d3a 0%, #2e3440 100%);
+    --lex-tooltip-color: #e8eaed;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.lex-tooltip--soft-gradient .lex-tooltip__text::after {
+    border-top-color: #2a2d3a;
+}
+
+/* Charcoal Dark - Professional & Subtle */
+.lex-tooltip--charcoal .lex-tooltip__text {
+    --lex-tooltip-bg: #2e3440;
+    --lex-tooltip-color: #eceff4;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Soft Dark Theme - Warm & Gentle */
+.lex-tooltip--soft .lex-tooltip__text {
+    --lex-tooltip-bg: #2a2d3a;
+    --lex-tooltip-color: #e5e7eb;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Gray - Neutral & Balanced */
+.lex-tooltip--gray .lex-tooltip__text {
+    --lex-tooltip-bg: #374151;
+    --lex-tooltip-color: #f3f4f6;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+}
+
+/* ============================================
+   SIZE VARIATIONS
+   ============================================ */
+
+/* Compact - For short hints and brief text */
+.lex-tooltip--compact .lex-tooltip__text {
+    width: var(--lex-tooltip-compact-width);
+}
+
+/* Wide - For detailed explanations */
+.lex-tooltip--wide .lex-tooltip__text {
+    width: var(--lex-tooltip-wide-width);
+}
+
+/* Extra Wide - For very detailed content */
+.lex-tooltip--xl .lex-tooltip__text {
+    width: var(--lex-tooltip-extra-wide-width);
+}
+
+/* No Wrap - Single line, no wrapping (naturally sizes) */
+.lex-tooltip--nowrap .lex-tooltip__text {
+    white-space: nowrap;
+    max-width: none;
+    width: auto;
+}
+
+/* Auto - Removes constraints, content determines size */
+.lex-tooltip--auto .lex-tooltip__text {
+    max-width: none;
+    width: max-content;
+}
+
+/* ============================================
+   FONT SIZE VARIATIONS
+   ============================================ */
+
+/* Small (Default) - Base font size is 12px */
+
+/* Medium - Slightly larger for better readability */
+.lex-tooltip--md .lex-tooltip__text {
+    font-size: 13px;
+}
+
+/* ============================================
+   HTML CONTENT STYLING
+   ============================================ */
+.lex-tooltip__text strong {
+    font-weight: 600;
+    color: inherit;
+}
+
+.lex-tooltip__text em {
+    font-style: italic;
+    color: #72aee6;
+}
+
+.lex-tooltip__text a {
+    color: #72aee6;
+    text-decoration: underline;
+}
+
+.lex-tooltip__text a:hover {
+    color: #4f94d4;
+}
+
+.lex-tooltip__text ul,
+.lex-tooltip__text ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.lex-tooltip__text li {
+    margin-bottom: 4px;
+}
+
+.lex-tooltip__text code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+}
+
+.lex-tooltip__text br {
+    line-height: 1.8;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media screen and (max-width: 782px) {
+    .lex-tooltip__text {
+        max-width: 250px;
+        font-size: 11px;
+        padding: 10px 12px;
+    }
+    
+    /* On mobile, position to prevent overflow */
+    .lex-tooltip .lex-tooltip__text {
+        left: auto;
+        right: 0;
+        transform: translateX(0) translateY(4px);
+    }
+    
+    .lex-tooltip:hover .lex-tooltip__text {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Ensure tooltips work with keyboard */
+.lex-tooltip {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Screen reader only text */
+.lex-tooltip--sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Center-aligned text */
+.lex-tooltip--center .lex-tooltip__text {
+    text-align: center;
+}
+
+/* Right-aligned text */
+.lex-tooltip--align-right .lex-tooltip__text {
+    text-align: right;
+}

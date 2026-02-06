@@ -1,0 +1,279 @@
+<?php
+namespace Lex\Settings\V2\Services;
+
+/**
+ * Section Renderer Service
+ * 
+ * Handles rendering of settings sections.
+ */
+
+use Lex\Settings\V2\Settings;
+
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Section Renderer Service Class
+ */
+class SectionRenderer {
+    
+    /**
+     * Settings instance
+     * 
+     * @var Settings
+     */
+    private $settings;
+    
+    /**
+     * Constructor
+     * 
+     * @param Settings $settings Settings instance
+     */
+    public function __construct(Settings $settings) {
+        $this->settings = $settings;
+    }
+    
+    /**
+     * Start a settings section
+     * 
+     * @param string $id Section identifier
+     * @param string $title Section title
+     * @param array $options Section options (is_pro, disable_save_button)
+     * @return void Outputs HTML directly
+     */
+    public function startSection($id, $title, $options = []) {
+        // Allow plugins to filter section options before rendering
+        // Hook: lex_settings/section_options (generic) and lex_settings/section_options/{section_id} (specific)
+        $instance_id = $this->settings->getConfig('instance_id');
+        $options = apply_filters(
+            'lex_settings/section_options', 
+            $options, 
+            $id, 
+            $title, 
+            $instance_id
+        );
+        // Also provide section-specific hook for granular control
+        $options = apply_filters(
+            'lex_settings/section_options/' . $id, 
+            $options, 
+            $title, 
+            $instance_id
+        );
+        
+        $is_pro = isset($options['is_pro']) ? $options['is_pro'] : false;
+        $disable_save_button = isset($options['disable_save_button']) 
+            ? $options['disable_save_button'] 
+            : ($is_pro ? true : null);
+        
+        // If disable_save_button is not specified, auto-sync with is_pro value
+        if ($disable_save_button === null) {
+            $disable_save_button = $is_pro;
+        }
+        
+        // Build section classes
+        $section_classes = 'lex-settings-section lex-settings-section--' . esc_attr($id);
+        if ($is_pro) {
+            $section_classes .= ' lex-settings-section--pro';
+        }
+        
+        // Build PRO badge HTML
+        $pro_badge_html = $is_pro ? '<span class="lex-pro-badge lex-pro-badge--medium">PRO</span>' : '';
+        
+        // Build save button HTML
+        $save_button_html = '';
+        if (!$disable_save_button) {
+            $save_button_html = sprintf(
+                '<button type="button" class="lex-btn lex-btn--primary lex-settings-section__save-btn lex-action-btn lex-btn--gray-v1-b2" data-action="save" data-section="%s" data-loading-type="text-only">%s</button>',
+                esc_attr($id),
+                esc_html__('Save', 'lex-settings')
+            );
+        }
+        
+        echo <<<HTML
+        <div class="{$section_classes}">
+            <div class="lex-settings-section__title">
+                <span>{$title}</span>
+                {$pro_badge_html}
+                {$save_button_html}
+            </div>
+            <table class="form-table lex-form-table" role="presentation">
+        HTML;
+    }
+    
+    /**
+     * End a settings section
+     * 
+     * @return void Outputs HTML directly
+     */
+    public function endSection() {
+        echo <<<HTML
+        </table> <!-- End of section table -->
+        </div> <!-- End of section div -->
+        HTML;
+    }
+    
+    /**
+     * Start a PRO grouped section
+     * 
+     * @param array $options Group options (id, title, padding_bottom)
+     * @return void Outputs HTML directly
+     */
+    public function startProGroup($options = []) {
+        $group_id = isset($options['id']) ? $options['id'] : 'pro-group';
+        $title = isset($options['title']) ? $options['title'] : 'Premium Features';
+        $padding_bottom = isset($options['padding_bottom']) ? $options['padding_bottom'] : false;
+        
+        $label_id = $group_id . '-label';
+        $td_style = $padding_bottom ? '' : ' style="padding-bottom: 0;"';
+
+        $title_escaped = wp_kses_post($title);
+        $label_id_escaped = esc_attr($label_id);
+        $td_style_escaped = $td_style ? ' style="' . esc_attr($td_style) . '"' : '';
+
+        echo <<<HTML
+        <tr>
+            <td colspan="2" {$td_style_escaped}>
+                <div class="lex-pro-section" role="group" aria-labelledby="{$label_id_escaped}">
+                    <div class="lex-pro-section__header" id="{$label_id_escaped}">
+                        <span>{$title_escaped}</span>
+                        <span class="lex-pro-badge">PRO</span>
+                    </div>
+                    <table class="lex form-table" style="margin: 0;">
+        HTML;
+    }
+
+    /**
+     * End a PRO grouped section
+     * 
+     * @return void Outputs HTML directly
+     */
+    public function endProGroup() {
+        echo <<<HTML
+                </table>
+                </div>
+            </td>
+        </tr>
+        HTML;
+    }
+    
+    /**
+     * Render a PRO section with overlay
+     * 
+     * @param string $section_title Section title
+     * @param array $overlay_config Overlay configuration (icon, title, description, button_text)
+     * @return void Outputs HTML directly
+     */
+    public function renderProSectionOverlay($section_title, $overlay_config = []) {
+        // Defaults
+        $defaults = [
+            'icon'        => 'lock',
+            'title'       => 'Unlock Premium Features',
+            'description' => 'Upgrade to Pro to access this feature.',
+            'button_text' => 'Upgrade to Pro →',
+            'onclick'     => 'openUpgradeModal(); return false;',
+        ];
+        
+        $config = array_merge($defaults, $overlay_config);
+        
+        // Escape values for HTML output
+        $icon_escaped = esc_attr($config['icon']);
+        $title_escaped = wp_kses_post($config['title']);
+        $description_escaped = wp_kses_post($config['description']);
+        $button_text_escaped = wp_kses_post($config['button_text']);
+        $onclick_escaped = esc_attr($config['onclick']);
+        $section_title_escaped = wp_kses_post($section_title);
+        
+        echo <<<HTML
+        <div class="lex-settings-section lex-settings-section--pro">
+            <div class="lex-settings-section__title">
+                <span>{$section_title_escaped}</span>
+                <span class="lex-pro-badge">PRO</span>
+            </div>
+            <div class="lex-settings-section__overlay">
+                <div class="lex-settings-section__overlay-content">
+                    <span class="dashicons dashicons-{$icon_escaped}"></span>
+                    <h3>{$title_escaped}</h3>
+                    <p>{$description_escaped}</p>
+                    <a href="#" class="lex-btn lex-btn--primary" onclick="{$onclick_escaped}">{$button_text_escaped}</a>
+                </div>
+            </div>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row">
+                        <label>Primary Color</label>
+                    </th>
+                    <td>
+                        <input type="color" value="#2271b1" disabled />
+                        <p class="description">Your brand\'s primary color.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label>Secondary Color</label>
+                    </th>
+                    <td>
+                        <input type="color" value="#d63638" disabled />
+                        <p class="description">Your brand\'s secondary color.</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        HTML;
+    }
+    
+    /**
+     * Render submit buttons
+     * 
+     * @param array $options Button options
+     * @return void Outputs HTML directly
+     */
+    public function renderSubmitButtons($options = []) {
+        $defaults = [
+            'save_text' => 'Save Changes',
+            'reset_text' => 'Reset Settings',
+            'show_reset' => true,
+            'show_save' => true,
+            'reset_class' => 'lex-btn lex-btn--secondary lex-btn--reset-section lex-action-btn',
+            'save_class' => 'lex-btn lex-btn--primary lex-action-btn'
+        ];
+        
+        $args = array_merge($defaults, $options);
+        
+        // Build reset button HTML
+        $reset_button_html = '';
+        if ($args['show_reset']) {
+            $reset_button_html = sprintf(
+                '<span class="lex-tooltip lex-tooltip--compact lex-tooltip--center">
+                    <button type="button" class="%s" data-action="reset">
+                        <span class="dashicons dashicons-image-rotate"></span>
+                        %s
+                    </button>
+                    <span class="lex-tooltip__text">Reset current section\'s settings</span>
+                </span>',
+                esc_attr($args['reset_class']),
+                esc_html($args['reset_text'])
+            );
+        }
+        
+        // Build save button HTML
+        $save_button_html = '';
+        if ($args['show_save']) {
+            $save_button_html = sprintf(
+                '<button type="button" class="%s" data-action="save">
+                    <span class="dashicons dashicons-yes"></span>
+                    %s
+                </button>',
+                esc_attr($args['save_class']),
+                esc_html($args['save_text'])
+            );
+        }
+        
+        echo '<p class="submit">';
+        echo wp_kses_post($reset_button_html);
+        echo wp_kses_post($save_button_html);
+        echo '</p> <!-- End of submit p -->';
+    }
+}
+

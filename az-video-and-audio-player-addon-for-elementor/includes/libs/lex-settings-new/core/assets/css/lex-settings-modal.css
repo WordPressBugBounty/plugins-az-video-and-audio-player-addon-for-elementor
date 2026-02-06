@@ -1,0 +1,187 @@
+/**
+ * Upgrade Modal - Simple & Clean
+ * 
+ * Header: Title left, Close right
+ * Content: Centered paragraph + button
+ * No gradients, minimal design
+ * Uses global CSS variables for spacing
+ */
+
+/* ============================================
+   BACKDROP
+   ============================================ */
+
+.lex-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 100000;
+    padding: var(--lex-spacing-md);
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+.lex-modal-backdrop.is-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.lex-modal-backdrop.is-closing {
+    opacity: 0;
+}
+
+/* ============================================
+   MODAL: SIMPLE & CLEAN
+   ============================================ */
+
+.lex-modal {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+    transition: transform 0.2s ease-out;
+}
+
+.lex-modal-backdrop.is-open .lex-modal {
+    animation: slideUp 0.25s ease-out;
+}
+
+.lex-modal-backdrop.is-closing .lex-modal {
+    transform: translateY(20px);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   HEADER: Title Left, Close Right
+   ============================================ */
+
+.lex-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--lex-spacing-sm) var(--lex-spacing-lg);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.lex-modal__header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.lex-modal__close {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.lex-modal__close:hover {
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+.lex-modal__close .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    display: block;
+}
+
+/* ============================================
+   CONTENT: Centered Paragraph + Button
+   ============================================ */
+
+.lex-modal__content {
+    padding: var(--lex-spacing-lg);
+    text-align: center;
+}
+
+.lex-modal__content p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+    margin: 0 0 var(--lex-spacing-lg);
+}
+
+.lex-btn--upgrade {
+    display: inline-block;
+    padding: 12px 32px;
+    background: #5344F4;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.lex-btn--upgrade:hover {
+    background: #4235D9;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 520px) {
+    .lex-modal {
+        max-width: 100%;
+    }
+    
+    .lex-modal__header {
+        padding: var(--lex-spacing-sm) var(--lex-spacing-md);
+    }
+    
+    .lex-modal__header h3 {
+        font-size: 16px;
+    }
+    
+    .lex-modal__content {
+        padding: var(--lex-spacing-md);
+    }
+    
+    .lex-modal__content p {
+        font-size: 14px;
+    }
+}
+
+
+

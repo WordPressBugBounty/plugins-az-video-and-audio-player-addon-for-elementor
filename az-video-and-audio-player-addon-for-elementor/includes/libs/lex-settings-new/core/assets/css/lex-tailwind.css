@@ -1,0 +1,318 @@
+/* ============================================
+   UTILITY CLASSES (Tailwind-inspired)
+   Balanced set for practical use
+   1 rem = 16px
+   ============================================ */
+
+/* Border Utilities */
+.lex-border-0 {
+    border: none !important;
+}
+
+.lex-border-t-0 {
+    border-top: none !important;
+}
+
+.lex-border-b-0 {
+    border-bottom: none !important;
+}
+
+.lex-border-l-0 {
+    border-left: none !important;
+}
+
+.lex-border-r-0 {
+    border-right: none !important;
+}
+
+/* Margin Utilities */
+.lex-m-0 {
+    margin: 0 !important;
+}
+
+.lex-m-2 {
+    margin: 0.5rem !important;
+}
+
+.lex-m-4 {
+    margin: 1rem !important;
+}
+
+/* Margin Top */
+.lex-mt-0 {
+    margin-top: 0 !important;
+}
+
+.lex-mt-2 {
+    margin-top: 0.5rem !important;
+}
+
+.lex-mt-3 {
+    margin-top: 0.75rem !important;
+}
+
+.lex-mt-4 {
+    margin-top: 1rem !important;
+}
+
+.lex-mt-6 {
+    margin-top: 1.5rem !important;
+}
+
+/* Margin Bottom */
+.lex-mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.lex-mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.lex-mb-3 {
+    margin-bottom: 0.75rem !important;
+}
+
+.lex-mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+.lex-mb-6 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Margin Left */
+.lex-ml-0 {
+    margin-left: 0 !important;
+}
+
+.lex-ml-2 {
+    margin-left: 0.5rem !important;
+}
+
+.lex-ml-4 {
+    margin-left: 1rem !important;
+}
+
+/* Margin Right */
+.lex-mr-0 {
+    margin-right: 0 !important;
+}
+
+.lex-mr-2 {
+    margin-right: 0.5rem !important;
+}
+
+.lex-mr-4 {
+    margin-right: 1rem !important;
+}
+
+/* Margin X (Horizontal) */
+.lex-mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.lex-mx-2 {
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+}
+
+.lex-mx-4 {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+
+/* Margin Y (Vertical) */
+.lex-my-0 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.lex-my-2 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.lex-my-4 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.lex-my-6 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Negative Margins */
+.lex--mt-2 {
+    margin-top: -0.5rem !important;
+}
+
+.lex--mt-4 {
+    margin-top: -1rem !important;
+}
+
+.lex--mb-2 {
+    margin-bottom: -0.5rem !important;
+}
+
+.lex--mb-4 {
+    margin-bottom: -1rem !important;
+}
+
+.lex--ml-2 {
+    margin-left: -0.5rem !important;
+}
+
+.lex--ml-4 {
+    margin-left: -1rem !important;
+}
+
+.lex--mr-2 {
+    margin-right: -0.5rem !important;
+}
+
+.lex--mr-4 {
+    margin-right: -1rem !important;
+}
+
+/* Padding Utilities */
+.lex-p-0 {
+    padding: 0 !important;
+}
+
+.lex-p-2 {
+    padding: 0.5rem !important;
+}
+
+.lex-p-3 {
+    padding: 0.75rem !important;
+}
+
+.lex-p-4 {
+    padding: 1rem !important;
+}
+
+.lex-p-6 {
+    padding: 1.5rem !important;
+}
+
+/* Padding Top */
+.lex-pt-0 {
+    padding-top: 0 !important;
+}
+
+.lex-pt-2 {
+    padding-top: 0.5rem !important;
+}
+
+.lex-pt-3 {
+    padding-top: 0.75rem !important;
+}
+
+.lex-pt-4 {
+    padding-top: 1rem !important;
+}
+
+.lex-pt-6 {
+    padding-top: 1.5rem !important;
+}
+
+/* Padding Bottom */
+.lex-pb-0 {
+    padding-bottom: 0 !important;
+}
+
+.lex-pb-2 {
+    padding-bottom: 0.5rem !important;
+}
+
+.lex-pb-3 {
+    padding-bottom: 0.75rem !important;
+}
+
+.lex-pb-4 {
+    padding-bottom: 1rem !important;
+}
+
+.lex-pb-6 {
+    padding-bottom: 1.5rem !important;
+}
+
+/* Padding Left */
+.lex-pl-0 {
+    padding-left: 0 !important;
+}
+
+.lex-pl-2 {
+    padding-left: 0.5rem !important;
+}
+
+.lex-pl-4 {
+    padding-left: 1rem !important;
+}
+
+/* Padding Right */
+.lex-pr-0 {
+    padding-right: 0 !important;
+}
+
+.lex-pr-2 {
+    padding-right: 0.5rem !important;
+}
+
+.lex-pr-4 {
+    padding-right: 1rem !important;
+}
+
+/* Padding X (Horizontal) */
+.lex-px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.lex-px-2 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+.lex-px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+}
+
+.lex-px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.lex-px-6 {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+/* Padding Y (Vertical) */
+.lex-py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.lex-py-2 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.lex-py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+.lex-py-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.lex-py-6 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}

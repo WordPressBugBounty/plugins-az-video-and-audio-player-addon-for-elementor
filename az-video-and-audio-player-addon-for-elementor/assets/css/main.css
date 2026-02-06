@@ -1,17 +1,24 @@
 .plyr__controls input[type=range]::-webkit-slider-runnable-track{
 	box-shadow: none;
 }
+
 .plyr--audio .plyr__controls{
 	background: transparent;
 }
-.vapfem-not-found{
+.lpl-not-found{
 	text-align: center;
 	background: #1AAFFF;
 	color: #fff;
 	padding: 15px 0;
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
 }
 
 /*customify theme support*/
@@ -24,9 +31,4 @@ body.theme-customify .elementor-widget-vapfem_audio_player .plyr__control--overl
 }
 .theme-customify .plyr--full-ui input[type=range]{
 	box-shadow: none;
-}
-
-/*BeTheme support*/
-.plyr button{
-	margin-bottom: 0;
 }
