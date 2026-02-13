@@ -567,6 +567,68 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->end_controls_section(); // Style tab setting_icon_section end
 
         $this->start_controls_section(
+            'styling_download_icon_section',
+            [
+                'label'     => esc_html__( 'Download Button', 'vapfem' ),
+                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+            $this->add_control(
+                'download_icon_bg_color',
+                [
+                    'label' => esc_html__( 'BG Color', 'vapfem' ),
+                    'type' => \Elementor\Controls_Manager::COLOR,
+                    'selectors' => [
+                        '{{WRAPPER}} .plyr__control[data-plyr="download"]' => 'background-color:{{VALUE}}',
+                    ],
+                ]
+            );
+
+            $this->add_control(
+                'download_icon_color',
+                [
+                    'label' => esc_html__( 'Icon Color', 'vapfem' ),
+                    'type' => \Elementor\Controls_Manager::COLOR,
+                    'selectors' => [
+                        '{{WRAPPER}} .plyr__control[data-plyr="download"] svg' => 'color:{{VALUE}}',
+                    ],
+                ]
+            );
+
+            $this->add_control(
+                'download_icon_hover_bg_color',
+                [
+                    'label' => esc_html__( 'Hover BG Color', 'vapfem' ),
+                    'type' => \Elementor\Controls_Manager::COLOR,
+                    'selectors' => [
+                        '{{WRAPPER}} .plyr__control[data-plyr="download"]:hover' => 'background-color:{{VALUE}}',
+                    ],
+                ]
+            );
+
+            $this->add_control(
+                'download_icon_hover_color',
+                [
+                    'label' => esc_html__( 'Hover Icon Color', 'vapfem' ),
+                    'type' => \Elementor\Controls_Manager::COLOR,
+                    'selectors' => [
+                        '{{WRAPPER}} .plyr__control[data-plyr="download"]:hover svg' => 'color:{{VALUE}}',
+                    ],
+                ]
+            );
+
+            $this->add_group_control(
+                \Elementor\Group_Control_Border::get_type(),
+                [
+                    'name' => 'download_icon_border',
+                    'label' => esc_html__( 'Border', 'vapfem' ),
+                    'selector' => '{{WRAPPER}} .plyr__control[data-plyr="download"]'
+                ]
+            );
+        $this->end_controls_section(); // Style tab download_icon_section end
+
+        $this->start_controls_section(
             'styling_others_section',
             [
                 'label'     => esc_html__( 'Others', 'vapfem' ),

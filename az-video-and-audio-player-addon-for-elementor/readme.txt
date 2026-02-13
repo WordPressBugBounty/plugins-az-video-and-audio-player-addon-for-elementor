@@ -4,7 +4,7 @@ Tags: elementor, player, audio player, video player, media player
 Requires at least: 4.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,9 @@ Version 3.0.0 marks a major milestone: our rebranding checkpoint and major updat
 * 20+ Styling options
 
 == Changelog ==
+= Version: 3.0.8 =
+Added: Download button styling option to the audio player elementor widget
+
 = Version: 3.0.7 =
 Fixed: Play Large button were not showing for very newly created video player
 
