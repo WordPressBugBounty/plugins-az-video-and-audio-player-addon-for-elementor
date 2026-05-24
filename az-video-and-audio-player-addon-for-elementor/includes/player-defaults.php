@@ -1,5 +1,21 @@
 <?php
 /**
+ * Player Config SSOT
+ *
+ * This file is the canonical source for all player config key names and defaults.
+ *
+ * Adding a new player option — update these 3 files:
+ * 1. This file — add key + default value in the correct section (shared/video/audio)
+ * 2. includes/class-player-renderer.php — add key to COMMON_SETTINGS_KEYS,
+ *    VIDEO_ONLY_SETTINGS_KEYS, or AUDIO_ONLY_SETTINGS_KEYS constant
+ * 3. assets/js/player-utils.js — add snake_case read + Plyr format output
+ *    in buildCommonConfig(), buildVideoConfig(), or buildAudioConfig()
+ *
+ * If the option should be user-configurable site-wide, also add a field to:
+ *    includes/libs/lex-settings-new/config/tabs/settings.php
+ */
+
+/**
  * Player Default Settings
  * Single Source of Truth for all player default values
  * Used by: Elementor widgets, Shortcodes, and Renderer
@@ -48,8 +64,10 @@ return [
     'shared' => [
         // Playback behavior
         'autoplay' => false,
+        'autopause' => false, // Pause other players when this one starts playing
         'muted' => false,
         'loop' => false,
+        'preload' => 'metadata', // HTML attribute on <audio>/<video>. Not a Plyr JS config key. 'auto', 'metadata', 'none'
         'volume' => 100, // Stored as 0-100 (UI format), converted to 0-1 by Config_Merger for Plyr
         'invert_time' => true,
         'seek_time' => 10, // The time, in seconds, to seek when a user hits fast forward or rewind.
@@ -67,25 +85,8 @@ return [
         // Note: Speed is converted to object format { selected: value, options: [...] } in JavaScript
         // YouTube and Vimeo will ignore/hide options outside 0.5-2 range automatically
 
-        // Default controls
-        'controls' => [
-            'play-large',
-            // 'restart',
-            // 'rewind',
-            'play',
-            // 'fast-forward',
-            'progress',
-            'current-time',
-            // 'duration',
-            'mute',
-            'volume',
-            'captions',
-            'settings',
-            'pip',
-            'airplay',
-            // 'download',
-            'fullscreen',
-        ],
+        // Default controls — derived from leanpl_get_controls_registry() in functions-player.php
+        'controls' => array_keys( array_filter( leanpl_get_controls_registry(), fn( $c ) => $c['default'] ) ),
 
         // Storage
         'storage_enabled' => true, // Allow use of local storage to store user settings
@@ -125,8 +126,10 @@ return [
         // Audio source
         'url' => '', // See demo links above
 
-        // Audio-specific behavior
-        'preload' => 'metadata', // 'auto', 'metadata', 'none'
+        // Poster / album art (resolved URL, not attachment ID)
+        'poster'      => '',
+        'audio_title' => '',
+        'audio_skin'  => 'default', // 'default' (light card), 'dark', 'glass'
 
         // Audio-specific controls (intentionally not using)
     ],

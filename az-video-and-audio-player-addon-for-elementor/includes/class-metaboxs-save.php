@@ -45,6 +45,17 @@ class Metabox_Save {
         if(isset($_POST['___controls_order'])) {
             update_post_meta($post_id, '___controls_order', $_POST['___controls_order']);
         }
+
+        // Save playlist fields (duration, meta_text)
+        if ( leanpl_get_option( 'playlist.enabled', true ) ) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized with sanitize_text_field below
+            $duration  = isset( $_POST['_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['_duration'] ) ) : '';
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized with sanitize_text_field below
+            $meta_text = isset( $_POST['_meta_text'] ) ? sanitize_text_field( wp_unslash( $_POST['_meta_text'] ) ) : '';
+
+            update_post_meta( $post_id, '_duration', $duration );
+            update_post_meta( $post_id, '_meta_text', $meta_text );
+        }
     }
 
     /**

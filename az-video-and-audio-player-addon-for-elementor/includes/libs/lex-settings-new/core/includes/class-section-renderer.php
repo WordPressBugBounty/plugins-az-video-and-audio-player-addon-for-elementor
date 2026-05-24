@@ -18,13 +18,19 @@ if (!defined('ABSPATH')) {
  * Section Renderer Service Class
  */
 class SectionRenderer {
-    
+
     /**
      * Settings instance
-     * 
+     *
      * @var Settings
      */
     private $settings;
+
+    /** @var string|null Currently open vtab id */
+    private $current_vtab = null;
+
+    /** @var array Vtab metadata collected during tab config include */
+    private $vtab_registry = [];
     
     /**
      * Constructor
@@ -36,11 +42,52 @@ class SectionRenderer {
     }
     
     /**
+     * Open a vertical tab block. Sections between startVtab/endVtab auto-inherit membership.
+     *
+     * @param string $id    Vtab id (used as data-vtab attr value and localStorage key)
+     * @param string $label Nav button label
+     * @param array  $options icon, order, is_pro, badge, tooltip, condition (all future-safe)
+     */
+    public function startVtab( $id, $label, $options = [] ) {
+        $instance_id = $this->settings->getConfig( 'instance_id' );
+        $options = apply_filters( 'lex_settings/vtab_options', $options, $id, $label, $instance_id );
+        $options = apply_filters( 'lex_settings/vtab_options/' . $id, $options, $label, $instance_id );
+
+        $this->vtab_registry[ $id ] = [
+            'id'      => $id,
+            'label'   => $label,
+            'icon'    => isset( $options['icon'] ) ? $options['icon'] : '',
+            'order'   => isset( $options['order'] ) ? (int) $options['order'] : count( $this->vtab_registry ),
+            'tab_layout' => isset( $options['tab_layout'] ) ? $options['tab_layout'] : '',
+            'options' => $options,
+        ];
+        $this->current_vtab = $id;
+    }
+
+    /** Close the current vtab block. */
+    public function endVtab() {
+        $this->current_vtab = null;
+    }
+
+    /** Return vtab registry sorted by order. */
+    public function getVtabRegistry() {
+        $registry = array_values( $this->vtab_registry );
+        usort( $registry, function( $a, $b ) { return $a['order'] <=> $b['order']; } );
+        return $registry;
+    }
+
+    /** Reset vtab state between tabs so vtabs from previous tab config don't leak. */
+    public function resetVtabRegistry() {
+        $this->vtab_registry = [];
+        $this->current_vtab  = null;
+    }
+
+    /**
      * Start a settings section
-     * 
+     *
      * @param string $id Section identifier
      * @param string $title Section title
-     * @param array $options Section options (is_pro, disable_save_button)
+     * @param array $options Section options (is_pro, disable_save_button, collapsed, collapsible, accordion, exclusive, summary_labels)
      * @return void Outputs HTML directly
      */
     public function startSection($id, $title, $options = []) {
@@ -48,39 +95,76 @@ class SectionRenderer {
         // Hook: lex_settings/section_options (generic) and lex_settings/section_options/{section_id} (specific)
         $instance_id = $this->settings->getConfig('instance_id');
         $options = apply_filters(
-            'lex_settings/section_options', 
-            $options, 
-            $id, 
-            $title, 
+            'lex_settings/section_options',
+            $options,
+            $id,
+            $title,
             $instance_id
         );
         // Also provide section-specific hook for granular control
         $options = apply_filters(
-            'lex_settings/section_options/' . $id, 
-            $options, 
-            $title, 
+            'lex_settings/section_options/' . $id,
+            $options,
+            $title,
             $instance_id
         );
-        
-        $is_pro = isset($options['is_pro']) ? $options['is_pro'] : false;
-        $disable_save_button = isset($options['disable_save_button']) 
-            ? $options['disable_save_button'] 
-            : ($is_pro ? true : null);
-        
+
+        $is_pro      = ! empty( $options['is_pro'] );
+        $collapsed   = ! empty( $options['collapsed'] );
+        $collapsible = $collapsed || ! empty( $options['collapsible'] );
+        $accordion   = ! empty( $options['accordion'] );
+        $exclusive   = ! empty( $options['exclusive'] ) ? sanitize_html_class( $options['exclusive'] ) : '';
+        $no_title    = ! empty( $options['no_title'] );
+        $disable_save_button = isset( $options['disable_save_button'] )
+            ? $options['disable_save_button']
+            : ( $is_pro ? true : null );
+        $summary_labels = ! empty( $options['summary_labels'] ) && is_array( $options['summary_labels'] )
+            ? $options['summary_labels']
+            : [];
+
         // If disable_save_button is not specified, auto-sync with is_pro value
-        if ($disable_save_button === null) {
+        if ( $disable_save_button === null ) {
             $disable_save_button = $is_pro;
         }
-        
+
+        // Auto-inherit vtab from open startVtab() block; explicit override allowed via options
+        $vtab = $this->current_vtab;
+        if ( isset( $options['vtab'] ) ) {
+            $vtab = $options['vtab'];
+        }
+
         // Build section classes
-        $section_classes = 'lex-settings-section lex-settings-section--' . esc_attr($id);
-        if ($is_pro) {
+        $section_classes = 'lex-settings-section lex-settings-section--' . esc_attr( $id );
+        if ( $is_pro ) {
             $section_classes .= ' lex-settings-section--pro';
         }
-        
+        if ( $collapsible ) {
+            $section_classes .= ' lex-settings-section--collapsible';
+        }
+        if ( $collapsed ) {
+            $section_classes .= ' lex-settings-section--collapsed';
+        }
+        if ( $accordion ) {
+            $section_classes .= ' lex-settings-section--accordion';
+        }
+        if ( $vtab ) {
+            $section_classes .= ' lex-settings-section--vtab-member';
+        }
+
+        $vtab_attr = $vtab ? ' data-vtab="' . esc_attr( $vtab ) . '"' : '';
+
+        // Build collapsible attributes (data-section-id and data-instance-id used by JS for localStorage key)
+        $collapsible_attr = $collapsible
+            ? ' data-collapsible="true" data-section-id="' . esc_attr( $id ) . '" data-instance-id="' . esc_attr( $instance_id ) . '"'
+            : '';
+        $exclusive_attr = $exclusive ? ' data-accordion-group="' . esc_attr( $exclusive ) . '"' : '';
+
+        // Build chevron HTML for collapsible sections
+        $chevron_html = $collapsible ? '<span class="dashicons dashicons-arrow-down-alt2 lex-settings-section__chevron"></span>' : '';
+
         // Build PRO badge HTML
         $pro_badge_html = $is_pro ? '<span class="lex-pro-badge lex-pro-badge--medium">PRO</span>' : '';
-        
+
         // Build save button HTML
         $save_button_html = '';
         if (!$disable_save_button) {
@@ -90,14 +174,27 @@ class SectionRenderer {
                 esc_html__('Save', 'lex-settings')
             );
         }
-        
-        echo <<<HTML
-        <div class="{$section_classes}">
+
+        // Build summary HTML
+        $summary_html = '';
+        if ( ! empty( $summary_labels ) ) {
+            $labels_escaped = implode( ', ', array_map( 'esc_html', $summary_labels ) );
+            $summary_html   = '<span class="lex-settings-section__summary">' . $labels_escaped . '</span>';
+        }
+
+        $title_html = $no_title ? '' : <<<TITLE
             <div class="lex-settings-section__title">
                 <span>{$title}</span>
+                {$summary_html}
+                {$chevron_html}
                 {$pro_badge_html}
                 {$save_button_html}
             </div>
+        TITLE;
+
+        echo <<<HTML
+        <div class="{$section_classes}"{$collapsible_attr}{$vtab_attr}{$exclusive_attr}>
+            {$title_html}
             <table class="form-table lex-form-table" role="presentation">
         HTML;
     }

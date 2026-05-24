@@ -43,8 +43,12 @@ include $settings->getConfig('framework_path') . '/partials/header.php';
                     $demo_file = $config_path . '/examples/tabs/' . $tab_id . '.php';
                     ?>
                     
-                    <div class="lex-settings-tabs__content<?php echo esc_attr($active_class); ?>" id="lex-tab-<?php echo esc_attr($tab_id); ?>">
+                    <div class="lex-settings-tabs__content<?php echo esc_attr($active_class); ?>" id="lex-tab-<?php echo esc_attr($tab_id); ?>"<?php if ( ! empty( $tab_config['loader'] ) ) echo ' data-loader="' . esc_attr( $tab_config['loader'] ) . '"'; ?>>
                         <?php
+                        // Reset vtab registry so vtabs from previous tab don't leak
+                        $settings->sectionRenderer->resetVtabRegistry();
+
+                        ob_start();
                         if (file_exists($user_file)) {
                             // User's custom file (takes priority)
                             include $user_file;
@@ -53,18 +57,50 @@ include $settings->getConfig('framework_path') . '/partials/header.php';
                             include $demo_file;
                         } else {
                             // No content found - show message
-                            ?>
-                            <div class="lex-tab-empty">
-                                <p class="description">
-                                    <?php 
-                                    printf(
-                                        esc_html__('Tab contents are not set yet. Create %s to add settings for this tab.', 'lex-settings'),
-                                        '<code>config/tabs/' . esc_html($tab_id) . '.php</code>'
-                                    ); 
-                                    ?>
-                                </p>
-                            </div>
-                            <?php
+                            printf(
+                                '<div class="lex-tab-empty"><p class="description">%s</p></div>',
+                                sprintf(
+                                    esc_html__('Tab contents are not set yet. Create %s to add settings for this tab.', 'lex-settings'),
+                                    '<code>config/tabs/' . esc_html($tab_id) . '.php</code>'
+                                )
+                            );
+                        }
+                        $tab_html = ob_get_clean();
+
+                        $vtabs = $settings->sectionRenderer->getVtabRegistry();
+                        if (!empty($vtabs)) {
+                            // Hoist <p class="submit"> out of the vtab content column so it
+                            // spans full width below the vtab layout (same as non-vtab tabs).
+                            $submit_html = '';
+                            if ( preg_match( '/<p[^>]*\bclass=["\'][^"\']*\bsubmit\b[^"\']*["\'][^>]*>.*?<\/p>/is', $tab_html, $m ) ) {
+                                $submit_html = $m[0];
+                                $tab_html    = str_replace( $m[0], '', $tab_html );
+                            }
+
+                            $vtab_layout = '';
+                            foreach ( $vtabs as $vt ) {
+                                if ( ! empty( $vt['tab_layout'] ) ) { $vtab_layout = $vt['tab_layout']; break; }
+                            }
+                            $layout_attr = $vtab_layout ? ' data-layout="' . esc_attr( $vtab_layout ) . '"' : '';
+                            echo '<div class="lex-vtabs" data-tab="' . esc_attr($tab_id) . '"' . $layout_attr . '>';
+                            echo '<div class="lex-vtabs__nav">';
+                            foreach ($vtabs as $vt) {
+                                printf(
+                                    '<button type="button" data-vtab="%s">%s<span>%s</span></button>',
+                                    esc_attr($vt['id']),
+                                    $vt['icon'],
+                                    esc_html($vt['label'])
+                                );
+                            }
+                            echo '</div>';
+                            echo '<div class="lex-vtabs__content">' . $tab_html . '</div>';
+                            echo '</div>';
+
+                            if ( $submit_html ) {
+                                echo $submit_html;
+                            }
+                        } else {
+                            echo $tab_html;
                         }
                         ?>
                     </div>
@@ -101,6 +137,22 @@ include $settings->getConfig('framework_path') . '/partials/header.php';
             ?>
 
         </form>
+        <?php // Fixes flash-of-wrong-tab: PHP always marks the first tab active, but the URL hash may point to a different tab. ?>
+        <?php // JS (document.ready) is too late — the browser paints before it runs, causing a visible content swap. ?>
+        <?php // This inline script runs synchronously during HTML parsing, before first paint, swapping the active class immediately. ?>
+        <script>
+        (function() {
+            var hash = window.location.hash.replace('#', '');
+            if (!hash) return;
+            var target = document.getElementById('lex-tab-' + hash);
+            if (!target) return;
+            var active = document.querySelector('.lex-settings-tabs__content--active');
+            if (active && active !== target) {
+                active.classList.remove('lex-settings-tabs__content--active');
+                target.classList.add('lex-settings-tabs__content--active');
+            }
+        })();
+        </script>
     </div>
 
     <!-- Sidebar -->

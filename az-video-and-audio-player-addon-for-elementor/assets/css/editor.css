@@ -1,17 +1,19 @@
-/*Add branding icon for each addons*/
+/* Add branding icon for each addon. */
+
 .elementor-element .icon {
   position: relative;
 }
 .elementor-element .icon .az_icon::after {
     content: "LEAN";
-    font-size: 11px;
+    font-size: var(--lex-font-size-xs, 11px);
     position: absolute;
-    right: 5px;
-    top: 5px;
-    background: #00c2ff;
-    color: #fff;
-    padding: 2px 5px 3px 5px;
-    border-radius: 3px;
+    inset-block-start: var(--lex-space-1, 4px);
+    inset-inline-end: var(--lex-space-1, 4px);
+    background: var(--lex-color-apple-blue);
+    color: var(--wp-color-white);
+    padding-block: var(--lex-space-1, 4px);
+    padding-inline: var(--lex-space-1, 4px);
+    border-radius: var(--lex-radius-xs, 3px);
     font-family: monospace;
     text-align: center;
     line-height: 1;

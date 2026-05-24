@@ -16,7 +16,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player-license"]) {
-    background-color: #F3F5FA;
+    background-color: var(--lex-admin-page-bg);
 }
 
 .lex-settings-tabs__content .form-table textarea{
@@ -25,10 +25,37 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 
 .lex-field p.description{
     margin-top: .3rem;
+    font-size: var(--lex-font-size-sm);
+    color: var(--lex-color-apple-label-secondary);
+    line-height: 1.5;
 }
 
 .lex-field-info--info p.description{
     margin-top: 0;
+}
+
+.lex-field-info--notice td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.lex-field-info--notice .lex-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--wp-color-blue-0);
+    border-left: 3px solid var(--wp-color-blue-50);
+    border-radius: 0 3px 3px 0;
+    font-size: var(--lex-font-size-sm);
+    color: var(--wp-color-gray-80);
+    line-height: 1.5;
+}
+.lex-field-info--notice .lex-notice__icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    margin-top: 2px;
+    fill: var(--wp-color-blue-50);
 }
 
 .lex-field label +p.description {
@@ -48,70 +75,54 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 /* ============================================
-   CSS VARIABLES (WordPress Foundation)
+   COMPONENT VARIABLES (WordPress Foundation)
    ============================================ */
 :root {
-    /* Primary Colors */
-    --lex-color-primary: #5344F4;
-    --lex-color-primary-hover: #4235D9;
-    --lex-color-primary-light: rgba(83, 68, 244, 0.1);
-    --lex-color-primary-glow: rgba(83, 68, 244, 0.2);
-    
-    /* WordPress Core Colors */
-    --lex-color-success: #00a32a;
-    --lex-color-error: #d63638;
-    --lex-color-warning: #f0b849;
-    
-    /* Pro Feature Gradient */
-    --lex-color-pro-start: #5344F4;
-    --lex-color-pro-end: #9A2ECB;
-    
-    /* Spacing (8px system) */
-    --lex-spacing-xs: 4px;
-    --lex-spacing-sm: 8px;
-    --lex-spacing-md: 16px;
-    --lex-spacing-lg: 24px;
-    --lex-spacing-xl: 32px;
-    
-    /* Typography (WordPress System Fonts) */
-    --lex-font-size-small: 13px;
-    --lex-font-size-base: 14px;
-    --lex-font-size-large: 16px;
-    --lex-font-weight-normal: 400;
-    --lex-font-weight-medium: 500;
-    --lex-font-weight-semibold: 600;
-    
-    /* Borders & Shadows (Enhanced) */
-    --lex-border-radius: 8px;
-    --lex-border-radius-sm: 4px;
-    --lex-border-color: #dcdcde;
-    --lex-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --lex-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --lex-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-    
+    /* Lex admin semantics */
+    --lex-color-primary: var(--lex-color-brand-primary);
+    --lex-color-primary-hover: var(--lex-color-brand-primary-hover);
+    --lex-color-primary-light: var(--lex-color-brand-primary-light);
+    --lex-color-primary-contrast: var(--wp-color-white);
+    --lex-color-text: var(--wp-color-gray-90);
+    --lex-color-text-muted: var(--wp-color-gray-60);
+    --lex-color-text-subtle: var(--wp-color-gray-30);
+    --lex-color-surface: var(--wp-color-white);
+    --lex-color-border: var(--wp-color-gray-5);
+    --lex-color-border-hover: var(--wp-color-gray-20);
+    --lex-color-success: var(--wp-color-green-40);
+    --lex-color-error: var(--wp-color-red-50);
+    --lex-color-warning: var(--wp-color-yellow-20);
+    --lex-color-info: var(--wp-color-blue-50);
+
+    /* Lex admin component semantics */
+    --lex-admin-page-bg: var(--wp-color-blue-0);
+    --lex-admin-card-shadow: 0 10px 30px color-mix(in srgb, var(--wp-color-black) 12%, transparent), 0 4px 12px color-mix(in srgb, var(--wp-color-black) 8%, transparent);
+    --lex-admin-danger-bg: color-mix(in srgb, var(--wp-color-red-50) 10%, transparent);
+    --lex-admin-danger-bg-hover: color-mix(in srgb, var(--wp-color-red-50) 15%, transparent);
+    --lex-admin-danger-bg-active: color-mix(in srgb, var(--wp-color-red-50) 20%, transparent);
+    --lex-admin-danger-border: color-mix(in srgb, var(--wp-color-red-50) 30%, transparent);
+    --lex-admin-danger-color-hover: var(--wp-color-red-60);
+    --lex-admin-danger-shadow: 0 2px 4px color-mix(in srgb, var(--wp-color-red-50) 15%, transparent);
+    --lex-primary-shadow-sm: 0 2px 8px color-mix(in srgb, var(--lex-color-primary) 25%, transparent);
+    --lex-primary-shadow-md: 0 4px 12px color-mix(in srgb, var(--lex-color-primary) 35%, transparent);
+    --lex-primary-shadow-active: 0 1px 4px color-mix(in srgb, var(--lex-color-primary) 30%, transparent);
+
     /* Text Fields (Single-line inputs only: text, password, email, url, number, select)
        Note: These are NOT for textareas - textareas     use different sizing */
     --lex-textfield-height: 30px;
     --lex-textfield-padding-y: 6px;
     --lex-textfield-padding-x: 8px;
-    --lex-textfield-font-size: 14px;
     --lex-textfield-line-height: 1.5;
-    --lex-textfield-border-color: #8c8f94;
-    --lex-textfield-border-radius: 4px;
     
     /* Box Model Visual Input */
-    --inner-offset: 32px;
+    --inner-offset: var(--lex-space-8);
     
     /* PRO Badge Dimensions (Centralized Control) */
     --lex-pro-badge-padding-y: 3px;
     --lex-pro-badge-padding-x: 8px;
     --lex-pro-badge-font-size: 10px;
-    --lex-pro-badge-font-weight: 600;
     --lex-pro-badge-line-height: 1.4;
-    --lex-pro-badge-border-radius: 3px;
     --lex-pro-badge-letter-spacing: 0.5px;
-    --lex-pro-badge-bg: #5344F4;
-    --lex-pro-badge-color: #fff;
 }
 
 /* ============================================
@@ -119,21 +130,22 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
    ============================================ */
 
 .lex-nav-header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--lex-color-surface);
+    border-bottom: 1px solid var(--lex-color-border);
     position: sticky;
-    top: 32px; /* Below WordPress admin bar */
+    top: var(--lex-wp-adminbar-height);
     z-index: 10000;
-    margin-bottom: var(--lex-spacing-lg); /* Spacing below header */
+    margin-bottom: var(--lex-space-6); /* Spacing below header */
 }
 
 .lex-nav-header__container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
-    min-height: 64px;
-    max-width: 100%;
+    padding: 0 var(--lex-space-6);
+    height: var(--lex-nav-header-height);
+    max-width: var(--lex-layout-max-width);
+    margin: 0 auto;
 }
 
 /* ============================================
@@ -151,7 +163,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     width: 40px;
     height: 40px;
     background: var(--lex-color-primary);
-    border-radius: 8px;
+    border-radius: var(--lex-radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,8 +171,8 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-nav-header__logo .dashicons {
-    color: #ffffff;
-    font-size: 24px;
+    color: var(--lex-color-primary-contrast);
+    font-size: var(--lex-font-size-3xl);
     width: 24px;
     height: 24px;
     line-height: 1;
@@ -170,15 +182,15 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 .lex-nav-header__logo svg {
     width: 24px;
     height: 24px;
-    color: #ffffff;
+    color: var(--lex-color-primary-contrast);
     display: block;
     flex-shrink: 0;
 }
 
 .lex-nav-header__name {
-    font-size: 20px;
+    font-size: var(--lex-font-size-2xl);
     font-weight: 600;
-    color: #1f2937;
+    color: var(--lex-color-text);
     letter-spacing: -0.01em;
 }
 
@@ -186,11 +198,11 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    font-size: 12px;
+    font-size: var(--lex-font-size-xs);
     font-weight: 600;
-    color: #6b7280;
-    background: #f3f4f6;
-    border-radius: 4px;
+    color: var(--lex-color-text-muted);
+    background: var(--wp-color-gray-0);
+    border-radius: var(--lex-radius-sm);
     letter-spacing: 0.02em;
 }
 
@@ -210,11 +222,11 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     align-items: center;
     gap: 6px;
     padding: 10px 16px;
-    font-size: 14px;
+    font-size: var(--lex-font-size-base);
     font-weight: 600;
-    color: #1f2937;
+    color: var(--lex-color-text);
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: var(--lex-radius-md);
     transition: all 0.15s ease;
     cursor: pointer;
     border: none;
@@ -229,13 +241,13 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 
 /* Hover State */
 .lex-nav-header__item:hover {
-    color: #1f2937;
-    background-color: #f0f0f1;
+    color: var(--lex-color-text);
+    background-color: var(--wp-color-gray-2);
 }
 
 /* Active State */
 .lex-nav-header__item--active {
-    background-color: #f0f0f1;
+    background-color: var(--wp-color-gray-2);
 }
 
 /* ============================================
@@ -251,7 +263,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-nav-header__dropdown-toggle .dashicons {
-    font-size: 16px;
+    font-size: var(--lex-font-size-lg);
     width: 16px;
     height: 16px;
     margin-left: 2px;
@@ -269,10 +281,10 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     top: calc(100% + 8px);
     right: 0;
     min-width: 220px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    box-shadow: var(--lex-admin-card-shadow);
     padding: 6px;
     opacity: 0;
     visibility: hidden;
@@ -293,11 +305,11 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     display: flex;
     align-items: center;
     padding: 10px 14px;
-    font-size: 14px;
+    font-size: var(--lex-font-size-base);
     font-weight: 500;
-    color: #6b7280;
+    color: var(--lex-color-text-muted);
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: var(--lex-radius-md);
     transition: all 0.15s ease;
 }
 
@@ -307,12 +319,12 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-nav-header__dropdown-item:hover {
-    color: #1f2937;
-    background-color: #f0f0f1;
+    color: var(--lex-color-text);
+    background-color: var(--wp-color-gray-2);
 }
 
 .lex-nav-header__dropdown-item:active {
-    background-color: #e5e7eb;
+    background-color: var(--lex-color-border);
 }
 
 /* Dropdown item icons */
@@ -329,18 +341,18 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
    TAB NAVIGATION (Stable Layout - No Shifts)
    ============================================ */
 .lex-settings-tabs {
-    padding: 0 var(--lex-spacing-md);
-    margin: var(--lex-spacing-lg) auto;
-    border-bottom: 2px solid var(--lex-border-color);
+    padding: 0 var(--lex-space-4);
+    margin: var(--lex-space-6) auto;
+    border-bottom: 2px solid var(--lex-color-border);
     display: flex;
     gap: 0;
     position: relative;
-    max-width: 1600px;
+    max-width: var(--lex-layout-max-width);
 }
 
 .lex-settings-tabs__tab {
     padding: 14px 20px;
-    color: #50575e;
+    color: var(--lex-color-text-muted);
     text-decoration: none;
     background: transparent;
     border: none;
@@ -350,7 +362,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--lex-spacing-xs);
+    gap: var(--lex-space-1);
     position: relative;
     white-space: nowrap;
     transition: color 0.2s ease, background-color 0.2s ease;
@@ -390,7 +402,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-settings-tabs__tab--pro {
-    color: #8c8f94;
+    color: var(--lex-color-text-subtle);
 }
 
 /* ============================================
@@ -403,11 +415,11 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 .lex-pro-badge--inline,
 .lex-pro-badge--small {
     padding: var(--lex-pro-badge-padding-y) var(--lex-pro-badge-padding-x);
-    background: var(--lex-pro-badge-bg);
-    color: var(--lex-pro-badge-color);
-    border-radius: var(--lex-pro-badge-border-radius);
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
+    border-radius: var(--lex-radius-xs);
     font-size: var(--lex-pro-badge-font-size);
-    font-weight: var(--lex-pro-badge-font-weight);
+    font-weight: var(--lex-font-weight-semibold);
     line-height: var(--lex-pro-badge-line-height);
     letter-spacing: var(--lex-pro-badge-letter-spacing);
     text-transform: uppercase;
@@ -415,7 +427,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 
 .lex-pro-badge--medium {
     padding: calc(var(--lex-pro-badge-padding-y) + 1px) calc(var(--lex-pro-badge-padding-x) + 2px);
-    font-size: 12px;
+    font-size: var(--lex-font-size-xs);
     line-height: 1.5;
 }
 
@@ -475,11 +487,11 @@ label .lex-pro-badge--auto,
     width: fit-content;
     padding: var(--lex-pro-badge-padding-y) var(--lex-pro-badge-padding-x);
     margin-bottom: 6px;
-    background: var(--lex-pro-badge-bg);
-    color: var(--lex-pro-badge-color);
-    border-radius: var(--lex-pro-badge-border-radius);
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
+    border-radius: var(--lex-radius-xs);
     font-size: var(--lex-pro-badge-font-size);
-    font-weight: var(--lex-pro-badge-font-weight);
+    font-weight: var(--lex-font-weight-semibold);
     line-height: var(--lex-pro-badge-line-height);
     letter-spacing: var(--lex-pro-badge-letter-spacing);
     text-transform: uppercase;
@@ -488,7 +500,7 @@ label .lex-pro-badge--auto,
 .lex-field--pro input:disabled,
 .lex-field--pro select:disabled,
 .lex-field--pro textarea:disabled {
-    background: #f9fafb;
+    background: var(--wp-color-gray-0);
     cursor: pointer;
     position: relative;
 }
@@ -511,11 +523,11 @@ label .lex-pro-badge--auto,
     top: 0;
     left: 0;
     padding: var(--lex-pro-badge-padding-y) var(--lex-pro-badge-padding-x);
-    background: var(--lex-pro-badge-bg);
-    color: var(--lex-pro-badge-color);
-    border-radius: var(--lex-pro-badge-border-radius);
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
+    border-radius: var(--lex-radius-xs);
     font-size: var(--lex-pro-badge-font-size);
-    font-weight: var(--lex-pro-badge-font-weight);
+    font-weight: var(--lex-font-weight-semibold);
     line-height: var(--lex-pro-badge-line-height);
     letter-spacing: var(--lex-pro-badge-letter-spacing);
     text-transform: uppercase;
@@ -524,7 +536,7 @@ label .lex-pro-badge--auto,
 .lex-field--pro-absolute input:disabled,
 .lex-field--pro-absolute select:disabled,
 .lex-field--pro-absolute textarea:disabled {
-    background: #f9fafb;
+    background: var(--wp-color-gray-0);
     cursor: pointer;
 }
 
@@ -543,11 +555,11 @@ label .lex-pro-badge--auto,
     display: inline-block;
     padding: var(--lex-pro-badge-padding-y) var(--lex-pro-badge-padding-x);
     margin-left: 6px;
-    background: var(--lex-pro-badge-bg);
-    color: var(--lex-pro-badge-color);
-    border-radius: var(--lex-pro-badge-border-radius);
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
+    border-radius: var(--lex-radius-xs);
     font-size: var(--lex-pro-badge-font-size);
-    font-weight: var(--lex-pro-badge-font-weight);
+    font-weight: var(--lex-font-weight-semibold);
     line-height: var(--lex-pro-badge-line-height);
     letter-spacing: var(--lex-pro-badge-letter-spacing);
     text-transform: uppercase;
@@ -557,7 +569,7 @@ label .lex-pro-badge--auto,
 .lex-field--pro-inline input:disabled,
 .lex-field--pro-inline select:disabled,
 .lex-field--pro-inline textarea:disabled {
-    background: #f9fafb;
+    background: var(--wp-color-gray-0);
     cursor: pointer;
 }
 
@@ -583,44 +595,45 @@ label .lex-pro-badge--auto,
 }
 
 .lex-field--clickable input:disabled{
+    /* Override WordPress disabled cursor so clickable disabled-looking fields remain discoverable. */
     cursor: pointer !important;
 }
 
 .lex-field--clickable .description{
-    color: #6c7781;
+    color: var(--lex-color-text-muted);
     font-style: italic;
 }
 
 /* PRO Section for Grouped Features (3+ related fields) - Full Width */
 .lex-pro-section {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--lex-color-border);
     border-radius: 0;
     border-left: none;
     border-right: none;
-    padding-top: calc(var(--lex-spacing-lg) + 8px);
-    padding-bottom: var(--lex-spacing-lg);
+    padding-top: calc(var(--lex-space-6) + 8px);
+    padding-bottom: var(--lex-space-6);
     padding-left: 0;
     padding-right: 0;
     margin: 0;
-    margin-left: calc(var(--lex-spacing-lg) * -1);
-    margin-right: calc(var(--lex-spacing-lg) * -1);
-    background: #fafbfc;
+    margin-left: calc(var(--lex-space-6) * -1);
+    margin-right: calc(var(--lex-space-6) * -1);
+    background: var(--wp-color-gray-0);
     position: relative;
 }
 
 .lex-pro-section__header {
-    padding: 6px var(--lex-spacing-md);
+    padding: 6px var(--lex-space-4);
     font-weight: 600;
-    color: #374151;
-    font-size: 14px;
+    color: var(--lex-color-text-muted);
+    font-size: var(--lex-font-size-base);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     text-align: center;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    background: #ffffff;
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-sm);
+    background: var(--lex-color-surface);
     position: absolute;
     top: -14px;
     left: 50%;
@@ -640,18 +653,18 @@ label .lex-pro-badge--auto,
 .lex-pro-section input:disabled,
 .lex-pro-section select:disabled,
 .lex-pro-section textarea:disabled {
-    background: #f3f4f6;
+    background: var(--wp-color-gray-0);
     cursor: pointer;
 }
 
 /* Nested table inside PRO section - remove extra margins */
 .lex-pro-section .form-table {
-    margin-top: var(--lex-spacing-sm);
+    margin-top: var(--lex-space-2);
 }
 
 .lex-pro-section .form-table tr:first-child th,
 .lex-pro-section .form-table tr:first-child td {
-    padding-top: var(--lex-spacing-sm);
+    padding-top: var(--lex-space-2);
 }
 
 .lex-field--pro-label input[disabled] {
@@ -674,33 +687,44 @@ label .lex-pro-badge--auto,
    SETTINGS SECTIONS (Minimal Card Style)
    ============================================ */
 .lex-settings-section {
-    background: #fff;
-    border: 1px solid var(--lex-border-color);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
     padding: 0;
-    margin-bottom: var(--lex-spacing-md);
     position: relative;
     box-shadow: var(--lex-shadow-sm);
     overflow: visible;
 }
 
+.lex-settings-section + .lex-settings-section {
+    margin-top: var(--lex-space-4);
+}
+
 /* Padding for direct children (paragraphs, divs, etc. not in form-table) */
 .lex-settings-section > p,
 .lex-settings-section > div:not(.lex-settings-section__title):not(.lex-settings-section__overlay) {
-    padding-left: var(--lex-spacing-lg);
-    padding-right: var(--lex-spacing-lg);
+    padding-left: var(--lex-space-6);
+    padding-right: var(--lex-space-6);
 }
 
 .lex-settings-section__title {
     margin: 0;
-    padding: var(--lex-spacing-md) var(--lex-spacing-md);
-    border-bottom: 1px solid #f0f0f1;
-    font-size: 15px;
+    padding: var(--lex-space-3) var(--lex-space-4);
+    border-bottom: 1px solid var(--wp-color-gray-2);
+    border-radius: var(--lex-radius-md) var(--lex-radius-md) 0 0;
+    font-size: var(--lex-font-size-lg);
     font-weight: var(--lex-font-weight-semibold);
-    color: #1d2327;
-    background: #f9f9fa;
+    color: var(--lex-color-text);
+    background: var(--wp-color-gray-0);
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.lex-settings-section--accordion .lex-settings-section__title {
+    font-size: var(--lex-font-size-lg);
+    font-weight: var(--lex-font-weight-semibold);
+    color: var(--lex-color-text-muted);
 }
 
 /* Pro Section Overlay */
@@ -714,9 +738,9 @@ label .lex-pro-badge--auto,
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, var(--wp-color-white) 95%, transparent);
     backdrop-filter: blur(2px);
-    border-radius: var(--lex-border-radius);
+    border-radius: var(--lex-radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -725,7 +749,7 @@ label .lex-pro-badge--auto,
 
 .lex-settings-section__overlay-content {
     text-align: center;
-    padding: var(--lex-spacing-xl);
+    padding: var(--lex-space-8);
 }
 
 .lex-settings-section__overlay-content .dashicons {
@@ -733,19 +757,19 @@ label .lex-pro-badge--auto,
     width: 48px;
     height: 48px;
     color: var(--lex-color-primary);
-    margin-bottom: var(--lex-spacing-md);
+    margin-bottom: var(--lex-space-4);
 }
 
 .lex-settings-section__overlay-content h3 {
-    margin: 0 0 var(--lex-spacing-sm) 0;
-    color: #1d2327;
+    margin: 0 0 var(--lex-space-2) 0;
+    color: var(--lex-color-text);
     font-weight: var(--lex-font-weight-medium);
 }
 
 .lex-settings-section__overlay-content p {
-    color: #50575e;
+    color: var(--lex-color-text-muted);
     font-weight: var(--lex-font-weight-normal);
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
     line-height: 1.6;
 }
 
@@ -755,15 +779,15 @@ label .lex-pro-badge--auto,
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f6f7f7;
-    border: 2px dashed var(--lex-border-color);
-    border-radius: var(--lex-border-radius);
+    background: var(--wp-color-gray-0);
+    border: 2px dashed var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
 }
 
 .lex-pro-full-content {
     text-align: center;
     max-width: 500px;
-    padding: var(--lex-spacing-xl);
+    padding: var(--lex-space-8);
 }
 
 .lex-pro-full-content .dashicons {
@@ -771,40 +795,40 @@ label .lex-pro-badge--auto,
     width: 64px;
     height: 64px;
     color: var(--lex-color-primary);
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
 }
 
 .lex-pro-full-content h2 {
-    margin: 0 0 var(--lex-spacing-md) 0;
-    color: #1d2327;
+    margin: 0 0 var(--lex-space-4) 0;
+    color: var(--lex-color-text);
     font-weight: var(--lex-font-weight-medium);
 }
 
 .lex-pro-full-content p {
-    color: #50575e;
+    color: var(--lex-color-text-muted);
     font-size: var(--lex-font-size-base);
     font-weight: var(--lex-font-weight-normal);
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
     line-height: 1.6;
 }
 
 .lex-pro-features {
     list-style: none;
     padding: 0;
-    margin: 0 0 var(--lex-spacing-xl) 0;
+    margin: 0 0 var(--lex-space-8) 0;
     text-align: left;
 }
 
 .lex-pro-features li {
     display: flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
-    padding: var(--lex-spacing-sm) 0;
-    color: #50575e;
+    gap: var(--lex-space-2);
+    padding: var(--lex-space-2) 0;
+    color: var(--lex-color-text-muted);
 }
 
 .lex-pro-features li .dashicons {
-    font-size: 20px;
+    font-size: var(--lex-font-size-2xl);
     width: 20px;
     height: 20px;
     color: var(--lex-color-success);
@@ -814,26 +838,26 @@ label .lex-pro-badge--auto,
    LIVE PREVIEW BOX (Enhanced)
    ============================================ */
 .lex-live-preview {
-    background: linear-gradient(135deg, #f9f9fa 0%, #f6f7f7 100%);
-    border: 1px solid var(--lex-border-color);
-    border-radius: var(--lex-border-radius);
-    padding: var(--lex-spacing-xl);
-    margin-bottom: var(--lex-spacing-lg);
+    background: linear-gradient(135deg, var(--wp-color-white) 0%, var(--wp-color-gray-0) 100%);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    padding: var(--lex-space-8);
+    margin-bottom: var(--lex-space-6);
     box-shadow: var(--lex-shadow-sm);
 }
 
 .lex-live-preview h3 {
-    margin: 0 0 var(--lex-spacing-md) 0;
-    font-size: var(--lex-font-size-large);
+    margin: 0 0 var(--lex-space-4) 0;
+    font-size: var(--lex-font-size-lg);
     font-weight: var(--lex-font-weight-medium);
-    color: #1d2327;
+    color: var(--lex-color-text);
 }
 
 .lex-live-preview__box {
-    background: white;
-    border: 1px solid var(--lex-border-color);
-    border-radius: var(--lex-border-radius);
-    padding: var(--lex-spacing-xl);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    padding: var(--lex-space-8);
     text-align: center;
     min-height: 120px;
     display: flex;
@@ -845,27 +869,27 @@ label .lex-pro-badge--auto,
 .lex-btn--bookmark {
     display: inline-flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
     padding: 10px 20px;
     background: var(--lex-color-primary);
-    color: white;
+    color: var(--lex-color-primary-contrast);
     border: none;
-    border-radius: var(--lex-border-radius);
+    border-radius: var(--lex-radius-md);
     font-size: var(--lex-font-size-base);
     font-weight: var(--lex-font-weight-medium);
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(83, 68, 244, 0.25);
+    box-shadow: var(--lex-primary-shadow-sm);
 }
 
 .lex-btn--bookmark:hover {
     background: var(--lex-color-primary-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(83, 68, 244, 0.35);
+    box-shadow: var(--lex-primary-shadow-md);
 }
 
 .lex-btn--bookmark .dashicons {
-    font-size: 18px;
+    font-size: var(--lex-font-size-2xl);
     width: 18px;
     height: 18px;
 }
@@ -885,9 +909,9 @@ label .lex-pro-badge--auto,
     min-height: var(--lex-textfield-height);
     padding: var(--lex-textfield-padding-y) var(--lex-textfield-padding-x);
     line-height: var(--lex-textfield-line-height);
-    font-size: var(--lex-textfield-font-size);
-    border: 1px solid var(--lex-textfield-border-color);
-    border-radius: var(--lex-textfield-border-radius);
+    font-size: var(--lex-font-size-base);
+    border: 1px solid var(--lex-color-text-subtle);
+    border-radius: var(--lex-radius-sm);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -910,8 +934,9 @@ label .lex-pro-badge--auto,
 
 .lex-settings-section .form-table th {
     width: 230px;
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
     vertical-align: top;
+    font-size: var(--lex-font-size-md);
     font-weight: var(--lex-font-weight-medium);
     position: relative;
     overflow: visible;
@@ -923,13 +948,13 @@ label .lex-pro-badge--auto,
 }
 
 .lex-settings-section .form-table td {
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
     position: relative;
     overflow: visible;
 }
 
 .lex-settings-section .lex-form-table tr {
-    border-bottom: 1px solid #f6f7f7;
+    border-bottom: 1px solid var(--wp-color-gray-0);
 }
 
 .lex-settings-section .form-table tr:last-child {
@@ -944,20 +969,20 @@ label .lex-pro-badge--auto,
 
 /* Section Save Buttons - Right Aligned */
 .lex-section-actions {
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
-    border-top: 1px solid #f0f0f1;
-    background: #f9f9fa;
+    padding: var(--lex-space-4) var(--lex-space-6);
+    border-top: 1px solid var(--wp-color-gray-2);
+    background: var(--wp-color-gray-0);
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
 }
 
 /* Tab Actions - Centered with Gap */
 .lex-settings-tabs__content > .submit {
-    margin-top: var(--lex-spacing-md);
-    padding-top: var(--lex-spacing-md);
-    border-top: 1px solid var(--lex-border-color);
+    margin-top: var(--lex-space-4);
+    padding-top: var(--lex-space-4);
+    border-top: 1px solid var(--lex-color-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -966,23 +991,24 @@ label .lex-pro-badge--auto,
 
 /* Reset Button - Danger Style */
 .lex-btn.lex-btn--reset-section {
-    background: rgba(214, 54, 56, 0.1) !important;
-    color: #d63638 !important;
-    border: 1px solid rgba(214, 54, 56, 0.3) !important;
+    /* Override WordPress button skins for the destructive reset action. */
+    background: var(--lex-admin-danger-bg) !important;
+    color: var(--lex-color-error) !important;
+    border: 1px solid var(--lex-admin-danger-border) !important;
     box-shadow: none !important;
 }
 
 .lex-btn.lex-btn--reset-section:hover,
 .lex-btn.lex-btn--reset-section:focus {
-    background: rgba(214, 54, 56, 0.15) !important;
-    color: #b32d2e !important;
-    border-color: #d63638 !important;
-    box-shadow: 0 2px 4px rgba(214, 54, 56, 0.15) !important;
+    background: var(--lex-admin-danger-bg-hover) !important;
+    color: var(--lex-admin-danger-color-hover) !important;
+    border-color: var(--lex-color-error) !important;
+    box-shadow: var(--lex-admin-danger-shadow) !important;
     transform: translateY(-1px);
 }
 
 .lex-btn.lex-btn--reset-section:active {
-    background: rgba(214, 54, 56, 0.2) !important;
+    background: var(--lex-admin-danger-bg-active) !important;
     transform: translateY(0);
 }
 
@@ -990,7 +1016,7 @@ label .lex-pro-badge--auto,
    ACTION BUTTONS WITH ICONS
    ============================================ */
 button .dashicons {
-    margin-right: var(--lex-spacing-xs);
+    margin-right: var(--lex-space-1);
     vertical-align: middle;
 }
 
@@ -1026,7 +1052,7 @@ button .dashicons {
     
     .lex-nav-header__container {
         padding: 0 16px;
-        min-height: 56px;
+        height: 56px;
     }
     
     .lex-nav-header__brand {
@@ -1039,17 +1065,17 @@ button .dashicons {
     }
     
     .lex-nav-header__logo .dashicons {
-        font-size: 20px;
+        font-size: var(--lex-font-size-2xl);
         width: 20px;
         height: 20px;
     }
     
     .lex-nav-header__name {
-        font-size: 18px;
+        font-size: var(--lex-font-size-2xl);
     }
     
     .lex-nav-header__version {
-        font-size: 11px;
+        font-size: var(--lex-font-size-xs);
         padding: 3px 8px;
     }
     
@@ -1059,7 +1085,7 @@ button .dashicons {
     
     .lex-nav-header__item {
         padding: 8px 12px;
-        font-size: 13px;
+        font-size: var(--lex-font-size-md);
     }
     
     /* Settings Tabs Mobile */
@@ -1068,8 +1094,8 @@ button .dashicons {
     }
     
     .lex-settings-tabs__tab {
-        padding: var(--lex-spacing-sm) var(--lex-spacing-md);
-        font-size: var(--lex-font-size-small);
+        padding: var(--lex-space-2) var(--lex-space-4);
+        font-size: var(--lex-font-size-md);
     }
     
     .lex-settings-form .form-table th {
@@ -1106,7 +1132,7 @@ button .dashicons {
 @media screen and (max-width: 600px) {
     .lex-nav-header__item {
         padding: 8px 10px;
-        font-size: 12px;
+        font-size: var(--lex-font-size-xs);
     }
     
     .lex-nav-header__name {
@@ -1124,36 +1150,36 @@ button .dashicons {
 
 @media (prefers-color-scheme: dark) {
     .lex-nav-header {
-        background: #1f2937;
-        border-bottom-color: #374151;
+        background: var(--wp-color-gray-90);
+        border-bottom-color: var(--lex-color-text-muted);
     }
     
     .lex-nav-header__name {
-        color: #f9fafb;
+        color: var(--wp-color-gray-0);
     }
     
     .lex-nav-header__item {
-        color: #9ca3af;
+        color: var(--wp-color-gray-30);
     }
     
     .lex-nav-header__item:hover,
     .lex-nav-header__item--active {
-        color: #f9fafb;
-        background-color: #374151;
+        color: var(--wp-color-gray-0);
+        background-color: var(--lex-color-text-muted);
     }
     
     .lex-nav-header__dropdown-menu {
-        background: #1f2937;
-        border-color: #374151;
+        background: var(--wp-color-gray-90);
+        border-color: var(--lex-color-text-muted);
     }
     
     .lex-nav-header__dropdown-item {
-        color: #9ca3af;
+        color: var(--wp-color-gray-30);
     }
     
     .lex-nav-header__dropdown-item:hover {
-        color: #f9fafb;
-        background-color: #374151;
+        color: var(--wp-color-gray-0);
+        background-color: var(--lex-color-text-muted);
     }
 }
 
@@ -1162,11 +1188,11 @@ button .dashicons {
    ============================================ */
 .lex-layout-container {
     display: flex;
-    gap: var(--lex-spacing-lg);
+    gap: var(--lex-space-6);
     align-items: flex-start;
     margin: 0 auto;
-    padding: 0 var(--lex-spacing-lg);
-    max-width: 1600px;
+    padding: 0 var(--lex-space-6);
+    max-width: var(--lex-layout-max-width);
 }
 
 .lex-main-content {
@@ -1183,10 +1209,10 @@ button .dashicons {
    SIDEBAR WIDGETS (Premium Card Style)
    ============================================ */
 .lex-sidebar-widget {
-    background: #fff;
-    border: 1px solid var(--lex-border-color);
-    border-radius: var(--lex-border-radius);
-    margin-bottom: var(--lex-spacing-lg);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    margin-bottom: var(--lex-space-6);
     overflow: hidden;
     box-shadow: var(--lex-shadow-md);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -1198,36 +1224,36 @@ button .dashicons {
 }
 
 .lex-sidebar-widget__header {
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
-    background: #F8F7FC;
-    border-bottom: 1px solid var(--lex-border-color);
+    padding: var(--lex-space-4) var(--lex-space-6);
+    background: color-mix(in srgb, var(--lex-color-primary) 4%, var(--wp-color-white));
+    border-bottom: 1px solid var(--lex-color-border);
     display: flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
 }
 
 .lex-sidebar-widget__header h3 {
     margin: 0;
-    font-size: var(--lex-font-size-large);
+    font-size: var(--lex-font-size-lg);
     font-weight: var(--lex-font-weight-medium);
-    color: #1d2327;
+    color: var(--lex-color-text);
 }
 
 .lex-sidebar-widget__header .dashicons {
     color: var(--lex-color-primary);
-    font-size: 20px;
+    font-size: var(--lex-font-size-2xl);
     width: 20px;
     height: 20px;
 }
 
 .lex-sidebar-widget__content {
-    padding: var(--lex-spacing-xl);
+    padding: var(--lex-space-8);
 }
 
 .lex-sidebar-widget__content p {
-    color: #50575e;
+    color: var(--lex-color-text-muted);
     line-height: 1.6;
-    margin: 0 0 var(--lex-spacing-md) 0;
+    margin: 0 0 var(--lex-space-4) 0;
 }
 
 .lex-sidebar-widget__content p:last-child {
@@ -1235,95 +1261,96 @@ button .dashicons {
 }
 
 .lex-sidebar-widget__footer-text {
-    font-size: 12px;
-    color: #8c8f94;
-    margin-top: var(--lex-spacing-md) !important;
+    font-size: var(--lex-font-size-xs);
+    color: var(--lex-color-text-subtle);
+    /* Override form-table spacing injected by WordPress settings markup. */
+    margin-top: var(--lex-space-4) !important;
     text-align: center;
 }
 
 /* Pro Upgrade Widget (Soft Purple Gradient - Current) */
 .lex-sidebar-widget--pro {
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--lex-color-primary) 15%, transparent);
 }
 
 .lex-sidebar-widget--pro:hover {
-    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.25);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--lex-color-primary) 25%, transparent);
 }
 
 .lex-sidebar-widget--pro .lex-sidebar-widget__header {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--lex-color-primary) 0%, var(--lex-color-brand-pro-end) 100%);
+    color: var(--lex-color-primary-contrast);
     border-bottom: none;
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
 }
 
 .lex-sidebar-widget--pro .lex-sidebar-widget__header h3 {
-    color: white;
+    color: var(--lex-color-primary-contrast);
     font-weight: var(--lex-font-weight-semibold);
 }
 
 .lex-sidebar-widget--pro .lex-sidebar-widget__header .dashicons {
-    color: #ffd700;
+    color: var(--wp-color-yellow-20);
 }
 
 /* Pro Upgrade Widget - Solid Purple Style (Alternative) */
 .lex-sidebar-widget--pro-solid {
-    box-shadow: 0 4px 20px rgba(106, 53, 247, 0.2);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--lex-color-primary) 20%, transparent);
 }
 
 .lex-sidebar-widget--pro-solid:hover {
-    box-shadow: 0 8px 32px rgba(106, 53, 247, 0.3);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--lex-color-primary) 30%, transparent);
 }
 
 .lex-sidebar-widget--pro-solid .lex-sidebar-widget__header {
-    background: #6A35F7;
-    color: white;
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
     border-bottom: none;
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
 }
 
 .lex-sidebar-widget--pro-solid .lex-sidebar-widget__header h3 {
-    color: white;
+    color: var(--lex-color-primary-contrast);
     font-weight: var(--lex-font-weight-semibold);
 }
 
 .lex-sidebar-widget--pro-solid .lex-sidebar-widget__header .dashicons {
-    color: #ffffff;
+    color: var(--lex-color-primary-contrast);
 }
 
 .lex-sidebar-widget--pro-solid .lex-feature-list li .dashicons {
-    color: #34C759;
+    color: var(--wp-color-green-20);
 }
 
 /* Pro Upgrade Widget - Border Style (Wrapped with Thick Border) */
 .lex-sidebar-widget--pro-outline {
-    border: 3px solid #6A35F7;
-    box-shadow: 0 4px 20px rgba(106, 53, 247, 0.15);
+    border: 3px solid var(--lex-color-primary);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--lex-color-primary) 15%, transparent);
 }
 
 .lex-sidebar-widget--pro-outline:hover {
-    box-shadow: 0 8px 32px rgba(106, 53, 247, 0.25);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--lex-color-primary) 25%, transparent);
     border-color: var(--lex-color-primary-hover);
 }
 
 .lex-sidebar-widget--pro-outline .lex-sidebar-widget__header {
-    background: #6A35F7;
-    color: #fff;
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
     border-bottom: none;
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
 }
 
 .lex-sidebar-widget--pro-outline .lex-sidebar-widget__header h3 {
-    color: #fff;
+    color: var(--lex-color-primary-contrast);
     font-weight: var(--lex-font-weight-semibold);
 }
 
 .lex-sidebar-widget--pro-outline .lex-sidebar-widget__header .dashicons {
-    color: #fff;
+    color: var(--lex-color-primary-contrast);
 }
 
 .lex-sidebar-widget--pro-outline .lex-feature-list li .dashicons {
-    color: #34C759;
+    color: var(--wp-color-green-20);
 }
 
 /* Pro Upgrade Widget - Subtle/Normal Style (Like Standard Widgets) */
@@ -1337,14 +1364,14 @@ button .dashicons {
 }
 
 .lex-sidebar-widget--pro-subtle .lex-sidebar-widget__header {
-    background: #f9f9fa;
-    color: #1d2327;
-    border-bottom: 1px solid var(--lex-border-color);
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    background: var(--wp-color-gray-0);
+    color: var(--lex-color-text);
+    border-bottom: 1px solid var(--lex-color-border);
+    padding: var(--lex-space-4) var(--lex-space-6);
 }
 
 .lex-sidebar-widget--pro-subtle .lex-sidebar-widget__header h3 {
-    color: #1d2327;
+    color: var(--lex-color-text);
     font-weight: var(--lex-font-weight-medium);
 }
 
@@ -1359,21 +1386,21 @@ button .dashicons {
 .lex-feature-list {
     list-style: none;
     padding: 0;
-    margin: var(--lex-spacing-md) 0 var(--lex-spacing-lg) 0;
+    margin: var(--lex-space-4) 0 var(--lex-space-6) 0;
 }
 
 .lex-feature-list li {
     display: flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
-    padding: var(--lex-spacing-xs) 0;
-    color: #50575e;
-    font-size: var(--lex-font-size-small);
+    gap: var(--lex-space-2);
+    padding: var(--lex-space-1) 0;
+    color: var(--lex-color-text-muted);
+    font-size: var(--lex-font-size-md);
 }
 
 .lex-feature-list li .dashicons {
     color: var(--lex-color-success);
-    font-size: 18px;
+    font-size: var(--lex-font-size-2xl);
     width: 18px;
     height: 18px;
     flex-shrink: 0;
@@ -1384,12 +1411,12 @@ button .dashicons {
     text-align: center;
     justify-content: center;
     font-weight: var(--lex-font-weight-medium);
-    box-shadow: 0 4px 12px rgba(83, 68, 244, 0.3);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--lex-color-primary) 30%, transparent);
     transition: all 0.3s ease;
 }
 
 .lex-btn--cta:hover {
-    box-shadow: 0 6px 20px rgba(83, 68, 244, 0.4);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--lex-color-primary) 40%, transparent);
     transform: translateY(-1px);
 }
 
@@ -1397,12 +1424,12 @@ button .dashicons {
 .lex-newsletter-form {
     display: flex;
     flex-direction: column;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
 }
 
 .lex-newsletter-form input[type="email"] {
     width: 100%;
-    padding: var(--lex-spacing-sm);
+    padding: var(--lex-space-2);
 }
 
 .lex-newsletter-form button {
@@ -1412,8 +1439,8 @@ button .dashicons {
 
 /* Product Items */
 .lex-product-item {
-    padding: var(--lex-spacing-md) 0;
-    border-bottom: 1px solid #f0f0f1;
+    padding: var(--lex-space-4) 0;
+    border-bottom: 1px solid var(--wp-color-gray-2);
 }
 
 .lex-product-item:last-child {
@@ -1426,54 +1453,54 @@ button .dashicons {
 }
 
 .lex-product-item h4 {
-    margin: 0 0 var(--lex-spacing-xs) 0;
+    margin: 0 0 var(--lex-space-1) 0;
     font-size: var(--lex-font-size-base);
-    color: #1d2327;
+    color: var(--lex-color-text);
     font-weight: var(--lex-font-weight-medium);
 }
 
 .lex-product-item p {
-    font-size: var(--lex-font-size-small);
+    font-size: var(--lex-font-size-md);
     font-weight: var(--lex-font-weight-normal);
-    margin: 0 0 var(--lex-spacing-sm) 0;
+    margin: 0 0 var(--lex-space-2) 0;
     line-height: 1.5;
 }
 
 .lex-product-item .button {
-    font-size: var(--lex-font-size-small);
+    font-size: var(--lex-font-size-md);
 }
 
 /* Free Trial Widget - Base Styles */
 .lex-sidebar-widget--trial {
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
 }
 
 .lex-sidebar-widget--trial .lex-sidebar-widget__header {
-    color: white;
+    color: var(--lex-color-primary-contrast);
     border-bottom: none;
-    padding: var(--lex-spacing-md) var(--lex-spacing-lg);
+    padding: var(--lex-space-4) var(--lex-space-6);
 }
 
 .lex-sidebar-widget--trial .lex-sidebar-widget__header h3 {
-    color: white;
+    color: var(--lex-color-primary-contrast);
     font-weight: var(--lex-font-weight-semibold);
 }
 
 .lex-sidebar-widget--trial .lex-sidebar-widget__header .dashicons {
-    color: #fcd34d;
+    color: var(--wp-color-yellow-20);
 }
 
 /* Free Trial Widget - Emerald/Teal Gradient */
 .lex-sidebar-widget--trial-v1 {
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--lex-color-success) 15%, transparent);
 }
 
 .lex-sidebar-widget--trial-v1:hover {
-    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--lex-color-success) 25%, transparent);
 }
 
 .lex-sidebar-widget--trial-v1 .lex-sidebar-widget__header {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, var(--wp-color-green-30) 0%, var(--wp-color-green-50) 100%);
 }
 
 /* Review Widget */
@@ -1483,12 +1510,12 @@ button .dashicons {
 
 /* Support Widget Styles */
 .lex-sidebar-widget--support {
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
 }
 
 .lex-sidebar-widget--support .lex-sidebar-widget__header {
-    background: #F8F7FC;
-    border-bottom: 1px solid var(--lex-border-color);
+    background: color-mix(in srgb, var(--lex-color-primary) 4%, var(--wp-color-white));
+    border-bottom: 1px solid var(--lex-color-border);
 }
 
 .lex-sidebar-widget--support .lex-sidebar-widget__header .dashicons {
@@ -1498,95 +1525,95 @@ button .dashicons {
 .lex-sidebar-widget__badge {
     display: inline-block;
     padding: 4px 12px;
-    background: var(--lex-color-primary-light, rgba(83, 68, 244, 0.1));
+    background: var(--lex-color-primary-light);
     color: var(--lex-color-primary);
-    border-radius: 12px;
-    font-size: var(--lex-font-size-small);
+    border-radius: var(--lex-radius-lg);
+    font-size: var(--lex-font-size-md);
     font-weight: var(--lex-font-weight-semibold);
-    margin-bottom: var(--lex-spacing-xs);
+    margin-bottom: var(--lex-space-1);
 }
 
 .lex-sidebar-widget__contact {
-    margin-top: var(--lex-spacing-lg);
-    padding-top: var(--lex-spacing-lg);
-    border-top: 1px solid var(--lex-border-color);
+    margin-top: var(--lex-space-6);
+    padding-top: var(--lex-space-6);
+    border-top: 1px solid var(--lex-color-border);
 }
 
 .lex-sidebar-widget__contact-item {
     display: flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
-    margin-bottom: var(--lex-spacing-md);
-    color: #50575e;
+    gap: var(--lex-space-2);
+    margin-bottom: var(--lex-space-4);
+    color: var(--lex-color-text-muted);
     font-size: var(--lex-font-size-base);
 }
 
 .lex-sidebar-widget__contact-item--highlight {
-    margin-top: var(--lex-spacing-md);
-    padding-top: var(--lex-spacing-md);
-    border-top: 1px solid var(--lex-border-color);
+    margin-top: var(--lex-space-4);
+    padding-top: var(--lex-space-4);
+    border-top: 1px solid var(--lex-color-border);
     margin-bottom: 0;
 }
 
 .lex-sidebar-widget__contact-icon {
-    font-size: 18px;
+    font-size: var(--lex-font-size-2xl);
     line-height: 1;
 }
 
 
 .lex-sidebar-widget__contact-email {
-    color: #E53E3E;
+    color: var(--lex-color-error);
     font-weight: var(--lex-font-weight-medium);
 }
 
 /* Hire Widget Styles */
 .lex-sidebar-widget--hire {
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
 }
 
 .lex-sidebar-widget--hire .lex-sidebar-widget__header {
-    background: #F8F7FC;
-    border-bottom: 1px solid var(--lex-border-color);
-    padding-bottom: var(--lex-spacing-md);
+    background: color-mix(in srgb, var(--lex-color-primary) 4%, var(--wp-color-white));
+    border-bottom: 1px solid var(--lex-color-border);
+    padding-bottom: var(--lex-space-4);
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
 }
 
 .lex-sidebar-widget--hire .lex-sidebar-widget__badge {
-    background: #ffe5e5;
-    color: #d63638;
+    background: var(--wp-color-red-0);
+    color: var(--lex-color-error);
 }
 
 .lex-sidebar-widget__contact-heading {
-    margin: 0 0 var(--lex-spacing-md) 0;
+    margin: 0 0 var(--lex-space-4) 0;
     font-size: var(--lex-font-size-base);
     font-weight: var(--lex-font-weight-semibold);
-    color: #1d2327;
+    color: var(--lex-color-text);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .lex-sidebar-widget--hire .lex-sidebar-widget__contact-item .dashicons {
-    color: #8c8f94;
-    font-size: 18px;
+    color: var(--lex-color-text-subtle);
+    font-size: var(--lex-font-size-2xl);
     width: 18px;
     height: 18px;
-    margin-right: var(--lex-spacing-xs);
+    margin-right: var(--lex-space-1);
     flex-shrink: 0;
 }
 
 .lex-sidebar-widget--hire .lex-sidebar-widget__contact-item--highlight .dashicons {
-    color: #d63638;
+    color: var(--lex-color-error);
 }
 
 .lex-stars {
-    margin-bottom: var(--lex-spacing-md);
+    margin-bottom: var(--lex-space-4);
 }
 
 .lex-stars .dashicons {
-    color: #ffd700;
-    font-size: 24px;
+    color: var(--wp-color-yellow-20);
+    font-size: var(--lex-font-size-3xl);
     width: 24px;
     height: 24px;
 }
@@ -1607,15 +1634,15 @@ button .dashicons {
 }
 
 .lex-mb-sm {
-    margin-bottom: var(--lex-spacing-sm);
+    margin-bottom: var(--lex-space-2);
 }
 
 .lex-mb-md {
-    margin-bottom: var(--lex-spacing-md);
+    margin-bottom: var(--lex-space-4);
 }
 
 .lex-mb-lg {
-    margin-bottom: var(--lex-spacing-lg);
+    margin-bottom: var(--lex-space-6);
 }
 
 /* ============================================
@@ -1624,14 +1651,14 @@ button .dashicons {
 .lex-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--lex-spacing-sm);
+    gap: var(--lex-space-2);
     padding: 10px 20px;
     font-size: var(--lex-font-size-base);
     font-weight: var(--lex-font-weight-medium);
     line-height: 1.4;
     text-decoration: none;
     border: none;
-    border-radius: var(--lex-border-radius);
+    border-radius: var(--lex-radius-md);
     cursor: pointer;
     transition: all 0.3s ease;
     box-sizing: border-box;
@@ -1641,42 +1668,42 @@ button .dashicons {
 /* Primary Button - Solid Purple */
 .lex-btn--primary {
     background: var(--lex-color-primary);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(83, 68, 244, 0.25);
+    color: var(--lex-color-primary-contrast);
+    box-shadow: var(--lex-primary-shadow-sm);
 }
 
 .lex-btn--primary:hover,
 .lex-btn--primary:focus {
     background: var(--lex-color-primary-hover);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(83, 68, 244, 0.35);
+    color: var(--lex-color-primary-contrast);
+    box-shadow: var(--lex-primary-shadow-md);
     transform: translateY(-1px);
 }
 
 .lex-btn--primary:active {
     transform: translateY(0);
-    box-shadow: 0 1px 4px rgba(83, 68, 244, 0.3);
+    box-shadow: var(--lex-primary-shadow-active);
 }
 
 .lex-btn--primary .dashicons {
-    font-size: 18px;
+    font-size: var(--lex-font-size-2xl);
     width: 18px;
     height: 18px;
 }
 
 /* Secondary Button - White with Border */
 .lex-btn--secondary {
-    background: #fff;
-    color: #50575e;
-    border: 1px solid var(--lex-border-color);
+    background: var(--lex-color-surface);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--lex-color-border);
     box-shadow: var(--lex-shadow-sm);
 }
 
 .lex-btn--secondary:hover,
 .lex-btn--secondary:focus {
-    background: #f9f9fa;
-    color: #1d2327;
-    border-color: #a7aaad;
+    background: var(--wp-color-gray-0);
+    color: var(--lex-color-text);
+    border-color: var(--lex-color-border-hover);
     box-shadow: var(--lex-shadow-md);
     transform: translateY(-1px);
 }
@@ -1687,7 +1714,7 @@ button .dashicons {
 }
 
 .lex-btn--secondary .dashicons {
-    font-size: 18px;
+    font-size: var(--lex-font-size-2xl);
     width: 18px;
     height: 18px;
 }
@@ -1695,12 +1722,12 @@ button .dashicons {
 /* Hero Button - Larger Size */
 .lex-btn--hero {
     padding: 14px 28px;
-    font-size: 16px;
+    font-size: var(--lex-font-size-lg);
     font-weight: var(--lex-font-weight-semibold);
 }
 
 .lex-btn--hero .dashicons {
-    font-size: 20px;
+    font-size: var(--lex-font-size-2xl);
     width: 20px;
     height: 20px;
 }
@@ -1708,11 +1735,11 @@ button .dashicons {
 /* Small Button - Compact Size */
 .lex-btn--small {
     padding: 6px 12px;
-    font-size: var(--lex-font-size-small);
+    font-size: var(--lex-font-size-md);
 }
 
 .lex-btn--small .dashicons {
-    font-size: 16px;
+    font-size: var(--lex-font-size-lg);
     width: 16px;
     height: 16px;
 }
@@ -1744,7 +1771,7 @@ button .dashicons {
 
 .lex-settings-section__save-btn {
     padding: 6px 16px;
-    font-size: 13px;
+    font-size: var(--lex-font-size-md);
 }
 
 /* ============================================
@@ -1754,31 +1781,31 @@ button .dashicons {
 
 /* Style 1: Ghost Button (Subtle, bordered) */
 .lex-settings-section__save-btn.lex-btn--ghost {
-    background: #fff;
-    color: #50575e;
-    border: 1px solid #dcdcde;
+    background: var(--lex-color-surface);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--lex-color-border);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--ghost:hover {
-    background: #f9f9fa;
-    color: #1d2327;
-    border-color: #a7aaad;
+    background: var(--wp-color-gray-0);
+    color: var(--lex-color-text);
+    border-color: var(--lex-color-border-hover);
     box-shadow: none;
 }
 
 /* Style 2: Secondary Gray (Filled, subtle) - V1-B2 Winner */
 .lex-settings-section__save-btn.lex-btn--gray {
-    background: #e8e8e9;
-    color: #50575e;
-    border: 1px solid #a7aaad;
+    background: var(--wp-color-gray-5);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--wp-color-gray-20);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray:hover {
-    background: #d8d9da;
-    color: #1d2327;
-    border-color: #8c8f94;
+    background: var(--wp-color-gray-10);
+    color: var(--lex-color-text);
+    border-color: var(--lex-color-text-subtle);
     box-shadow: none;
 }
 
@@ -1786,16 +1813,16 @@ button .dashicons {
 
 /* V1: Medium Gray (Current Default) */
 .lex-settings-section__save-btn.lex-btn--gray-v1 {
-    background: #e8e8e9;
-    color: #50575e;
-    border: 1px solid #dcdcde;
+    background: var(--wp-color-gray-5);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--lex-color-border);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v1:hover {
-    background: #d8d9da;
-    color: #1d2327;
-    border-color: #a7aaad;
+    background: var(--wp-color-gray-10);
+    color: var(--lex-color-text);
+    border-color: var(--wp-color-gray-20);
     box-shadow: none;
 }
 
@@ -1803,77 +1830,77 @@ button .dashicons {
 
 /* V1-B1: Light Gray + Medium Border */
 .lex-settings-section__save-btn.lex-btn--gray-v1-b1 {
-    background: #e8e8e9;
-    color: #50575e;
-    border: 1px solid #c3c4c7;
+    background: var(--wp-color-gray-5);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--wp-color-gray-10);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v1-b1:hover {
-    background: #d8d9da;
-    color: #1d2327;
-    border-color: #a7aaad;
+    background: var(--wp-color-gray-10);
+    color: var(--lex-color-text);
+    border-color: var(--wp-color-gray-20);
     box-shadow: none;
 }
 
 /* V1-B2: Light Gray + Stronger Border */
 .lex-settings-section__save-btn.lex-btn--gray-v1-b2 {
-    background: #e8e8e9;
-    color: #50575e;
-    border: 1px solid #a7aaad;
+    background: var(--wp-color-gray-5);
+    color: var(--lex-color-text-muted);
+    border: 1px solid var(--wp-color-gray-20);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v1-b2:hover {
-    background: #d8d9da;
-    color: #1d2327;
-    border-color: #8c8f94;
+    background: var(--wp-color-gray-10);
+    color: var(--lex-color-text);
+    border-color: var(--lex-color-text-subtle);
     box-shadow: none;
 }
 
 /* V1-B3: Light Gray + Dark Border */
 .lex-settings-section__save-btn.lex-btn--gray-v1-b3 {
-    background: #e8e8e9;
-    color: #1d2327;
-    border: 1px solid #8c8f94;
+    background: var(--wp-color-gray-5);
+    color: var(--lex-color-text);
+    border: 1px solid var(--wp-color-gray-30);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v1-b3:hover {
-    background: #d8d9da;
-    color: #000;
-    border-color: #646970;
+    background: var(--wp-color-gray-10);
+    color: var(--wp-color-black);
+    border-color: var(--wp-color-gray-50);
     box-shadow: none;
 }
 
 /* V2: Darker Gray + Stronger Border */
 .lex-settings-section__save-btn.lex-btn--gray-v2 {
-    background: #d8d9da;
-    color: #1d2327;
-    border: 1px solid #a7aaad;
+    background: var(--wp-color-gray-10);
+    color: var(--lex-color-text);
+    border: 1px solid var(--wp-color-gray-20);
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v2:hover {
-    background: #c8c9ca;
-    color: #000;
-    border-color: #8c8f94;
+    background: var(--wp-color-gray-20);
+    color: var(--wp-color-black);
+    border-color: var(--lex-color-text-subtle);
     box-shadow: none;
 }
 
 /* V3: Darkest + Thicker Border + Subtle Shadow */
 .lex-settings-section__save-btn.lex-btn--gray-v3 {
-    background: #c8c9ca;
-    color: #1d2327;
-    border: 1.5px solid #8c8f94;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background: var(--wp-color-gray-20);
+    color: var(--lex-color-text);
+    border: 1.5px solid var(--wp-color-gray-30);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--wp-color-black) 5%, transparent);
 }
 
 .lex-settings-section__save-btn.lex-btn--gray-v3:hover {
-    background: #b8b9ba;
-    color: #000;
-    border-color: #646970;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background: var(--wp-color-gray-20);
+    color: var(--wp-color-black);
+    border-color: var(--wp-color-gray-50);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--wp-color-black) 8%, transparent);
 }
 
 /* Style 3: Minimal Text (Borderless, text-only) */
@@ -1892,14 +1919,14 @@ button .dashicons {
 
 /* Style 4: Soft Purple (Light purple background by default) */
 .lex-settings-section__save-btn.lex-btn--soft {
-    background: rgba(83, 68, 244, 0.15);
+    background: color-mix(in srgb, var(--lex-color-primary) 15%, transparent);
     color: var(--lex-color-primary-hover);
     border: none;
     box-shadow: none;
 }
 
 .lex-settings-section__save-btn.lex-btn--soft:hover {
-    background: rgba(83, 68, 244, 0.20);
+    background: color-mix(in srgb, var(--lex-color-primary) 20%, transparent);
     color: var(--lex-color-primary-hover);
     box-shadow: none;
 }
@@ -1943,10 +1970,10 @@ button .dashicons {
     justify-content: center;
     width: 34px;
     height: 34px;
-    border: 1px solid var(--lex-textfield-border-color);
-    border-radius: var(--lex-textfield-border-radius);
-    background: #fff;
-    color: #50575e;
+    border: 1px solid var(--lex-color-text-subtle);
+    border-radius: var(--lex-radius-sm);
+    background: var(--lex-color-surface);
+    color: var(--lex-color-text-muted);
     cursor: pointer;
     transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
@@ -1970,7 +1997,7 @@ button .dashicons {
 
 .lex-css-input-wrapper__toggle .dashicons {
     margin: 0;
-    font-size: 16px;
+    font-size: var(--lex-font-size-lg);
     width: 16px;
     height: 16px;
 }
@@ -1999,6 +2026,7 @@ button .dashicons {
 
 /* Radio Field Type */
 .form-table .lex-field-type--radio.lex-field--inline td fieldset label + label {
+    /* Override WordPress form-table label spacing for inline radio groups. */
     margin-left: 10px !important;
 }
 
@@ -2008,8 +2036,8 @@ button .dashicons {
 }
 
 .lex-css-input-wrapper__visual-wrapper {
-    border-radius: var(--lex-border-radius);
-    border: 2px solid rgba(139, 166, 255, 0.5);
+    border-radius: var(--lex-radius-md);
+    border: 2px solid color-mix(in srgb, var(--lex-color-apple-blue) 50%, transparent);
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
@@ -2021,7 +2049,7 @@ button .dashicons {
     position: absolute;
     inset: var(--inner-offset);
     border-radius: calc(14px - 8px);
-    border: 2px dashed rgba(139, 166, 255, 0.6);
+    border: 2px dashed color-mix(in srgb, var(--lex-color-apple-blue) 60%, transparent);
     pointer-events: none;
 }
 
@@ -2029,20 +2057,20 @@ button .dashicons {
     position: absolute;
     width: 72px;
     height: 36px;
-    background: #fff;
-    border: 1px solid rgba(139, 166, 255, 0.4);
-    border-radius: 8px;
+    background: var(--lex-color-surface);
+    border: 1px solid color-mix(in srgb, var(--lex-color-apple-blue) 40%, transparent);
+    border-radius: var(--lex-radius-md);
     text-align: center;
-    color: #1f2937;
-    box-shadow: 0 2px 8px -4px rgba(99, 139, 255, 0.25);
+    color: var(--lex-color-text);
+    box-shadow: 0 2px 8px -4px color-mix(in srgb, var(--lex-color-apple-blue) 25%, transparent);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     z-index: 2;
 }
 
 .lex-css-input-wrapper__visual-input:focus {
     outline: none;
-    border-color: rgba(99, 139, 255, 0.7);
-    box-shadow: 0 0 0 3px rgba(139, 166, 255, 0.2);
+    border-color: color-mix(in srgb, var(--lex-color-apple-blue) 70%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lex-color-apple-blue) 20%, transparent);
 }
 
 .lex-css-input-wrapper__visual-input.top {
@@ -2072,7 +2100,7 @@ button .dashicons {
 .lex-css-input-wrapper__connector {
     position: absolute;
     border: none;
-    border-top: 2px dashed rgba(139, 166, 255, 0.5);
+    border-top: 2px dashed color-mix(in srgb, var(--lex-color-apple-blue) 50%, transparent);
     pointer-events: none;
     z-index: 1;
 }
@@ -2083,7 +2111,7 @@ button .dashicons {
     width: 1px;
     height: calc(var(--inner-offset) - 36px);
     border-top: none;
-    border-left: 2px dashed rgba(139, 166, 255, 0.5);
+    border-left: 2px dashed color-mix(in srgb, var(--lex-color-apple-blue) 50%, transparent);
     transform: translateX(-50%);
 }
 
@@ -2101,7 +2129,7 @@ button .dashicons {
     width: 1px;
     height: calc(var(--inner-offset) - 36px);
     border-top: none;
-    border-left: 2px dashed rgba(139, 166, 255, 0.5);
+    border-left: 2px dashed color-mix(in srgb, var(--lex-color-apple-blue) 50%, transparent);
     transform: translateX(-50%);
 }
 
@@ -2120,21 +2148,21 @@ button .dashicons {
     place-items: center;
     font-size: 0.875rem;
     font-weight: 500;
-    color: rgba(99, 139, 255, 0.75);
-    background: rgba(177, 194, 255, 0.08);
+    color: color-mix(in srgb, var(--lex-color-apple-blue) 75%, transparent);
+    background: color-mix(in srgb, var(--lex-color-apple-blue) 8%, transparent);
     border-radius: calc(14px - 8px);
 }
 
 .lex-css-input-wrapper__border-wrapper {
-    border: 1px solid rgba(139, 166, 255, 0.35);
-    border-radius: var(--lex-border-radius-sm);
+    border: 1px solid color-mix(in srgb, var(--lex-color-apple-blue) 35%, transparent);
+    border-radius: var(--lex-radius-sm);
     padding: 12px;
-    background: #f8faff;
+    background: var(--wp-color-blue-0);
 }
 
 .lex-css-input-wrapper__border-wrapper.lex-css-input-wrapper__border-wrapper--unsupported-color {
-    border-color: rgba(240, 184, 73, 0.6);
-    background: rgba(240, 184, 73, 0.12);
+    border-color: color-mix(in srgb, var(--wp-color-yellow-20) 60%, transparent);
+    background: color-mix(in srgb, var(--wp-color-yellow-20) 12%, transparent);
 }
 
 .lex-css-input-wrapper__border-wrapper.lex-css-input-wrapper__border-wrapper--unsupported-color .lex-css-input-wrapper__border-input.color {
@@ -2156,9 +2184,9 @@ button .dashicons {
 
 .lex-css-input-wrapper__border-field-label {
     display: block;
-    font-size: var(--lex-font-size-small);
+    font-size: var(--lex-font-size-md);
     font-weight: var(--lex-font-weight-medium);
-    color: #1d2327;
+    color: var(--lex-color-text);
 }
 
 .lex-css-input-wrapper__border-input.width {
@@ -2182,7 +2210,7 @@ button .dashicons {
 
 .lex-css-input-wrapper__border-input.color::-webkit-color-swatch {
     border: none;
-    border-radius: var(--lex-border-radius-sm);
+    border-radius: var(--lex-radius-sm);
 }
 
 /* ============================================
@@ -2197,9 +2225,9 @@ button .dashicons {
     z-index: 100000;
     min-width: 300px;
     max-width: 600px;
-    background-color: #1d2327;
-    color: #ffffff;
-    border-radius: var(--lex-border-radius);
+    background-color: var(--lex-color-text);
+    color: var(--lex-color-primary-contrast);
+    border-radius: var(--lex-radius-md);
     box-shadow: var(--lex-shadow-lg);
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -2229,18 +2257,18 @@ button .dashicons {
     justify-content: center;
     width: 20px;
     height: 20px;
-    background-color: #ffffff;
+    background-color: var(--lex-color-surface);
     border-radius: 50%;
-    font-size: 12px;
+    font-size: var(--lex-font-size-xs);
     font-weight: var(--lex-font-weight-semibold);
-    color: #1d2327;
+    color: var(--lex-color-text);
     flex-shrink: 0;
 }
 
 .lex-notice-bottom__message {
     font-size: var(--lex-font-size-base);
     line-height: 1.5;
-    color: #ffffff;
+    color: var(--lex-color-primary-contrast);
     margin: 0;
 }
 
@@ -2250,8 +2278,8 @@ button .dashicons {
     border: none;
     background: transparent;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 24px;
+    color: color-mix(in srgb, var(--wp-color-white) 70%, transparent);
+    font-size: var(--lex-font-size-3xl);
     line-height: 1;
     transition: color 0.2s ease, background-color 0.2s ease;
     flex-shrink: 0;
@@ -2263,44 +2291,44 @@ button .dashicons {
 }
 
 .lex-notice-bottom__dismiss:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--lex-color-primary-contrast);
+    background-color: color-mix(in srgb, var(--wp-color-white) 10%, transparent);
 }
 
 /* Error variant - red background */
 .lex-notice-bottom--error {
-    background-color: #d63638;
+    background-color: var(--lex-color-error);
 }
 
 .lex-notice-bottom--error .lex-notice-bottom__icon {
-    background-color: #ffffff;
-    color: #d63638;
+    background-color: var(--lex-color-surface);
+    color: var(--lex-color-error);
 }
 
 /* Success variant - black background (default) */
 .lex-notice-bottom--success {
-    background-color: #1d2327;
+    background-color: var(--lex-color-text);
 }
 
 .lex-notice-bottom--success .lex-notice-bottom__icon {
-    background-color: #ffffff;
-    color: #1d2327;
+    background-color: var(--lex-color-surface);
+    color: var(--lex-color-text);
 }
 
 /* Info variant - blue background */
 .lex-notice-bottom--info {
-    background-color: #2271b1;
+    background-color: var(--lex-color-info);
 }
 
 .lex-notice-bottom--info .lex-notice-bottom__icon {
-    background-color: #ffffff;
-    color: #2271b1;
+    background-color: var(--lex-color-surface);
+    color: var(--lex-color-info);
 }
 
 /* Alternative gray background variant (uncomment to use gray instead of black) */
 /*
 .lex-notice-bottom {
-    background-color: #50575e;
+    background-color: var(--lex-color-text-muted);
 }
 */
 
@@ -2327,10 +2355,10 @@ button .dashicons {
     max-height: 75px;
     width: auto;
     height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--wp-color-gray-5);
+    border-radius: var(--lex-radius-sm);
     padding: 4px;
-    background: #fff;
+    background: var(--lex-color-surface);
     display: block;
 }
 
@@ -2379,7 +2407,7 @@ button .dashicons {
 .lex-field--inherited,
 .lex-field-row--inherited input,
 .lex-field-row--inherited select {
-    background-color: #f0f0f1;
+    background-color: var(--wp-color-gray-2);
     transition: background-color 0.2s ease;
 }
 
@@ -2387,13 +2415,13 @@ button .dashicons {
 .lex-field-row--inherited input[value]:not([value=""]),
 .lex-field-row--inherited input:not([value=""]) {
     opacity: 1;
-    background-color: #fff;
+    background-color: var(--lex-color-surface);
 }
 
 /* Remove gray when select has non-empty value (value attribute) */
 .lex-field-row--inherited select[value]:not([value=""]) {
     opacity: 1;
-    background-color: #fff;
+    background-color: var(--lex-color-surface);
 }
 
 /* ============================================
@@ -2404,7 +2432,7 @@ button .dashicons {
 .lex-checkbox-master-wrapper {
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--wp-color-gray-5);
 }
 
 .lex-checkbox-master-label {
@@ -2412,7 +2440,7 @@ button .dashicons {
     align-items: center;
     cursor: pointer;
     font-weight: 500;
-    color: #23282d;
+    color: var(--lex-color-text);
     user-select: none;
 }
 
@@ -2422,7 +2450,7 @@ button .dashicons {
 }
 
 .lex-checkbox-master-text {
-    font-size: 14px;
+    font-size: var(--lex-font-size-base);
 }
 
 .lex-sortable-checkbox-container {
@@ -2433,12 +2461,12 @@ button .dashicons {
 
 /* Styling for scrollable containers with max-height */
 .lex-sortable-checkbox-container[style*="max-height"] {
-    border: 1px solid #ddd;
+    border: 1px solid var(--wp-color-gray-5);
     border-radius: 0;
     padding: 10px;
-    background-color: #fff;
+    background-color: var(--lex-color-surface);
     scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 #f1f1f1;
+    scrollbar-color: var(--wp-color-gray-10) var(--wp-color-gray-2);
 }
 
 .lex-sortable-checkbox-container[style*="max-height"]::-webkit-scrollbar {
@@ -2446,17 +2474,17 @@ button .dashicons {
 }
 
 .lex-sortable-checkbox-container[style*="max-height"]::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+    background: var(--wp-color-gray-2);
+    border-radius: var(--lex-radius-sm);
 }
 
 .lex-sortable-checkbox-container[style*="max-height"]::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
+    background: var(--wp-color-gray-10);
+    border-radius: var(--lex-radius-sm);
 }
 
 .lex-sortable-checkbox-container[style*="max-height"]::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: var(--wp-color-gray-20);
 }
 
 .lex-sortable-checkbox-item {
@@ -2464,16 +2492,16 @@ button .dashicons {
     align-items: center;
     gap: 10px;
     padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
+    border: 1px solid var(--wp-color-gray-5);
+    border-radius: var(--lex-radius-sm);
+    background-color: var(--lex-color-surface);
     cursor: move;
     user-select: none;
     transition: background-color 0.2s, opacity 0.2s;
 }
 
 .lex-sortable-checkbox-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--wp-color-gray-0);
 }
 
 .lex-sortable-checkbox-item.dragging {
@@ -2482,14 +2510,14 @@ button .dashicons {
 }
 
 .lex-sortable-checkbox-item.drag-over {
-    border-color: #0073aa;
-    background-color: #e3f2fd;
+    border-color: var(--lex-color-apple-blue);
+    background-color: var(--wp-color-blue-0);
 }
 
 .lex-drag-handle {
     cursor: grab;
-    color: #868e96;
-    font-size: 16px;
+    color: var(--wp-color-gray-30);
+    font-size: var(--lex-font-size-lg);
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -2512,4 +2540,240 @@ button .dashicons {
 
 .lex-sortable-checkbox-item input[type="checkbox"] {
     margin-right: 8px;
+}
+
+/* ============================================
+   COLLAPSIBLE SECTIONS
+   ============================================ */
+
+.lex-settings-section--collapsible > .lex-settings-section__title {
+    cursor: pointer;
+    user-select: none;
+}
+
+.lex-settings-section__chevron {
+    margin-left: auto;
+    margin-right: 4px;
+    font-size: var(--lex-font-size-lg);
+    width: 20px;
+    height: 20px;
+    color: var(--lex-color-text-muted);
+    transition: transform 0.2s ease;
+}
+
+.lex-settings-section--collapsed > .lex-settings-section__title .lex-settings-section__chevron {
+    transform: rotate(-90deg);
+}
+
+.lex-settings-section--collapsed > .lex-settings-section__title {
+    border-bottom: none;
+}
+
+.lex-settings-section--collapsed > .form-table.lex-form-table,
+.lex-settings-section--collapsed > .submit {
+    display: none;
+}
+
+/* ── Vertical tabs (Apple Settings style) ─────────────────────────── */
+.lex-vtabs {
+    display: flex;
+    gap: var(--lex-space-4, 16px);
+    align-items: flex-start;
+}
+
+.lex-vtabs__nav {
+    width: 180px;
+    flex-shrink: 0;
+    background: var(--wp-color-gray-0);
+    border-radius: var(--lex-radius-md);
+    /* padding: 6px; */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: sticky;
+    top: var(--lex-vtab-sticky-top, calc(var(--lex-sticky-top) + var(--lex-space-4)));
+}
+
+.lex-vtabs__nav button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: var(--lex-font-size-md);
+    font-weight: 400;
+    border-radius: var(--lex-radius-sm);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--lex-color-text);
+    text-align: left;
+    transition: background .12s, color .12s;
+}
+
+.lex-vtabs__nav button svg {
+    flex-shrink: 0;
+    opacity: .6;
+}
+
+.lex-vtabs__nav button:hover {
+    background: var(--wp-color-gray-2);
+}
+
+.lex-vtabs__btn--active {
+    background: var(--lex-color-apple-blue) !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+}
+
+.lex-vtabs__btn--active svg {
+    opacity: 1 !important;
+}
+
+.lex-vtabs__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.lex-settings-section--vtab-member { display: none; }
+.lex-settings-section--vtab-member.is-active-vtab { display: block; }
+
+/* Horizontal layout */
+.lex-vtabs[data-layout="horizontal"] {
+    flex-direction: column;
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav {
+    flex-direction: row;
+    width: auto;
+    flex-shrink: unset;
+    position: static;
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: var(--lex-radius-md);
+    padding: 5px;
+    gap: 2px;
+    align-self: flex-start;
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 7px 14px;
+    border-radius: var(--lex-radius-sm);
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button:hover {
+    background: var(--wp-color-gray-2);
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active {
+    background: var(--lex-color-apple-blue) !important;
+    color: #fff !important;
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active svg {
+    opacity: 1;
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__content {
+    width: 100%;
+}
+
+@media (max-width: 782px) {
+    .lex-vtabs { flex-direction: column; }
+    .lex-vtabs__nav {
+        width: 100%;
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+}
+
+/* ── Tab content loader ─────────────────────────────────────────── */
+
+/* Hide real content while loader is present */
+.lex-settings-tabs__content--active.lex-tab--loading {
+    display: none;
+}
+
+.lex-loader {
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Shimmer variant — default */
+.lex-loader--shimmer .lex-loader__shimmer-panel {
+    width: 100%;
+    height: 240px;
+    border-radius: var(--lex-radius-md, 8px);
+    background: linear-gradient(
+        120deg,
+        var(--wp-color-gray-0, #f6f7f7) 0%,
+        var(--wp-color-gray-2, #f0f0f1) 30%,
+        #ffffff 50%,
+        var(--wp-color-gray-2, #f0f0f1) 70%,
+        var(--wp-color-gray-0, #f6f7f7) 100%
+    );
+    background-size: 300% 100%;
+    animation: lex-loader-shimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes lex-loader-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Dots variant — opt-in */
+.lex-loader--dots .lex-loader__dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lex-loader__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--lex-color-primary, #2271b1);
+    animation: lex-loader-dot 1.2s ease-in-out infinite;
+}
+
+.lex-loader__dot:nth-child(2) { animation-delay: 0.15s; }
+.lex-loader__dot:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes lex-loader-dot {
+    0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
+    40%           { opacity: 1;    transform: scale(1.1); }
+}
+
+/* Fade out when loader removed */
+.lex-loader--hiding {
+    animation: lex-loader-fade-out 0.2s ease forwards;
+}
+
+@keyframes lex-loader-fade-out {
+    to { opacity: 0; }
+}
+
+/* Reduced motion — disable all loader animations */
+@media (prefers-reduced-motion: reduce) {
+    .lex-loader--shimmer .lex-loader__shimmer-panel,
+    .lex-loader__dot {
+        animation: none;
+    }
+    .lex-loader--shimmer .lex-loader__shimmer-panel {
+        background: var(--wp-color-gray-0, #f6f7f7);
+    }
+}
+
+.lex-settings-tabs__content--active.lex-tab--revealed {
+    animation: lex-tab-fade-in 0.25s ease forwards;
+}
+
+@keyframes lex-tab-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

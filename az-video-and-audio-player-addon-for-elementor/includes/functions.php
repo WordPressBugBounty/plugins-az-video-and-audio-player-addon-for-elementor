@@ -75,8 +75,33 @@ function leanpl_is_pro_active() {
 }
 
 /**
+ * Keys that only pro users may override via shortcode attributes.
+ *
+ * For free users, any key in this list is silently dropped in
+ * Config::clean_attr_overrides() and falls back to post meta or global default.
+ * Pro users pass all keys through. New free keys added to defaults automatically
+ * work without updating this list.
+ *
+ * @return string[]
+ */
+function leanpl_get_playlist_pro_shortcode_keys(): array {
+    return [
+        'item_template',
+        'grid_columns',
+        'skin',
+        'accent_color',
+        'bg_style',
+        'gradient_css',
+        'play_icon',
+        'now_playing_style',
+        'start_item',
+        'auto_thumbnail',
+    ];
+}
+
+/**
  * Get the plugin version for cache busting
- * 
+ *
  * @return string The plugin version
  */
 function leanpl_get_version() {
@@ -106,20 +131,6 @@ function leanpl_is_elementor_editor() {
     return $is_elementor_editor;
 }
 
-function leanpl_get_player_defaults(){
-    return include LEANPL_DIR . '/includes/player-defaults.php';
-}
-
-function leanpl_get_video_defaults(){
-    $defaults = include LEANPL_DIR . '/includes/player-defaults.php';
-    return array_merge($defaults['shared'], $defaults['video']);
-}
-
-function leanpl_get_audio_defaults(){
-    $defaults = include LEANPL_DIR . '/includes/player-defaults.php';
-    return array_merge($defaults['shared'], $defaults['audio']);
-}
-
 /**
  * Get all plugin page identifiers (single source of truth)
  * 
@@ -138,6 +149,7 @@ function leanpl_get_our_page_identifiers() {
         // Post types
         'post_types' => array(
             'lean_player',
+            'lean_playlist',
         ),
         
         // Page slugs (from $_GET['page'])
@@ -291,309 +303,6 @@ function leanpl_get_option($key = null, $default = null) {
     }
     
     return $value;
-}
-
-/**
- * Shortcode Converter Functions
- * Shared functionality for both video and audio shortcodes
- */
-
-/**
- * Normalize boolean values with smart validation
- * Handles:
- * - Boolean: true/false
- * - String: 'true'/'false', '1'/'0', 'yes'/'no', 'on'/'off'
- * - Numeric: 1/0
- * 
- * @param mixed $value Value to normalize
- * @return bool|null Normalized boolean or null if invalid/empty
- */
-function leanpl_normalize_boolean($value) {
-    // Already boolean - return as-is
-    if (is_bool($value)) {
-        return $value;
-    }
-
-    // Null or empty string - return null (let caller decide fallback)
-    if ($value === null || $value === '') {
-        return null;
-    }
-
-    // String values
-    if (is_string($value)) {
-        $lower = strtolower(trim($value));
-
-        // True values
-        if (in_array($lower, ['true', '1', 'yes', 'on'], true)) {
-            return true;
-        }
-
-        // False values
-        if (in_array($lower, ['false', '0', 'no', 'off'], true)) {
-            return false;
-        }
-    }
-
-    // Numeric values
-    if (is_numeric($value)) {
-        if ((int)$value === 1) {
-            return true;
-        }
-        if ((int)$value === 0) {
-            return false;
-        }
-    }
-
-    // Invalid value - return null
-    return null;
-}
-
-/**
- * Convert and clamp volume to 0-1 range with validation
- * Supports both 0-1 (legacy) and 0-100 (new) formats
- */
-function leanpl_float_clamp_0_1($value) {
-    $float = floatval($value);
-
-    // If value is > 1, assume it's 0-100 format and convert to 0-1
-    if ($float > 1) {
-        $float = $float / 100;
-    }
-
-    // Clamp to valid range (0-1)
-    if ($float < 0 || $float > 1) {
-        $float = max(0, min(1, $float));
-    }
-
-    return $float;
-}
-
-/**
- * Convert comma-separated string to array for controls
- * Example: "play,fullscreen" → ['play', 'fullscreen']
- */
-function leanpl_convert_comma_to_array($value) {
-    if (empty($value)) {
-        return null; // Let renderer use defaults
-    }
-
-    $sanitized = sanitize_text_field(wp_unslash($value));
-    $array = array_map('trim', explode(',', $sanitized));
-
-    // Remove empty values
-    $array = array_filter($array);
-
-    if (empty($array)) {
-        return null;
-    }
-
-    return $array;
-}
-
-/**
- * Convert sources string to HTML5 video list format
- * Example: "video1.mp4|720,video2.mp4|1080" → [['url' => 'video1.mp4', 'size' => '720'], ...]
- */
-function leanpl_convert_sources_to_html5_list($value) {
-    if (empty($value)) {
-        return null; // Let renderer use defaults
-    }
-
-    $sanitized = sanitize_text_field(wp_unslash($value));
-    $sources = array_map('trim', explode(',', $sanitized));
-    $html5_list = [];
-
-    foreach ($sources as $source) {
-        if (empty($source)) continue;
-
-        // Parse format: "url|size" or just "url"
-        $parts = explode('|', $source);
-        $url = trim($parts[0]);
-        $size = isset($parts[1]) ? trim($parts[1]) : '';
-
-        if (!empty($url)) {
-            $html5_list[] = [
-                'url' => esc_url($url),
-                'size' => $size
-            ];
-        }
-    }
-
-    if (empty($html5_list)) {
-        return null;
-    }
-
-    return $html5_list;
-}
-
-/**
- * Convert string to float with validation
- */
-function leanpl_convert_to_float($value) {
-    $float = floatval(sanitize_text_field(wp_unslash($value)));
-    return $float;
-}
-
-/**
- * Convert string to integer with validation
- */
-function leanpl_convert_to_int($value) {
-    $int = intval(sanitize_text_field(wp_unslash($value)));
-    return $int;
-}
-
-/**
- * Convert HTML5 video list from array to comma-separated string
- *
- * @param array $sources Array of ['url' => ..., 'size' => ...] items
- * @return string Comma-separated string of URL|size pairs
- */
-function leanpl_convert_html5_video_list_arr_to_str($sources) {
-    $pairs = [];
-    foreach ($sources as $video) {
-        if (!empty($video['url'])) {
-            $size_part = !empty($video['size']) ? '|' . $video['size'] : '';
-            $pairs[] = $video['url'] . $size_part;
-        }
-    }
-    return implode(',', $pairs);
-}
-
-/**
- * Parse video URL to extract type, ID, and create HTML5 sources if needed
- * 
- * Shared utility function for video URL parsing
- * Used by both Video_Shortcode and Player_Shortcode classes
- * 
- * @param string $url Video URL
- * @return array Video info with type, id, and sources
- */
-function leanpl_parse_video_url($url) {
-    $url = sanitize_text_field(wp_unslash($url));
-
-    // YouTube patterns
-    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
-        return [
-            'type' => 'youtube',
-            'id' => $matches[1],
-            'sources' => []
-        ];
-    }
-
-    // Vimeo patterns
-    if (preg_match('/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|)(\d+)(?:|\/\?))/', $url, $matches)) {
-        return [
-            'type' => 'vimeo',
-            'id' => $matches[1],
-            'sources' => []
-        ];
-    }
-
-    // HTML5 - direct video file
-    if (preg_match('/\.(mp4|webm|ogg)$/i', $url)) {
-        return [
-            'type' => 'html5',
-            'id' => '',
-            'sources' => [
-                [
-                    'url' => esc_url($url),
-                    'size' => '' // No quality specified for single file
-                ]
-            ]
-        ];
-    }
-
-    // Default to HTML5 if no pattern matches
-    return [
-        'type' => 'html5',
-        'id' => '',
-        'sources' => [
-            [
-                'url' => esc_url($url),
-                'size' => ''
-            ]
-        ]
-    ];
-}
-
-/**
- * Get media filename from attachment ID
- * 
- * @param int $attachment_id Media attachment ID
- * @return string Filename or empty string
- */
-function leanpl_get_media_filename($attachment_id) {
-    if (!$attachment_id || !is_numeric($attachment_id)) {
-        return '';
-    }
-    
-    $file_path = get_attached_file($attachment_id);
-    if (!$file_path) {
-        return '';
-    }
-    
-    return basename($file_path);
-}
-
-/**
- * Get human-readable player type label
- * 
- * @param string $player_type 'video' or 'audio'
- * @return string 'Video' or 'Audio'
- */
-function leanpl_get_player_type_label($player_type) {
-    if ($player_type === 'audio') {
-        return __('Audio', 'vapfem');
-    }
-    return __('Video', 'vapfem');
-}
-
-/**
- * Get source type label for a player
- * 
- * @param int $post_id Post ID
- * @return string Source type label (YouTube, Vimeo, HTML5 Video, Audio File)
- */
-function leanpl_get_source_type_label($post_id) {
-    $player_type = \LeanPL\Metaboxes::get_field_value($post_id, '_player_type');
-    
-    if ($player_type === 'audio') {
-        // Check if uploaded or external
-        $audio_source_type = \LeanPL\Metaboxes::get_field_value($post_id, '_audio_source_type');
-        
-        if ($audio_source_type === 'upload') {
-            return __('Uploaded File', 'vapfem');
-        } elseif ($audio_source_type === 'link') {
-            return __('External File', 'vapfem');
-        }
-        
-        // Fallback for old data that might not have source type
-        return __('Audio File', 'vapfem');
-    }
-    
-    // For video, check video type
-    $video_type = \LeanPL\Metaboxes::get_field_value($post_id, '_video_type');
-    
-    switch ($video_type) {
-        case 'youtube':
-            return __('YouTube', 'vapfem');
-        case 'vimeo':
-            return __('Vimeo', 'vapfem');
-        case 'html5':
-            // Check if uploaded or external
-            $html5_source_type = \LeanPL\Metaboxes::get_field_value($post_id, '_html5_source_type');
-            
-            if ($html5_source_type === 'upload') {
-                return __('Uploaded File', 'vapfem');
-            } elseif ($html5_source_type === 'link') {
-                return __('External File', 'vapfem');
-            }
-            
-            // Fallback for old data
-            return __('HTML5 Video', 'vapfem');
-        default:
-            return __('YouTube', 'vapfem'); // Default fallback
-    }
 }
 
 /**

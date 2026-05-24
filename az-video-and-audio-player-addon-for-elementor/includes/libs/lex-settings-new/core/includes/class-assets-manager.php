@@ -168,8 +168,8 @@ class AssetManager {
         
         // Enqueue CSS with instance-specific handles
         wp_enqueue_style(
-            "{$instance_id}-lex-tailwind",
-            $base_url . 'assets/css/lex-tailwind.css',
+            "{$instance_id}-lex-tokens",
+            $base_url . 'assets/css/lex-tokens.css',
             [],
             $version
         );
@@ -177,7 +177,7 @@ class AssetManager {
         wp_enqueue_style(
             "{$instance_id}-lex-settings-core",
             $base_url . 'assets/css/lex-settings-core.css',
-            [],
+            ["{$instance_id}-lex-tokens"],
             $version
         );
         
@@ -300,12 +300,12 @@ class AssetManager {
 }
 
 .select2-container--lex .select2-selection--single:hover {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
 }
 
 .select2-container--lex .select2-selection--single:focus,
 .select2-container--lex.select2-container--focus .select2-selection--single {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -366,7 +366,7 @@ class AssetManager {
 }
 
 .select2-container--lex.select2-container--open .select2-selection--single {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -398,12 +398,12 @@ class AssetManager {
 }
 
 .select2-container--lex .select2-selection--multiple:hover {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
 }
 
 .select2-container--lex .select2-selection--multiple:focus,
 .select2-container--lex.select2-container--focus .select2-selection--multiple {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -492,7 +492,7 @@ class AssetManager {
 }
 
 .select2-container--lex.select2-container--open .select2-selection--multiple {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -515,7 +515,7 @@ class AssetManager {
 }
 
 .select2-container--lex .select2-search--dropdown .select2-search__field:focus {
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-color-primary, #3858E9);
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -594,7 +594,7 @@ class AssetManager {
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--lex-color-primary, #5344F4);
+    color: var(--lex-color-primary, #3858E9);
     font-weight: bold;
     font-size: 14px;
 }
@@ -603,7 +603,7 @@ class AssetManager {
     cursor: default;
     display: block;
     padding: 0;
-    color: var(--lex-color-primary, #5344F4);
+    color: var(--lex-color-primary, #3858E9);
     font-size: 12px;
     font-weight: bold;
     padding: 0px 12px 4px;
@@ -698,4 +698,3 @@ class AssetManager {
         $this->inline_styles = '';
     }
 }
-

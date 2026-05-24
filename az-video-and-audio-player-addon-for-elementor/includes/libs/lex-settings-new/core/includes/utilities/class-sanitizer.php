@@ -74,11 +74,13 @@ class Sanitizer {
                 return ($value === '1' || $value === 1 || $value === true) ? '1' : '0';
                 
             case 'color':
-                // Hex color validation
+                if ($value === '' || $value === null) {
+                    return '';
+                }
                 if (preg_match('/^#[a-fA-F0-9]{6}$/', $value)) {
                     return $value;
                 }
-                return '#000000'; // Default fallback
+                return '#000000'; // Fallback only for invalid non-empty input
                 
             case 'text':
             default:

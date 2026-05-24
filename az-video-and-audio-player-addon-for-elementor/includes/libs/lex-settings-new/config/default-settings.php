@@ -28,4 +28,7 @@ if (isset($player_defaults['audio'])) {
     $defaults['audio'] = $player_defaults['audio'];
 }
 
+// Playlist defaults — stored under leanpl_settings['playlist']
+$defaults['playlist'] = leanpl_get_playlist_defaults();
+
 return $defaults;

@@ -36,6 +36,7 @@ class Video_Shortcode {
         'autoplay' => 'leanpl_normalize_boolean',
         'muted' => 'leanpl_normalize_boolean',
         'loop' => 'leanpl_normalize_boolean',
+        'preload' => 'sanitize_text_field',
         'volume' => 'leanpl_float_clamp_0_1',
         'click_to_play' => 'leanpl_normalize_boolean',
         'invert_time' => 'leanpl_normalize_boolean',
@@ -151,15 +152,26 @@ class Video_Shortcode {
      * @return array Config array for player renderer
      */
     private function map_shortcode_to_player_config($atts) {
-        // Parse video URL first (always required - validated in handler)
-        $video_url = isset($atts['url']) ? trim($atts['url']) : '';
-        $video_info = leanpl_parse_video_url($video_url);
+        $video_url  = isset($atts['url'])  ? trim($atts['url'])                    : '';
+        $type_hint  = isset($atts['type']) ? sanitize_text_field($atts['type'])    : '';
+
+        // When the user passes a bare ID (no URL pattern) + type="youtube"|"vimeo",
+        // treat the url value as the ID directly instead of running URL parsing.
+        if ( $type_hint && ! preg_match('/[.\/]/', $video_url) ) {
+            $video_info = [
+                'type'    => $type_hint,
+                'id'      => $video_url,
+                'sources' => [],
+            ];
+        } else {
+            $video_info = leanpl_parse_video_url($video_url);
+        }
 
         // Start with video source info (always required)
         $config = [
             'video_type' => $video_info['type'],
-            'video_id' => $video_info['id'],
-            'sources' => $video_info['sources'],
+            'video_id'   => $video_info['id'],
+            'sources'    => $video_info['sources'],
         ];
 
         // Only add attributes that user actually provided (not empty strings)

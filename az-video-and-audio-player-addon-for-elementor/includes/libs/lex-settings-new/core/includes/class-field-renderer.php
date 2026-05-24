@@ -224,6 +224,9 @@ class FieldRenderer {
         if (isset($field['tooltip_width'])) {
             $tooltip_class .= ' lex-tooltip--' . esc_attr($field['tooltip_width']);
         }
+        if (isset($field['tooltip_position'])) {
+            $tooltip_class .= ' lex-tooltip--' . esc_attr($field['tooltip_position']);
+        }
         
         printf(
             '<span class="%s">

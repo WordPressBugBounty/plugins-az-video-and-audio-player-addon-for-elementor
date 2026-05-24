@@ -1,21 +1,24 @@
-=== Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor  ===
+=== Lean Player - Video and Audio Player with Playlist for WordPress, Elementor and Gutenberg ===
 Contributors: azplugins
-Tags: elementor, player, audio player, video player, media player
+Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.0.8
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-WordPress Video Player & Audio Player plugin - simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices
+Video and audio player with playlist for WordPress. Plays YouTube, Vimeo, HTML5 video, and audio. Works with Elementor, Gutenberg, and Classic Editor.
 
 == Description ==
-"Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor" - is a simple, lightweight and customizable HTML5, YouTube, Vimeo & mp3 media player that supports all devices. It supports all the major file formats for audio & video. Included audio & video player widget / addon and shortcode support that has lots of customization options, using those options you can change the player settings how you want.
+Lean Player is a video and audio player plugin for WordPress. It plays YouTube videos, Vimeo videos, HTML5 video files, and audio files (MP3, AAC, OGG, WAV, M4A). You can embed players anywhere using a shortcode, the Elementor widget, the Block Editor, or the Classic Editor.
 
-Version 3.0.0 marks a major milestone: our rebranding checkpoint and major update. We've rebranded our plugin under the LeanPlugins brand and made significant improvements to make it more performance-focused and aligned with our brand philosophy.
+Version 3.1 adds a full playlist feature. You can create a video or audio playlist, choose where the track list sits (left, right, top, or bottom of the player), show thumbnails and duration, and let it auto-advance through items. The playlist works with YouTube, Vimeo, HTML5 video, and audio files, and embeds with [lean_playlist id="123"]. A working playlist is free. A small set of styling and power-user options require Pro.
 
-👉 [Live Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
+Lean Player also helps keep media-heavy pages fast. With Media Preload, you choose whether video and audio should load only basic info, wait until the visitor clicks play, or start loading immediately. This is useful for pages with multiple players or playlists.
+
+👉 [Players Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
+👉 [Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc)
 👉 [Purchase Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing)
 
 == Features ==
@@ -27,6 +30,7 @@ Version 3.0.0 marks a major milestone: our rebranding checkpoint and major updat
 * **Admin Columns** - View all players at a glance with Player Type, Source Type, Source, Autoplay status, and copy-ready Shortcode
 * **Preview Player** - Preview your player before publishing directly from the players list or from the player edit page
 * **Simple Shortcode** - [lean_player id="123"] to embed anywhere
+* **Player Categories** - Group and organize players using categories
 
 **Video Sources:**
 * YouTube video support
@@ -42,11 +46,14 @@ Version 3.0.0 marks a major milestone: our rebranding checkpoint and major updat
 * Autoplay
 * Start Muted
 * Initial Volume control (0-100%)
-* Loop playback
-* Default Playback Speed (0.5x to 4x)
+* Loop Playback
+* HTML5 Media Preload - Keep pages lighter by controlling when video and audio files start loading
+* Starting Playback Speed (0.5x to 4x)
+* Pause Other Players - Automatically pause other players when one starts playing (works across standalone players and playlists) [PRO]
+* Keyboard Shortcuts - Control playback when the player is focused, with optional global shortcuts for single-player pages
 * Time Display Format - Countdown or elapsed time [PRO]
-* Skip Amount - Set forward/back jump time (1-60 seconds) [PRO]
-* Reset to start when finished
+* Skip Forward/Back Amount - Set forward/back jump time (1-60 seconds) [PRO]
+* Reset to Start When Finished
 
 **Player Controls:**
 * Fullscreen button
@@ -63,6 +70,28 @@ Version 3.0.0 marks a major milestone: our rebranding checkpoint and major updat
 * Very lightweight - no major impact on website speed
 * Works with all themes
 
+**Playlist:**
+* Works with YouTube, Vimeo, HTML5 video, and audio files
+* Shortcode: [lean_playlist id="123"]
+* Search players and add them to a playlist from the admin
+* Filter players by category and add all from a selected category at once
+* Panel position: left, right, top, or bottom of the player
+* Panel width, max width, and height (synced or fixed)
+* List layout with thumbnails (16:9 or 1:1 shape), duration badge, duration next to title, item numbers, and subtitle/artist text
+* Play icon: active item only or always visible
+* Playlist header with title and item count
+* Light and dark skin
+* Solid panel background
+* Auto-advance to the next track when one finishes
+* Audio now-playing compact view
+* Grid layout [PRO]
+* Accent color customization [PRO]
+* Custom gradient panel background [PRO]
+* Play icon hidden variant [PRO]
+* Audio now-playing large card [PRO]
+* Start from a specific item number [PRO]
+* Automatic Thumbnail - auto-fetch thumbnails from YouTube and Vimeo when no custom image is set [PRO]
+
 **Integration:**
 * Elementor widgets (video & audio)
 * Block Editor (Gutenberg) support
@@ -74,31 +103,45 @@ Version 3.0.0 marks a major milestone: our rebranding checkpoint and major updat
 * Video Type (YouTube/Vimeo/HTML5)
 * YouTube Video URL
 * Vimeo Video URL
-* HTML5 Video (Upload or URL)
-* Display Preview Thumbnail
+* HTML5 Video File (Upload or URL)
+* Preview Thumbnail
 * Autoplay
 * Start Muted
 * Initial Volume
-* Loop
-* Click To Play/Pause
-* Fullscreen Toggle
-* Default Playback Speed
+* Loop Playback
+* HTML5 Media Preload - Choose Metadata, None, or Auto loading
+* Click Video to Play/Pause
+* Fullscreen Button
+* Starting Playback Speed
 * Picture-in-picture (PIP)
 * Keyboard Shortcuts
-* Reset To Start After End
+* Reset to Start When Finished
 * 20+ Design & Styling options
 
 == Audio Player Elementor Widget/Addon Options (All FREE) ==
 
-* Audio Source (Upload, URL, or Streaming URL) - Supported formats: MP3, OGG, WAV, M4A, AAC, and audio streams (MP3, AAC streams)
+* Audio Upload or URL - Supported formats: MP3, OGG, WAV, M4A, AAC, and audio streams (MP3, AAC streams)
 * Autoplay
 * Start Muted
 * Initial Volume
-* Loop
-* Default Playback Speed
+* Loop Playback
+* HTML5 Media Preload - Choose Metadata, None, or Auto loading
+* Starting Playback Speed
+* Keyboard Shortcuts
 * 20+ Styling options
 
 == Changelog ==
+= Version: 3.1.0 =
+* Added: Automatic Thumbnail (Pro) - playlist items without a custom poster now auto-fetch the thumbnail from YouTube or Vimeo. Enable once in Settings > Playlist. YouTube is zero-cost; Vimeo uses a cached API call.
+* Added: Playlist feature - video and audio playlists with panel position (left/right/top/bottom), list/grid layout, thumbnails, duration badge, item numbers, dark skin, and shortcode [lean_playlist id="123"]
+* Added: Pause Other Players (Autopause) - when one player starts, all others pause automatically. Configurable site-wide via Global Player Settings.
+* Added: HTML5 Media Preload - control when video/audio loads (Metadata, None, or Auto). Useful for pages with multiple players.
+* Added: Keyboard Shortcuts - site-wide and per-player control, with Elementor widget and shortcode override support.
+* Added: Player type selection modal - choose Video or Audio when creating a new player.
+* Added: Accordion sections in player metabox - Playback tab reorganized into collapsible groups.
+* Added: Vertical tab navigation in player and playlist metaboxes.
+* Improved: Admin UI consistency - unified design tokens across settings pages and metaboxes.
+
 = Version: 3.0.8 =
 Added: Download button styling option to the audio player elementor widget
 

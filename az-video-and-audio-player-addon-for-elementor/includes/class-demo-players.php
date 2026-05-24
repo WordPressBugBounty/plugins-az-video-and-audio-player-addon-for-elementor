@@ -84,10 +84,69 @@ class Demo_Players {
             ]
         ];
     }
-    
+    /**
+     * Create demo playlists if enough published players exist (threshold: 2 per type).
+     * Video playlist groups all _player_type=video; audio groups all _player_type=audio.
+     */
+    public static function maybe_create_demo_playlists() {
+        $threshold = 2;
+
+        foreach ( [ 'video', 'audio' ] as $type ) {
+            $player_ids = get_posts( [
+                'post_type'      => 'lean_player',
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+                'meta_query'     => [
+                    [
+                        'key'   => '_player_type',
+                        'value' => $type,
+                    ],
+                ],
+            ] );
+
+            if ( count( $player_ids ) < $threshold ) {
+                continue;
+            }
+
+            $title = $type === 'video'
+                ? __( 'Demo - Video Playlist', 'vapfem' )
+                : __( 'Demo - Audio Playlist', 'vapfem' );
+
+            $items = array_map( fn( $id ) => [ 'id' => (string) $id ], $player_ids );
+
+            self::create_single_playlist( $title, $type, $items );
+        }
+    }
+
+    /**
+     * Insert a lean_playlist post with type and items meta.
+     *
+     * @param string $title         Post title.
+     * @param string $playlist_type 'video' or 'audio'.
+     * @param array  $items         Array of [ 'id' => string ] entries.
+     */
+    private static function create_single_playlist( $title, $playlist_type, $items ) {
+        $author_id = get_current_user_id() ?: 1;
+
+        $post_id = wp_insert_post( [
+            'post_title'  => $title,
+            'post_type'   => 'lean_playlist',
+            'post_status' => 'publish',
+            'post_author' => $author_id,
+        ] );
+
+        if ( ! $post_id || is_wp_error( $post_id ) ) {
+            return;
+        }
+
+        update_post_meta( $post_id, '_playlist_type', $playlist_type );
+        update_post_meta( $post_id, '_playlist_items', $items );
+    }
+
     /**
      * Create a single demo player
-     * 
+     *
      * @param array $config Player configuration with 'title' and 'meta' keys
      * @return int|WP_Error Post ID on success, WP_Error on failure
      */

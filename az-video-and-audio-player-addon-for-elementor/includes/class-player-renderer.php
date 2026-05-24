@@ -35,6 +35,33 @@ class Player_Renderer {
     private const SUPPORTED_VIDEO_TYPES = ['html5', 'youtube', 'vimeo'];
 
     /**
+     * Keys sent to JS for both video and audio players.
+     * Snake_case only — JS converts to Plyr format in player-utils.js.
+     */
+    private const COMMON_SETTINGS_KEYS = [
+        'autoplay', 'muted', 'volume', 'loop',
+        'seek_time', 'invert_time', 'speed_selected',
+        'controls', 'storage_enabled', 'debug_mode',
+        'keyboard_focused', 'keyboard_global',
+        'tooltips_seek',
+        'autopause',
+    ];
+
+    /**
+     * Video-only keys — extend COMMON_SETTINGS_KEYS.
+     */
+    private const VIDEO_ONLY_SETTINGS_KEYS = [
+        'tooltips_controls',
+        'click_to_play', 'hide_controls', 'reset_on_end',
+        'fullscreen_enabled', 'quality_default', 'ratio',
+    ];
+
+    /**
+     * Audio-only keys — extend COMMON_SETTINGS_KEYS (empty, slot exists for future).
+     */
+    private const AUDIO_ONLY_SETTINGS_KEYS = [];
+
+    /**
      * Constructor
      */
     private function __construct() {
@@ -49,6 +76,38 @@ class Player_Renderer {
      */
     private function is_valid_video_type($video_type) {
         return in_array($video_type, self::SUPPORTED_VIDEO_TYPES, true);
+    }
+
+    /**
+     * Build the value of an inline `style="..."` attribute for a player wrapper.
+     *
+     * Reads Plyr CSS variables from $config and returns the joined declarations
+     * (without the surrounding `style="..."`). Returns '' when nothing is set.
+     * Caller is responsible for wrapping with `style="..."` and applying esc_attr().
+     *
+     * To support a new Plyr CSS variable later, add one line to the $map below.
+     * Values are trusted to be sanitised at the input boundary
+     * (Lex Settings + metabox save handlers).
+     *
+     * @param array $config Merged player config.
+     * @return string Empty string or `--plyr-x: y; --plyr-z: w`.
+     */
+    private function build_player_style( array $config ): string {
+        // config key  =>  Plyr CSS variable name
+        $map = [
+            'primary_color' => '--plyr-color-main',
+        ];
+
+        $declarations = [];
+        foreach ( $map as $config_key => $css_var ) {
+            $value = $config[ $config_key ] ?? '';
+            if ( $value === '' ) {
+                continue;
+            }
+            $declarations[] = $css_var . ': ' . $value;
+        }
+
+        return implode( '; ', $declarations );
     }
 
   /**
@@ -76,28 +135,9 @@ class Player_Renderer {
          */
         do_action('leanpl/player/before_render', $config, 'video');
 
-      // Build data settings
-      $data_settings = [
-          'autoplay'            => $config['autoplay'],
-          'storage_enabled'     => $config['storage_enabled'],
-          'seek_time'          => $config['seek_time'],
-          'volume'             => $config['volume'],
-          'muted'              => $config['muted'],
-          'clickToPlay'        => $config['click_to_play'],
-          'keyboard_focused'   => $config['keyboard_focused'],
-          'keyboard_global'    => $config['keyboard_global'],
-          'tooltips_controls'  => $config['tooltips_controls'],
-          'hideControls'       => $config['hide_controls'],
-          'resetOnEnd'         => $config['reset_on_end'],
-          'tooltips_seek'      => $config['tooltips_seek'],
-          'invertTime'         => $config['invert_time'],
-          'fullscreen_enabled' => $config['fullscreen_enabled'],
-          'speed_selected'     => $config['speed_selected'],
-          'quality_default'    => $config['quality_default'],
-          'controls'           => $config['controls'],
-          'ratio'              => $config['ratio'],
-          'debug_mode'         => $config['debug_mode'],
-      ];
+      // Build data settings — allowlist via constants, all keys stay snake_case.
+      $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::VIDEO_ONLY_SETTINGS_KEYS );
+      $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
       if ($config['video_type'] == 'html5') {
             $this->render_html5_markup($config, $data_settings);
@@ -149,21 +189,9 @@ class Player_Renderer {
          */
         do_action('leanpl/player/before_render', $config, 'audio');
 
-        // Build data settings for audio
-        $data_settings = [
-            'autoplay'            => $config['autoplay'],
-            'storage_enabled'     => $config['storage_enabled'],
-            'seek_time'          => $config['seek_time'],
-            'volume'             => $config['volume'],
-            'muted'              => $config['muted'],
-            'keyboard_focused'   => $config['keyboard_focused'],
-            'keyboard_global'    => $config['keyboard_global'],
-            'tooltips_seek'      => $config['tooltips_seek'],
-            'invertTime'         => $config['invert_time'],
-            'speed_selected'     => $config['speed_selected'],
-            'controls'           => $config['controls'],
-            'debug_mode'         => $config['debug_mode'],
-        ];
+        // Build data settings — allowlist via constants, all keys stay snake_case.
+        $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::AUDIO_ONLY_SETTINGS_KEYS );
+        $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
         $this->render_html5_audio_markup($config, $data_settings);
         
@@ -185,30 +213,6 @@ class Player_Renderer {
     }
 
     /**
-     * Get MIME type for audio file based on extension
-     *
-     * @param string $file_extension File extension (e.g., 'mp3', 'm4a', 'ogg')
-     * @return string MIME type (e.g., 'audio/mpeg', 'audio/mp4', 'audio/ogg')
-     */
-    private function get_audio_mime_type($file_extension) {
-        // Normalize extension to lowercase
-        $ext = strtolower($file_extension);
-        
-        // Map file extensions to correct MIME types
-        $mime_map = [
-            'mp3' => 'audio/mpeg',
-            'ogg' => 'audio/ogg',
-            'wav' => 'audio/wav',
-            'm4a' => 'audio/mp4',
-            'aac' => 'audio/aac',
-            'aacp' => 'audio/aac',
-        ];
-        
-        // Return mapped MIME type or default to audio/{extension}
-        return isset($mime_map[$ext]) ? $mime_map[$ext] : 'audio/' . $ext;
-    }
-
-    /**
      * Render HTML5 audio player
      *
      * @param array $config Configuration
@@ -222,13 +226,35 @@ class Player_Renderer {
             $path_info = pathinfo($config['url']);
             $file_extension = isset($path_info['extension']) ? $path_info['extension'] : 'mp3';
         }
-        
+
         // Get correct MIME type for the file extension
-        $mime_type = $this->get_audio_mime_type($file_extension);
-        ?>
+        $mime_type = leanpl_get_audio_mime_type($file_extension);
+
+        $brand_style = $this->build_player_style( $config );
+        $has_poster  = !empty($config['poster']);
+        $skin        = !empty($config['audio_skin']) ? $config['audio_skin'] : 'default';
+        $allowed_skins = [ 'default', 'dark', 'glass' ];
+        if ( ! in_array( $skin, $allowed_skins, true ) ) {
+            $skin = 'default';
+        }
+
+        if ( $has_poster ) : ?>
+        <div class="lpl-audio-with-poster" data-skin="<?php echo esc_attr( $skin ); ?>">
+            <img
+                class="lpl-audio-poster"
+                src="<?php echo esc_url( $config['poster'] ); ?>"
+                alt="<?php echo esc_attr( $config['audio_title'] ?? '' ); ?>"
+                aria-hidden="true"
+            />
+            <div class="lpl-audio-info">
+                <?php if ( !empty( $config['audio_title'] ) ) : ?>
+                <div class="lpl-audio-title"><?php echo esc_html( $config['audio_title'] ); ?></div>
+                <?php endif; ?>
+        <?php endif; ?>
         <audio
             class="lpl-player lpl-player--audio"
-            data-settings='<?php echo wp_json_encode($data_settings); ?>'
+            <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
+            data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
             <?php echo $config['autoplay'] ? 'autoplay allow="autoplay"' : ''; ?>
             <?php echo $config['loop'] ? 'loop' : ''; ?>
             preload="<?php echo esc_attr($config['preload']); ?>"
@@ -239,7 +265,10 @@ class Player_Renderer {
             />
             <?php esc_html_e('Your browser does not support the audio element.', 'vapfem'); ?>
         </audio>
-        <?php
+        <?php if ( $has_poster ) : ?>
+            </div><!-- .lpl-audio-info -->
+        </div><!-- .lpl-audio-with-poster -->
+        <?php endif;
     }
 
     /**
@@ -260,14 +289,18 @@ class Player_Renderer {
         if (!empty($config['sources'][0]['url'])) {
             $fallback_video_url = $config['sources'][0]['url'];
         }
+
+        $brand_style = $this->build_player_style( $config );
         ?>
         <video
-              <?php if (!empty($config['poster'])): ?>poster="<?php echo esc_attr($config['poster']); ?>"<?php endif; ?>
+              <?php if (!empty($config['poster'])): ?>poster="<?php echo esc_url($config['poster']); ?>"<?php endif; ?>
               class="lpl-player lpl-player--video"
+              <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
               <?php echo $config['autoplay'] ? 'autoplay' : ''; ?>
               <?php echo $config['muted'] ? 'muted' : ''; ?>
               <?php echo $config['loop'] ? 'loop' : ''; ?>
-              data-settings='<?php echo wp_json_encode($data_settings); ?>'
+              preload="<?php echo esc_attr($config['preload']); ?>"
+              data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
           >
               <?php
               foreach($config['sources'] as $html5_video) {
@@ -307,9 +340,12 @@ class Player_Renderer {
             $this->render_error('YouTube video ID is required.');
             return;
         }
+
+        $brand_style = $this->build_player_style( $config );
         ?>
         <div class="plyr__video-embed lpl-player lpl-player--video"
-            data-settings='<?php echo wp_json_encode($data_settings); ?>'
+            <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
+            data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
         >
             <iframe
                 src="<?php echo esc_url($this->generate_youtube_url($config)); ?>"
@@ -335,9 +371,11 @@ class Player_Renderer {
             return;
         }
 
+        $brand_style = $this->build_player_style( $config );
         ?>
         <div class="plyr__video-embed lpl-player lpl-player--video"
-            data-settings='<?php echo wp_json_encode($data_settings); ?>'
+            <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
+            data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
         >
             <iframe
                 src="<?php echo esc_url($this->generate_vimeo_url($config)); ?>"

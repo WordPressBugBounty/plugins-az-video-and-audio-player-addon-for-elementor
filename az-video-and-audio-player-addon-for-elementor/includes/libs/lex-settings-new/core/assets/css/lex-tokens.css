@@ -1,0 +1,134 @@
+/**
+ * Lex Settings shared design tokens.
+ *
+ * Safe to load in wp-admin and on the frontend. This file must only expose
+ * primitive global custom properties; no semantic aliases, component
+ * selectors, utilities, or admin overrides belong here.
+ */
+
+:root {
+    /* WordPress color palette */
+    --wp-color-white: #fff;
+    --wp-color-black: #000;
+    --wp-color-gray-0: #f6f7f7;
+    --wp-color-gray-2: #f0f0f1;
+    --wp-color-gray-5: #dcdcde;
+    --wp-color-gray-10: #c3c4c7;
+    --wp-color-gray-20: #a7aaad;
+    --wp-color-gray-30: #8c8f94;
+    --wp-color-gray-40: #787c82;
+    --wp-color-gray-50: #646970;
+    --wp-color-gray-60: #50575e;
+    --wp-color-gray-70: #3c434a;
+    --wp-color-gray-80: #2c3338;
+    --wp-color-gray-90: #1d2327;
+    --wp-color-gray-100: #101517;
+    --wp-color-blue-0: #f0f6fc;
+    --wp-color-blue-5: #c5d9ed;
+    --wp-color-blue-10: #9ec2e6;
+    --wp-color-blue-20: #72aee6;
+    --wp-color-blue-30: #4f94d4;
+    --wp-color-blue-40: #3582c4;
+    --wp-color-blue-50: #2271b1;
+    --wp-color-blue-60: #135e96;
+    --wp-color-blue-70: #0a4b78;
+    --wp-color-blue-80: #043959;
+    --wp-color-blue-90: #01263a;
+    --wp-color-blue-100: #00131c;
+    --wp-color-red-0: #fcf0f1;
+    --wp-color-red-5: #facfd2;
+    --wp-color-red-10: #ffabaf;
+    --wp-color-red-20: #ff8085;
+    --wp-color-red-30: #f86368;
+    --wp-color-red-40: #e65054;
+    --wp-color-red-50: #d63638;
+    --wp-color-red-60: #b32d2e;
+    --wp-color-red-70: #8a2424;
+    --wp-color-red-80: #691c1c;
+    --wp-color-red-90: #451313;
+    --wp-color-red-100: #240a0a;
+    --wp-color-yellow-0: #fcf9e8;
+    --wp-color-yellow-5: #f5e6ab;
+    --wp-color-yellow-10: #f2d675;
+    --wp-color-yellow-20: #f0c33c;
+    --wp-color-yellow-30: #dba617;
+    --wp-color-yellow-40: #bd8600;
+    --wp-color-yellow-50: #996800;
+    --wp-color-yellow-60: #755100;
+    --wp-color-yellow-70: #614200;
+    --wp-color-yellow-80: #4a3200;
+    --wp-color-yellow-90: #362400;
+    --wp-color-yellow-100: #211600;
+    --wp-color-green-0: #edfaef;
+    --wp-color-green-5: #b8e6bf;
+    --wp-color-green-10: #68de7c;
+    --wp-color-green-20: #1ed14b;
+    --wp-color-green-30: #00ba37;
+    --wp-color-green-40: #00a32a;
+    --wp-color-green-50: #008a20;
+    --wp-color-green-60: #007017;
+    --wp-color-green-70: #005c12;
+    --wp-color-green-80: #00450c;
+    --wp-color-green-90: #003008;
+    --wp-color-green-100: #001c05;
+
+    /* Brand color palette */
+    --lex-color-brand-primary: #3858E9;
+    --lex-color-brand-primary-hover: #1D35B4;
+    --lex-color-brand-primary-light: color-mix(in srgb, var(--lex-color-brand-primary) 10%, transparent);
+    --lex-color-brand-primary-glow: color-mix(in srgb, var(--lex-color-brand-primary) 20%, transparent);
+    --lex-color-brand-pro-end: #9A2ECB;
+    --lex-color-apple-blue: #0071e3;
+    --lex-color-apple-label-secondary: #6e6e73;
+
+    /* Spacing scale */
+    --lex-space-0: 0;
+    --lex-space-1: 4px;
+    --lex-space-2: 8px;
+    --lex-space-3: 12px;
+    --lex-space-4: 16px;
+    --lex-space-5: 20px;
+    --lex-space-6: 24px;
+    --lex-space-8: 32px;
+
+    /* Typography */
+    --lex-font-size-xs: 11px;
+    --lex-font-size-sm: 12px;
+    --lex-font-size-apple-field-desc: var(--lex-font-size-sm);
+    --lex-font-size-md: 13px;
+    --lex-font-size-base: 14px;
+    --lex-font-size-lg: 16px;
+    --lex-font-size-xl: 18px;
+    --lex-font-size-2xl: 20px;
+    --lex-font-size-3xl: 24px;
+    --lex-font-weight-normal: 400;
+    --lex-font-weight-medium: 500;
+    --lex-font-weight-semibold: 600;
+    --lex-font-weight-bold: 700;
+
+    /* Radius */
+    --lex-radius-xs: 3px;
+    --lex-radius-sm: 4px;
+    --lex-radius-md: 8px;
+    --lex-radius-lg: 12px;
+    --lex-radius-xl: 16px;
+
+    /* Shadows */
+    --lex-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --lex-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --lex-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    /* Motion */
+    --lex-transition-fast: 0.15s ease;
+    --lex-transition-base: 0.2s ease;
+    --lex-transition-slow: 0.3s ease;
+
+    /* Layout */
+    --lex-layout-max-width: 1600px;
+
+    /* Sticky offsets */
+    --lex-wp-adminbar-height: 32px;
+    --lex-nav-header-height: 64px;
+    --lex-sticky-top: calc(var(--lex-wp-adminbar-height) + var(--lex-nav-header-height));
+    --lex-scroll-gap: 100px; /* intentionally make the gap 100px 14px cause issue to fix a unwanted scroll jump bug */
+}

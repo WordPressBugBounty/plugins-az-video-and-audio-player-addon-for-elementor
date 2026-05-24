@@ -25,19 +25,27 @@
  * Defaults:
  * - Font size: 12px (small, clean default)
  * - Width: 300px max
- * - Theme: Soft Dark (#2a2d3a)
+ * - Theme: Soft Dark
  */
 
 /* ============================================
    CSS VARIABLES
    ============================================ */
 :root {
-    --lex-tooltip-bg: #2a2d3a;
-    --lex-tooltip-color: #e5e7eb;
+    --lex-tooltip-bg: var(--wp-color-gray-80);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    --lex-tooltip-link-color: var(--wp-color-blue-20);
+    --lex-tooltip-link-hover-color: var(--wp-color-blue-30);
+    --lex-tooltip-code-bg: color-mix(in srgb, var(--wp-color-white) 10%, transparent);
+    --lex-tooltip-shadow: 0 4px 16px color-mix(in srgb, var(--wp-color-black) 20%, transparent);
+    --lex-tooltip-shadow-raised: 0 6px 20px color-mix(in srgb, var(--wp-color-black) 20%, transparent);
+    --lex-tooltip-shadow-raised-strong: 0 6px 20px color-mix(in srgb, var(--wp-color-black) 25%, transparent);
+    --lex-tooltip-shadow-raised-gray: 0 6px 20px color-mix(in srgb, var(--wp-color-black) 24%, transparent);
     --lex-tooltip-max-width: 300px;
-    --lex-tooltip-padding: 12px 16px;
-    --lex-tooltip-border-radius: 6px;
-    --lex-tooltip-spacing: 8px;
+    --lex-tooltip-padding: var(--lex-space-3) var(--lex-space-4);
+    --lex-tooltip-border-radius: var(--lex-radius-md);
+    --lex-tooltip-spacing: var(--lex-space-2);
+    --lex-tooltip-arrow-size: calc(var(--lex-space-3) / 2);
     --lex-tooltip-compact-width: 200px;
     --lex-tooltip-wide-width: 400px;
     --lex-tooltip-extra-wide-width: 500px;
@@ -50,7 +58,7 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--lex-space-1);
     cursor: help;
     z-index: 9999;
     vertical-align: middle;
@@ -66,11 +74,11 @@ label .lex-tooltip {
 }
 
 .lex-tooltip > .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: #8c8f94;
-    transition: color 0.2s ease;
+    font-size: var(--lex-font-size-lg);
+    width: var(--lex-space-4);
+    height: var(--lex-space-4);
+    color: var(--lex-color-text-subtle);
+    transition: color var(--lex-transition-base);
     flex-shrink: 0;
     line-height: 1;
     display: flex;
@@ -80,13 +88,13 @@ label .lex-tooltip {
 
 .lex-tooltip:hover > .dashicons,
 .lex-tooltip:focus > .dashicons {
-    color: var(--lex-color-primary, #5344F4);
+    color: var(--lex-color-primary);
 }
 
 .lex-tooltip:focus {
-    outline: 2px solid rgba(83, 68, 244, 0.1);
-    outline-offset: 2px;
-    border-radius: 2px;
+    outline: 2px solid var(--lex-color-primary-light);
+    outline-offset: calc(var(--lex-space-1) / 2);
+    border-radius: calc(var(--lex-space-1) / 2);
 }
 
 /* ============================================
@@ -103,11 +111,11 @@ label .lex-tooltip {
     text-align: left;
     padding: var(--lex-tooltip-padding);
     border-radius: var(--lex-tooltip-border-radius);
-    font-size: 12px;
+    font-size: var(--lex-font-size-xs);
     line-height: 1.5;
-    font-weight: 400;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    font-weight: var(--lex-font-weight-normal);
+    box-shadow: var(--lex-tooltip-shadow);
+    transition: opacity var(--lex-transition-base), visibility var(--lex-transition-base), transform var(--lex-transition-base);
     pointer-events: none;
     white-space: normal;
     word-wrap: break-word;
@@ -135,7 +143,7 @@ label .lex-tooltip {
 .lex-tooltip .lex-tooltip__text {
     bottom: calc(100% + var(--lex-tooltip-spacing));
     left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    transform: translateX(-50%) translateY(var(--lex-space-1));
 }
 
 .lex-tooltip:hover .lex-tooltip__text,
@@ -147,8 +155,8 @@ label .lex-tooltip {
 .lex-tooltip .lex-tooltip__text::after {
     top: 100%;
     left: 50%;
-    margin-left: -6px;
-    border-width: 6px 6px 0 6px;
+    margin-left: calc(var(--lex-tooltip-arrow-size) * -1);
+    border-width: var(--lex-tooltip-arrow-size) var(--lex-tooltip-arrow-size) 0 var(--lex-tooltip-arrow-size);
     border-color: var(--lex-tooltip-bg) transparent transparent transparent;
 }
 
@@ -158,41 +166,41 @@ label .lex-tooltip {
 
 /* Soft Gray - Light & Gentle */
 .lex-tooltip--soft-gray .lex-tooltip__text {
-    --lex-tooltip-bg: #4b5563;
-    --lex-tooltip-color: #f9fafb;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    --lex-tooltip-bg: var(--wp-color-gray-70);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    box-shadow: var(--lex-tooltip-shadow-raised);
 }
 
 /* Soft Gradient - Subtle Two-Tone */
 .lex-tooltip--soft-gradient .lex-tooltip__text {
-    background: linear-gradient(135deg, #2a2d3a 0%, #2e3440 100%);
-    --lex-tooltip-color: #e8eaed;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(135deg, var(--wp-color-gray-80) 0%, var(--wp-color-gray-70) 100%);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    box-shadow: var(--lex-tooltip-shadow-raised-strong);
 }
 
 .lex-tooltip--soft-gradient .lex-tooltip__text::after {
-    border-top-color: #2a2d3a;
+    border-top-color: var(--wp-color-gray-80);
 }
 
 /* Charcoal Dark - Professional & Subtle */
 .lex-tooltip--charcoal .lex-tooltip__text {
-    --lex-tooltip-bg: #2e3440;
-    --lex-tooltip-color: #eceff4;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    --lex-tooltip-bg: var(--wp-color-gray-80);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    box-shadow: var(--lex-tooltip-shadow-raised);
 }
 
 /* Soft Dark Theme - Warm & Gentle */
 .lex-tooltip--soft .lex-tooltip__text {
-    --lex-tooltip-bg: #2a2d3a;
-    --lex-tooltip-color: #e5e7eb;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    --lex-tooltip-bg: var(--wp-color-gray-80);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    box-shadow: var(--lex-tooltip-shadow-raised-strong);
 }
 
 /* Gray - Neutral & Balanced */
 .lex-tooltip--gray .lex-tooltip__text {
-    --lex-tooltip-bg: #374151;
-    --lex-tooltip-color: #f3f4f6;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+    --lex-tooltip-bg: var(--wp-color-gray-70);
+    --lex-tooltip-color: var(--wp-color-gray-0);
+    box-shadow: var(--lex-tooltip-shadow-raised-gray);
 }
 
 /* ============================================
@@ -235,47 +243,47 @@ label .lex-tooltip {
 
 /* Medium - Slightly larger for better readability */
 .lex-tooltip--md .lex-tooltip__text {
-    font-size: 13px;
+    font-size: var(--lex-font-size-md);
 }
 
 /* ============================================
    HTML CONTENT STYLING
    ============================================ */
 .lex-tooltip__text strong {
-    font-weight: 600;
+    font-weight: var(--lex-font-weight-semibold);
     color: inherit;
 }
 
 .lex-tooltip__text em {
     font-style: italic;
-    color: #72aee6;
+    color: var(--lex-tooltip-link-color);
 }
 
 .lex-tooltip__text a {
-    color: #72aee6;
+    color: var(--lex-tooltip-link-color);
     text-decoration: underline;
 }
 
 .lex-tooltip__text a:hover {
-    color: #4f94d4;
+    color: var(--lex-tooltip-link-hover-color);
 }
 
 .lex-tooltip__text ul,
 .lex-tooltip__text ol {
-    margin: 8px 0;
-    padding-left: 20px;
+    margin-block: var(--lex-space-2);
+    padding-inline-start: var(--lex-space-5);
 }
 
 .lex-tooltip__text li {
-    margin-bottom: 4px;
+    margin-block-end: var(--lex-space-1);
 }
 
 .lex-tooltip__text code {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 3px;
+    background: var(--lex-tooltip-code-bg);
+    padding: calc(var(--lex-space-1) / 2) calc(var(--lex-space-3) / 2);
+    border-radius: var(--lex-radius-xs);
     font-family: 'Monaco', 'Courier New', monospace;
-    font-size: 12px;
+    font-size: var(--lex-font-size-xs);
 }
 
 .lex-tooltip__text br {
@@ -288,15 +296,15 @@ label .lex-tooltip {
 @media screen and (max-width: 782px) {
     .lex-tooltip__text {
         max-width: 250px;
-        font-size: 11px;
-        padding: 10px 12px;
+        font-size: var(--lex-font-size-xs);
+        padding: var(--lex-space-2) var(--lex-space-3);
     }
     
     /* On mobile, position to prevent overflow */
     .lex-tooltip .lex-tooltip__text {
         left: auto;
         right: 0;
-        transform: translateX(0) translateY(4px);
+        transform: translateX(0) translateY(var(--lex-space-1));
     }
     
     .lex-tooltip:hover .lex-tooltip__text {
@@ -339,4 +347,23 @@ label .lex-tooltip {
 /* Right-aligned text */
 .lex-tooltip--align-right .lex-tooltip__text {
     text-align: right;
+}
+
+/* Below - opens downward instead of upward */
+.lex-tooltip--below .lex-tooltip__text {
+    bottom: auto;
+    top: calc(100% + var(--lex-tooltip-spacing));
+    transform: translateX(-50%) translateY(calc(var(--lex-space-1) * -1));
+}
+
+.lex-tooltip--below:hover .lex-tooltip__text,
+.lex-tooltip--below:focus .lex-tooltip__text {
+    transform: translateX(-50%) translateY(0);
+}
+
+.lex-tooltip--below .lex-tooltip__text::after {
+    top: auto;
+    bottom: 100%;
+    border-width: 0 var(--lex-tooltip-arrow-size) var(--lex-tooltip-arrow-size) var(--lex-tooltip-arrow-size);
+    border-color: transparent transparent var(--lex-tooltip-bg) transparent;
 }

@@ -46,7 +46,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->add_control(
             'src_type',
             [
-                'label' => esc_html__( 'Audio Source', 'vapfem' ),
+                'label' => esc_html__( 'Audio Upload or URL', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'upload',
                 'options' => [
@@ -109,7 +109,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->add_control(
             'muted',
             [
-                'label' => esc_html__( 'Muted', 'vapfem' ),
+                'label' => esc_html__( 'Start Muted', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'description' => esc_html__('Enable this to start playback muted. This is also usefull if you experience autoplay is not working from your browser.', 'vapfem'),
                 'label_on' => esc_html__( 'Yes', 'vapfem' ),
@@ -123,7 +123,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->add_control(
             'loop',
             [
-                'label' => esc_html__( 'Loop', 'vapfem' ),
+                'label' => esc_html__( 'Loop Playback', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'description' => esc_html__('Loop the current media. ', 'vapfem'),
                 'label_on' => esc_html__( 'Yes', 'vapfem' ),
@@ -151,7 +151,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->add_control(
             'seek_time',
             [
-                'label' => esc_html__( 'Seek Time', 'vapfem' ),
+                'label' => esc_html__( 'Skip Forward/Back Amount', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::NUMBER,
                 'description' => esc_html__('The time, in seconds, to seek when a user hits fast forward or rewind.', 'vapfem'),
                 'min' => 5,
@@ -175,10 +175,39 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
                 'separator' => 'before',
             ]
         );
+
+        $this->add_control(
+            'keyboard_focused',
+            [
+                'label' => esc_html__( 'Keyboard Shortcuts', 'vapfem' ),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'description' => esc_html__('Allow viewers to control playback with keyboard keys (Space, arrow keys, M, F). Works when the player is focused.', 'vapfem'),
+                'label_on' => esc_html__( 'Yes', 'vapfem' ),
+                'label_off' => esc_html__( 'No', 'vapfem' ),
+                'return_value' => 'true',
+                'default' => 'true',
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'keyboard_global',
+            [
+                'label' => esc_html__( 'Global Keyboard Shortcuts', 'vapfem' ),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'description' => esc_html__('Works from anywhere on the page — only use with one player per page.', 'vapfem'),
+                'label_on' => esc_html__( 'Yes', 'vapfem' ),
+                'label_off' => esc_html__( 'No', 'vapfem' ),
+                'return_value' => 'true',
+                'default' => 'false',
+                'separator' => 'before',
+            ]
+        );
+
         $this->add_control(
             'speed_selected',
             [
-                'label' => esc_html__( 'Initial Speed', 'vapfem' ),
+                'label' => esc_html__( 'Starting Playback Speed', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'speed_1',
                 'options' => [
@@ -195,16 +224,16 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         $this->add_control(
             'preload',
             [
-                'label' => esc_html__( 'Preload', 'vapfem' ),
-                'description' => __( 'Specifies how the the audio should be loaded when the page loads. <a target="_blank" href="https://www.w3schools.com/tags/att_audio_preload.asp">Learn More</a>', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'upload',
-                'options' => [
-                    'auto' => esc_html__( 'Auto', 'vapfem' ),
-                    'metadata' => esc_html__( 'Metadata', 'vapfem' ),
-                    'none' => esc_html__( 'None', 'vapfem' ),
+                'label'       => esc_html__( 'HTML5 Media Preload', 'vapfem' ),
+                'description' => __( '<strong>Metadata</strong><br>Loads only basic media details when the page opens, such as duration. The actual audio/video starts loading when the visitor presses play. Recommended for most sites.<br><br><strong>None</strong><br>Does not load the media until the visitor presses play. Best when a page has many players or you want to save bandwidth.<br><br><strong>Auto</strong><br>Tells the browser to start loading the media early, before the visitor presses play. Use only when this media is important and most visitors are likely to play it.', 'vapfem' ),
+                'type'        => \Elementor\Controls_Manager::SELECT,
+                'default'     => 'metadata',
+                'options'     => [
+                    'metadata' => esc_html__( 'Metadata (Recommended)', 'vapfem' ),
+                    'none'     => esc_html__( 'None', 'vapfem' ),
+                    'auto'     => esc_html__( 'Auto', 'vapfem' ),
                 ],
-                'separator' => 'before',
+                'separator'   => 'before',
             ]
         );
 
@@ -675,6 +704,8 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
             'invert_time'        => $settings['invert_time'] === 'true',
             'seek_time'          => intval($settings['seek_time']),
             'tooltips_seek'      => $settings['tooltips_seek'] === 'true',
+            'keyboard_focused'   => $settings['keyboard_focused'] === 'true',
+            'keyboard_global'    => $settings['keyboard_global'] === 'true',
             'speed_selected'     => $this->convert_speed($settings),
             'preload'            => $settings['preload'],
             'controls'           => $settings['controls'],

@@ -1,3 +1,7 @@
+:root {
+	--lpl-player-notice-bg: #1AAFFF;
+}
+
 .plyr__controls input[type=range]::-webkit-slider-runnable-track{
 	box-shadow: none;
 }
@@ -7,9 +11,10 @@
 }
 .lpl-not-found{
 	text-align: center;
-	background: #1AAFFF;
-	color: #fff;
-	padding: 15px 0;
+	background: var(--lpl-player-notice-bg, var(--lex-color-brand-primary));
+	color: var(--wp-color-white);
+	padding-block: var(--lex-space-4, 16px);
+	padding-inline: var(--lex-space-0, 0);
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -19,6 +24,115 @@
 	-webkit-box-pack: center;
 	    -ms-flex-pack: center;
 	        justify-content: center;
+}
+
+/* ─── Audio player: poster card ─────────────────────────────────────────── */
+
+/*
+ * Token system mirrors playlist.css:
+ *   --lpl-audio-bg        card background
+ *   --lpl-audio-text      title + control icon colour
+ *   --lpl-audio-border    card border colour
+ *   --lpl-audio-radius    card corner radius
+ *   --lpl-audio-shadow    card box-shadow
+ *   --lpl-audio-backdrop  backdrop-filter (glass only)
+ *
+ * Skins via data-skin attribute (matches playlist data-skin pattern):
+ *   default  →  A: light card
+ *   dark     →  C: dark / night
+ *   glass    →  F: glassmorphism
+ */
+
+.lpl-audio-with-poster {
+    /* layout tokens */
+    --lpl-audio-radius:   12px;
+    --lpl-audio-thumb-radius: 6px;
+    --lpl-audio-thumb-size:   64px;
+    --lpl-audio-gap:      12px;
+    --lpl-audio-pad-x:    16px;
+    --lpl-audio-pad-y:    12px;
+    --lpl-audio-title-size: 13px;
+    --lpl-audio-title-weight: 600;
+    --lpl-audio-info-gap: 6px;
+
+    /* skin tokens — default (A: light card) */
+    --lpl-audio-bg:       #ffffff;
+    --lpl-audio-text:     #1a1d23;
+    --lpl-audio-border:   #e2e4e7;
+    --lpl-audio-shadow:   0 1px 4px rgba(0, 0, 0, 0.06);
+    --lpl-audio-backdrop: none;
+
+    /* structure */
+    display: flex;
+    align-items: center;
+    gap: var(--lpl-audio-gap);
+    padding: var(--lpl-audio-pad-y) var(--lpl-audio-pad-x);
+    border: 1px solid var(--lpl-audio-border);
+    border-radius: var(--lpl-audio-radius);
+    background: var(--lpl-audio-bg);
+    box-shadow: var(--lpl-audio-shadow);
+    backdrop-filter: var(--lpl-audio-backdrop);
+    color: var(--lpl-audio-text);
+}
+
+/* skin: dark (C) */
+.lpl-audio-with-poster[data-skin="dark"] {
+    --lpl-audio-bg:     #1a1d23;
+    --lpl-audio-text:   #e0e3ea;
+    --lpl-audio-border: #2e3138;
+    --lpl-audio-shadow: 0 2px 8px rgba(0, 0, 0, 0.40);
+    --plyr-color-main:            #60a5fa;
+    --plyr-audio-control-color:   #9ca3af;
+    --plyr-audio-controls-background: transparent;
+    --plyr-range-fill-background: #60a5fa;
+    --plyr-range-thumb-background: #60a5fa;
+}
+
+/* skin: glass (F) */
+.lpl-audio-with-poster[data-skin="glass"] {
+    --lpl-audio-bg:       rgba(255, 255, 255, 0.55);
+    --lpl-audio-text:     #1a1d23;
+    --lpl-audio-border:   rgba(255, 255, 255, 0.50);
+    --lpl-audio-shadow:   0 4px 24px rgba(0, 0, 0, 0.08);
+    --lpl-audio-backdrop: blur(12px);
+}
+
+/* poster image */
+.lpl-audio-poster {
+    flex-shrink: 0;
+    width: var(--lpl-audio-thumb-size);
+    height: var(--lpl-audio-thumb-size);
+    border-radius: var(--lpl-audio-thumb-radius);
+    object-fit: cover;
+    align-self: center;
+}
+
+/* info column: title + player stacked */
+.lpl-audio-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--lpl-audio-info-gap);
+}
+
+/* track title — mirrors .lpl-playlist__item-title sizing */
+.lpl-audio-title {
+    font-size: var(--lpl-audio-title-size);
+    font-weight: var(--lpl-audio-title-weight);
+    line-height: 1.2;
+    margin: 0;
+    color: var(--lpl-audio-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* strip plyr's internal padding so controls sit flush inside info column */
+.lpl-audio-info .plyr--audio .plyr__controls {
+    padding: 0;
+    background: transparent;
 }
 
 /*customify theme support*/

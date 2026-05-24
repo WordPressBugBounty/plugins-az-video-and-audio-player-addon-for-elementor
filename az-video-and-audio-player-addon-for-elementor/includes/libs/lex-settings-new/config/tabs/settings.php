@@ -14,67 +14,121 @@ if (file_exists($defaults_file)) {
 }
 
 $settings = \Lex\Settings\V2\Settings::getInstance('leanpl');
+$sr = $settings->sectionRenderer;
 
 // ============================================
-// Section 1: Shared Options (Video & Audio)
+// VTAB: Playback
 // ============================================
-$settings->sectionRenderer->startSection('shared', esc_html__('Shared Options (Video & Audio)', 'vapfem'));
+$sr->startVtab('playback', esc_html__('Playback', 'vapfem'), [
+    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>',
+]);
+
+$sr->startSection('shared_playback', esc_html__('Shared Options (Video & Audio)', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
+]);
 $settings->fieldRenderer->render('info', 'shared_info', [
-    'content' => esc_html__('Set default behavior that applies to all video and audio players across your site, unless you override them at the widget or individual player level.', 'vapfem'),
+    'content' => __('Set once, applies to every player on your site. Override individually when you need a one-off change.<br><strong>Note:</strong> Autoplay and Loop are ignored for playlist players. Playlists handle track flow themselves.', 'vapfem'),
 ]);
 
 // Auto Play
 $settings->fieldRenderer->render('checkbox', 'autoplay', [
-    'label' => esc_html__('Autoplay', 'vapfem'),
-    'desc' => __('Try to start videos and audio automatically when the page loads. <strong>If autoplay does not work, turn on "Muted" below.</strong> Most browsers only allow autoplay when sound is off. <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay" target="_blank" rel="noopener noreferrer">Learn more about autoplay policies</a>.', 'vapfem'),
-    'checkbox_label' => esc_html__('Yes - Start playing automatically when the page loads', 'vapfem'),
-    'default' => $defaults['autoplay'] ?? null,
+    'label'          => esc_html__('Autoplay', 'vapfem'),
+    'tooltip'        => __('<strong>If autoplay does not work, enable Start Muted.</strong><br>Most browsers block autoplay with sound on.', 'vapfem'),
+    'tooltip_width'  => 'wide',
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc'           => __('Tries to start playing when the page loads. Most browsers block autoplay with sound on. <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay" target="_blank" rel="noopener noreferrer">Learn more about autoplay policies</a>.', 'vapfem'),
+    'default'        => $defaults['autoplay'] ?? null,
 ]);
 
 // Muted
 $settings->fieldRenderer->render('checkbox', 'muted', [
-    'label' => esc_html__('Start Muted', 'vapfem'),
-    'desc' => __('Start all players with sound off. Required for autoplay in modern browsers.', 'vapfem'),
-    'checkbox_label' => esc_html__('Yes - Start all players with sound off (muted)', 'vapfem'),
-    'default' => $defaults['muted'] ?? null,
-]);
-
-// Initial Volume
-$settings->fieldRenderer->render('number', 'volume', [
-    'label' => esc_html__('Initial Volume', 'vapfem'),
-    'desc' => esc_html__('Choose how loud the player starts, from 0% (mute) to 100% (full volume). Viewers can still change the volume while watching.', 'vapfem'),
-    'min' => 0,
-    'max' => 100,
-    'step' => 1,
-    'unit' => '%',
-    'default' => isset($defaults['volume']) ? ($defaults['volume'] * 100) : 100,
+    'label'          => esc_html__('Start Muted', 'vapfem'),
+    'tooltip'        => __('Starts all players with sound off.<br><br>Required for autoplay in most modern browsers.', 'vapfem'),
+    'tooltip_width'  => 'wide',
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc'           => esc_html__('Start all players with sound off', 'vapfem'),
+    'default'        => $defaults['muted'] ?? null,
 ]);
 
 // Loop
 $settings->fieldRenderer->render('checkbox', 'loop', [
-    'label' => esc_html__('Loop', 'vapfem'),
-    'tooltip' => esc_html__('Automatically restart from the beginning when finished', 'vapfem'),
-    'tooltip_width' => 'compact',
+    'label'          => esc_html__('Loop Playback', 'vapfem'),
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
-    'desc' => esc_html__('Play again automatically when finished', 'vapfem'),
-    'default' => $defaults['loop'] ?? null,
+    'desc'           => esc_html__('Restart automatically when playback finishes', 'vapfem'),
+    'default'        => $defaults['loop'] ?? null,
+]);
+
+// Initial Volume
+$settings->fieldRenderer->render('number', 'volume', [
+    'label'   => esc_html__('Initial Volume', 'vapfem'),
+    'tooltip' => esc_html__('How loud players start, from 0% (silent) to 100% (full). Viewers can still adjust during playback.', 'vapfem'),
+    'desc'    => esc_html__('Starting volume level for all players', 'vapfem'),
+    'min'     => 0,
+    'max'     => 100,
+    'step'    => 1,
+    'unit'    => '%',
+    'default' => isset($defaults['volume']) ? ($defaults['volume'] * 100) : 100,
 ]);
 
 // Playback Speed
 $settings->fieldRenderer->render('select', 'speed_selected', [
-    'label' => esc_html__('Default Playback Speed', 'vapfem'),
-    'desc' => __('Set the initial playback speed when players load. Many users now prefer listening to podcasts and videos at faster speeds (1.2x or 1.5x). We recommend setting 1.25x as the global default—this will apply to all video and audio players site-wide, unless you override it at the widget or individual player level.', 'vapfem'),
-    'options' => [
-        '0.5' => esc_html__('0.5x (Slow)', 'vapfem'),
+    'label'         => esc_html__('Starting Playback Speed', 'vapfem'),
+    'desc'          => esc_html__('Speed players use when they first load', 'vapfem'),
+    'tooltip'       => __('Sets the default speed for all players site-wide.<br><br>Override per player or widget as needed.<br><br><strong>Popular choices:</strong> 1.25x or 1.5x for podcasts and lessons.', 'vapfem'),
+    'tooltip_width' => 'wide',
+    'options'       => [
+        '0.5'  => esc_html__('0.5x (Slow)', 'vapfem'),
         '0.75' => esc_html__('0.75x', 'vapfem'),
-        '1' => esc_html__('1x (Normal)', 'vapfem'),
+        '1'    => esc_html__('1x (Normal)', 'vapfem'),
         '1.25' => esc_html__('1.25x', 'vapfem'),
-        '1.5' => esc_html__('1.5x', 'vapfem'),
+        '1.5'  => esc_html__('1.5x', 'vapfem'),
         '1.75' => esc_html__('1.75x', 'vapfem'),
-        '2' => esc_html__('2x (Fast)', 'vapfem'),
-        '4' => esc_html__('4x (Very Fast)', 'vapfem'),
+        '2'    => esc_html__('2x (Fast)', 'vapfem'),
+        '4'    => esc_html__('4x (Very Fast)', 'vapfem'),
     ],
-    'default' => $defaults['speed_selected'] ?? null,
+    'default'       => $defaults['speed_selected'] ?? null,
+]);
+
+// Media Preload
+$settings->fieldRenderer->render('select', 'preload', [
+    'label'         => esc_html__('HTML5 Media Preload', 'vapfem'),
+    'desc'          => esc_html__('How much media loads before the visitor presses play', 'vapfem'),
+    'tooltip'       => __('<ul><li><strong>Metadata (Recommended)</strong><br>Loads only duration and basic info. Media loads on play.</li><li><strong>None</strong><br>Nothing loads until the visitor presses play. Best for pages with many players.</li><li><strong>Auto</strong><br>Browser starts loading early, before play. Use only when most visitors will play this media.</li></ul>', 'vapfem'),
+    'tooltip_width' => 'xl',
+    'options'       => [
+        'metadata' => esc_html__('Metadata (Recommended)', 'vapfem'),
+        'none'     => esc_html__('None', 'vapfem'),
+        'auto'     => esc_html__('Auto', 'vapfem'),
+    ],
+    'default'       => $defaults['preload'] ?? 'metadata',
+]);
+
+// Autopause (Pro)
+$settings->fieldRenderer->render('checkbox', 'autopause', [
+    'label'          => esc_html__('Pause Other Players', 'vapfem'),
+    'tooltip'        => __('When one player starts, all other players on the same page pause automatically.<br><br>Recommended when you have multiple players on the same page.', 'vapfem'),
+    'tooltip_width'  => 'wide',
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc'           => esc_html__('Pause other players when one starts playing', 'vapfem'),
+    'default'        => $defaults['autopause'] ?? null,
+    'disabled'       => true,
+    'pro'            => ['onclick' => 'openUpgradeModal'],
+]);
+
+$sr->endSection();
+$sr->endVtab();
+
+// ============================================
+// VTAB: Controls
+// ============================================
+$sr->startVtab('controls', esc_html__('Controls', 'vapfem'), [
+    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>',
+]);
+
+$sr->startSection('shared_controls', esc_html__('Controls & Keyboard', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
 ]);
 
 // Controls
@@ -84,46 +138,18 @@ $settings->fieldRenderer->render('checkbox', 'controls', [
     'is_multiple' => true,
     'is_sortable' => true,
     'max_height' => '300px',
-    'options' => [
-        'play-large' => esc_html__('Play Large (Video Only)', 'vapfem'),
-        'restart' => esc_html__('Restart', 'vapfem'),
-        'rewind' => esc_html__('Rewind', 'vapfem'),
-        'play' => esc_html__('Play', 'vapfem'),
-        'fast-forward' => esc_html__('Fast Forward', 'vapfem'),
-        'progress' => esc_html__('Progress Bar', 'vapfem'),
-        'current-time' => esc_html__('Current Time', 'vapfem'),
-        'duration' => esc_html__('Duration', 'vapfem'),
-        'mute' => esc_html__('Mute', 'vapfem'),
-        'volume' => esc_html__('Volume', 'vapfem'),
-        'captions' => esc_html__('Caption (Video Only)', 'vapfem'),
-        'settings' => esc_html__('Settings Icon', 'vapfem'),
-        'pip' => esc_html__('PIP (Video Only)', 'vapfem'),
-        'airplay' => esc_html__('Airplay', 'vapfem'),
-        'fullscreen' => esc_html__('Fullscreen (Video Only)', 'vapfem'),
-        'download' => esc_html__('Download', 'vapfem'),
-    ],
+    'options' => array_map( fn( $c ) => $c['label'], leanpl_get_controls_registry() ),
     'default' => $defaults['controls'] ?? null,
     'disabled' => true,
     'pro'      => [ 'onclick' => 'openUpgradeModal'],
 ]);
 
-// Time Display Format
-$settings->fieldRenderer->render('select', 'invert_time', [
-    'label' => esc_html__('Time Display Format', 'vapfem'),
-    'desc' => __('Choose what the time display shows:<br>• <strong>Remaining Time (Countdown):</strong> counts down how much time is left (for example, "-2:30")<br>• <strong>Elapsed Time:</strong> counts up how much has already played (for example, "2:30").<br>Default: Remaining time.', 'vapfem'),
-    'options' => [
-        '1' => esc_html__('Remaining Time (Countdown)', 'vapfem'),
-        '0' => esc_html__('Elapsed Time (Incremental)', 'vapfem'),
-    ],
-    'default' => $defaults['invert_time'] ?? '1',
-    'disabled' => true,
-    'pro' => ['onclick' => 'openUpgradeModal'],
-]);
-
 // Seek Time
 $settings->fieldRenderer->render('number', 'seek_time', [
-    'label' => esc_html__('Skip Amount (Forward / Back)', 'vapfem'),
-    'desc' => esc_html__('How many seconds to skip forward or backward when viewers use keyboard shortcuts (arrow keys) for fast forward or rewind. For example, 10 seconds means each press of the arrow key jumps 10 seconds. Note: Clicking on the progress bar will still jump directly to that position.', 'vapfem'),
+    'label'         => esc_html__('Skip Forward/Back Amount', 'vapfem'),
+    'tooltip'       => __('Seconds to skip per keyboard shortcut press.<br><ul><li>Arrow right / left — skip forward or back</li><li>Example: 10 sec means each press jumps 10 seconds</li></ul><strong>Note:</strong> Clicking the progress bar always jumps directly to that position.', 'vapfem'),
+    'tooltip_width' => 'wide',
+    'desc'          => esc_html__('Seconds to skip per keyboard shortcut press.', 'vapfem'),
     'min' => 1,
     'max' => 60,
     'step' => 1,
@@ -133,39 +159,79 @@ $settings->fieldRenderer->render('number', 'seek_time', [
     'pro' => ['onclick' => 'openUpgradeModal'],
 ]);
 
-$settings->sectionRenderer->endSection();
-
-// ============================================
-// Section 2: Video-Only Options
-// ============================================
-$settings->sectionRenderer->startSection('video_only', esc_html__('Video-Only Options', 'vapfem'));
-$settings->fieldRenderer->render('info', 'video_info', [
-    'content' => esc_html__('Set default behavior that applies to all video players across your site, unless you override them at the widget or individual player level.', 'vapfem'),
+// Time Display Format
+$settings->fieldRenderer->render('select', 'invert_time', [
+    'label'         => esc_html__('Time Display Format', 'vapfem'),
+    'tooltip'       => __('<ul><li><strong>Remaining Time (Countdown)</strong><br>Counts down from total. Example: -2:30</li><li><strong>Elapsed Time</strong><br>Counts up from zero. Example: 2:30</li></ul>', 'vapfem'),
+    'tooltip_width' => 'wide',
+    'desc'          => esc_html__('Choose what the time counter shows during playback.', 'vapfem'),
+    'options' => [
+        '1' => esc_html__('Remaining Time (Countdown)', 'vapfem'),
+        '0' => esc_html__('Elapsed Time (Incremental)', 'vapfem'),
+    ],
+    'default' => $defaults['invert_time'] ?? '1',
+    'disabled' => true,
+    'pro' => ['onclick' => 'openUpgradeModal'],
 ]);
 
-// Fullscreen enabled
-$settings->fieldRenderer->render('checkbox', 'fullscreen_enabled', [
-    'label' => esc_html__('Fullscreen Button', 'vapfem'),
-    'tooltip' => esc_html__('Show a button to expand video to fullscreen', 'vapfem'),
+// Keyboard Shortcuts
+$settings->fieldRenderer->render('checkbox', 'keyboard_focused', [
+    'label'             => esc_html__('Keyboard Shortcuts', 'vapfem'),
+    'tooltip'           => __('Control playback with keyboard keys:<br><ul><li><strong>Space</strong> — play / pause</li><li><strong>Arrow keys</strong> — seek forward / back</li><li><strong>M</strong> — mute</li><li><strong>F</strong> — fullscreen</li></ul>Works when the player is focused (clicked or tabbed into).', 'vapfem'),
+    'tooltip_width'     => 'wide',
+    'tooltip_position'  => 'below',
+    'checkbox_label'    => esc_html__('Yes', 'vapfem'),
+    'desc'              => esc_html__('Enable keyboard shortcuts when the player is focused', 'vapfem'),
+    'default'           => $defaults['keyboard_focused'] ?? null,
+]);
+
+// Global Keyboard Shortcuts
+$settings->fieldRenderer->render('checkbox', 'keyboard_global', [
+    'label'          => esc_html__('Global Keyboard Shortcuts', 'vapfem'),
+    'tooltip'        => __('Keyboard shortcuts work even when the player is not focused.<br><br><strong>Caution:</strong> Only enable this if you have one player per page.<br>With multiple players, all of them respond to the same keys at once.', 'vapfem'),
+    'tooltip_width'  => 'wide',
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
-    'desc' => esc_html__('Show a fullscreen button on the player', 'vapfem'),
-    'default' => $defaults['fullscreen_enabled'] ?? null,
+    'desc'           => esc_html__('Enable keyboard shortcuts from anywhere on the page', 'vapfem'),
+    'default'        => $defaults['keyboard_global'] ?? null,
+]);
+
+$sr->endSection();
+$sr->endVtab();
+
+// ============================================
+// VTAB: Video-Only
+// ============================================
+$sr->startVtab('video', esc_html__('Video-Only', 'vapfem'), [
+    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M17 10l4-2v8l-4-2" stroke="currentColor" stroke-width="1.75"/></svg>',
+]);
+
+$sr->startSection('video_only', esc_html__('Video-Only Options', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
+]);
+$settings->fieldRenderer->render('info', 'video_info', [
+    'content' => __('Set once, applies to every video player on your site. Override individually when you need a one-off change.<br><strong>Note:</strong> Reset to Start When Finished is ignored for playlist players. They auto-advance instead.', 'vapfem'),
 ]);
 
 // Click to play
 $settings->fieldRenderer->render('checkbox', 'click_to_play', [
-    'label' => esc_html__('Click to Play / Pause', 'vapfem'),
-    'tooltip' => esc_html__('Allow clicking directly on video to play or pause', 'vapfem'),
+    'label' => esc_html__('Click Video to Play/Pause', 'vapfem'),
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
     'desc' => esc_html__('Allow clicking on the video to play or pause', 'vapfem'),
     'default' => $defaults['click_to_play'] ?? null,
 ]);
 
+// Fullscreen enabled
+$settings->fieldRenderer->render('checkbox', 'fullscreen_enabled', [
+    'label' => esc_html__('Fullscreen Button', 'vapfem'),
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc' => esc_html__('Show a fullscreen button on the player', 'vapfem'),
+    'default' => $defaults['fullscreen_enabled'] ?? null,
+]);
+
 // Auto Hide Control
 $settings->fieldRenderer->render('checkbox', 'hide_controls', [
     'label' => esc_html__('Auto-Hide Controls', 'vapfem'),
-    'tooltip' => esc_html__('Hide controls during playback; show on hover or tap', 'vapfem'),
-    'tooltip_width' => 'compact',
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
     'desc' => esc_html__('Hide controls while playing, show on hover or tap', 'vapfem'),
     'default' => $defaults['hide_controls'] ?? null,
@@ -176,13 +242,13 @@ $settings->fieldRenderer->render('checkbox', 'hide_controls', [
 // Reset on End
 $settings->fieldRenderer->render('checkbox', 'reset_on_end', [
     'label' => esc_html__('Reset to Start When Finished', 'vapfem'),
-    'tooltip' => esc_html__('Reset video to beginning when playback ends', 'vapfem'),
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
-    'desc' => __('Reset video to the beginning after it finishes', 'vapfem'),
+    'desc' => esc_html__('Video-only. Reset to the beginning after playback ends. Has no effect on audio players.', 'vapfem'),
     'default' => $defaults['reset_on_end'] ?? null,
 ]);
 
-$settings->sectionRenderer->endSection();
+$sr->endSection();
+$sr->endVtab();
 
 // Render Save & Reset buttons
-$settings->sectionRenderer->renderSubmitButtons();
+$sr->renderSubmitButtons();

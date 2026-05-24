@@ -4,11 +4,75 @@
 
 (function($) {
     'use strict';
-    
+
+    // ── Type-selection modal factory ─────────────────────────────────────────
+    // Used by both player and playlist list-table pages.
+    // config: { modalId, postType, paramName }
+    function createTypeModal( config ) {
+        var $modal    = null;
+        var $backdrop = null;
+        var addNewHref = null;
+
+        return {
+            init: function() {
+                $modal    = $( '#' + config.modalId );
+                $backdrop = $( '#' + config.modalId + '-backdrop' );
+
+                if ( ! $modal.length ) { return; }
+
+                var self = this;
+
+                $( document ).on( 'click', 'a.page-title-action', function( e ) {
+                    var href = $( this ).attr( 'href' ) || '';
+                    if ( href.indexOf( 'post_type=' + config.postType ) !== -1 && href.indexOf( 'post-new.php' ) !== -1 ) {
+                        e.preventDefault();
+                        addNewHref = href;
+                        self.open();
+                    }
+                } );
+
+                $modal.on( 'click', '.lpl-pla__builder-modal-card', function( e ) {
+                    e.preventDefault();
+                    var type = $( this ).data( 'type' );
+                    var url  = addNewHref || ( 'post-new.php?post_type=' + config.postType );
+                    url += ( url.indexOf( '?' ) !== -1 ? '&' : '?' ) + config.paramName + '=' + type;
+                    window.location.href = url;
+                } );
+
+                $backdrop.on( 'click', this.close.bind( this ) );
+                $( '#' + config.modalId + '-close' ).on( 'click', this.close.bind( this ) );
+
+                $( document ).on( 'keydown.lpl-modal-' + config.modalId, function( e ) {
+                    if ( e.key === 'Escape' ) { self.close(); }
+                } );
+            },
+
+            open: function() {
+                $modal.removeAttr( 'hidden' );
+                $( '#' + config.modalId + '-close' ).trigger( 'focus' );
+            },
+
+            close: function() {
+                $modal.attr( 'hidden', '' );
+            }
+        };
+    }
+
     $(document).ready(function() {
-        // Only run on lean_player post type
-        if (!$('body').hasClass('post-type-lean_player')) {
+        // Only run on our post types
+        if (!$('body').hasClass('post-type-lean_player') && !$('body').hasClass('post-type-lean_playlist')) {
             return;
+        }
+
+        // Init type-selection modals (each guards itself with a DOM length check).
+        var playerModal   = createTypeModal( { modalId: 'lpl-plr-builder-modal', postType: 'lean_player',   paramName: 'player_type'   } );
+        var playlistModal = createTypeModal( { modalId: 'lpl-pla-builder-modal', postType: 'lean_playlist', paramName: 'playlist_type' } );
+        playerModal.init();
+        playlistModal.init();
+
+        // Auto-open player modal when redirected from sidebar "Add New Player" link.
+        if ( window.location.search.indexOf( 'open_modal=1' ) !== -1 ) {
+            playerModal.open();
         }
         
         // Fix sticky positioning by ensuring parent has proper height
@@ -60,8 +124,9 @@
         
         // Update conditional sections and fields visibility
         function updateConditionalElements() {
-            var playerType = $('select[name="_player_type"]').val() || 
-                           $('input[name="_player_type"]:checked').val();
+            var playerType = $('select[name="_player_type"]').val() ||
+                           $('input[name="_player_type"]:checked').val() ||
+                           $('input[name="_player_type"][type="hidden"]').val();
             var videoType = $('select[name="_video_type"]').val() || 
                           $('input[name="_video_type"]:checked').val();
             var html5SourceType = $('select[name="_html5_source_type"]').val() || 
@@ -128,11 +193,7 @@
         // Initial state
         updateConditionalElements();
         
-        // Watch for changes to player type, video type, HTML5 source type, and audio source type
-        $(document).on('change', 'select[name="_player_type"], input[name="_player_type"]', function() {
-            updateConditionalElements();
-        });
-        
+        // Watch for changes to video type, HTML5 source type, and audio source type
         $(document).on('change', 'select[name="_video_type"], input[name="_video_type"]', function() {
             updateConditionalElements();
         });
@@ -144,6 +205,69 @@
         $(document).on('change', 'select[name="_audio_source_type"], input[name="_audio_source_type"]', function() {
             updateConditionalElements();
         });
+
+        // ── Playlist metabox conditional fields ───────────────────────────────
+        function updatePlaylistConditionals() {
+            var showThumbs = $('input[name="_playlist_show_thumbnails"]').is(':checked');
+            $('input[name="_playlist_thumb_ratio"], select[name="_playlist_thumb_ratio"]')
+                .closest('tr').toggle( showThumbs );
+            $('input[name="_playlist_show_duration_badge"]')
+                .closest('tr').toggle( showThumbs );
+            $('tr.lex-field-info--notice').toggle( showThumbs );
+        }
+
+        if ( $('input[name="_playlist_show_thumbnails"]').length ) {
+            updatePlaylistConditionals();
+            $(document).on( 'change', 'input[name="_playlist_show_thumbnails"]', updatePlaylistConditionals );
+        }
+
+        // ── Player metabox vertical tabs ──────────────────────────────────────
+        var $vtabs = $('.lpl-player-vtabs');
+        if ( $vtabs.length ) {
+            var vtabStorageKey = 'lpl_player_vtab_' + ( $vtabs.data('storage-suffix') || $('input#post_ID').val() || 'new' );
+            var savedVtab      = localStorage.getItem( vtabStorageKey );
+            var $vtabNav       = $vtabs.find('.lex-vtabs__nav');
+
+            function activateVtab( $btn ) {
+                var vtab  = $btn.data('vtab');
+                $vtabNav.find('button').removeClass('lex-vtabs__btn--active');
+                $btn.addClass('lex-vtabs__btn--active');
+                $vtabs.find('.lex-vtab-pane').hide();
+                var $pane = $vtabs.find('.lex-vtab-pane[data-vtab="' + vtab + '"]').show();
+
+                if ( $.fn.wpColorPicker ) {
+                    $pane.find('.lex-color-picker').each(function() {
+                        var $el = $(this);
+                        if ( $el.closest('.wp-picker-container').length ) { return; }
+                        $el.wpColorPicker({ defaultColor: this.value || false });
+                    });
+                }
+            }
+
+            $vtabNav.on('click', 'button', function(e) {
+                activateVtab( $(e.currentTarget) );
+                localStorage.setItem( vtabStorageKey, $(e.currentTarget).data('vtab') );
+            });
+
+            function applyPlayerTypeToTabs( playerType ) {
+                var isVideo    = playerType === 'video';
+                var $videoBtn  = $vtabNav.find('button[data-vtab="p-video"]');
+                var $videoPane = $vtabs.find('.lex-vtab-pane[data-vtab="p-video"]');
+                $videoBtn.toggle( isVideo );
+                $videoPane.toggle( isVideo );
+                if ( !isVideo && $videoBtn.hasClass('lex-vtabs__btn--active') ) {
+                    activateVtab( $vtabNav.find('button:visible').first() );
+                }
+            }
+
+            var initialType = $vtabs.data('player-type') || 'video';
+            applyPlayerTypeToTabs( initialType );
+
+            var $restore = savedVtab
+                ? $vtabNav.find('button[data-vtab="' + savedVtab + '"]:visible')
+                : null;
+            activateVtab( $restore && $restore.length ? $restore : $vtabNav.find('button:visible').first() );
+        }
     });
-    
+
 })(jQuery);

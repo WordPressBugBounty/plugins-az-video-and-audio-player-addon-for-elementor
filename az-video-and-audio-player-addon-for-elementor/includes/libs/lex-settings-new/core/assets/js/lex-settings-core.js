@@ -91,23 +91,85 @@ window.LexSettings.log = window.lexLog;
     const RELOAD_DELAY = 1000;
 
     // --------------------------------------------
+    // ─── LOADER (minimal tab loading indicator)
+    // --------------------------------------------
+
+    var loaderTemplates = {
+        dots: function() {
+            return '<div class="lex-loader__dots">' +
+                '<span class="lex-loader__dot"></span>' +
+                '<span class="lex-loader__dot"></span>' +
+                '<span class="lex-loader__dot"></span>' +
+            '</div>';
+        },
+        shimmer: function() {
+            return '<div class="lex-loader__shimmer-panel"></div>';
+        }
+    };
+
+    var LOADER_MIN_MS = 250;
+    var loaderInjectedAt = 0;
+
+    function injectLoader() {
+        var $activeTab = $('.lex-settings-tabs__content--active');
+        if (!$activeTab.length) return;
+
+        var variant = $activeTab.data('loader') || 'dots';
+        if (variant === 'none') return;
+
+        var templateFn = loaderTemplates[variant] || loaderTemplates.dots;
+        $activeTab.addClass('lex-tab--loading');
+
+        var html = '<div class="lex-loader lex-loader--' + variant + '">' + templateFn() + '</div>';
+        $activeTab.before(html);
+        loaderInjectedAt = Date.now();
+    }
+
+    function removeLoader(onRevealed) {
+        var $loader = $('.lex-loader');
+        if (!$loader.length) {
+            if (onRevealed) onRevealed();
+            return;
+        }
+
+        var elapsed = Date.now() - loaderInjectedAt;
+        var wait = Math.max(0, LOADER_MIN_MS - elapsed);
+
+        setTimeout(function() {
+            $loader.addClass('lex-loader--hiding');
+            setTimeout(function() {
+                $loader.remove();
+                $('.lex-settings-tabs__content--active')
+                    .removeClass('lex-tab--loading')
+                    .addClass('lex-tab--revealed');
+                if (onRevealed) onRevealed();
+            }, 200);
+        }, wait);
+    }
+
+    // Inject immediately (sync, before document.ready)
+    injectLoader();
+
+    // --------------------------------------------
     // ─── MAIN OBJECT
     // --------------------------------------------
-    
+
     const lexSettingsCore = {
-        
+
         // Store media frames to reuse across function calls
         mediaFrames: {},
-        
+
         /**
          * Initialize all functionality
          */
         init() {
-            // Tab switching - event handlers
+            // Tab switching - event handlers (registered before loader removal so clicks work immediately)
             $('body').on('click', '.lex-settings-tabs__tab, .lex-nav-header__item, .lex-nav-header__dropdown-item', this.onTabClick.bind(this));
-            
-            // Handle initial hash on page load (runs once, not an event handler)
-            this.handleInitialHash();
+
+            // Remove loader, then run hash/vtab init once tab is visible
+            removeLoader(() => {
+                this.handleInitialHash();
+            });
 
             // Listen for hash changes (e.g., from menu links or browser back/forward)
             $(window).on('hashchange', () => {
@@ -131,7 +193,10 @@ window.LexSettings.log = window.lexLog;
             
             // Initialize master checkbox functionality
             this.initMasterCheckboxes();
-            
+
+            // Initialize collapsible sections
+            this.initCollapsibleSections();
+
             lexLog('Lex Settings Core script initialized');
             
             // Debug: Log all current settings on page load
@@ -209,12 +274,15 @@ window.LexSettings.log = window.lexLog;
 
                 // Initialize color pickers immediately after tab is shown (no delay needed)
                 this.initColorPickers();
-                
+
                 // Initialize media fields after tab is shown
                 this.initMediaFields();
-                
+
                 // Initialize Select2 after tab is shown
                 this.initSelect2();
+
+                // Initialize vtabs inside this tab if not yet done
+                $targetContent.find('.lex-vtabs').each(function() { initLexVtabs($(this)); });
 
                 // Smooth scroll ONLY when shouldScroll is true (user clicks)
                 if (shouldScroll) {
@@ -222,8 +290,8 @@ window.LexSettings.log = window.lexLog;
                 }
             }
 
-            // Update URL hash
-            window.location.hash = targetTab;
+            // Update URL hash without triggering native browser scroll-to-anchor
+            history.replaceState(null, '', '#' + targetTab);
         },
 
         /**
@@ -240,10 +308,13 @@ window.LexSettings.log = window.lexLog;
             const navHeaderHeight = $navHeader.length ? $navHeader.outerHeight() : 0;
             const offset = adminBarHeight + navHeaderHeight + SCROLL_OFFSET;
 
-            // Smooth scroll using jQuery animate with proper offset
-            $('html, body').animate({
-                scrollTop: $mainContent.offset().top - offset
-            }, SCROLL_DURATION);
+            const targetScrollTop = $mainContent.offset().top - offset;
+            const currentScrollTop = $(window).scrollTop();
+
+            // Skip animation if already within 10px of the target position
+            if (Math.abs(currentScrollTop - targetScrollTop) < 10) return;
+
+            $('html, body').animate({ scrollTop: targetScrollTop }, SCROLL_DURATION);
         },
 
         // ────────────────────────────────────────
@@ -1287,6 +1358,62 @@ window.LexSettings.log = window.lexLog;
         },
 
         /**
+         * Initialize collapsible sections
+         * Toggles collapsed state on title click
+         */
+        initCollapsibleSections() {
+            // Restore saved open/closed states from localStorage on page load
+            // Skip exclusive groups — they always use PHP defaults (all collapsed)
+            $('[data-collapsible]').each(function() {
+                if ($(this).data('accordion-group')) { return; }
+                const instanceId = $(this).data('instance-id');
+                const sectionId = $(this).data('section-id');
+                if (!instanceId || !sectionId) { return; }
+                try {
+                    const saved = localStorage.getItem('lex_' + instanceId + '_' + sectionId);
+                    if (saved === 'open') {
+                        $(this).removeClass('lex-settings-section--collapsed');
+                    } else if (saved === 'closed') {
+                        $(this).addClass('lex-settings-section--collapsed');
+                    }
+                    // null = no saved state, use PHP default (no change)
+                } catch (e) { /* storage unavailable, use PHP defaults */ }
+            });
+
+            // Toggle on title click and persist state
+            $('body').on('click', '[data-collapsible] > .lex-settings-section__title', function(e) {
+                // Don't toggle if clicking a button inside the title (e.g., save button)
+                if ($(e.target).closest('button, a').length) {
+                    return;
+                }
+                const $section = $(this).closest('.lex-settings-section--collapsible');
+                $section.toggleClass('lex-settings-section--collapsed');
+
+                // Exclusive accordion: close siblings in the same group when this one opens
+                const group = $section.data('accordion-group');
+                if (group && !$section.hasClass('lex-settings-section--collapsed')) {
+                    $('[data-accordion-group="' + group + '"]').not($section).each(function() {
+                        $(this).addClass('lex-settings-section--collapsed');
+                    });
+                }
+
+                // Skip localStorage for exclusive groups — always reset to collapsed on page load
+                if (!group) {
+                    const instanceId = $section.data('instance-id');
+                    const sectionId = $section.data('section-id');
+                    if (instanceId && sectionId) {
+                        try {
+                            localStorage.setItem(
+                                'lex_' + instanceId + '_' + sectionId,
+                                $section.hasClass('lex-settings-section--collapsed') ? 'closed' : 'open'
+                            );
+                        } catch (e) { /* storage unavailable, state not persisted */ }
+                    }
+                }
+            });
+        },
+
+        /**
          * Initialize master checkbox functionality for multiple checkbox fields
          * Simple select all / deselect all functionality
          */
@@ -1312,5 +1439,63 @@ window.LexSettings.log = window.lexLog;
     $(document).ready(function() {
         lexSettingsCore.init();
     });
-    
+
+    // --------------------------------------------
+    // ─── VERTICAL TABS (Apple Settings style)
+    // --------------------------------------------
+
+    function initLexVtabs($wrapper) {
+        var tabId   = $wrapper.data('tab');
+        var suffix  = $wrapper.data('storage-suffix') || '';
+        var key     = 'lex_vtab_' + tabId + (suffix ? '_' + suffix : '');
+        var saved   = null;
+        try { saved = localStorage.getItem(key); } catch(_) {}
+
+        var $target = saved
+            ? $wrapper.find('.lex-vtabs__nav button[data-vtab="' + saved + '"]:visible')
+            : null;
+        if (!$target || !$target.length) {
+            $target = $wrapper.find('.lex-vtabs__nav button:visible').first();
+        }
+        activateLexVtab($target, false);
+    }
+
+    function activateLexVtab($btn, shouldScroll) {
+        var vtab     = $btn.data('vtab');
+        var $wrapper = $btn.closest('.lex-vtabs');
+        var tabId    = $wrapper.data('tab');
+        var suffix   = $wrapper.data('storage-suffix') || '';
+        var key      = 'lex_vtab_' + tabId + (suffix ? '_' + suffix : '');
+
+        $wrapper.find('.lex-vtabs__nav button').removeClass('lex-vtabs__btn--active');
+        $btn.addClass('lex-vtabs__btn--active');
+
+        $wrapper.find('.lex-settings-section--vtab-member').removeClass('is-active-vtab');
+        $wrapper.find('.lex-settings-section--vtab-member[data-vtab="' + vtab + '"]').addClass('is-active-vtab');
+
+        if (shouldScroll) {
+            var $content = $wrapper.find('.lex-vtabs__content');
+            if ($content.length) {
+                var $nav = $('.lex-nav-header');
+                var stickyOffset = ($nav.length ? $nav.outerHeight() : 0) + (window.adminbarHeight || parseInt($('#wpadminbar').outerHeight()) || 32);
+                var scrollGap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lex-scroll-gap')) || 19;
+                $('html, body').animate({ scrollTop: $content.offset().top - stickyOffset - scrollGap }, 150);
+            }
+        }
+
+        try { localStorage.setItem(key, vtab); } catch(_) {}
+    }
+
+    $('body').on('click', '.lex-vtabs__nav button', function(e) {
+        activateLexVtab($(e.currentTarget), true);
+    });
+
+    // Vtabs on inactive tabs (not the active one) — init immediately on ready.
+    // The active tab's vtabs are handled inside removeLoader's callback via handleInitialHash → activateTab.
+    $(document).ready(function() {
+        $('.lex-settings-tabs__content:not(.lex-settings-tabs__content--active) .lex-vtabs').each(function() {
+            initLexVtabs($(this));
+        });
+    });
+
 })(jQuery);

@@ -18,19 +18,19 @@ $settings = \Lex\Settings\V2\Settings::getInstance('leanpl');
 // ============================================
 // Section: Player Styling
 // ============================================
-$settings->sectionRenderer->startSection('styling', esc_html__('Player Styling', 'vapfem'), ['disable_save_button' => true]);
+$settings->sectionRenderer->startSection('styling', esc_html__('Player Styling', 'vapfem'));
 $settings->fieldRenderer->render('info', 'styling_info', [
-    'content' => esc_html__('Match player colors with your brand. These global styling options apply to all players site-wide, unless you override them at the widget or individual player level.', 'vapfem'),
+    'content' => esc_html__('Match player colors with your brand. These global styling options apply to all players site-wide (single players and players inside playlists), unless you override them at the widget, individual player, or playlist level.', 'vapfem'),
 ]);
 
-// Primary Color
+// Player Accent Color
 $settings->fieldRenderer->render('color', 'primary_color', [
-    'label' => esc_html__('Brand Color', 'vapfem'),
-    'desc' => esc_html__('Main accent color for player controls, progress bars, and interactive elements to match your brand.', 'vapfem'),
+    'label' => esc_html__('Player Accent Color', 'vapfem'),
+    'desc' => esc_html__('Sets the accent color for controls, progress bars, and interactive elements across all video, audio, and playlist players site-wide.', 'vapfem'),
     'default' => $defaults['primary_color'] ?? '#00b3ff',
-    'disabled' => true,
-    'pro'      => ['onclick' => 'openUpgradeModal'],
 ]);
 
 $settings->sectionRenderer->endSection();
+
+$settings->sectionRenderer->renderSubmitButtons();
 

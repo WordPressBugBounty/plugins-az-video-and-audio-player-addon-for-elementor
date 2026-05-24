@@ -41,32 +41,34 @@ class Player_Preview {
      * @return void
      */
     public function render_preview_button($post) {
-        // Only show for lean_player post type
-        if ($post->post_type !== 'lean_player') {
+        if ( ! in_array( $post->post_type, [ 'lean_player', 'lean_playlist' ], true ) ) {
             return;
         }
 
-        $is_published = in_array($post->post_status, array('publish', 'draft'));
+        $is_published = in_array( $post->post_status, [ 'publish', 'draft' ], true );
+        $button_text  = $post->post_type === 'lean_playlist'
+            ? esc_html__( 'Preview Playlist', 'vapfem' )
+            : esc_html__( 'Preview Player', 'vapfem' );
 
         $preview_link = get_preview_post_link(
             $post->ID,
-            array(
-                'preview' => 'true',
-                'preview_id' => $post->ID,
-                'preview_nonce' => wp_create_nonce('post_preview_' . $post->ID)
-            )
+            [
+                'preview'       => 'true',
+                'preview_id'    => $post->ID,
+                'preview_nonce' => wp_create_nonce( 'post_preview_' . $post->ID ),
+            ]
         );
         ?>
         <div class="misc-pub-section lpl-preview-metabox">
-            <a class="preview button <?php echo $is_published ? '' : 'disabled'; ?>" href="<?php echo esc_url($preview_link); ?>" target="_blank">
+            <a class="preview button <?php echo esc_attr( $is_published ? '' : 'disabled' ); ?>" href="<?php echo esc_url( $preview_link ); ?>" target="_blank">
                 <span class="dashicons dashicons-visibility"></span>
-                <?php echo esc_html__('Preview Player', 'vapfem'); ?>
-            </a>  
+                <?php echo esc_html( $button_text ); ?>
+            </a>
 
-            <?php if(!$is_published): ?>
+            <?php if ( ! $is_published ) : ?>
                 <p class="description" style="margin-top: 5px;">
-                    <?php echo esc_html__('Publish the player to enable preview.', 'vapfem'); ?>
-                </p> 
+                    <?php echo esc_html__( 'Publish first to enable preview.', 'vapfem' ); ?>
+                </p>
             <?php endif; ?>
         </div>
         <?php
@@ -79,19 +81,22 @@ class Player_Preview {
      * @return string Modified content with player shortcode
      */
     public function render_preview_content($content) {
-        if (
-            ! is_preview()
-            || get_post_type() !== 'lean_player'
-        ) {
+        if ( ! is_preview() ) {
             return $content;
         }
 
-        $post_id = get_the_ID();
+        $post_type = get_post_type();
+        $post_id   = get_the_ID();
 
-        // Build shortcode dynamically
-        $shortcode = '[lean_player id="' . $post_id . '"]';
+        if ( $post_type === 'lean_playlist' ) {
+            return do_shortcode( '[lean_playlist id="' . $post_id . '"]' );
+        }
 
-        return do_shortcode($shortcode);
+        if ( $post_type === 'lean_player' ) {
+            return do_shortcode( '[lean_player id="' . $post_id . '"]' );
+        }
+
+        return $content;
     }
 
     /**
@@ -100,7 +105,7 @@ class Player_Preview {
      * @return void
      */
     public function add_preview_styles() {
-        if (is_preview() && get_post_type() === 'lean_player') {
+        if ( is_preview() && in_array( get_post_type(), [ 'lean_player', 'lean_playlist' ], true ) ) {
             echo '<style>
                 header, footer, .sidebar { display:none !important; }
             </style>';
@@ -108,7 +113,7 @@ class Player_Preview {
     }
 
     public function modify_row_actions($actions, $post) {
-        if ($post->post_type !== 'lean_player') {
+        if ( ! in_array( $post->post_type, [ 'lean_player', 'lean_playlist' ], true ) ) {
             return $actions;
         }
 
@@ -119,23 +124,28 @@ class Player_Preview {
         // Generate preview link
         $preview_link = get_preview_post_link(
             $post->ID,
-            array(
-                'preview' => 'true',
-                'preview_id' => $post->ID,
-                'preview_nonce' => wp_create_nonce('post_preview_' . $post->ID)
-            )
+            [
+                'preview'       => 'true',
+                'preview_id'    => $post->ID,
+                'preview_nonce' => wp_create_nonce( 'post_preview_' . $post->ID ),
+            ]
         );
 
-        $is_published = in_array($post->post_status, array('publish', 'draft'));
+        $is_published = in_array( $post->post_status, [ 'publish', 'draft' ], true );
 
-        if($is_published){  
-            // Add a link to very first action using array_unshift
-            array_unshift($actions, sprintf(
+        if ( $is_published ) {
+            $aria_label = $post->post_type === 'lean_playlist'
+                /* translators: %s is the playlist title */
+                ? sprintf( __( 'Preview Playlist: %s', 'vapfem' ), get_the_title( $post->ID ) )
+                /* translators: %s is the player title */
+                : sprintf( __( 'Preview Player: %s', 'vapfem' ), get_the_title( $post->ID ) );
+
+            array_unshift( $actions, sprintf(
                 '<a href="%s" target="_blank" aria-label="%s">%s</a>',
-                esc_url($preview_link),
-                esc_attr(sprintf(__('Preview Player: %s', 'vapfem'), get_the_title($post->ID))),
-                esc_html__('Preview', 'vapfem')
-            ));
+                esc_url( $preview_link ),
+                esc_attr( $aria_label ),
+                esc_html__( 'Preview', 'vapfem' )
+            ) );
         }
 
         return $actions;

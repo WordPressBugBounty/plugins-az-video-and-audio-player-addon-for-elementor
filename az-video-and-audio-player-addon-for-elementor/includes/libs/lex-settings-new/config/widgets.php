@@ -14,10 +14,13 @@
 
 return [
     'support' => [
+        'enabled' => false,
+    ],
+    'support-v2' => [
         'enabled' => true,
     ],
     'hire' => [
-        'enabled' => true,
+        'enabled' => false,
     ],
     'upgrade' => [
         'enabled' => false,

@@ -21,17 +21,12 @@
    CSS VARIABLES
    ============================================ */
 :root {
-    --lex-copy-bg: var(--lex-color-primary, #5344F4);
-    --lex-copy-bg-hover: var(--lex-color-primary-hover, #4235D9);
-    --lex-copy-color: #fff;
-    --lex-copy-border-radius: var(--lex-border-radius, 4px);
-    --lex-copy-padding: 6px 12px;
-    --lex-copy-padding-small: 4px 8px;
-    --lex-copy-font-size: var(--lex-font-size-small, 13px);
-    --lex-copy-font-weight: var(--lex-font-weight-medium, 500);
-    --lex-copy-success-bg: var(--lex-color-success, #00a32a);
-    --lex-copy-success-color: #fff;
-    --lex-copy-transition: all 0.2s ease;
+    --lex-copy-bg: var(--lex-color-primary);
+    --lex-copy-bg-hover: var(--lex-color-primary-hover);
+    --lex-copy-color: var(--lex-color-primary-contrast);
+    --lex-copy-success-bg: var(--lex-color-success);
+    --lex-copy-shadow: 0 2px 8px color-mix(in srgb, var(--lex-color-primary) 25%, transparent);
+    --lex-copy-shadow-active: 0 1px 4px color-mix(in srgb, var(--lex-color-primary) 30%, transparent);
 }
 
 /* ============================================
@@ -41,16 +36,17 @@
 button.lex-copy-button {
     /* Reset WordPress core button styles */
     border: 1px solid transparent;
-    border-radius: var(--lex-copy-border-radius);
+    border-radius: var(--lex-radius-md);
     box-shadow: none;
     background: var(--lex-copy-bg);
     color: var(--lex-copy-color);
     font-family: inherit;
-    font-size: var(--lex-copy-font-size);
-    font-weight: var(--lex-copy-font-weight);
+    font-size: var(--lex-font-size-md);
+    font-weight: var(--lex-font-weight-medium);
     line-height: 1;
     margin: 0;
-    padding: var(--lex-copy-padding);
+    padding-block: var(--lex-space-2);
+    padding-inline: var(--lex-space-3);
     text-decoration: none;
     text-shadow: none;
     vertical-align: baseline;
@@ -60,9 +56,9 @@ button.lex-copy-button {
     /* Custom styles */
     display: inline-flex;
     align-items: center;
-    gap: var(--lex-spacing-xs, 4px);
+    gap: var(--lex-space-1);
     cursor: pointer;
-    transition: var(--lex-copy-transition);
+    transition: all var(--lex-transition-base);
     box-sizing: border-box;
     white-space: nowrap;
     -webkit-appearance: none;
@@ -78,14 +74,14 @@ button.lex-copy-button:focus {
     color: var(--lex-copy-color);
     text-decoration: none;
     text-shadow: none;
-    box-shadow: 0 2px 8px rgba(83, 68, 244, 0.25);
+    box-shadow: var(--lex-copy-shadow);
     outline: none;
 }
 
 .lex-copy-button:active,
 button.lex-copy-button:active {
     transform: translateY(1px);
-    box-shadow: 0 1px 4px rgba(83, 68, 244, 0.3);
+    box-shadow: var(--lex-copy-shadow-active);
 }
 
 .lex-copy-button:disabled,
@@ -98,9 +94,9 @@ button.lex-copy-button:disabled {
 
 /* Icon styling */
 .lex-copy-button .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
+    font-size: var(--lex-font-size-lg);
+    width: var(--lex-space-4);
+    height: var(--lex-space-4);
     line-height: 1;
     margin: 0;
     flex-shrink: 0;
@@ -114,25 +110,25 @@ button.lex-copy-button:disabled {
 button.lex-copy-button--outline {
     background: none;
     background-color: transparent;
-    border: 1px solid var(--lex-color-primary, #5344F4);
-    color: var(--lex-color-primary, #5344F4);
+    border: 1px solid var(--lex-copy-bg);
+    color: var(--lex-copy-bg);
 }
 
 .lex-copy-button--outline:hover,
 .lex-copy-button--outline:focus,
 button.lex-copy-button--outline:hover,
 button.lex-copy-button--outline:focus {
-    border: 1px solid var(--lex-color-primary, #5344F4);
-    background: var(--lex-color-primary, #5344F4);
-    color: #fff;
+    border: 1px solid var(--lex-copy-bg);
+    background: var(--lex-copy-bg);
+    color: var(--lex-copy-color);
 }
 
 .lex-copy-button--outline:active,
 button.lex-copy-button--outline:active {
-    background: var(--lex-color-primary-hover, #4235D9);
-    border-color: var(--lex-color-primary-hover, #4235D9);
+    background: var(--lex-copy-bg-hover);
+    border-color: var(--lex-copy-bg-hover);
     transform: translateY(1px);
-    box-shadow: 0 1px 4px rgba(83, 68, 244, 0.3);
+    box-shadow: var(--lex-copy-shadow-active);
 }
 
 .lex-copy-button--outline:disabled,
@@ -141,7 +137,7 @@ button.lex-copy-button--outline:disabled {
     cursor: not-allowed;
     pointer-events: none;
     background: transparent;
-    border-color: var(--lex-color-primary, #5344F4);
+    border-color: var(--lex-copy-bg);
 }
 
 /* ============================================
@@ -151,7 +147,7 @@ button.lex-copy-button--outline:disabled {
 button.lex-copy-button--copied {
     background: var(--lex-copy-success-bg);
     border-color: transparent;
-    color: var(--lex-copy-success-color);
+    color: var(--lex-color-primary-contrast);
     box-shadow: none;
 }
 
@@ -166,19 +162,19 @@ button.lex-copy-button--copied:hover {
    ============================================ */
 .lex-copy-button--secondary,
 button.lex-copy-button--secondary {
-    background: #fff;
-    border: 1px solid var(--lex-border-color, #dcdcde);
-    color: var(--lex-color-text, #50575e);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    color: var(--lex-color-text-muted);
 }
 
 .lex-copy-button--secondary:hover,
 .lex-copy-button--secondary:focus,
 button.lex-copy-button--secondary:hover,
 button.lex-copy-button--secondary:focus {
-    background: #f9f9fa;
-    border-color: var(--lex-border-color-hover, #a7aaad);
-    color: var(--lex-color-text-hover, #1d2327);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--wp-color-gray-0);
+    border-color: var(--lex-color-border-hover);
+    color: var(--lex-color-text);
+    box-shadow: var(--lex-shadow-md);
 }
 
 /* ============================================
@@ -186,15 +182,16 @@ button.lex-copy-button--secondary:focus {
    ============================================ */
 .lex-copy-button--small,
 button.lex-copy-button--small {
-    padding: var(--lex-copy-padding-small);
-    font-size: 12px;
+    padding-block: var(--lex-space-1);
+    padding-inline: var(--lex-space-2);
+    font-size: var(--lex-font-size-xs);
 }
 
 .lex-copy-button--small .dashicons,
 button.lex-copy-button--small .dashicons {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    font-size: var(--lex-font-size-base);
+    width: var(--lex-font-size-base);
+    height: var(--lex-font-size-base);
 }
 
 /* ============================================
@@ -211,7 +208,7 @@ button.lex-copy-button--block {
    ============================================ */
 .lex-copy-button:focus,
 button.lex-copy-button:focus {
-    outline: 2px solid var(--lex-color-primary-light, rgba(83, 68, 244, 0.1));
+    outline: 2px solid var(--lex-color-primary-light);
     outline-offset: 2px;
 }
 
@@ -221,15 +218,15 @@ button.lex-copy-button:focus {
 @media screen and (max-width: 782px) {
     .lex-copy-button,
     button.lex-copy-button {
-        font-size: 12px;
-        padding: 5px 10px;
+        font-size: var(--lex-font-size-xs);
+        padding-block: var(--lex-space-1);
+        padding-inline: var(--lex-space-3);
     }
     
     .lex-copy-button .dashicons,
     button.lex-copy-button .dashicons {
-        font-size: 14px;
-        width: 14px;
-        height: 14px;
+        font-size: var(--lex-font-size-base);
+        width: var(--lex-font-size-base);
+        height: var(--lex-font-size-base);
     }
 }
-

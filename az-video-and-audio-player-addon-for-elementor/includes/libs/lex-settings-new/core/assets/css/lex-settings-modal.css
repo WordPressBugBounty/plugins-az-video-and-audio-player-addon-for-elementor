@@ -11,20 +11,30 @@
    BACKDROP
    ============================================ */
 
+:root {
+    --lex-modal-backdrop-bg: color-mix(in srgb, var(--wp-color-black) 50%, transparent);
+    --lex-modal-bg: var(--lex-color-surface);
+    --lex-modal-border-color: var(--lex-color-border);
+    --lex-modal-title-color: var(--lex-color-text);
+    --lex-modal-text-color: var(--lex-color-text-muted);
+    --lex-modal-close-color: var(--lex-color-text-muted);
+    --lex-modal-close-hover-color: var(--lex-color-text);
+    --lex-modal-close-hover-border-color: var(--lex-color-border-hover);
+    --lex-modal-radius: var(--lex-radius-md);
+    --lex-modal-shadow: 0 10px 40px color-mix(in srgb, var(--wp-color-black) 20%, transparent);
+}
+
 .lex-modal-backdrop {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    inset: 0;
+    background: var(--lex-modal-backdrop-bg);
     backdrop-filter: blur(3px);
     z-index: 100000;
-    padding: var(--lex-spacing-md);
+    padding: var(--lex-space-4);
     overflow-y: auto;
     opacity: 0;
-    transition: opacity 0.2s ease-out;
+    transition: opacity var(--lex-transition-base);
 }
 
 .lex-modal-backdrop.is-open {
@@ -43,13 +53,13 @@
    ============================================ */
 
 .lex-modal {
-    background: #fff;
-    border-radius: 8px;
+    background: var(--lex-modal-bg);
+    border-radius: var(--lex-modal-radius);
     max-width: 480px;
     width: 100%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--lex-modal-shadow);
     transform: translateY(0);
-    transition: transform 0.2s ease-out;
+    transition: transform var(--lex-transition-base);
 }
 
 .lex-modal-backdrop.is-open .lex-modal {
@@ -79,41 +89,41 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--lex-spacing-sm) var(--lex-spacing-lg);
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--lex-space-2) var(--lex-space-6);
+    border-bottom: 1px solid var(--lex-modal-border-color);
 }
 
 .lex-modal__header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #111827;
+    font-size: var(--lex-font-size-2xl);
+    font-weight: var(--lex-font-weight-semibold);
+    color: var(--lex-modal-title-color);
     margin: 0;
 }
 
 .lex-modal__close {
     background: transparent;
-    border: 1px solid #e5e7eb;
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
+    border: 1px solid var(--lex-modal-border-color);
+    width: var(--lex-space-8);
+    height: var(--lex-space-8);
+    border-radius: var(--lex-radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #6b7280;
-    transition: all 0.15s ease;
+    color: var(--lex-modal-close-color);
+    transition: all var(--lex-transition-fast);
     flex-shrink: 0;
 }
 
 .lex-modal__close:hover {
-    color: #374151;
-    border-color: #d1d5db;
+    color: var(--lex-modal-close-hover-color);
+    border-color: var(--lex-modal-close-hover-border-color);
 }
 
 .lex-modal__close .dashicons {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    font-size: var(--lex-font-size-3xl);
+    width: var(--lex-space-6);
+    height: var(--lex-space-6);
     line-height: 1;
     margin: 0;
     padding: 0;
@@ -126,34 +136,35 @@
    ============================================ */
 
 .lex-modal__content {
-    padding: var(--lex-spacing-lg);
+    padding: var(--lex-space-6);
     text-align: center;
 }
 
 .lex-modal__content p {
-    font-size: 15px;
+    font-size: var(--lex-font-size-lg);
     line-height: 1.6;
-    color: #374151;
-    margin: 0 0 var(--lex-spacing-lg);
+    color: var(--lex-modal-text-color);
+    margin: 0 0 var(--lex-space-6);
 }
 
 .lex-btn--upgrade {
     display: inline-block;
-    padding: 12px 32px;
-    background: #5344F4;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    padding-block: var(--lex-space-3);
+    padding-inline: var(--lex-space-8);
+    background: var(--lex-color-primary);
+    color: var(--lex-color-primary-contrast);
+    font-size: var(--lex-font-size-lg);
+    font-weight: var(--lex-font-weight-semibold);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--lex-radius-md);
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.15s ease;
+    transition: all var(--lex-transition-fast);
 }
 
 .lex-btn--upgrade:hover {
-    background: #4235D9;
-    color: #fff;
+    background: var(--lex-color-primary-hover);
+    color: var(--lex-color-primary-contrast);
     transform: translateY(-1px);
 }
 
@@ -167,21 +178,18 @@
     }
     
     .lex-modal__header {
-        padding: var(--lex-spacing-sm) var(--lex-spacing-md);
+        padding: var(--lex-space-2) var(--lex-space-4);
     }
     
     .lex-modal__header h3 {
-        font-size: 16px;
+        font-size: var(--lex-font-size-lg);
     }
     
     .lex-modal__content {
-        padding: var(--lex-spacing-md);
+        padding: var(--lex-space-4);
     }
     
     .lex-modal__content p {
-        font-size: 14px;
+        font-size: var(--lex-font-size-base);
     }
 }
-
-
-

@@ -135,6 +135,11 @@ class Player_Shortcode {
         // Process poster
         $config['poster'] = $this->process_poster($post_id);
 
+        // Audio title shown alongside poster (only when poster is set)
+        if ($player_type === 'audio' && !empty($config['poster'])) {
+            $config['audio_title'] = get_the_title($post_id);
+        }
+
         $renderer = Player_Renderer::get_instance();
 
         ob_start();

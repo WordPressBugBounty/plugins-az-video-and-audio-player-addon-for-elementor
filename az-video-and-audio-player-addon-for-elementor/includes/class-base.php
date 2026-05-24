@@ -167,6 +167,9 @@ class Base {
     private function load_dependencies() {
         // Load utility functions first
         require_once LEANPL_DIR . '/includes/functions.php';
+        require_once LEANPL_DIR . '/includes/functions-converter.php';
+        require_once LEANPL_DIR . '/includes/functions-player.php';
+        require_once LEANPL_DIR . '/includes/functions-admin.php';
 
         // Load core classes
         require_once LEANPL_DIR . '/includes/class-assets-manager.php';
@@ -176,7 +179,12 @@ class Base {
         // Load shortcodes
         require_once LEANPL_DIR . '/includes/shortcodes/class-video-shortcode.php';
         require_once LEANPL_DIR . '/includes/shortcodes/class-audio-shortcode.php';
-        require_once LEANPL_DIR . '/includes/shortcodes/class-player-shortcode.php';  
+        require_once LEANPL_DIR . '/includes/shortcodes/class-player-shortcode.php';
+
+        // Load playlist feature conditionally
+        if ( leanpl_get_option( 'playlist.enabled', true ) ) {
+            require_once LEANPL_DIR . '/includes/playlist/class-playlist.php';
+        }
 
          // Load post type and metaboxes. Used in frontend as well to fetch player data
         require_once LEANPL_DIR . '/includes/class-custom-posts.php';
@@ -239,13 +247,17 @@ class Base {
     private function maybe_create_demos() {
         // Check if demos have already been created
         $demos_already_created = get_option('leanpl_demos_created');
-        
+
         if (!$demos_already_created) {
             // Demos don't exist yet - create them
             // This applies to both new installs and existing users updating
-            
+
             // Hook to 'admin_init' to ensure post types are registered and we're in admin
             add_action('admin_init', [$this, 'create_demos_on_admin_init'], 20);
+        }
+
+        if (!get_option('leanpl_demo_playlists_created')) {
+            add_action('admin_init', [$this, 'create_demo_playlists_on_admin_init'], 30);
         }
     }
 
@@ -256,7 +268,7 @@ class Base {
     public function create_demos_on_admin_init() {
         // Double-check flag (in case it was set between hook registration and execution)
         $demos_already_created = get_option('leanpl_demos_created');
-        
+
         if (!$demos_already_created) {
             // Check if post type already has any data
             $existing_posts = get_posts([
@@ -265,13 +277,13 @@ class Base {
                 'post_status' => 'any',
                 'fields' => 'ids',
             ]);
-            
+
             // Only create demos if post type is empty
             if (empty($existing_posts)) {
                 // Create demo players
                 require_once LEANPL_DIR . '/includes/class-demo-players.php';
                 \LeanPL\Demo_Players::create_demo_players();
-                
+
                 // Mark demos as created to prevent duplicates
                 update_option('leanpl_demos_created', true, false);
             } else {
@@ -279,5 +291,20 @@ class Base {
                 update_option('leanpl_demos_created', true, false);
             }
         }
+    }
+
+    /**
+     * Create demo playlists if enough players exist (threshold: 2 per type).
+     * Runs after create_demos_on_admin_init (priority 30 vs 20).
+     */
+    public function create_demo_playlists_on_admin_init() {
+        if (get_option('leanpl_demo_playlists_created')) {
+            return;
+        }
+
+        require_once LEANPL_DIR . '/includes/class-demo-players.php';
+        \LeanPL\Demo_Players::maybe_create_demo_playlists();
+
+        update_option('leanpl_demo_playlists_created', true, false);
     }
 }

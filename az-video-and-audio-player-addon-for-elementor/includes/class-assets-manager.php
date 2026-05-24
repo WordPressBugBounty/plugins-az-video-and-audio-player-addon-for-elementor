@@ -32,15 +32,27 @@ class Assets_Manager {
                 'in_footer' => true,
                 'contexts' => ['frontend'],
             ],
-            'plyr-polyfilled' => [
-                'file' => '/assets/js/plyr.polyfilled.min.js',
-                'deps' => ['jquery'],
+            // 'plyr-polyfilled' => [
+            //     'file' => '/assets/js/plyr.polyfilled.min.js',
+            //     'deps' => ['jquery'],
+            //     'in_footer' => true,
+            //     'contexts' => ['frontend'],
+            // ],
+            'leanpl-player-utils' => [
+                'file' => '/assets/js/player-utils.js',
+                'deps' => [],
                 'in_footer' => true,
                 'contexts' => ['frontend'],
             ],
             'leanpl-main' => [
                 'file' => '/assets/js/main.js',
-                'deps' => ['jquery', 'plyr'],
+                'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],
+                'in_footer' => true,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-playlist' => [
+                'file' => '/assets/js/playlist.js',
+                'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],
                 'in_footer' => true,
                 'contexts' => ['frontend'],
             ],
@@ -50,8 +62,26 @@ class Assets_Manager {
                 'in_footer' => true,
                 'contexts' => ['admin'],
             ],
+            'sortablejs' => [
+                'file' => '/assets/js/Sortable.min.js',
+                'deps' => [],
+                'in_footer' => true,
+                'contexts' => ['admin-playlist'],
+            ],
+            'leanpl-playlist-admin' => [
+                'file' => '/assets/js/playlist-admin.js',
+                'deps' => ['jquery', 'sortablejs'],
+                'in_footer' => true,
+                'contexts' => ['admin-playlist'],
+            ],
         ],
         'styles' => [
+            'leanpl-lex-tokens' => [
+                'file' => '/includes/libs/lex-settings-new/core/assets/css/lex-tokens.css',
+                'deps' => [],
+                'in_footer' => false,
+                'contexts' => ['frontend', 'admin', 'elementor-editor'],
+            ],
             'plyr' => [
                 'file' => '/assets/css/plyr.css',
                 'deps' => [],
@@ -60,19 +90,25 @@ class Assets_Manager {
             ],
             'leanpl-main' => [
                 'file' => '/assets/css/main.css',
-                'deps' => ['plyr'],
+                'deps' => ['leanpl-lex-tokens', 'plyr'],
+                'in_footer' => false,
+                'contexts' => ['frontend'],
+            ],
+            'leanpl-playlist' => [
+                'file' => '/assets/css/playlist.css',
+                'deps' => ['leanpl-lex-tokens', 'plyr'],
                 'in_footer' => false,
                 'contexts' => ['frontend'],
             ],
             'leanpl-editor' => [
                 'file' => '/assets/css/editor.css',
-                'deps' => [],
+                'deps' => ['leanpl-lex-tokens'],
                 'in_footer' => false,
                 'contexts' => ['elementor-editor'],
             ],
             'leanpl-admin' => [
                 'file' => '/assets/css/admin.css',
-                'deps' => [],
+                'deps' => ['leanpl-lex-tokens'],
                 'in_footer' => false,
                 'contexts' => ['admin'],
             ],
@@ -138,8 +174,14 @@ class Assets_Manager {
         if (!leanpl_is_our_admin_page()) {
             return;
         }
-        
+
         $this->load_assets_by_context('admin');
+
+        // Enqueue playlist-admin JS only on lean_playlist post type pages
+        $screen = get_current_screen();
+        if ( $screen && $screen->post_type === 'lean_playlist' ) {
+            wp_enqueue_script( 'leanpl-playlist-admin' );
+        }
     }
 
     public function common_frontend_enqueue() {
@@ -200,7 +242,8 @@ class Assets_Manager {
         if ($post && ( 
                 has_shortcode( $post->post_content, 'lean_video' ) ||
                 has_shortcode( $post->post_content, 'lean_audio' ) || 
-                has_shortcode( $post->post_content, 'lean_player' )
+                has_shortcode( $post->post_content, 'lean_player' ) ||
+                has_shortcode( $post->post_content, 'lean_playlist' )
             )
         ) {
             $this->load_assets_by_context('frontend');

@@ -43,7 +43,7 @@ $input_id = $field['id'];
 $input_name = $field['name'];
 // Ensure color input always has a valid hex value (HTML5 requirement)
 // Default to black (#000000) if value is empty
-$input_value = !empty($value) && preg_match('/^#[0-9A-Fa-f]{6}$/', $value) ? $value : '#000000';
+$input_value = (!empty($value) && preg_match('/^#[0-9A-Fa-f]{6}$/', $value)) ? $value : '';
 $is_disabled = $field['disabled'];
 $has_tooltip = !empty($field['tooltip']);
 

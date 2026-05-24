@@ -53,8 +53,8 @@ class Menu {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'init_lex_settings')); // Initialize on admin_init
         add_action('admin_enqueue_scripts', array($this, 'enqueue_menu_hash_script'));
-        add_filter('submenu_file', array($this, 'remove_duplicate_menu_item'), 10, 2);
-        add_filter('parent_file', array($this, 'highlight_parent_menu'));
+        add_filter('submenu_file', array($this, 'submenu_file_cb'), 10, 2);
+        add_filter('parent_file', array($this, 'parent_file_cb'));
         add_filter('plugin_action_links_' . plugin_basename(LEANPL_DIR . '/plugin-main.php'), array($this, 'add_plugin_action_links'));
         add_action('admin_head', function () {
             // Don't remove notices on Freemius pages - they need to show opt-in notices
@@ -121,38 +121,46 @@ class Menu {
             return;
         }
         
-        // Register General Settings tab (main tab, not in dropdown)
+        // Register Player Behavior tab (main tab, not in dropdown)
         $this->lex_settings->registerTab([
-            'id' => 'settings',
-            'label' => esc_html__('General Settings', 'vapfem'),
-            'icon' => 'dashicons dashicons-admin-settings',
-            'order' => 5,
+            'id'       => 'settings',
+            'label'    => esc_html__('Player Defaults', 'vapfem'),
+            'icon'     => 'dashicons dashicons-performance',
+            'order'    => 5,
+        ]);
+
+        // Register Playlist tab (main tab, not in dropdown)
+        $this->lex_settings->registerTab([
+            'id'       => 'playlist',
+            'label'    => esc_html__( 'Playlist', 'vapfem' ),
+            'icon'     => 'dashicons dashicons-playlist-video',
+            'order'    => 5.3,
         ]);
 
         // Register Styling tab (main tab, not in dropdown)
         $this->lex_settings->registerTab([
-            'id' => 'styling',
-            'label' => esc_html__('Styling', 'vapfem'),
-            'icon' => 'dashicons dashicons-admin-appearance',
-            'order' => 5.5,
+            'id'       => 'styling',
+            'label'    => esc_html__('Styling', 'vapfem'),
+            'icon'     => 'dashicons dashicons-admin-appearance',
+            'order'    => 5.5,
         ]);
 
         // Register Import/Export tab (main tab, not in dropdown)
         $this->lex_settings->registerTab([
-            'id' => 'import-export',
-            'label' => esc_html__('Import/Export', 'vapfem'),
-            'icon' => 'dashicons dashicons-database',
-            'order' => 6,
+            'id'       => 'import-export',
+            'label'    => esc_html__('Import/Export', 'vapfem'),
+            'icon'     => 'dashicons dashicons-database',
+            'order'    => 6,
         ]);
 
         // Register Quick Start tab (main tab, not in dropdown)
         $this->lex_settings->registerTab([
-            'id' => 'quick-start',
-            'label' => esc_html__('Quick Start', 'vapfem'),
-            'icon' => 'dashicons dashicons-lightbulb',
-            'order' => 7,
+            'id'       => 'quick-start',
+            'label'    => esc_html__('Quick Start', 'vapfem'),
+            'icon'     => 'dashicons dashicons-lightbulb',
+            'order'    => 7,
         ]);
-        
+
         // Register the guide tabs as dropdown tabs (under "Legacy Shortcodes")
         $this->lex_settings->registerTab([
             'id' => 'video-player',
@@ -167,6 +175,14 @@ class Menu {
             'label' => esc_html__('Audio Player Shortcode', 'vapfem'),
             'icon' => 'dashicons dashicons-format-audio',
             'order' => 20,
+            'dropdown' => true,
+        ]);
+
+        $this->lex_settings->registerTab([
+            'id' => 'playlist-shortcode',
+            'label' => esc_html__('Playlist Shortcode', 'vapfem'),
+            'icon' => 'dashicons dashicons-playlist-video',
+            'order' => 25,
             'dropdown' => true,
         ]);
         
@@ -219,9 +235,29 @@ class Menu {
             esc_html__('Add New Player', 'vapfem'),
             esc_html__('Add New Player', 'vapfem'),
             'edit_posts',
-            'post-new.php?post_type=lean_player'
+            'edit.php?post_type=lean_player&open_modal=1'
         );
-        
+
+        // Submenu - Categories
+        add_submenu_page(
+            'lean_player-settings',
+            esc_html__('Categories', 'vapfem'),
+            esc_html__('Categories', 'vapfem'),
+            'manage_categories',
+            'edit-tags.php?taxonomy=lean_player_cat&post_type=lean_player'
+        );
+
+        // Submenu - Playlists (conditional on playlist feature enabled)
+        if ( leanpl_get_option( 'playlist.enabled', true ) ) {
+            add_submenu_page(
+                'lean_player-settings',
+                esc_html__('Playlists', 'vapfem'),
+                esc_html__('Playlists', 'vapfem'),
+                'edit_posts',
+                'edit.php?post_type=lean_playlist'
+            );
+        }
+
         // Submenu - Settings
         add_submenu_page(
             'lean_player-settings',
@@ -257,11 +293,12 @@ class Menu {
     }
 
     /**
-     * Remove duplicate first submenu item and manage submenu highlighting
+     * Manage submenu file highlighting and remove duplicates
      */
-    public function remove_duplicate_menu_item($submenu_file, $parent_file) {
+    public function submenu_file_cb($submenu_file, $parent_file) {
         global $submenu, $post_type, $pagenow;
         
+        // Remove duplicate submenu items
         if (isset($submenu['lean_player-settings'])) {
             $seen = array();
             foreach ($submenu['lean_player-settings'] as $key => $item) {
@@ -275,27 +312,53 @@ class Menu {
             }
         }
         
-        // When editing a lean_player post, don't highlight any submenu item
-        // Only the parent menu should be highlighted
-        if ($post_type === 'lean_player' && $pagenow === 'post.php') {
-            $submenu_file = '';
+        // When editing a lean_player post, highlight "All Players" submenu
+        if ( $post_type === 'lean_player' && $pagenow === 'post.php' ) {
+            $submenu_file = 'edit.php?post_type=lean_player';
         }
-        
+
+        // When adding a new lean_player post, highlight "Add New Player" submenu
+        if ( $post_type === 'lean_player' && $pagenow === 'post-new.php' ) {
+            $submenu_file = 'edit.php?post_type=lean_player&open_modal=1';
+        }
+
+        // When editing a lean_playlist post, highlight "Playlists" submenu
+        if ( $post_type === 'lean_playlist' && $pagenow === 'post.php' ) {
+            $submenu_file = 'edit.php?post_type=lean_playlist';
+        }
+
+        // Highlight Categories submenu when on category taxonomy page
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET param for menu highlight only
+        if ( $pagenow === 'edit-tags.php' && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === 'lean_player_cat' ) {
+            $submenu_file = 'edit-tags.php?taxonomy=lean_player_cat&post_type=lean_player';
+        }
+
+        // Highlight Playlists submenu when on playlist list or add new page
+        if ( $post_type === 'lean_playlist' && in_array( $pagenow, [ 'edit.php', 'post-new.php' ], true ) ) {
+            $submenu_file = 'edit.php?post_type=lean_playlist';
+        }
+
         return $submenu_file;
     }
 
     /**
-     * Highlight parent menu for lean_player post type
-     * Fixes menu highlighting when editing a lean_player post
+     * Highlight parent menu for lean_player post type and playlist taxonomy
+     * Fixes menu highlighting when editing a lean_player post or viewing playlists
      */
-    public function highlight_parent_menu($parent_file) {
-        global $post_type;
-        
-        // Check if we're editing a lean_player post
-        if ($post_type === 'lean_player') {
+    public function parent_file_cb($parent_file) {
+        global $post_type, $pagenow;
+
+        // Highlight parent menu for our post types
+        if ( in_array( $post_type, [ 'lean_player', 'lean_playlist' ], true ) ) {
             $parent_file = 'lean_player-settings';
         }
-        
+
+        // Highlight parent menu for category taxonomy page
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET param for menu highlight only
+        if ( $pagenow === 'edit-tags.php' && isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === 'lean_player_cat' ) {
+            $parent_file = 'lean_player-settings';
+        }
+
         return $parent_file;
     }
 
@@ -303,46 +366,41 @@ class Menu {
      * Enqueue script to add hash fragment to menu links and handle highlight
      */
     public function enqueue_menu_hash_script() {
-        wp_add_inline_script('jquery', "
+        wp_add_inline_script( 'jquery', <<<'JS'
             jQuery(document).ready(function($) {
                 // Add hash fragment to Quick Start link
-                $('#toplevel_page_lean_player-settings a[href=\"admin.php?page=lean_player-settings\"]').attr('href', 'admin.php?page=lean_player-settings#quick-start');
-                
+                $('#toplevel_page_lean_player-settings a[href="admin.php?page=lean_player-settings"]').attr('href', 'admin.php?page=lean_player-settings#quick-start');
+
                 // Redirect Settings link to main page with hash
-                $('#toplevel_page_lean_player-settings a[href=\"admin.php?page=lean_player-settings-tab\"]').attr('href', 'admin.php?page=lean_player-settings#settings');
-                
-                // Function to update menu highlight based on hash
+                $('#toplevel_page_lean_player-settings a[href="admin.php?page=lean_player-settings-tab"]').attr('href', 'admin.php?page=lean_player-settings#settings');
+
+                // Update menu highlight based on hash
                 function updateMenuHighlight() {
                     var hash = window.location.hash;
                     var currentPage = window.location.search;
-                    
-                    // Only update if we're on the lean_player-settings page
+
                     if (currentPage.indexOf('page=lean_player-settings') === -1) {
                         return;
                     }
-                    
-                    // Remove current class from all submenu items
+
                     $('#toplevel_page_lean_player-settings .wp-submenu li').removeClass('current');
                     $('#toplevel_page_lean_player-settings .wp-submenu a').removeClass('current').removeAttr('aria-current');
-                    
-                    // Add current class based on hash
+
                     if (hash === '#quick-start' || hash === '' || hash === '#') {
-                        $('#toplevel_page_lean_player-settings a[href=\"admin.php?page=lean_player-settings#quick-start\"]').addClass('current').attr('aria-current', 'page').closest('li').addClass('current');
+                        $('#toplevel_page_lean_player-settings a[href="admin.php?page=lean_player-settings#quick-start"]').addClass('current').attr('aria-current', 'page').closest('li').addClass('current');
                     } else if (hash === '#settings') {
-                        $('#toplevel_page_lean_player-settings a[href=\"admin.php?page=lean_player-settings#settings\"]').addClass('current').attr('aria-current', 'page').closest('li').addClass('current');
+                        $('#toplevel_page_lean_player-settings a[href="admin.php?page=lean_player-settings#settings"]').addClass('current').attr('aria-current', 'page').closest('li').addClass('current');
                     }
                 }
-                
-                // Update on page load
+
                 updateMenuHighlight();
-                
-                // Update on hash change
                 $(window).on('hashchange', updateMenuHighlight);
 
-                // Target the specific upgrade 
-                $('.wp-submenu a[href*=\"leanplugins.com\"]').attr('target', '_blank');
+                // Open upgrade link in new tab
+                $('.wp-submenu a[href*="leanplugins.com"]').attr('target', '_blank');
             });
-        ");
+JS
+        );
     }
 
     /**

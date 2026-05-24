@@ -2,121 +2,232 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
-$settings = \Lex\Settings\V2\Settings::getInstance('leanpl');
 ?>
-<div class="lpl-card">
-    <div class="lpl-heading-2 lpl-admin__main-title"><?php echo esc_html__('Quick Start Guide', 'vapfem'); ?></div>
-    <p class="lpl-admin__subtitle"><?php echo esc_html__('Welcome to the new and improved Video & Audio Player (Lean Player)! Get started in minutes.', 'vapfem'); ?></p>
+<div class="lpl-qs-page">
 
-    <!-- Rebranding Notice -->
-    <div class="lpl-info-block lpl-info-block--note lex-mt-0 lex-mb-6">
-        <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('We\'ve Rebranded!', 'vapfem'); ?></div>
-        <p><strong><?php echo esc_html__('AZ Video & Audio Player is now "Lean Player"', 'vapfem'); ?></strong></p>
-        <p><?php echo esc_html__('Version 3.0.0 marks a major milestone: our rebranding checkpoint and major update. We\'ve rebranded our plugin under the LeanPlugins brand and renamed it from "AZ Video & Audio Player" to "Lean Player - Video & Audio Player for WordPress".', 'vapfem'); ?></p>
-        <p><?php echo esc_html__('This update includes significant improvements and restructuring to make the plugin more performance-focused and aligned with our LeanPlugins brand philosophy. The plugin now supports WordPress, Elementor, Block Editor, and Classic Editor.', 'vapfem'); ?></p>
-        <p><strong><?php echo esc_html__('Full name:', 'vapfem'); ?></strong> <?php echo esc_html__('Lean Player - Video and Audio Player for WordPress, Elementor, Block Editor and Classic Editor', 'vapfem'); ?></p>
-    </div>
+    <h2 class="lpl-qs-page__heading"><?php esc_html_e( 'Get started in seconds.', 'vapfem' ); ?></h2>
 
-    <!-- What's New Section -->
-    <div class="lpl-info-block lpl-info-block--success lex-mt-0">
-        <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('What\'s New in Version 3.0.0', 'vapfem'); ?></div>
-        <p><?php echo esc_html__('Version 3.0.0 is our rebranding checkpoint and major update. We\'re excited to introduce improvements that make creating and managing players easier than ever:', 'vapfem'); ?></p>
-        <ul>
-            <li><strong><?php echo esc_html__('Global Player Settings:', 'vapfem'); ?></strong> <?php echo esc_html__('Set default behavior once for all players across your site. No need to configure every player individually!', 'vapfem'); ?></li>
-            <li><strong><?php echo esc_html__('Simple Player Creation:', 'vapfem'); ?></strong> <?php echo esc_html__('Create video and audio players through an intuitive interface without touching shortcode attributes.', 'vapfem'); ?></li>
-            <li><strong><?php echo esc_html__('One-Click Shortcode:', 'vapfem'); ?></strong> <?php echo esc_html__('After creating a player, just copy and paste a simple shortcode anywhere on your site.', 'vapfem'); ?></li>
-            <li><strong><?php echo esc_html__('Backward Compatible:', 'vapfem'); ?></strong> <?php echo esc_html__('Existing shortcodes continue to work perfectly!', 'vapfem'); ?></li>
-        </ul>
-    </div>
+    <div class="lpl-qs-cards lpl-qs-grid-3">
 
-    <!-- How It Works Section -->
-    <div class="lpl-heading-2 lex-mt-6 lex-mb-0"><?php echo esc_html__('How It Works (3 Simple Steps)', 'vapfem'); ?></div>
-
-    <div style="display: grid; gap: 20px;" class="lex-mb-6">
-        <div class="lpl-info-block lpl-info-block--note">
-            <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Step 1: Configure Global Defaults (Optional)', 'vapfem'); ?></div>
-            <p><?php echo esc_html__('Go to', 'vapfem'); ?> <strong><?php echo esc_html__('Lean Player → Settings', 'vapfem'); ?></strong> <?php echo esc_html__('to set default behavior for all players. This is optional but saves time!', 'vapfem'); ?></p>
-            <p><?php echo esc_html__('Examples: Default volume, autoplay settings, player controls, and more.', 'vapfem'); ?></p>
+        <!-- Card: Quick embed -->
+        <div class="lpl-qs-card" data-card="quick">
+            <div class="lpl-qs-card__header">
+                <span class="lpl-qs-card__icon"></span>
+                <h3 class="lpl-qs-card__title"><?php esc_html_e( 'Quick embed', 'vapfem' ); ?></h3>
+            </div>
+            <p class="lpl-qs-card__desc"><?php esc_html_e( 'You have the video/audio URL and want to embed quickly.', 'vapfem' ); ?></p>
+            <span class="lpl-qs-card__cta"><?php esc_html_e( 'Show me how', 'vapfem' ); ?> →</span>
+            <div class="lpl-qs-card__check">✓</div>
         </div>
 
-        <div class="lpl-info-block lpl-info-block--note lex-mt-0">
-            <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Step 2: Create Your Player', 'vapfem'); ?></div>
-            <p><?php echo esc_html__('Go to', 'vapfem'); ?> <strong><?php echo esc_html__('Lean Player → Add New Player', 'vapfem'); ?></strong></p>
-            <ul>
-                <li><?php echo esc_html__('Choose player type (Video or Audio)', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Add your media URL (YouTube, Vimeo, or direct file)', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Customize player settings (or use global defaults)', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Click Publish', 'vapfem'); ?></li>
-            </ul>
+        <!-- Card: Reuse -->
+        <div class="lpl-qs-card" data-card="reuse">
+            <div class="lpl-qs-card__header">
+                <span class="lpl-qs-card__icon"></span>
+                <h3 class="lpl-qs-card__title"><?php esc_html_e( 'Save once, embed anywhere', 'vapfem' ); ?></h3>
+            </div>
+            <p class="lpl-qs-card__desc"><?php esc_html_e( 'You have a few videos/audios and want to reuse them across different places.', 'vapfem' ); ?></p>
+            <span class="lpl-qs-card__cta"><?php esc_html_e( 'Show me how', 'vapfem' ); ?> →</span>
+            <div class="lpl-qs-card__check">✓</div>
         </div>
 
-        <div class="lpl-info-block lpl-info-block--note lex-mt-0">
-            <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Step 3: Use the Shortcode', 'vapfem'); ?></div>
-            <p><?php echo esc_html__('After creating your player, copy the shortcode and paste it anywhere on your site:', 'vapfem'); ?></p>
-            <code style="background: #f0f0f0; border-radius: 4px; display: inline-block;" class="lex-py-2 lex-px-3">[lean_player id="123"]</code>
-            <p class="lex-mt-3"><?php echo esc_html__('Or use PHP in your templates:', 'vapfem'); ?></p>
-            <code style="background: #f0f0f0; border-radius: 4px; display: inline-block;" class="lex-py-2 lex-px-3"><?php echo esc_html('<?php echo do_shortcode(\'[lean_player id="123"]\'); ?>'); ?></code>
-            <p class="lex-mt-3"><?php echo esc_html__('Works in posts, pages, widgets, and more!', 'vapfem'); ?></p>
+        <!-- Card: Playlist -->
+        <div class="lpl-qs-card" data-card="playlist">
+            <div class="lpl-qs-card__header">
+                <span class="lpl-qs-card__icon"></span>
+                <h3 class="lpl-qs-card__title"><?php esc_html_e( 'Create a playlist', 'vapfem' ); ?></h3>
+            </div>
+            <p class="lpl-qs-card__desc"><?php esc_html_e( 'You want to group multiple videos or audios into a playlist and embed it.', 'vapfem' ); ?></p>
+            <span class="lpl-qs-card__cta"><?php esc_html_e( 'Show me how', 'vapfem' ); ?> →</span>
+            <div class="lpl-qs-card__check">✓</div>
+        </div>
+
+    </div>
+
+    <!-- Panel: Quick embed -->
+    <div class="lpl-qs-panel" id="lpl-qs-panel-quick">
+
+        <h3 class="lpl-qs-step-heading"><?php esc_html_e( 'Step 1: Copy a shortcode', 'vapfem' ); ?></h3>
+
+        <div class="lpl-qs-step-body">
+
+                <?php /* YouTube — open by default */ ?>
+                <div class="lex-settings-section lex-settings-section--accordion lex-settings-section--collapsible lpl-qs-accordion-section"
+                     data-collapsible="true" data-section-id="qs-youtube" data-instance-id="leanpl"
+                     data-accordion-group="qs-sources">
+                    <div class="lex-settings-section__title">
+                        <span><?php esc_html_e( 'YouTube', 'vapfem' ); ?></span>
+                        <span class="dashicons dashicons-arrow-down-alt2 lex-settings-section__chevron"></span>
+                    </div>
+                    <div class="lpl-qs-accordion-body">
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'Full URL', 'vapfem' ); ?></span>
+                            <code>[lean_video url="https://www.youtube.com/watch?v=bTqVqk7FSmY"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_video url="https://www.youtube.com/watch?v=bTqVqk7FSmY"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'Video ID only', 'vapfem' ); ?></span>
+                            <code>[lean_video url="bTqVqk7FSmY" type="youtube"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_video url="bTqVqk7FSmY" type="youtube"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                    </div>
+                </div>
+
+                <?php /* Vimeo — collapsed */ ?>
+                <div class="lex-settings-section lex-settings-section--accordion lex-settings-section--collapsible lex-settings-section--collapsed lpl-qs-accordion-section"
+                     data-collapsible="true" data-section-id="qs-vimeo" data-instance-id="leanpl"
+                     data-accordion-group="qs-sources">
+                    <div class="lex-settings-section__title">
+                        <span><?php esc_html_e( 'Vimeo', 'vapfem' ); ?></span>
+                        <span class="dashicons dashicons-arrow-down-alt2 lex-settings-section__chevron"></span>
+                    </div>
+                    <div class="lpl-qs-accordion-body">
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'Full URL', 'vapfem' ); ?></span>
+                            <code>[lean_video url="https://vimeo.com/76979871"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_video url="https://vimeo.com/76979871"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'Video ID only', 'vapfem' ); ?></span>
+                            <code>[lean_video url="76979871" type="vimeo"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_video url="76979871" type="vimeo"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                    </div>
+                </div>
+
+                <?php /* HTML5 / MP4 — collapsed */ ?>
+                <div class="lex-settings-section lex-settings-section--accordion lex-settings-section--collapsible lex-settings-section--collapsed lpl-qs-accordion-section"
+                     data-collapsible="true" data-section-id="qs-html5" data-instance-id="leanpl"
+                     data-accordion-group="qs-sources">
+                    <div class="lex-settings-section__title">
+                        <span><?php esc_html_e( 'HTML5 / MP4', 'vapfem' ); ?></span>
+                        <span class="dashicons dashicons-arrow-down-alt2 lex-settings-section__chevron"></span>
+                    </div>
+                    <div class="lpl-qs-accordion-body">
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'File URL', 'vapfem' ); ?></span>
+                            <code>[lean_video url="https://files.vidstack.io/sprite-fight/720p.mp4"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_video url="https://files.vidstack.io/sprite-fight/720p.mp4"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                    </div>
+                </div>
+
+                <?php /* Audio — collapsed */ ?>
+                <div class="lex-settings-section lex-settings-section--accordion lex-settings-section--collapsible lex-settings-section--collapsed lpl-qs-accordion-section"
+                     data-collapsible="true" data-section-id="qs-audio" data-instance-id="leanpl"
+                     data-accordion-group="qs-sources">
+                    <div class="lex-settings-section__title">
+                        <span><?php esc_html_e( 'Audio (MP3, WAV, OGG)', 'vapfem' ); ?></span>
+                        <span class="dashicons dashicons-arrow-down-alt2 lex-settings-section__chevron"></span>
+                    </div>
+                    <div class="lpl-qs-accordion-body">
+                        <div class="lpl-qs-code-row">
+                            <span class="lpl-qs-row-label"><?php esc_html_e( 'File URL', 'vapfem' ); ?></span>
+                            <code>[lean_audio url="https://www.w3schools.com/html/horse.mp3"]</code>
+                            <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_audio url="https://www.w3schools.com/html/horse.mp3"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="lpl-qs-source-hint"><?php esc_html_e( 'YouTube/Vimeo: pass the full URL or just the ID. For ID-only, add type="youtube" or type="vimeo". HTML5/Audio: paste a direct file URL.', 'vapfem' ); ?></p>
+
+        </div>
+
+        <h3 class="lpl-qs-step-heading"><?php esc_html_e( 'Step 2: Add it to any page', 'vapfem' ); ?></h3>
+        <p class="lpl-qs-step-desc"><?php esc_html_e( 'Works immediately.', 'vapfem' ); ?></p>
+
+        <div class="lpl-qs-note">
+            <?php esc_html_e( 'Using Elementor? Drag the Video Player or Audio Player widget directly onto the page. No shortcode needed.', 'vapfem' ); ?>
+        </div>
+        <div class="lpl-qs-note lpl-qs-note--info">
+            <?php esc_html_e( 'Want more control? See the', 'vapfem' ); ?>
+            <a href="#all-options" class="lpl-admin__tab-link" data-tab="all-options"><?php esc_html_e( 'All Options', 'vapfem' ); ?></a>
+            <?php esc_html_e( 'tab.', 'vapfem' ); ?>
         </div>
     </div>
 
-    <!-- Two Approaches Section -->
-    <div class="lpl-heading-2 lex-mt-6"><?php echo esc_html__('Two Ways to Create Players', 'vapfem'); ?></div>
-    <p class="lpl-admin__subtitle lex-mb-4"><?php echo esc_html__('Plus: Elementor integration for page builder users', 'vapfem'); ?></p>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" class="lex-mb-6">
-        <div class="lpl-info-block lpl-info-block--success lex-mt-0">
-            <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Recommended: Use Player Manager', 'vapfem'); ?></div>
-            <p><strong><?php echo esc_html__('Best for:', 'vapfem'); ?></strong> <?php echo esc_html__('Most users, especially those who want a simple interface', 'vapfem'); ?></p>
-            <ul>
-                <li><?php echo esc_html__('Visual interface, no code needed', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Inherit global settings automatically', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Manage all players in one place', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Simple shortcode:', 'vapfem'); ?> <code>[lean_player id="123"]</code></li>
-            </ul>
-            <p class="lex-mt-4">
-                <a href="<?php echo admin_url('post-new.php?post_type=lean_player'); ?>" class="button button-primary"><?php echo esc_html__('Create Player Now', 'vapfem'); ?></a>
-            </p>
+    <!-- Panel: Reuse -->
+    <div class="lpl-qs-panel" id="lpl-qs-panel-reuse">
+        <h4 class="lpl-qs-panel__title"><?php esc_html_e( 'Save once, embed anywhere', 'vapfem' ); ?></h4>
+
+        <div class="lpl-qs-tint-block lpl-qs-how-it-works">
+            <p><?php esc_html_e( 'Create a saved player in the Player Manager. It gets its own shortcode:', 'vapfem' ); ?> <strong>[lean_player id="123"]</strong></p>
+            <p><?php esc_html_e( 'Paste that shortcode on as many pages as you need. When you update the player, every embed reflects the change automatically.', 'vapfem' ); ?></p>
         </div>
 
-        <div class="lpl-info-block lpl-info-block--outline lex-mt-0">
-            <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Direct Shortcodes', 'vapfem'); ?></div>
-            <p><strong><?php echo esc_html__('Good for:', 'vapfem'); ?></strong> <?php echo esc_html__('Quick embed or programmatic use', 'vapfem'); ?></p>
-            <ul>
-                <li><?php echo esc_html__('No admin interface needed', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Configure everything via shortcode attributes', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Perfect for dynamic/programmatic content', 'vapfem'); ?></li>
-                <li><?php echo esc_html__('Use:', 'vapfem'); ?> <code>[lean_video]</code> <?php echo esc_html__('or', 'vapfem'); ?> <code>[lean_audio]</code></li>
-            </ul>
-            <p class="lex-mt-4">
-                <a href="#all-options" class="button lpl-admin__tab-link"><?php echo esc_html__('View Shortcode Options', 'vapfem'); ?></a>
-            </p>
+        <p class="lpl-qs-panel__hint"><?php esc_html_e( 'Create your first saved player:', 'vapfem' ); ?></p>
+        <div class="lpl-qs-actions">
+            <a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=lean_player' ) ); ?>" class="lpl-qs-btn lpl-qs-btn--primary"><?php esc_html_e( 'Create a Video / Audio Player', 'vapfem' ); ?></a>
         </div>
     </div>
 
-    <!-- Elementor Integration -->
-    <div class="lpl-info-block lpl-info-block--note">
-        <div class="lpl-heading-3 lex-mb-3"><?php echo esc_html__('Using with Elementor?', 'vapfem'); ?></div>
-        <p><?php echo esc_html__('Our Elementor widgets continue to work perfectly! You can still:', 'vapfem'); ?></p>
-        <ul>
-            <li><?php echo esc_html__('Drag and drop Video Player or Audio Player widgets', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('Configure settings visually in Elementor', 'vapfem'); ?></li>
-        </ul>
+    <!-- Panel: Playlist -->
+    <div class="lpl-qs-panel" id="lpl-qs-panel-playlist">
+        <h4 class="lpl-qs-panel__title"><?php esc_html_e( 'Create a playlist', 'vapfem' ); ?></h4>
+
+        <div class="lpl-qs-playlist-steps lpl-qs-grid-3">
+            <div class="lpl-qs-playlist-step lpl-qs-tint-block">
+                <div class="lpl-qs-num-badge lpl-qs-num-badge--sm">1</div>
+                <h4><?php esc_html_e( 'Create your players', 'vapfem' ); ?></h4>
+                <p><?php esc_html_e( 'Each video or audio file needs a saved player first. Create them in Player Manager.', 'vapfem' ); ?></p>
+            </div>
+            <div class="lpl-qs-playlist-step lpl-qs-tint-block">
+                <div class="lpl-qs-num-badge lpl-qs-num-badge--sm">2</div>
+                <h4><?php esc_html_e( 'Build the playlist', 'vapfem' ); ?></h4>
+                <p><?php esc_html_e( 'Go to Playlist Manager, create a new playlist, and add your players to it.', 'vapfem' ); ?></p>
+            </div>
+            <div class="lpl-qs-playlist-step lpl-qs-tint-block">
+                <div class="lpl-qs-num-badge lpl-qs-num-badge--sm">3</div>
+                <h4><?php esc_html_e( 'Embed it anywhere', 'vapfem' ); ?></h4>
+                <p><?php esc_html_e( 'Copy the playlist shortcode and paste it into any post, page, or widget.', 'vapfem' ); ?></p>
+            </div>
+        </div>
+
+        <div class="lpl-qs-code-block">
+            <div class="lpl-qs-code-label"><?php esc_html_e( 'Playlist shortcode', 'vapfem' ); ?></div>
+            <div class="lpl-qs-code-row">
+                <code>[lean_playlist id="YOUR_PLAYLIST_ID"]</code>
+                <button class="lpl-qs-btn lpl-qs-btn--copy lex-copy-button" data-lex-copy='[lean_playlist id="YOUR_PLAYLIST_ID"]'><?php esc_html_e( 'Copy', 'vapfem' ); ?></button>
+            </div>
+        </div>
+
+        <div class="lpl-qs-actions">
+            <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=lean_playlist' ) ); ?>" class="lpl-qs-btn lpl-qs-btn--primary"><?php esc_html_e( 'Go to Playlist Manager', 'vapfem' ); ?></a>
+            <a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=lean_player' ) ); ?>" class="lpl-qs-btn lpl-qs-btn--secondary"><?php esc_html_e( 'Create a Player first', 'vapfem' ); ?></a>
+        </div>
+
+        <div class="lpl-qs-note lpl-qs-note--info">
+            <?php esc_html_e( 'Using Elementor? The Playlist Widget lets you drag and drop a playlist directly onto any page. No shortcode needed.', 'vapfem' ); ?>
+        </div>
     </div>
 
-    <!-- What's Coming Next -->
-    <div class="lpl-info-block lpl-info-block--success">
-        <div class="lpl-heading-2 lex-mb-3"><?php echo esc_html__('What\'s Coming Next', 'vapfem'); ?></div>
-        <p><?php echo esc_html__('Version 3.0.0 is just the beginning! We\'re considering the following enhancements for future updates:', 'vapfem'); ?></p>
-        <ul>
-            <li><?php echo esc_html__('Player width setting', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('Video start time option', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('More styling options', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('More customization options', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('Subtitle and caption support', 'vapfem'); ?></li>
-            <li><?php echo esc_html__('Playlist support', 'vapfem'); ?></li>
-        </ul>
-        <p><?php echo esc_html__('Stay tuned for more exciting features!', 'vapfem'); ?></p>
+    <!-- Footer strip -->
+    <div class="lpl-qs-footer-strip">
+        <span><?php esc_html_e( 'Want to set global defaults for all players?', 'vapfem' ); ?></span>
+        <a href="#settings" class="lpl-admin__tab-link" data-tab="settings"><?php esc_html_e( 'Open Settings →', 'vapfem' ); ?></a>
     </div>
+
 </div>
+
+<script>
+( function () {
+    var cards  = document.querySelectorAll( '.lpl-qs-card' );
+    var panels = document.querySelectorAll( '.lpl-qs-panel' );
+
+    function selectCard( id ) {
+        cards.forEach( function ( c ) { c.classList.remove( 'is-active' ); } );
+        panels.forEach( function ( p ) { p.classList.remove( 'is-visible' ); } );
+
+        var card  = document.querySelector( '.lpl-qs-card[data-card="' + id + '"]' );
+        var panel = document.getElementById( 'lpl-qs-panel-' + id );
+        if ( card )  { card.classList.add( 'is-active' ); }
+        if ( panel ) { panel.classList.add( 'is-visible' ); }
+    }
+
+    cards.forEach( function ( card ) {
+        card.addEventListener( 'click', function () {
+            selectCard( card.dataset.card );
+        } );
+    } );
+}() );
+</script>
