@@ -574,32 +574,41 @@ class Playlist_Metaboxes {
 
             <div class="lex-vtabs lex-vtabs--apple" data-tab="playlist-do" data-storage-suffix="<?php echo esc_attr( $post->ID ); ?>">
 
-                <div class="lex-vtabs__nav">
-                    <button type="button" data-vtab="a-layout">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.75"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.75"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.75"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.75"/></svg>
-                        <span><?php esc_html_e( 'Layout', 'vapfem' ); ?></span>
-                    </button>
-                    <button type="button" data-vtab="a-appearance">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 3c0 0 4.5 4 4.5 9s-4.5 9-4.5 9" stroke="currentColor" stroke-width="1.75"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.75"/></svg>
-                        <span><?php esc_html_e( 'Appearance', 'vapfem' ); ?></span>
-                    </button>
-                    <button type="button" data-vtab="a-header">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 6h16M4 10h10M4 14h16M4 18h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
-                        <span><?php esc_html_e( 'Header', 'vapfem' ); ?></span>
-                    </button>
-                    <button type="button" data-vtab="a-items">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><circle cx="5" cy="6" r="1.25" fill="currentColor"/><circle cx="5" cy="12" r="1.25" fill="currentColor"/><circle cx="5" cy="18" r="1.25" fill="currentColor"/></svg>
-                        <span><?php esc_html_e( 'List Items', 'vapfem' ); ?></span>
-                    </button>
-                    <button type="button" data-vtab="a-audio">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 18V6l12-2v12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.75"/><circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.75"/></svg>
-                        <span><?php esc_html_e( 'Audio', 'vapfem' ); ?></span>
-                    </button>
-                    <button type="button" data-vtab="a-behavior">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.75"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
-                        <span><?php esc_html_e( 'Behavior', 'vapfem' ); ?></span>
-                    </button>
-                </div>
+                <?php
+                $tabs = [
+                    [
+                        'id'    => 'a-layout',
+                        'label' => __( 'Layout', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'layout_svg' ),
+                    ],
+                    [
+                        'id'    => 'a-appearance',
+                        'label' => __( 'Appearance', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'appearance_svg' ),
+                    ],
+                    [
+                        'id'    => 'a-header',
+                        'label' => __( 'Header', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'header_svg' ),
+                    ],
+                    [
+                        'id'    => 'a-items',
+                        'label' => __( 'List Items', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'items_svg' ),
+                    ],
+                    [
+                        'id'    => 'a-audio',
+                        'label' => __( 'Audio', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'audio_svg' ),
+                    ],
+                    [
+                        'id'    => 'a-behavior',
+                        'label' => __( 'Behavior', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'behavior_svg' ),
+                    ],
+                ];
+                echo \Lex\Settings\V2\Services\Vtabs::render_nav_flat( $tabs );
+                ?>
 
                 <div class="lex-vtabs__content">
 

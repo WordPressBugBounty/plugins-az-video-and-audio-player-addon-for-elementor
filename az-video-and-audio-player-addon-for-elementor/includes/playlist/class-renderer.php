@@ -74,7 +74,7 @@ class Renderer {
         $is_card           = ( $item_template === 'grid' );
         $now_playing_style = $config->get_now_playing_style();
 
-        echo '<div class="lpl-playlist-wrap">';
+        echo '<div class="lpl-playlist-wrap" id="lpl-playlist-' . esc_attr( $this->playlist_id ) . '">';
         include $template_dir . 'playlist.php';
         echo '</div>';
     }

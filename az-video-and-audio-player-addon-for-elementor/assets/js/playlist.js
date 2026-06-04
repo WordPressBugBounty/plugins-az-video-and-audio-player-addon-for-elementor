@@ -62,7 +62,7 @@
             : leanplUtils.buildVideoConfig( rawPlayerConfig, commonCfg );
 
         var player = new Plyr( $playerEl[0], plyrConfig );
-        leanplUtils.autopauseManager.register(player);
+        leanplUtils.playerRegistry.register(player);
 
         player.once('ready', function () {
             hideLoading($loading);
@@ -334,9 +334,14 @@
     }
 
     function setActiveItem($item, $playlist) {
+        // Also clear --playing here: switching items means the previously playing
+        // item has stopped. markItemPlaying re-adds it on the new item's 'playing'
+        // event. Without this, the old item keeps its pause icon, because the
+        // 'pause' tick fires too late, by then unmarkItemPlaying reads the NEW
+        // active item and never clears --playing off the old one.
         $playlist
             .find('.lpl-playlist__item')
-            .removeClass('lpl-playlist__item--active')
+            .removeClass('lpl-playlist__item--active lpl-playlist__item--playing')
             .attr('aria-pressed', 'false');
 
         $item

@@ -43,7 +43,7 @@ class Player_Renderer {
         'seek_time', 'invert_time', 'speed_selected',
         'controls', 'storage_enabled', 'debug_mode',
         'keyboard_focused', 'keyboard_global',
-        'tooltips_seek',
+        'tooltips_seek', 'tooltips_controls',
         'autopause',
     ];
 
@@ -51,7 +51,6 @@ class Player_Renderer {
      * Video-only keys — extend COMMON_SETTINGS_KEYS.
      */
     private const VIDEO_ONLY_SETTINGS_KEYS = [
-        'tooltips_controls',
         'click_to_play', 'hide_controls', 'reset_on_end',
         'fullscreen_enabled', 'quality_default', 'ratio',
     ];
@@ -89,10 +88,13 @@ class Player_Renderer {
      * Values are trusted to be sanitised at the input boundary
      * (Lex Settings + metabox save handlers).
      *
-     * @param array $config Merged player config.
+     * @param array $config         Merged player config.
+     * @param bool  $reserve_ratio  When true (video only), emit --lpl-ratio so
+     *                              CSS can reserve the aspect-ratio box before
+     *                              Plyr initializes, preventing layout shift.
      * @return string Empty string or `--plyr-x: y; --plyr-z: w`.
      */
-    private function build_player_style( array $config ): string {
+    private function build_player_style( array $config, bool $reserve_ratio = false ): string {
         // config key  =>  Plyr CSS variable name
         $map = [
             'primary_color' => '--plyr-color-main',
@@ -107,16 +109,27 @@ class Player_Renderer {
             $declarations[] = $css_var . ': ' . $value;
         }
 
+        // Reserve the video aspect-ratio up front to avoid pre-init layout shift.
+        // ratio is stored in Plyr's "W:H" form (e.g. "16:9"); CSS aspect-ratio
+        // wants "W/H". Empty/auto ratio falls back to 16/9 via the CSS default.
+        if ( $reserve_ratio ) {
+            $ratio = isset( $config['ratio'] ) ? trim( (string) $config['ratio'] ) : '';
+            if ( $ratio !== '' && preg_match( '/^\d+\s*:\s*\d+$/', $ratio ) ) {
+                $declarations[] = '--lpl-ratio: ' . str_replace( ':', '/', str_replace( ' ', '', $ratio ) );
+            }
+        }
+
         return implode( '; ', $declarations );
     }
 
   /**
    * Render video player with flattened configuration array
    *
-   * @param array $config Configuration array
+   * @param array $config  Configuration array
+   * @param int   $post_id lean_player CPT post ID for wrap (0 = inline, no wrap)
    * @return void
    */
-    public function render_video_player($config = []) {
+    public function render_video_player($config = [], $post_id = 0) {
       $config = Config_Merger::get_instance()->merge($config);
 
         if (!$this->is_valid_video_type($config['video_type'])) {
@@ -139,12 +152,21 @@ class Player_Renderer {
       $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::VIDEO_ONLY_SETTINGS_KEYS );
       $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
+      $post_id = absint( $post_id );
+      if ( $post_id > 0 ) {
+            echo '<div class="lpl-player-wrap" id="lpl-player-' . esc_attr( $post_id ) . '">';
+      }
+
       if ($config['video_type'] == 'html5') {
             $this->render_html5_markup($config, $data_settings);
       } elseif ($config['video_type'] == 'youtube') {
             $this->render_youtube_markup($config, $data_settings);
       } elseif ($config['video_type'] == 'vimeo') {
             $this->render_vimeo_player($config, $data_settings);
+      }
+
+      if ( $post_id > 0 ) {
+            echo '</div>';
       }
       
       /**
@@ -167,10 +189,11 @@ class Player_Renderer {
   /**
    * Render audio player with flattened configuration array
    *
-   * @param array $config Configuration array
+   * @param array $config  Configuration array
+   * @param int   $post_id lean_player CPT post ID for wrap (0 = inline, no wrap)
    * @return void
    */
-    public function render_audio_player($config = []) {
+    public function render_audio_player($config = [], $post_id = 0) {
         $config = Config_Merger::get_instance()->merge($config);
 
         if (empty($config['url'])) {
@@ -193,7 +216,16 @@ class Player_Renderer {
         $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::AUDIO_ONLY_SETTINGS_KEYS );
         $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
+        $post_id = absint( $post_id );
+        if ( $post_id > 0 ) {
+            echo '<div class="lpl-player-wrap" id="lpl-player-' . esc_attr( $post_id ) . '">';
+        }
+
         $this->render_html5_audio_markup($config, $data_settings);
+
+        if ( $post_id > 0 ) {
+            echo '</div>';
+        }
         
         /**
          * Fires after audio player renders
@@ -290,7 +322,7 @@ class Player_Renderer {
             $fallback_video_url = $config['sources'][0]['url'];
         }
 
-        $brand_style = $this->build_player_style( $config );
+        $brand_style = $this->build_player_style( $config, true );
         ?>
         <video
               <?php if (!empty($config['poster'])): ?>poster="<?php echo esc_url($config['poster']); ?>"<?php endif; ?>
@@ -341,7 +373,7 @@ class Player_Renderer {
             return;
         }
 
-        $brand_style = $this->build_player_style( $config );
+        $brand_style = $this->build_player_style( $config, true );
         ?>
         <div class="plyr__video-embed lpl-player lpl-player--video"
             <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
@@ -371,7 +403,7 @@ class Player_Renderer {
             return;
         }
 
-        $brand_style = $this->build_player_style( $config );
+        $brand_style = $this->build_player_style( $config, true );
         ?>
         <div class="plyr__video-embed lpl-player lpl-player--video"
             <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>

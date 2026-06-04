@@ -2,6 +2,18 @@
 	--lpl-player-notice-bg: #1AAFFF;
 }
 
+/* Reserve the video aspect-ratio before Plyr initializes, so the player does
+   not collapse and shove the page (cumulative layout shift). The renderer emits
+   --lpl-ratio from the configured ratio (e.g. 16/9); empty/auto falls back here.
+   Video only — audio has no ratio. Once Plyr takes over, it owns sizing inside
+   .plyr, and these element-level reservations no longer drive layout. */
+video.lpl-player--video,
+.plyr__video-embed.lpl-player--video {
+	aspect-ratio: var(--lpl-ratio, 16 / 9);
+	width: 100%;
+	height: auto;
+}
+
 .plyr__controls input[type=range]::-webkit-slider-runnable-track{
 	box-shadow: none;
 }
@@ -9,6 +21,7 @@
 .plyr--audio .plyr__controls{
 	background: transparent;
 }
+
 .lpl-not-found{
 	text-align: center;
 	background: var(--lpl-player-notice-bg, var(--lex-color-brand-primary));

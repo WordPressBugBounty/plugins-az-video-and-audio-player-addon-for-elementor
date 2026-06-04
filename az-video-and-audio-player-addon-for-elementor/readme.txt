@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,15 @@ Lean Player also helps keep media-heavy pages fast. With Media Preload, you choo
 * 20+ Styling options
 
 == Changelog ==
+= Version: 3.1.1 =
+* Added: Video Shape (Aspect Ratio) option per player. Set a player to 16:9, 4:3, 1:1, 9:16, or any width:height in the Video-Only settings; leave it empty for automatic. Available in the player editor, shortcode, and Elementor widget.
+* Improved: Video players no longer cause the page to jump while they load. Each player reserves its aspect-ratio space up front, removing layout shift for better Core Web Vitals.
+* Added: Stable target ids on rendered output. Post-backed players now render inside <div class="lpl-player-wrap" id="lpl-player-{ID}">, and playlists render inside <div class="lpl-playlist-wrap" id="lpl-playlist-{ID}">. Makes per-instance CSS and JS targeting straightforward.
+* Updated: Plyr player engine to 3.8.4 (upstream fixes, hides default Vimeo captions).
+* Improved: Player Defaults and the per-player settings now share the same tab and section layout (Behavior, Controls, Video-Only) for a consistent editing experience.
+* Improved: Each settings section now shows its media scope ("Applies to all players" or "Applies to video players only"), so it is clear what each option affects.
+* Fixed: Opening the settings page without a tab in the URL left the panel blank; it now opens the first tab.
+
 = Version: 3.1.0 =
 * Added: Automatic Thumbnail (Pro) - playlist items without a custom poster now auto-fetch the thumbnail from YouTube or Vimeo. Enable once in Settings > Playlist. YouTube is zero-cost; Vimeo uses a cached API call.
 * Added: Playlist feature - video and audio playlists with panel position (left/right/top/bottom), list/grid layout, thumbnails, duration badge, item numbers, dark skin, and shortcode [lean_playlist id="123"]
@@ -318,20 +327,19 @@ Terms of Service: https://supabase.com/terms
 The feedback is only sent when you click "Submit & Deactivate". Nothing is collected during normal plugin usage.
 
 == Screenshots ==
-1. Plugin Activation - Easy installation and activation process
-2. YouTube Video Player - Playing YouTube videos with custom controls
-3. Vimeo Video Player - Vimeo video integration with player controls
-4. HTML5 Video Player - Native HTML5 video player with custom poster
-5. Video Color Customization - Customizing player colors to match your brand
-6. Multiple Players - Multiple video players on a single page
-7. Audio Player Examples - Various audio player implementations
-8. All Players list - View and manage all created players
-9. Create a new Video / Audio Player - Player creation interface
-10. Create a new Video / Audio Player - Player creation interface (part 2)
-11. Create a new Video / Audio Player - Player creation interface (part 3)
-12. Create a new Video / Audio Player - Player creation interface (part 4)
-13. Global options to define common options for all players - Global settings configuration
-14. Global options to define common options for all players - Global settings (part 2)
-15. Global options to define common options for all players - Global settings (part 3)
-16. Elementor Integration - Video player widget in Elementor editor
-17. Elementor Integration - Audio player widget in Elementor editor
+1. Activate Lean Player and open its settings
+2. All Players list with player type, source, and shortcode
+3. All Playlists list
+4. Add a new player, choose YouTube, Vimeo, or HTML5
+5. Build a playlist from your existing players
+6. Customize the playlist look and feel
+7. Video player
+8. Video playlist with side panel
+9. Video playlist with bottom thumbnail grid
+10. Audio players with color and background styling
+11. Audio playlist with now playing card
+12. Audio playlist, right panel with dark skin
+13. Player Defaults, Behavior settings
+14. Player Defaults, Controls settings
+15. Player Defaults, Video-Only settings
+16. Playlist settings

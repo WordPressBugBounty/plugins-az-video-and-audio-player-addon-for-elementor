@@ -121,6 +121,11 @@ class SectionRenderer {
         $summary_labels = ! empty( $options['summary_labels'] ) && is_array( $options['summary_labels'] )
             ? $options['summary_labels']
             : [];
+        // Generic always-visible meta label beside the section title. Styled
+        // exactly like summary_labels, but unlike summary (which only shows when
+        // collapsed) this stays visible in both collapsed and expanded states.
+        // Multi-purpose: scope hints ("Video & Audio"), status tags, etc.
+        $meta = ! empty( $options['meta'] ) ? $options['meta'] : '';
 
         // If disable_save_button is not specified, auto-sync with is_pro value
         if ( $disable_save_button === null ) {
@@ -182,9 +187,16 @@ class SectionRenderer {
             $summary_html   = '<span class="lex-settings-section__summary">' . $labels_escaped . '</span>';
         }
 
+        // Build meta HTML. Always-visible plain-text label beside the title;
+        // works for accordion and non-accordion sections alike.
+        $meta_html = $meta
+            ? '<span class="lex-settings-section__meta">' . esc_html( $meta ) . '</span>'
+            : '';
+
         $title_html = $no_title ? '' : <<<TITLE
             <div class="lex-settings-section__title">
                 <span>{$title}</span>
+                {$meta_html}
                 {$summary_html}
                 {$chevron_html}
                 {$pro_badge_html}

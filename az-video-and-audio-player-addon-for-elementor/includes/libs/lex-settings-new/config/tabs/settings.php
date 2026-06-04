@@ -17,15 +17,16 @@ $settings = \Lex\Settings\V2\Settings::getInstance('leanpl');
 $sr = $settings->sectionRenderer;
 
 // ============================================
-// VTAB: Playback
+// VTAB: Behavior
 // ============================================
-$sr->startVtab('playback', esc_html__('Playback', 'vapfem'), [
-    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>',
+$sr->startVtab('behavior', esc_html__('Behavior', 'vapfem'), [
+    'icon' => leanpl_ssot( 'icons', 'behavior_svg' ),
 ]);
 
-$sr->startSection('shared_playback', esc_html__('Shared Options (Video & Audio)', 'vapfem'), [
+$sr->startSection('auto_start', esc_html__('Auto-Start', 'vapfem'), [
     'accordion' => true,
     'exclusive' => 'player-settings',
+    'meta'      => esc_html__('- Applies to all players', 'vapfem'),
 ]);
 $settings->fieldRenderer->render('info', 'shared_info', [
     'content' => __('Set once, applies to every player on your site. Override individually when you need a one-off change.<br><strong>Note:</strong> Autoplay and Loop are ignored for playlist players. Playlists handle track flow themselves.', 'vapfem'),
@@ -49,6 +50,14 @@ $settings->fieldRenderer->render('checkbox', 'muted', [
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
     'desc'           => esc_html__('Start all players with sound off', 'vapfem'),
     'default'        => $defaults['muted'] ?? null,
+]);
+
+$sr->endSection();
+
+$sr->startSection('playback', esc_html__('Playback', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
+    'meta'      => esc_html__('- Applies to all players', 'vapfem'),
 ]);
 
 // Loop
@@ -90,6 +99,14 @@ $settings->fieldRenderer->render('select', 'speed_selected', [
     'default'       => $defaults['speed_selected'] ?? null,
 ]);
 
+$sr->endSection();
+
+$sr->startSection('advanced', esc_html__('Advanced', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
+    'meta'      => esc_html__('- Applies to all players', 'vapfem'),
+]);
+
 // Media Preload
 $settings->fieldRenderer->render('select', 'preload', [
     'label'         => esc_html__('HTML5 Media Preload', 'vapfem'),
@@ -123,12 +140,13 @@ $sr->endVtab();
 // VTAB: Controls
 // ============================================
 $sr->startVtab('controls', esc_html__('Controls', 'vapfem'), [
-    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>',
+    'icon' => leanpl_ssot( 'icons', 'controls_svg' ),
 ]);
 
-$sr->startSection('shared_controls', esc_html__('Controls & Keyboard', 'vapfem'), [
-    'accordion' => true,
-    'exclusive' => 'player-settings',
+$sr->startSection('controls_buttons', esc_html__('Buttons & Order', 'vapfem'), [
+    'accordion'      => true,
+    'exclusive'      => 'player-settings',
+    'meta'           => esc_html__('- Applies to all players', 'vapfem'),
 ]);
 
 // Controls
@@ -144,19 +162,12 @@ $settings->fieldRenderer->render('checkbox', 'controls', [
     'pro'      => [ 'onclick' => 'openUpgradeModal'],
 ]);
 
-// Seek Time
-$settings->fieldRenderer->render('number', 'seek_time', [
-    'label'         => esc_html__('Skip Forward/Back Amount', 'vapfem'),
-    'tooltip'       => __('Seconds to skip per keyboard shortcut press.<br><ul><li>Arrow right / left — skip forward or back</li><li>Example: 10 sec means each press jumps 10 seconds</li></ul><strong>Note:</strong> Clicking the progress bar always jumps directly to that position.', 'vapfem'),
-    'tooltip_width' => 'wide',
-    'desc'          => esc_html__('Seconds to skip per keyboard shortcut press.', 'vapfem'),
-    'min' => 1,
-    'max' => 60,
-    'step' => 1,
-    'unit' => 'Seconds',
-    'default' => $defaults['seek_time'] ?? null,
-    'disabled' => true,
-    'pro' => ['onclick' => 'openUpgradeModal'],
+$sr->endSection();
+
+$sr->startSection('controls_time_tooltips', esc_html__('Time & Tooltips', 'vapfem'), [
+    'accordion'      => true,
+    'exclusive'      => 'player-settings',
+    'meta'           => esc_html__('- Applies to all players', 'vapfem'),
 ]);
 
 // Time Display Format
@@ -170,6 +181,37 @@ $settings->fieldRenderer->render('select', 'invert_time', [
         '0' => esc_html__('Elapsed Time (Incremental)', 'vapfem'),
     ],
     'default' => $defaults['invert_time'] ?? '1',
+    'disabled' => true,
+    'pro' => ['onclick' => 'openUpgradeModal'],
+]);
+
+// Control Button Tooltips
+$settings->fieldRenderer->render('checkbox', 'tooltips_controls', [
+    'label'          => esc_html__('Control Button Tooltips', 'vapfem'),
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc'           => esc_html__('Hover over a button (play, mute, fullscreen) → shows its name as a little bubble ("Play", "Mute"). Works on video and audio.', 'vapfem'),
+    'default'        => $defaults['tooltips_controls'] ?? null,
+]);
+
+$sr->endSection();
+
+$sr->startSection('controls_keyboard', esc_html__('Keyboard', 'vapfem'), [
+    'accordion'      => true,
+    'exclusive'      => 'player-settings',
+    'meta'           => esc_html__('- Applies to all players', 'vapfem'),
+]);
+
+// Seek Time
+$settings->fieldRenderer->render('number', 'seek_time', [
+    'label'         => esc_html__('Skip Forward/Back Amount', 'vapfem'),
+    'tooltip'       => __('Seconds to skip per keyboard shortcut press.<br><ul><li>Arrow right / left — skip forward or back</li><li>Example: 10 sec means each press jumps 10 seconds</li></ul><strong>Note:</strong> Clicking the progress bar always jumps directly to that position.', 'vapfem'),
+    'tooltip_width' => 'wide',
+    'desc'          => esc_html__('Seconds to skip per keyboard shortcut press.', 'vapfem'),
+    'min' => 1,
+    'max' => 60,
+    'step' => 1,
+    'unit' => 'Seconds',
+    'default' => $defaults['seek_time'] ?? null,
     'disabled' => true,
     'pro' => ['onclick' => 'openUpgradeModal'],
 ]);
@@ -202,12 +244,13 @@ $sr->endVtab();
 // VTAB: Video-Only
 // ============================================
 $sr->startVtab('video', esc_html__('Video-Only', 'vapfem'), [
-    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M17 10l4-2v8l-4-2" stroke="currentColor" stroke-width="1.75"/></svg>',
+    'icon' => leanpl_ssot( 'icons', 'video_svg' ),
 ]);
 
-$sr->startSection('video_only', esc_html__('Video-Only Options', 'vapfem'), [
+$sr->startSection('video_only', esc_html__('Video-Only', 'vapfem'), [
     'accordion' => true,
     'exclusive' => 'player-settings',
+    'meta'      => esc_html__('- Applies to video players only', 'vapfem'),
 ]);
 $settings->fieldRenderer->render('info', 'video_info', [
     'content' => __('Set once, applies to every video player on your site. Override individually when you need a one-off change.<br><strong>Note:</strong> Reset to Start When Finished is ignored for playlist players. They auto-advance instead.', 'vapfem'),

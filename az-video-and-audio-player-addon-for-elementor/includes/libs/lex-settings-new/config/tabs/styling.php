@@ -16,9 +16,9 @@ if (file_exists($defaults_file)) {
 $settings = \Lex\Settings\V2\Settings::getInstance('leanpl');
 
 // ============================================
-// Section: Player Styling
+// Section: Player Appearance
 // ============================================
-$settings->sectionRenderer->startSection('styling', esc_html__('Player Styling', 'vapfem'));
+$settings->sectionRenderer->startSection('styling', esc_html__('Player Appearance', 'vapfem'));
 $settings->fieldRenderer->render('info', 'styling_info', [
     'content' => esc_html__('Match player colors with your brand. These global styling options apply to all players site-wide (single players and players inside playlists), unless you override them at the widget, individual player, or playlist level.', 'vapfem'),
 ]);

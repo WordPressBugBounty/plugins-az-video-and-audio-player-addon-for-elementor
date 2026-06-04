@@ -217,14 +217,20 @@ window.LexSettings.log = window.lexLog;
          */
         handleInitialHash() {
             const hash = window.location.hash.substring(1);
+            let $targetTab = $();
             if (hash) {
-                const $targetTab = $(`.lex-settings-tabs__tab[data-tab="${hash}"], .lex-nav-header__item[data-tab="${hash}"], .lex-nav-header__dropdown-item[data-tab="${hash}"]`);
-                if ($targetTab.length) {
-                    // Activate tab without smooth scroll on page load
-                    this.activateTab($targetTab, false);
-                }
+                $targetTab = $(`.lex-settings-tabs__tab[data-tab="${hash}"], .lex-nav-header__item[data-tab="${hash}"], .lex-nav-header__dropdown-item[data-tab="${hash}"]`);
             }
-            
+            // No hash, or hash matched no tab: fall back to the first nav item so
+            // the content panel (and its vtabs) is never left blank.
+            if (!$targetTab.length) {
+                $targetTab = $('.lex-settings-tabs__tab, .lex-nav-header__item').first();
+            }
+            if ($targetTab.length) {
+                // Activate tab without smooth scroll on page load
+                this.activateTab($targetTab, false);
+            }
+
             // Initialize color pickers immediately (no delay needed - WordPress color picker is synchronous)
             this.initColorPickers();
             

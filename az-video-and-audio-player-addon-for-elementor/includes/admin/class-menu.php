@@ -137,10 +137,10 @@ class Menu {
             'order'    => 5.3,
         ]);
 
-        // Register Styling tab (main tab, not in dropdown)
+        // Register Appearance tab (main tab, not in dropdown)
         $this->lex_settings->registerTab([
             'id'       => 'styling',
-            'label'    => esc_html__('Styling', 'vapfem'),
+            'label'    => esc_html__('Appearance', 'vapfem'),
             'icon'     => 'dashicons dashicons-admin-appearance',
             'order'    => 5.5,
         ]);

@@ -83,16 +83,7 @@ include $settings->getConfig('framework_path') . '/partials/header.php';
                             }
                             $layout_attr = $vtab_layout ? ' data-layout="' . esc_attr( $vtab_layout ) . '"' : '';
                             echo '<div class="lex-vtabs" data-tab="' . esc_attr($tab_id) . '"' . $layout_attr . '>';
-                            echo '<div class="lex-vtabs__nav">';
-                            foreach ($vtabs as $vt) {
-                                printf(
-                                    '<button type="button" data-vtab="%s">%s<span>%s</span></button>',
-                                    esc_attr($vt['id']),
-                                    $vt['icon'],
-                                    esc_html($vt['label'])
-                                );
-                            }
-                            echo '</div>';
+                            echo \Lex\Settings\V2\Services\Vtabs::render_nav_flat($vtabs);
                             echo '<div class="lex-vtabs__content">' . $tab_html . '</div>';
                             echo '</div>';
 

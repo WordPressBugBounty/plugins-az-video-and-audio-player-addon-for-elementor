@@ -255,17 +255,17 @@ class Metaboxes {
             '_tooltips_seek' => [
                 'type' => 'select',
                 'label' => __('Seek Tooltips', 'vapfem'),
-                'desc' => __('Display a seek tooltip to indicate on click where the media would seek to', 'vapfem'),
+                'desc' => __('Hover over the progress/scrubber bar → shows the time at that point (e.g. "1:24"). Helps you see where you\'ll jump before clicking.', 'vapfem'),
                 'options' => [
+                    '' => __('Use Global Option', 'vapfem'),
                     '1' => __('Yes', 'vapfem'),
                     '0' => __('No', 'vapfem'),
                 ],
-                'default' => '1',
                 'group' => 'playback_options',
             ],
             '_poster' => [
                 'type' => 'media',
-                'label' => __('Poster Image', 'vapfem'),
+                'label' => __('Custom Thumbnail', 'vapfem'),
                 'desc' => __('Video: thumbnail before playback. Audio: album art in the player. Playlist: cover image in the playlist list.', 'vapfem'),
                 'button_text' => __('Select Image', 'vapfem'),
                 'remove_text' => __('Remove', 'vapfem'),
@@ -322,16 +322,23 @@ class Metaboxes {
                 'default' => '0',
                 'group' => 'video_options',
             ],
+            '_ratio' => [
+                'type' => 'text',
+                'label' => __('Video Shape (Aspect Ratio)', 'vapfem'),
+                'desc' => __('Sets the width-to-height shape of the player so the page does not jump while the video loads.<br>• <strong>Leave empty</strong> for automatic (most widescreen videos are 16:9).<br>• Enter <code>width:height</code> to force a shape, for example <code>16:9</code> (widescreen), <code>4:3</code> (older TV), <code>1:1</code> (square), or <code>9:16</code> (vertical / phone).<br>Video-only. Has no effect on audio players.', 'vapfem'),
+                'placeholder' => __('16:9', 'vapfem'),
+                'group' => 'video_options',
+            ],
             '_tooltips_controls' => [
                 'type' => 'select',
                 'label' => __('Control Button Tooltips', 'vapfem'),
-                'desc' => __('Display control labels as tooltips on :hover & :focus. Examples: play icon, mute/unmute, pip, fullscreen, etc. By default, the labels are screen reader only.', 'vapfem'),
+                'desc' => __('Hover over a button (play, mute, fullscreen) → shows its name as a little bubble ("Play", "Mute").', 'vapfem'),
                 'options' => [
+                    '' => __('Use Global Option', 'vapfem'),
                     '1' => __('Yes', 'vapfem'),
                     '0' => __('No', 'vapfem'),
                 ],
-                'default' => '0',
-                'group' => 'video_options',
+                'group' => 'playback_options',
             ],
             '_preload' => [
                 'type' => 'select',
@@ -346,6 +353,17 @@ class Metaboxes {
                 ],
                 'default' => 'metadata',
                 'group' => 'playback_options',
+            ],
+            '_primary_color' => [
+                'type'    => 'color',
+                'label'   => __( 'Player Accent Color', 'vapfem' ),
+                'desc'    => __( 'Overrides the global accent color for this player. Leave empty to inherit.', 'vapfem' ),
+                'default' => '',
+                'group'   => 'appearance',
+                'pro'     => [
+                    'badge_position' => 'inline',
+                    'onclick'        => 'openUpgradeModal',
+                ],
             ],
         ];
     }
@@ -393,22 +411,48 @@ class Metaboxes {
                  data-player-type="<?php echo esc_attr( $player_type_value ); ?>"
                  data-storage-suffix="<?php echo esc_attr( $post->ID ); ?>">
 
-                <div class="lex-vtabs__nav">
-                    <button type="button" data-vtab="p-source">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M15 10l4.553-2.277A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <?php esc_html_e( 'Source', 'vapfem' ); ?>
-                    </button>
-                    <button type="button" data-vtab="p-playback">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M10 8l6 4-6 4V8z" fill="currentColor"/></svg>
-                        <?php esc_html_e( 'Playback', 'vapfem' ); ?>
-                    </button>
-                    <?php if ( $playlist_enabled ) : ?>
-                    <button type="button" data-vtab="p-playlist">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 6h16M4 10h10M4 14h16M4 18h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
-                        <?php esc_html_e( 'Playlist Data', 'vapfem' ); ?>
-                    </button>
-                    <?php endif; ?>
-                </div>
+                <?php
+                $source_tab = [
+                    'id'    => 'p-source',
+                    'label' => __( 'Source', 'vapfem' ),
+                    'icon'  => leanpl_ssot( 'icons', 'source_svg' ),
+                ];
+                $optional_tabs = [
+                    [
+                        'id'    => 'p-behavior',
+                        'label' => __( 'Behavior', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'behavior_svg' ),
+                    ],
+                    [
+                        'id'    => 'p-controls',
+                        'label' => __( 'Controls', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'controls_svg' ),
+                    ],
+                    [
+                        'id'    => 'p-video',
+                        'label' => __( 'Video-Only', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'video_svg' ),
+                    ],
+                    [
+                        'id'    => 'p-appearance',
+                        'label' => __( 'Appearance', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'appearance_svg' ),
+                    ],
+                ];
+                if ( $playlist_enabled ) {
+                    $optional_tabs[] = [
+                        'id'    => 'p-playlist',
+                        'label' => __( 'Playlist Data', 'vapfem' ),
+                        'icon'  => leanpl_ssot( 'icons', 'playlist_svg' ),
+                    ];
+                }
+
+                $groups = [
+                    [ 'label' => '',                          'tabs' => [ $source_tab ] ],
+                    [ 'label' => __( 'Optional', 'vapfem' ),  'tabs' => $optional_tabs ],
+                ];
+                echo \Lex\Settings\V2\Services\Vtabs::render_nav( $groups );
+                ?>
 
                 <div class="lex-vtabs__content">
 
@@ -420,8 +464,20 @@ class Metaboxes {
                         ?>
                     </div>
 
-                    <div class="lex-vtab-pane" data-vtab="p-playback">
-                        <?php $this->render_playback_options_section($post, $settings, $fields, $player_type_value); ?>
+                    <div class="lex-vtab-pane" data-vtab="p-behavior">
+                        <?php $this->render_behavior_options_section($post, $settings, $fields, $player_type_value); ?>
+                    </div>
+
+                    <div class="lex-vtab-pane" data-vtab="p-controls">
+                        <?php $this->render_controls_section($post, $settings, $fields); ?>
+                    </div>
+
+                    <div class="lex-vtab-pane" data-vtab="p-video">
+                        <?php $this->render_video_only_section($post, $settings, $fields, $player_type_value); ?>
+                    </div>
+
+                    <div class="lex-vtab-pane" data-vtab="p-appearance">
+                        <?php $this->render_appearance_section( $post, $settings, $fields ); ?>
                     </div>
 
                     <?php if ( $playlist_enabled ) : ?>
@@ -727,17 +783,39 @@ class Metaboxes {
     }
 
     /**
-     * Render playback options section (shared)
+     * Render appearance section (per-player accent color override).
+     *
+     * @param object $post     Post object
+     * @param object $settings Settings instance
+     * @param array  $fields   All field definitions
+     * @return void
+     */
+    private function render_appearance_section( $post, $settings, $fields ) {
+        $settings->sectionRenderer->startSection( 'appearance', esc_html__( 'Appearance', 'vapfem' ), [
+            'disable_save_button' => true,
+            'no_title'            => true,
+        ] );
+
+        $this->render_field( $settings, $post->ID, '_primary_color', $fields );
+
+        $settings->sectionRenderer->endSection();
+    }
+
+    /**
+     * Render behavior options section (shared).
+     *
+     * Hosts the Auto-Start / Playback / advanced accordions that live inside the
+     * "Behavior" tab in the player metabox.
      *
      * @param object $post Post object
      * @param object $settings Settings instance
      * @param array $fields All field definitions
      * @return void
      */
-    private function render_playback_options_section( $post, $settings, $fields, $player_type_value = '' ) {
+    private function render_behavior_options_section( $post, $settings, $fields, $player_type_value = '' ) {
         $settings->sectionRenderer->startSection( 'playback-auto-start', esc_html__( 'Auto-Start', 'vapfem' ), [
             'disable_save_button' => true,
-            'collapsed'           => true,
+            'collapsed'           => false,
             'accordion'           => true,
             'exclusive'           => 'metabox-playback',
             'summary_labels'      => [ esc_html__( 'Autoplay', 'vapfem' ), esc_html__( 'Start Muted', 'vapfem' ) ],
@@ -758,6 +836,61 @@ class Metaboxes {
         $this->render_field( $settings, $post->ID, '_speed_selected', $fields );
         $settings->sectionRenderer->endSection();
 
+        $settings->sectionRenderer->startSection( 'playback-advanced', esc_html__( 'Advanced', 'vapfem' ), [
+            'disable_save_button' => true,
+            'collapsed'           => true,
+            'accordion'           => true,
+            'exclusive'           => 'metabox-playback',
+            'summary_labels'      => [ esc_html__( 'Preload', 'vapfem' ), esc_html__( 'Storage', 'vapfem' ) ],
+        ] );
+        $this->render_field( $settings, $post->ID, '_preload', $fields );
+        $this->render_field( $settings, $post->ID, '_storage_enabled', $fields );
+        $settings->sectionRenderer->endSection();
+    }
+
+    /**
+     * Render the Controls tab (Controls & Keyboard). Mirrors the global
+     * Settings "Controls" vtab for cross-surface consistency.
+     */
+    private function render_controls_section( $post, $settings, $fields ) {
+        $settings->sectionRenderer->startSection( 'controls-buttons', esc_html__( 'Buttons & Order', 'vapfem' ), [
+            'disable_save_button' => true,
+            'collapsed'           => true,
+            'accordion'           => true,
+            'exclusive'           => 'metabox-controls',
+            'summary_labels'      => [ esc_html__( 'Controls', 'vapfem' ) ],
+        ] );
+        $this->render_field( $settings, $post->ID, '_controls', $fields );
+        $settings->sectionRenderer->endSection();
+
+        $settings->sectionRenderer->startSection( 'controls-time-tooltips', esc_html__( 'Time & Tooltips', 'vapfem' ), [
+            'disable_save_button' => true,
+            'collapsed'           => true,
+            'accordion'           => true,
+            'exclusive'           => 'metabox-controls',
+            'summary_labels'      => [ esc_html__( 'Invert Time', 'vapfem' ), esc_html__( 'Tooltips', 'vapfem' ) ],
+        ] );
+        $this->render_field( $settings, $post->ID, '_invert_time', $fields );
+        $this->render_field( $settings, $post->ID, '_tooltips_controls', $fields );
+        $this->render_field( $settings, $post->ID, '_tooltips_seek', $fields );
+        $settings->sectionRenderer->endSection();
+
+        $settings->sectionRenderer->startSection( 'controls-keyboard', esc_html__( 'Keyboard', 'vapfem' ), [
+            'disable_save_button' => true,
+            'collapsed'           => true,
+            'accordion'           => true,
+            'exclusive'           => 'metabox-controls',
+            'summary_labels'      => [ esc_html__( 'Seek Time', 'vapfem' ) ],
+        ] );
+        $this->render_field( $settings, $post->ID, '_seek_time', $fields );
+        $settings->sectionRenderer->endSection();
+    }
+
+    /**
+     * Render the Video-Only tab. Mirrors the global Settings "Video-Only" vtab.
+     * Conditional: only meaningful for video players.
+     */
+    private function render_video_only_section( $post, $settings, $fields, $player_type_value = '' ) {
         $display = $this->get_conditional_display( $player_type_value, 'video' );
         ?>
         <div class="lpl-conditional-section"
@@ -765,46 +898,19 @@ class Metaboxes {
              data-show-value="video"
              style="display: <?php echo esc_attr( $display ); ?>;">
             <?php
-            $settings->sectionRenderer->startSection( 'playback-display', esc_html__( 'Display', 'vapfem' ), [
+            $settings->sectionRenderer->startSection( 'playback-display', esc_html__( 'Video-Only', 'vapfem' ), [
                 'disable_save_button' => true,
-                'collapsed'           => true,
-                'accordion'           => true,
-                'exclusive'           => 'metabox-playback',
-                'summary_labels'      => [ esc_html__( 'Click to Play', 'vapfem' ), esc_html__( 'Fullscreen', 'vapfem' ), esc_html__( 'Hide Controls', 'vapfem' ), esc_html__( 'Restart', 'vapfem' ), esc_html__( 'Control Labels', 'vapfem' ) ],
+                'no_title'            => true,
             ] );
             $this->render_field( $settings, $post->ID, '_click_to_play', $fields );
             $this->render_field( $settings, $post->ID, '_fullscreen_enabled', $fields );
             $this->render_field( $settings, $post->ID, '_hide_controls', $fields );
             $this->render_field( $settings, $post->ID, '_reset_on_end', $fields );
-            $this->render_field( $settings, $post->ID, '_tooltips_controls', $fields );
+            $this->render_field( $settings, $post->ID, '_ratio', $fields );
             $settings->sectionRenderer->endSection();
             ?>
         </div>
         <?php
-
-        $settings->sectionRenderer->startSection( 'playback-controls', esc_html__( 'Controls', 'vapfem' ), [
-            'disable_save_button' => true,
-            'collapsed'           => true,
-            'accordion'           => true,
-            'exclusive'           => 'metabox-playback',
-            'summary_labels'      => [ esc_html__( 'Controls', 'vapfem' ), esc_html__( 'Seek Time', 'vapfem' ), esc_html__( 'Invert Time', 'vapfem' ), esc_html__( 'Tooltips', 'vapfem' ) ],
-        ] );
-        $this->render_field( $settings, $post->ID, '_controls', $fields );
-        $this->render_field( $settings, $post->ID, '_seek_time', $fields );
-        $this->render_field( $settings, $post->ID, '_invert_time', $fields );
-        $this->render_field( $settings, $post->ID, '_tooltips_seek', $fields );
-        $settings->sectionRenderer->endSection();
-
-        $settings->sectionRenderer->startSection( 'playback-advanced', esc_html__( 'Advanced', 'vapfem' ), [
-            'disable_save_button' => true,
-            'collapsed'           => true,
-            'accordion'           => true,
-            'exclusive'           => 'metabox-playback',
-            'summary_labels'      => [ esc_html__( 'Storage', 'vapfem' ), esc_html__( 'Preload', 'vapfem' ) ],
-        ] );
-        $this->render_field( $settings, $post->ID, '_storage_enabled', $fields );
-        $this->render_field( $settings, $post->ID, '_preload', $fields );
-        $settings->sectionRenderer->endSection();
     }
 
     /**

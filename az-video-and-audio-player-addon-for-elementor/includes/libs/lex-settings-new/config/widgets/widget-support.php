@@ -6,10 +6,10 @@
  */
 
 if(leanpl_is_pro_active()){
-    $support_url = 'https://leanplugins.com/contact/';
+    $support_url = leanpl_ssot( 'brand', 'support_pro_url' );
 
 } else {
-    $support_url = 'https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor/';
+    $support_url = leanpl_ssot( 'brand', 'support_free_url' );
 }
 ?>
 <div class="lex-sidebar-widget lex-sidebar-widget--support">

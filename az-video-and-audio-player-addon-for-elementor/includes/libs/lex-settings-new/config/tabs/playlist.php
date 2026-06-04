@@ -21,7 +21,7 @@ $settings->fieldRenderer->render( 'checkbox', 'playlist.auto_thumbnail', [
     'checkbox_label' => esc_html__( 'Yes', 'vapfem' ),
     'default'        => $playlist_defaults['auto_thumbnail'] ?? false,
     'disabled'       => true,
-    'pro'            => [ 'onclick' => 'openUpgradeModal', 'badge_position' => false ],
+    'pro'            => [ 'onclick' => 'openUpgradeModal' ],
 ] );
 
 $settings->sectionRenderer->endSection();

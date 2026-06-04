@@ -85,7 +85,18 @@ window.leanplUtils = (function () {
         });
     }
 
-    var autopauseManager = (function () {
+    /**
+     * Player registry. Every Plyr instance created by this plugin (single
+     * players and playlist players) registers itself here. Public API:
+     *
+     *   window.LeanPL.players.all()       // array of all live Plyr instances
+     *   window.LeanPL.players.pauseAll()  // pause every live player
+     *
+     * Autopause is implemented as one consumer of this registry: when a player
+     * with autopause enabled starts playing, all other autopause-enabled
+     * players are paused.
+     */
+    var playerRegistry = (function () {
         var registry = [];
 
         function register(player) {
@@ -99,12 +110,9 @@ window.leanplUtils = (function () {
                 if (!player.config.autopause) {
                     return;
                 }
-
                 for (var i = 0; i < registry.length; i++) {
                     var other = registry[i];
-                    if (other === player) {
-                        continue;
-                    }
+                    if (other === player) continue;
                     if (other.config && other.config.autopause && other.playing) {
                         other.pause();
                     }
@@ -113,21 +121,30 @@ window.leanplUtils = (function () {
 
             player.on('destroy', function () {
                 var idx = registry.indexOf(player);
-                if (idx > -1) {
-                    registry.splice(idx, 1);
-                }
+                if (idx > -1) registry.splice(idx, 1);
             });
         }
 
-        function getRegistry() {
-            return registry;
+        function all() {
+            return registry.slice();
+        }
+
+        function pauseAll() {
+            for (var i = 0; i < registry.length; i++) {
+                if (registry[i].playing) registry[i].pause();
+            }
         }
 
         return {
-            register:    register,
-            getRegistry: getRegistry
+            register: register,
+            all:      all,
+            pauseAll: pauseAll
         };
     })();
+
+    // Expose public API on window.LeanPL.
+    window.LeanPL = window.LeanPL || {};
+    window.LeanPL.players = playerRegistry;
 
     return {
         getBooleanSetting:  getBooleanSetting,
@@ -136,7 +153,7 @@ window.leanplUtils = (function () {
         buildCommonConfig:  buildCommonConfig,
         buildVideoConfig:   buildVideoConfig,
         buildAudioConfig:   buildAudioConfig,
-        autopauseManager:   autopauseManager
+        playerRegistry:     playerRegistry
     };
 
 })();

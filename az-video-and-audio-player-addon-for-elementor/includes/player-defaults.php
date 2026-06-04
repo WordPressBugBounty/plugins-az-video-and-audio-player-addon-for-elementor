@@ -78,6 +78,7 @@ return [
 
         // Tooltips & UI
         'tooltips_seek' => true,
+        'tooltips_controls' => false, // Display control labels as tooltips on :hover & :focus (e.g., play icon, mute/unmute, pip). Works on both video and audio.
         // Note: Tooltips are converted to object format { controls: boolean, seek: boolean } in JavaScript
         // - controls: Display control labels as tooltips on :hover & :focus (e.g., play icon, mute/unmute, pip)
         // - seek: Display a seek tooltip to indicate on click where the media would seek to
@@ -110,7 +111,6 @@ return [
         'hide_controls' => false,
         'reset_on_end' => false,
         'fullscreen_enabled' => true,
-        'tooltips_controls' => false, // Display control labels as tooltips on :hover & :focus (e.g., play icon, mute/unmute, pip)
 
         // HTML5 video specific
         'sources' => array(), // See $source array example above

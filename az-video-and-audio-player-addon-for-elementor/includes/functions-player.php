@@ -34,7 +34,7 @@ function leanpl_get_audio_defaults(){
 function leanpl_get_controls_registry() {
     return [
         'play-large' => [
-            'label'      => __( 'Play Large',   'vapfem' ),
+            'label'      => __( 'Play Large (Video Only)',   'vapfem' ),
             'video_only' => true,
             'audio_only' => false,
             'default'    => true,
@@ -94,7 +94,7 @@ function leanpl_get_controls_registry() {
             'default'    => true,
         ],
         'captions' => [
-            'label'      => __( 'Captions',     'vapfem' ),
+            'label'      => __( 'Captions (Video Only)',     'vapfem' ),
             'video_only' => true,
             'audio_only' => false,
             'default'    => true,
@@ -106,7 +106,7 @@ function leanpl_get_controls_registry() {
             'default'    => true,
         ],
         'pip' => [
-            'label'      => __( 'PIP',          'vapfem' ),
+            'label'      => __( 'PIP (Video Only)',          'vapfem' ),
             'video_only' => true,
             'audio_only' => false,
             'default'    => true,
@@ -124,7 +124,7 @@ function leanpl_get_controls_registry() {
             'default'    => false,
         ],
         'fullscreen' => [
-            'label'      => __( 'Fullscreen',   'vapfem' ),
+            'label'      => __( 'Fullscreen (Video Only)',   'vapfem' ),
             'video_only' => true,
             'audio_only' => false,
             'default'    => true,

@@ -74,6 +74,17 @@ function leanpl_is_pro_active() {
            function_exists('leanpl_pro_init');
 }
 
+function leanpl_ssot( $section, $key = null ) {
+	static $data = null;
+	if ( $data === null ) {
+		$data = include LEANPL_DIR . '/includes/ssot.php';
+	}
+	if ( $key === null ) {
+		return $data[ $section ] ?? [];
+	}
+	return $data[ $section ][ $key ] ?? null;
+}
+
 /**
  * Keys that only pro users may override via shortcode attributes.
  *
@@ -320,7 +331,7 @@ function leanpl_get_upgrade_url($args = []) {
 
     $args = wp_parse_args($args, $defaults);
 
-    $base_url = 'https://leanplugins.com/wordpress-plugins/video-and-audio-player/';
+    $base_url = leanpl_ssot( 'brand', 'upgrade_base_url' );
 
     $url = $base_url . '?utm_source=' . esc_attr($args['utm_source']) . '&utm_medium=' . esc_attr($args['utm_medium']) . '&utm_campaign=' . esc_attr($args['utm_campaign']);
 

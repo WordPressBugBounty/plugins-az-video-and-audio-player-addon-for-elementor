@@ -2620,6 +2620,23 @@ button .dashicons {
     background: var(--wp-color-gray-2);
 }
 
+.lex-vtabs__group-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--lex-color-text-muted, #94a3b8);
+    padding: 12px 12px 4px;
+}
+
+.lex-vtabs__group-label:first-child {
+    padding-top: 8px;
+}
+
+.lex-vtabs__divider {
+    height: 1px;
+    background: var(--lex-color-border, #e2e8f0);
+    margin: 10px 8px 0;
+}
+
 .lex-vtabs__btn--active {
     background: var(--lex-color-apple-blue) !important;
     color: #fff !important;

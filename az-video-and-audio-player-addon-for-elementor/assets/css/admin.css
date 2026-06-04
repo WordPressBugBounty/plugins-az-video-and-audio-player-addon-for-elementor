@@ -1659,6 +1659,24 @@ Table of contents:
     margin-inline-start: 8px;
 }
 
+/* Always-visible plain-text meta label beside a section title. Styled exactly
+   like the summary, but unlike summary it stays visible whether the section is
+   open, collapsed, or non-accordion. Multi-purpose: scope hints ("Video &
+   Audio"), status tags, etc. */
+.lex-settings-section__meta {
+    display: inline;
+    font-size: var(--lex-font-size-xs, 11px);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--lex-color-text-muted);
+    opacity: 0.75;
+    margin-inline-start: 8px;
+    /* Keep the meta tight beside the title; push only the trailing controls
+       (e.g. Save button) to the far end of the space-between flex row. */
+    margin-inline-end: auto;
+}
+
 /* Hide conditional sections by default - JavaScript will show them */
 .lpl-conditional-section {
     display: none;

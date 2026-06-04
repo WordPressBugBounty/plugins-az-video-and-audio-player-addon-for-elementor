@@ -117,12 +117,24 @@ class Player_Shortcode {
         $config['reset_on_end'] = Metaboxes::get_field_value($post_id, '_reset_on_end');
         $config['tooltips_controls'] = Metaboxes::get_field_value($post_id, '_tooltips_controls');
         $config['preload'] = Metaboxes::get_field_value($post_id, '_preload');
+
+        // Per-player video aspect ratio (empty = automatic). Plyr "W:H" form.
+        $per_player_ratio = Metaboxes::get_field_value($post_id, '_ratio');
+        if (!empty($per_player_ratio)) {
+            $config['ratio'] = $per_player_ratio;
+        }
         
         // Per-player controls (empty array means inherit from global)
         // If empty array or not set, controls will inherit from global/defaults via Config_Merger
         $per_player_controls = Metaboxes::get_field_value($post_id, '_controls');
         if (is_array($per_player_controls) && !empty($per_player_controls)) {
             $config['controls'] = $per_player_controls;
+        }
+
+        // Per-player accent color (empty string means inherit from global)
+        $per_player_primary_color = Metaboxes::get_field_value($post_id, '_primary_color');
+        if (!empty($per_player_primary_color)) {
+            $config['primary_color'] = $per_player_primary_color;
         }
         
         // Special processing (not direct match)
@@ -145,9 +157,9 @@ class Player_Shortcode {
         ob_start();
         
         if ($player_type === 'audio') {
-            $renderer->render_audio_player($config);
+            $renderer->render_audio_player($config, $post_id);
         } else {
-            $renderer->render_video_player($config);
+            $renderer->render_video_player($config, $post_id);
         }
         
         return ob_get_clean();

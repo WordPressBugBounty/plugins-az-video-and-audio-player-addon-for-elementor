@@ -7,7 +7,7 @@
     var buildCommonConfig = leanplUtils.buildCommonConfig;
     var buildVideoConfig  = leanplUtils.buildVideoConfig;
     var buildAudioConfig  = leanplUtils.buildAudioConfig;
-    var autopauseManager  = leanplUtils.autopauseManager;
+    var playerRegistry  = leanplUtils.playerRegistry;
 
     // Initialize on document ready
     $(document).ready(function() {
@@ -81,7 +81,7 @@
             logConfigIfDebug('video', videoConfig);
             
             var player = new Plyr(element, videoConfig);
-            autopauseManager.register(player);
+            playerRegistry.register(player);
         }
     }
 
@@ -108,7 +108,7 @@
             logConfigIfDebug('audio', audioConfig);
             
             var player = new Plyr(element, audioConfig);
-            autopauseManager.register(player);
+            playerRegistry.register(player);
         }
     }
 

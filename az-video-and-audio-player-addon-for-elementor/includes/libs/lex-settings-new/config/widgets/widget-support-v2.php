@@ -6,8 +6,8 @@
  */
 
 $support_url = function_exists('leanpl_is_pro_active') && leanpl_is_pro_active()
-    ? 'https://leanplugins.com/contact/'
-    : 'https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor/';
+    ? leanpl_ssot( 'brand', 'support_pro_url' )
+    : leanpl_ssot( 'brand', 'support_free_url' );
 ?>
 <div class="lex-sidebar-widget lex-sidebar-widget--support">
     <div class="lex-sidebar-widget__header">
