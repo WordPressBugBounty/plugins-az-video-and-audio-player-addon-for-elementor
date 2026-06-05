@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,9 @@ Lean Player also helps keep media-heavy pages fast. With Media Preload, you choo
 * 20+ Styling options
 
 == Changelog ==
+= Version: 3.1.2 =
+* Fixed: Switching playlist tracks could log a JavaScript console error ("Cannot read properties of undefined") on YouTube and Vimeo items. Playback was unaffected; the error is now suppressed.
+
 = Version: 3.1.1 =
 * Added: Video Shape (Aspect Ratio) option per player. Set a player to 16:9, 4:3, 1:1, 9:16, or any width:height in the Video-Only settings; leave it empty for automatic. Available in the player editor, shortcode, and Elementor widget.
 * Improved: Video players no longer cause the page to jump while they load. Each player reserves its aspect-ratio space up front, removing layout shift for better Core Web Vitals.

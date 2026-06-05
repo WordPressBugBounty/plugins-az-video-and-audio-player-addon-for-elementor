@@ -164,7 +164,16 @@
         player.once('ready', function () {
             var provider = source.sources && source.sources[0] && source.sources[0].provider;
             var isEmbed = provider === 'youtube' || provider === 'vimeo';
-            var playFn = function () { player.play().catch(function () {}); };
+            var playFn = function () {
+                // Plyr's play() returns a Promise for HTML5 media, but can return
+                // undefined/null for embeds or when the media is not ready to play
+                // (e.g. YouTube/Vimeo mid-load, autoplay blocked). Guard before .catch
+                // so a missing Promise never throws "Cannot read properties of undefined".
+                var p = player.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(function () {});
+                }
+            };
             if (isEmbed) {
                 setTimeout(playFn, 200);
             } else {
