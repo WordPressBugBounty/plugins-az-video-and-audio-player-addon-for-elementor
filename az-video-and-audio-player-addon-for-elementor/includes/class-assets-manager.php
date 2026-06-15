@@ -56,6 +56,12 @@ class Assets_Manager {
                 'in_footer' => true,
                 'contexts' => ['frontend'],
             ],
+            'leanpl-elementor' => [
+                'file' => '/assets/js/elementor.js',
+                'deps' => ['jquery', 'leanpl-player-utils', 'leanpl-main', 'leanpl-playlist'],
+                'in_footer' => true,
+                'contexts' => ['elementor-widget'],
+            ],
             'leanpl-admin' => [
                 'file' => '/assets/js/admin.js',
                 'deps' => ['jquery'],
@@ -185,6 +191,20 @@ class Assets_Manager {
     }
 
     public function common_frontend_enqueue() {
+        // Output global accent color as a stylesheet rule scoped to .lpl-player-wrap.
+        // Weaker than Elementor widget CSS ({{WRAPPER}} .plyr = two classes) and
+        // weaker than per-player inline styles, so the cascade works correctly.
+        $global_color = leanpl_get_option( 'primary_color', '' );
+        if ( $global_color !== '' ) {
+            $css = sprintf(
+                '.lpl-player-wrap { --plyr-color-main: %s; --plyr-range-fill-background: %s; --plyr-range-thumb-background: %s; }',
+                sanitize_hex_color( $global_color ),
+                sanitize_hex_color( $global_color ),
+                sanitize_hex_color( $global_color )
+            );
+            wp_add_inline_style( 'leanpl-main', $css );
+        }
+
         // Enqueue jQuery first, other plugins may remove it from the queue
         wp_enqueue_script('jquery');
 

@@ -266,9 +266,11 @@ $settings->fieldRenderer->render('checkbox', 'click_to_play', [
 
 // Fullscreen enabled
 $settings->fieldRenderer->render('checkbox', 'fullscreen_enabled', [
-    'label' => esc_html__('Fullscreen Button', 'vapfem'),
+    'label' => esc_html__('Allow Fullscreen', 'vapfem'),
     'checkbox_label' => esc_html__('Yes', 'vapfem'),
-    'desc' => esc_html__('Show a fullscreen button on the player', 'vapfem'),
+    'desc' => esc_html__('Let viewers expand the video to fullscreen.', 'vapfem'),
+    'tooltip' => __('<strong>What it does</strong><br>Lets viewers open the video in fullscreen.<br><br><strong>On:</strong> the fullscreen button, double-click on the video, and the F key all work.<br><strong>Off:</strong> all three are disabled, fullscreen is fully turned off.<br><br><strong>Note:</strong> the Player Controls list only sets whether the button shows in the bar. To fully disable fullscreen, turn this off.', 'vapfem'),
+    'tooltip_width' => 'wide',
     'default' => $defaults['fullscreen_enabled'] ?? null,
 ]);
 

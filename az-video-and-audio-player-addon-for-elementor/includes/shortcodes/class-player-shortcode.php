@@ -91,6 +91,10 @@ class Player_Shortcode {
             return $this->render_error(__('Player not found.', 'vapfem'));
         }
 
+        if ( ! in_array( $post->post_status, [ 'publish', 'draft' ], true ) ) {
+            return $this->render_error( __( 'Player not found.', 'vapfem' ) );
+        }
+
         // Player type must be set
         $player_type = Metaboxes::get_field_value($post_id, '_player_type');
         if (!$player_type) {

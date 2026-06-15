@@ -275,6 +275,22 @@
 .lpl-playlist__item--playing .lpl-playlist__item-thumb-overlay .lpl-playlist__item-thumb-overlay-icon--pause {
   display: block;
 }
+.lpl-playlist__item--loading .lpl-playlist__item-thumb-overlay {
+  display: flex;
+}
+.lpl-playlist__item--loading .lpl-playlist__item-thumb-overlay .lpl-playlist__item-thumb-overlay-icon--play,
+.lpl-playlist__item--loading .lpl-playlist__item-thumb-overlay .lpl-playlist__item-thumb-overlay-icon--pause {
+  display: none;
+}
+.lpl-playlist__item--loading .lpl-playlist__item-thumb-overlay::after {
+  content: "";
+  width: var(--lpl-playlist-thumb-overlay-icon-size);
+  height: var(--lpl-playlist-thumb-overlay-icon-size);
+  border: 2px solid color-mix(in srgb, var(--wp-color-white) 30%, transparent);
+  border-top-color: var(--wp-color-white);
+  border-radius: 50%;
+  animation: lpl-item-spin 0.7s linear infinite;
+}
 .lpl-playlist__item-duration-badge {
   position: absolute;
   inset-block-end: var(--lex-space-1, 4px);
@@ -296,6 +312,17 @@
   position: relative;
   width: var(--lpl-playlist-item-icon-size);
   height: var(--lpl-playlist-item-icon-size);
+}
+.lpl-playlist__item--loading .lpl-playlist__item-icon-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: lpl-item-spin 0.7s linear infinite;
 }
 .lpl-playlist__item-icon {
   position: absolute;
@@ -321,6 +348,9 @@
 }
 .lpl-playlist__item--playing .lpl-playlist__item-icon--pause {
   display: block;
+}
+.lpl-playlist__item--loading .lpl-playlist__item-icon--play, .lpl-playlist__item--loading .lpl-playlist__item-icon--pause {
+  display: none;
 }
 .lpl-playlist__item-content {
   flex: 1;
@@ -679,6 +709,11 @@
 @container (max-width: 350px) {
   .lpl-playlist .lpl-playlist__items-wrap--grid.lpl-playlist__items-wrap--grid {
     grid-template-columns: 1fr;
+  }
+}
+@keyframes lpl-item-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

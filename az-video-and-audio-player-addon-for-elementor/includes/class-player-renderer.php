@@ -95,18 +95,16 @@ class Player_Renderer {
      * @return string Empty string or `--plyr-x: y; --plyr-z: w`.
      */
     private function build_player_style( array $config, bool $reserve_ratio = false ): string {
-        // config key  =>  Plyr CSS variable name
-        $map = [
-            'primary_color' => '--plyr-color-main',
-        ];
-
+        // Only per-player color overrides go inline (beat stylesheet-level rules).
+        // Global primary_color is output via wp_add_inline_style on .lpl-player
+        // so it doesn't fight Elementor widget CSS. Per-player is flagged with a
+        // dedicated key so the two levels stay distinguishable here.
         $declarations = [];
-        foreach ( $map as $config_key => $css_var ) {
-            $value = $config[ $config_key ] ?? '';
-            if ( $value === '' ) {
-                continue;
-            }
-            $declarations[] = $css_var . ': ' . $value;
+        $per_player_color = $config['per_player_primary_color'] ?? '';
+        if ( $per_player_color !== '' ) {
+            $declarations[] = '--plyr-color-main: ' . $per_player_color;
+            $declarations[] = '--plyr-range-fill-background: ' . $per_player_color;
+            $declarations[] = '--plyr-range-thumb-background: ' . $per_player_color;
         }
 
         // Reserve the video aspect-ratio up front to avoid pre-init layout shift.
@@ -130,7 +128,11 @@ class Player_Renderer {
    * @return void
    */
     public function render_video_player($config = [], $post_id = 0) {
+      $per_player_color = $config['per_player_primary_color'] ?? '';
       $config = Config_Merger::get_instance()->merge($config);
+      if ( $per_player_color !== '' ) {
+          $config['per_player_primary_color'] = $per_player_color;
+      }
 
         if (!$this->is_valid_video_type($config['video_type'])) {
             $this->render_error('Invalid video type provided.');
@@ -153,21 +155,19 @@ class Player_Renderer {
       $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
       $post_id = absint( $post_id );
-      if ( $post_id > 0 ) {
-            echo '<div class="lpl-player-wrap" id="lpl-player-' . esc_attr( $post_id ) . '">';
-      }
+      $wrap_attrs = $post_id > 0 ? ' id="lpl-player-' . esc_attr( $post_id ) . '"' : '';
+      $wrap_classes = 'lpl-player-wrap lpl-video' . ( ! empty( $config['poster'] ) ? ' has-poster' : '' );
+      echo '<div class="' . esc_attr( $wrap_classes ) . '"' . $wrap_attrs . '>';
 
       if ($config['video_type'] == 'html5') {
             $this->render_html5_markup($config, $data_settings);
       } elseif ($config['video_type'] == 'youtube') {
-            $this->render_youtube_markup($config, $data_settings);
+            $this->render_youtube_markup($config, $data_settings, $post_id);
       } elseif ($config['video_type'] == 'vimeo') {
-            $this->render_vimeo_player($config, $data_settings);
+            $this->render_vimeo_player($config, $data_settings, $post_id);
       }
 
-      if ( $post_id > 0 ) {
-            echo '</div>';
-      }
+      echo '</div>';
       
       /**
        * Fires after video player renders
@@ -181,7 +181,7 @@ class Player_Renderer {
       do_action('leanpl/player/after_render', $config, 'video');
       
       // Output debug info if debug mode is enabled
-      if (leanpl_is_debug_mode()) {
+      if (leanpl_is_debug_mode() || leanpl_is_test_mode()) {
           echo Config_Merger::get_debug_output_html();
       }
   }
@@ -194,7 +194,11 @@ class Player_Renderer {
    * @return void
    */
     public function render_audio_player($config = [], $post_id = 0) {
+        $per_player_color = $config['per_player_primary_color'] ?? '';
         $config = Config_Merger::get_instance()->merge($config);
+        if ( $per_player_color !== '' ) {
+            $config['per_player_primary_color'] = $per_player_color;
+        }
 
         if (empty($config['url'])) {
             $this->render_error('No audio source provided.');
@@ -216,16 +220,20 @@ class Player_Renderer {
         $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::AUDIO_ONLY_SETTINGS_KEYS );
         $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
-        $post_id = absint( $post_id );
-        if ( $post_id > 0 ) {
-            echo '<div class="lpl-player-wrap" id="lpl-player-' . esc_attr( $post_id ) . '">';
+        $post_id    = absint( $post_id );
+        $skin       = !empty( $config['audio_skin'] ) ? $config['audio_skin'] : 'default';
+        $allowed_skins = [ 'default', 'dark', 'glass' ];
+        if ( ! in_array( $skin, $allowed_skins, true ) ) {
+            $skin = 'default';
         }
+        $wrap_attrs   = $post_id > 0 ? ' id="lpl-player-' . esc_attr( $post_id ) . '"' : '';
+        $wrap_attrs  .= ' data-skin="' . esc_attr( $skin ) . '"';
+        $wrap_classes = 'lpl-player-wrap lpl-audio' . ( ! empty( $config['poster'] ) ? ' has-poster' : '' );
+        echo '<div class="' . esc_attr( $wrap_classes ) . '"' . $wrap_attrs . '>';
 
         $this->render_html5_audio_markup($config, $data_settings);
 
-        if ( $post_id > 0 ) {
-            echo '</div>';
-        }
+        echo '</div>';
         
         /**
          * Fires after audio player renders
@@ -263,15 +271,9 @@ class Player_Renderer {
         $mime_type = leanpl_get_audio_mime_type($file_extension);
 
         $brand_style = $this->build_player_style( $config );
-        $has_poster  = !empty($config['poster']);
-        $skin        = !empty($config['audio_skin']) ? $config['audio_skin'] : 'default';
-        $allowed_skins = [ 'default', 'dark', 'glass' ];
-        if ( ! in_array( $skin, $allowed_skins, true ) ) {
-            $skin = 'default';
-        }
+        $has_poster = !empty($config['poster']);
 
         if ( $has_poster ) : ?>
-        <div class="lpl-audio-with-poster" data-skin="<?php echo esc_attr( $skin ); ?>">
             <img
                 class="lpl-audio-poster"
                 src="<?php echo esc_url( $config['poster'] ); ?>"
@@ -299,7 +301,6 @@ class Player_Renderer {
         </audio>
         <?php if ( $has_poster ) : ?>
             </div><!-- .lpl-audio-info -->
-        </div><!-- .lpl-audio-with-poster -->
         <?php endif;
     }
 
@@ -367,7 +368,7 @@ class Player_Renderer {
      * @param array $data_settings Data settings
      * @return void
      */
-    private function render_youtube_markup($config, $data_settings) {
+    private function render_youtube_markup($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
             $this->render_error('YouTube video ID is required.');
             return;
@@ -386,18 +387,18 @@ class Player_Renderer {
                 allow="autoplay"
             ></iframe>
         </div>
-        <?php $this->render_custom_poster_style($config); ?>
+        <?php $this->render_custom_poster_style($config, $post_id); ?>
         <?php
     }
 
     /**
      * Render Vimeo player
-     * 
+     *
      * @param array $config Configuration
      * @param array $data_settings Data settings
      * @return void
      */
-    private function render_vimeo_player($config, $data_settings) {
+    private function render_vimeo_player($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
             $this->render_error('Vimeo video ID is required.');
             return;
@@ -416,24 +417,31 @@ class Player_Renderer {
                 allow="autoplay"
             ></iframe>
         </div>
-        <?php $this->render_custom_poster_style($config); ?>
+        <?php $this->render_custom_poster_style($config, $post_id); ?>
         <?php
     }
 
     /**
-     * Render custom poster style if needed
-     * 
-     * @param array $config Configuration
+     * Render custom poster style scoped to this player instance.
+     *
+     * @param array $config  Configuration
+     * @param int   $post_id Player post ID (used to scope the CSS selector)
      * @return void
      */
-    private function render_custom_poster_style($config) {
+    private function render_custom_poster_style($config, $post_id = 0) {
         if (empty($config['poster'])) {
             return;
         }
 
+        $post_id = absint($post_id);
+        $selector = $post_id > 0
+            ? '#lpl-player-' . $post_id . ' .plyr__poster'
+            : '.plyr__poster';
+
         printf(
-            '<style type="text/css">.plyr__poster { background-image: url(\'%s\') !important; }</style>',
-            esc_attr($config['poster'])
+            '<style type="text/css">%s { background-image: url(\'%s\'); }</style>',
+            esc_attr($selector),
+            esc_url($config['poster'])
         );
     }
 

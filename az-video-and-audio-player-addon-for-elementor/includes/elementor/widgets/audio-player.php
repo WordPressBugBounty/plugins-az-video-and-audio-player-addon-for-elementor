@@ -1,8 +1,15 @@
 <?php
 use LeanPL\Player_Renderer;
+use LeanPL\Shortcodes\Player_Shortcode;
 use Elementor\Modules\DynamicTags\Module as TagsModule;
 
+require_once __DIR__ . '/audio-player/trait-content-controls.php';
+require_once __DIR__ . '/audio-player/trait-style-controls.php';
+
 class LeanPL_Audio_Player extends Elementor\Widget_Base {
+
+    use LeanPL_Audio_Player_Content_Controls;
+    use LeanPL_Audio_Player_Style_Controls;
 
     public function get_name() {
         return "vapfem_audio_player";
@@ -19,677 +26,96 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
     public function get_categories() {
         return array( 'general' );
     }
-    
+
+    public function get_keywords() {
+        return [ 'lean', 'leanpl', 'audio', 'player', 'podcast', 'music' ];
+    }
+
     public function get_style_depends() {
         return [
             'plyr',
             'leanpl-main'
         ];
     }
-    
+
     public function get_script_depends() {
         return [
             'plyr',
             'leanpl-main',
+            'leanpl-elementor',
         ];
     }
 
     protected function _register_controls() {
-        $this->start_controls_section(
-            'content_section',
-            [
-                'label' => esc_html__( 'General Options', 'vapfem' ),
-                'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-        $this->add_control(
-            'src_type',
-            [
-                'label' => esc_html__( 'Audio Upload or URL', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'upload',
-                'options' => [
-                    'upload' => esc_html__( 'Upload Audio', 'vapfem' ),
-                    'link' => esc_html__( 'Audio Link', 'vapfem' ),
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'audio_upload',
-            array(
-                'label' => esc_html__( 'Upload Audio', 'vapfem' ),
-                'type'  => \Elementor\Controls_Manager::MEDIA,
-                'media_type' => 'audio',
-                'condition' => array(
-                    'src_type' => 'upload',
-                ),
-            )
-        );
-
-        $this->add_control(
-            'audio_link',
-            [
-                'label' => esc_html__( 'Audio Link', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::URL,
-                'placeholder' => esc_html__( 'https://example.com/music-name.mp3', 'vapfem' ),
-                'show_external' => false,
-                'default' => [
-                    'url' => '',
-                    'is_external' => false,
-                    'nofollow' => false,
-                ],
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::URL_CATEGORY,
-                    ],
-                ],
-                'condition' => [
-                    'src_type'    =>  'link',
-                ]
-            ]
-        );
-
-        $this->add_control(
-            'autoplay',
-            [
-                'label' => esc_html__( 'Autoplay', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => __('Note: Mobile browsers don’t allow autoplay for Audio. Some desktop or laptop browsers also automatically block videos from automatically playing or may automatically mute the audio.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => '',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'muted',
-            [
-                'label' => esc_html__( 'Start Muted', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Enable this to start playback muted. This is also usefull if you experience autoplay is not working from your browser.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => '',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'loop',
-            [
-                'label' => esc_html__( 'Loop Playback', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Loop the current media. ', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => '',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'invert_time',
-            [
-                'label' => esc_html__( 'Display Time As Countdown', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Display the current time as a countdown rather than an incremental counter.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => 'true',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'seek_time',
-            [
-                'label' => esc_html__( 'Skip Forward/Back Amount', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::NUMBER,
-                'description' => esc_html__('The time, in seconds, to seek when a user hits fast forward or rewind.', 'vapfem'),
-                'min' => 5,
-                'max' => 100,
-                'step' => 1,
-                'default' => 10,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'tooltips_seek',
-            [
-                'label' => esc_html__( 'Display Seek Tooltip', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Display a seek tooltip to indicate on click where the media would seek to.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => 'true',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'keyboard_focused',
-            [
-                'label' => esc_html__( 'Keyboard Shortcuts', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Allow viewers to control playback with keyboard keys (Space, arrow keys, M, F). Works when the player is focused.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => 'true',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'keyboard_global',
-            [
-                'label' => esc_html__( 'Global Keyboard Shortcuts', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'description' => esc_html__('Works from anywhere on the page — only use with one player per page.', 'vapfem'),
-                'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                'label_off' => esc_html__( 'No', 'vapfem' ),
-                'return_value' => 'true',
-                'default' => 'false',
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'speed_selected',
-            [
-                'label' => esc_html__( 'Starting Playback Speed', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'speed_1',
-                'options' => [
-                    'speed_.5'  => esc_html__( '0.5', 'vapfem' ),
-                    'speed_.75' => esc_html__( '0.75', 'vapfem' ),
-                    'speed_1' => esc_html__( '1', 'vapfem' ),
-                    'speed_1.25' => esc_html__( '1.25', 'vapfem' ),
-                    'speed_1.5' => esc_html__( '1.5', 'vapfem' ),
-                ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'preload',
-            [
-                'label'       => esc_html__( 'HTML5 Media Preload', 'vapfem' ),
-                'description' => __( '<strong>Metadata</strong><br>Loads only basic media details when the page opens, such as duration. The actual audio/video starts loading when the visitor presses play. Recommended for most sites.<br><br><strong>None</strong><br>Does not load the media until the visitor presses play. Best when a page has many players or you want to save bandwidth.<br><br><strong>Auto</strong><br>Tells the browser to start loading the media early, before the visitor presses play. Use only when this media is important and most visitors are likely to play it.', 'vapfem' ),
-                'type'        => \Elementor\Controls_Manager::SELECT,
-                'default'     => 'metadata',
-                'options'     => [
-                    'metadata' => esc_html__( 'Metadata (Recommended)', 'vapfem' ),
-                    'none'     => esc_html__( 'None', 'vapfem' ),
-                    'auto'     => esc_html__( 'Auto', 'vapfem' ),
-                ],
-                'separator'   => 'before',
-            ]
-        );
-
-        $this->add_control(
-            'controls',
-            [
-                'label' => esc_html__( 'Control Options', 'vapfem' ),
-                'type' => \Elementor\Controls_Manager::SELECT2,
-                'description'   =>  esc_html__('Add/Remove your prefered audio control options'),
-                'multiple' => true,
-                'options' => [
-                    'play' => esc_html__( 'Play Icon', 'vapfem' ),
-                    'progress' => esc_html__( 'Progress Bar', 'vapfem' ),
-                    'mute' => esc_html__( 'Mute Icon', 'vapfem' ),
-                    'volume' => esc_html__( 'Volume Bar', 'vapfem' ),
-                    'settings' => esc_html__( 'Settings Icon', 'vapfem' ),
-                    'airplay' => esc_html__( 'Airplay Icon', 'vapfem' ),
-                    'download' => esc_html__( 'Download Button', 'vapfem' ),
-                ],
-                'default' => [ 'play', 'progress', 'mute', 'volume', 'settings' ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->end_controls_section();
-
-        $this->start_controls_section(
-            'debug_section',
-            [
-                'label' => esc_html__( 'Debugging', 'vapfem' ),
-                'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
-            ]
-        );
-
-            $this->add_control(
-                'debug_mode',
-                [
-                    'label' => esc_html__( 'Debug Mode', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::SWITCHER,
-                    'description' => esc_html__('Enable it when the player does not work properly. When debug is enable, the browser will show the informations about this player in the browser console. This is helpful for developer.', 'vapfem'),
-                    'label_on' => esc_html__( 'Yes', 'vapfem' ),
-                    'label_off' => esc_html__( 'No', 'vapfem' ),
-                    'return_value' => 'true',
-                    'default' => 'false',
-                ]
-            );
-
-        $this->end_controls_section();
-
-       # styling play icon section start
-        $this->start_controls_section(
-            'styling_section_play_icon',
-            [
-                'label' => esc_html__( 'Play Icon', 'vapfem' ),
-                'tab' => \Elementor\controls_Manager::TAB_STYLE,
-            ]
-        );
-
-            // play_icon_bg_color
-            $this->add_control(
-                'play_icon_bg_color',
-                [
-                    'label' => esc_html__( 'BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="play"]' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // play_icon_color
-            $this->add_control(
-                'play_icon_color',
-                [
-                    'label' => esc_html__( 'Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="play"] svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // play_icon_hover_bg_color
-            $this->add_control(
-                'play_icon_hover_bg_color',
-                [
-                    'label' => esc_html__( 'Hover BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="play"]:hover' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // play_icon_hover_color
-            $this->add_control(
-                'play_icon_hover_color',
-                [
-                    'label' => esc_html__( 'Hover Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="play"]:hover svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // play_icon_border
-            $this->add_group_control(
-                \Elementor\Group_Control_Border::get_type(),
-                [
-                    'name' => 'play_icon_border',
-                    'label' => esc_html__( 'Border', 'vapfem' ),
-                    'selector' => '{{WRAPPER}} .plyr__control[data-plyr="play"]'
-                ]
-            );
-        $this->end_controls_section(); // Styling- play icon section end
-
-        $this->start_controls_section(
-            'styling_progress_bar_section',
-            [
-                'label'     => esc_html__( 'Seek Progress Bar', 'vapfem' ),
-                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-            // pbar_pointer_color
-            $this->add_control(
-                'pbar_pointer_color',
-                [
-                    'label' => esc_html__( 'Bar Pointer Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__progress__container input[type=range]::-webkit-slider-thumb' => 'background:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__progress__container input[type=range]::-moz-range-thumb' => 'background:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__progress__container input[type=range]::-ms-thumb' => 'background:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // pbar_color
-            $this->add_control(
-                'pbar_color_1',
-                [
-                    'label' => esc_html__( 'Bar Color 1', 'vapfem' ),
-                    'desc'  => esc_html__( 'Use RGB color with some opacity. E.g: rgba(255,68,115,0.60). Otherwise buffer color will now show.', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__progress input[type=range]::-webkit-slider-runnable-track' => 'background-color:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__progress input[type=range]::-moz-range-track' => 'background-color:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__progress input[type=range]::-ms-track' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // pbar_color_2
-            $this->add_control(
-                'pbar_color_2',
-                [
-                    'label' => esc_html__( 'Bar Color 2', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__progress__container input[type=range]' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // pbar_buffer_color
-            $this->add_control(
-                'pbar_buffer_color',
-                [
-                    'label' => esc_html__( 'Buffered Bar Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr--audio .plyr__progress__buffer' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-        $this->end_controls_section(); // styling_progress_bar_section end
-
-        $this->start_controls_section(
-            'styling_volume_section',
-            [
-                'label'     => esc_html__( 'Volume Icon', 'vapfem' ),
-                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-            // volume_icon_bg_color
-            $this->add_control(
-                'volume_icon_bg_color',
-                [
-                    'label' => esc_html__( 'BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="mute"]' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // volume_icon_color
-            $this->add_control(
-                'volume_icon_color',
-                [
-                    'label' => esc_html__( 'Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="mute"] svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // volume_icon_hover_bg_color
-            $this->add_control(
-                'volume_icon_hover_bg_color',
-                [
-                    'label' => esc_html__( 'Hover BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="mute"]:hover' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // volume_icon_hover_color
-            $this->add_control(
-                'volume_icon_hover_color',
-                [
-                    'label' => esc_html__( 'Hover Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="mute"]:hover svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // volume_icon_border
-            $this->add_group_control(
-                \Elementor\Group_Control_Border::get_type(),
-                [
-                    'name' => 'volume_icon_border',
-                    'label' => esc_html__( 'Border', 'vapfem' ),
-                    'selector' => '{{WRAPPER}} .plyr__control[data-plyr="mute"]'
-                ]
-            );
-
-            $this->end_controls_section(); // Styling- volume icon section end
-            $this->start_controls_section(
-                'styling_volume_bar_section',
-                [
-                    'label'     => esc_html__( 'Volume Bar', 'vapfem' ),
-                    'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-                ]
-            );
-            // vbar_pointer_color
-            $this->add_control(
-                'vbar_pointer_color',
-                [
-                    'label' => esc_html__( 'Bar Pointer Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-webkit-slider-thumb' => 'background:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-moz-range-thumb' => 'background:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-ms-thumb' => 'background:{{VALUE}}',
-                    ],
-                ]
-
-            );
-            // vbar_color
-            $this->add_control(
-                'vbar_color',
-                [
-                    'label' => esc_html__( 'Bar Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__volume input[type=range]' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // vbar_remaining_color
-            $this->add_control(
-                'vbar_remaining_color',
-                [
-                    'label' => esc_html__( 'Bar Empty Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-webkit-slider-runnable-track' => 'background-color:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-moz-range-track' => 'background-color:{{VALUE}}',
-                        '{{WRAPPER}} .plyr__volume input[type=range]::-ms-track' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-        $this->end_controls_section(); // style tab volume_section end
-
-        $this->start_controls_section(
-            'styling_setting_icon_section',
-            [
-                'label'     => esc_html__( 'Setting Icon', 'vapfem' ),
-                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-            // settings_icon_bg_color
-            $this->add_control(
-                'settings_icon_bg_color',
-                [
-                    'label' => esc_html__( 'BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="settings"]' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // settings_icon_color
-            $this->add_control(
-                'settings_icon_color',
-                [
-                    'label' => esc_html__( 'Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="settings"] svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // settings_icon_hover_bg_color
-            $this->add_control(
-                'settings_icon_hover_bg_color',
-                [
-                    'label' => esc_html__( 'Hover BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="settings"]:hover' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // settings_icon_hover_color
-            $this->add_control(
-                'settings_icon_hover_color',
-                [
-                    'label' => esc_html__( 'Hover Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="settings"]:hover svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            // volume_icon_border
-            $this->add_group_control(
-                \Elementor\Group_Control_Border::get_type(),
-                [
-                    'name' => 'settings_icon_border',
-                    'label' => esc_html__( 'Border', 'vapfem' ),
-                    'selector' => '{{WRAPPER}} .plyr__control[data-plyr="settings"]'
-                ]
-            );
-        $this->end_controls_section(); // Style tab setting_icon_section end
-
-        $this->start_controls_section(
-            'styling_download_icon_section',
-            [
-                'label'     => esc_html__( 'Download Button', 'vapfem' ),
-                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-            $this->add_control(
-                'download_icon_bg_color',
-                [
-                    'label' => esc_html__( 'BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="download"]' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            $this->add_control(
-                'download_icon_color',
-                [
-                    'label' => esc_html__( 'Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="download"] svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            $this->add_control(
-                'download_icon_hover_bg_color',
-                [
-                    'label' => esc_html__( 'Hover BG Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="download"]:hover' => 'background-color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            $this->add_control(
-                'download_icon_hover_color',
-                [
-                    'label' => esc_html__( 'Hover Icon Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__control[data-plyr="download"]:hover svg' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-            $this->add_group_control(
-                \Elementor\Group_Control_Border::get_type(),
-                [
-                    'name' => 'download_icon_border',
-                    'label' => esc_html__( 'Border', 'vapfem' ),
-                    'selector' => '{{WRAPPER}} .plyr__control[data-plyr="download"]'
-                ]
-            );
-        $this->end_controls_section(); // Style tab download_icon_section end
-
-        $this->start_controls_section(
-            'styling_others_section',
-            [
-                'label'     => esc_html__( 'Others', 'vapfem' ),
-                'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-            // timer_color
-            $this->add_control(
-                'timer_color',
-                [
-                    'label' => esc_html__( 'Timer Color', 'vapfem' ),
-                    'type' => \Elementor\Controls_Manager::COLOR,
-                    'selectors' => [
-                        '{{WRAPPER}} .plyr__controls .plyr__time' => 'color:{{VALUE}}',
-                    ],
-                ]
-            );
-
-        $this->end_controls_section(); // Style tab others_section end
-
+        $this->register_content_controls();
+        $this->register_style_controls();
     }
 
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        // Adapter: Convert Elementor settings to flattened config
-        $config = $this->elementor_to_audio_config_adapter($settings);
+        // Saved Player mode: delegate entirely to the shortcode renderer.
+        // The widget owns all validation so render_error() never reaches the frontend.
+        if ( ( $settings['player_source'] ?? 'manual' ) === 'saved' ) {
+            $post_id = absint( $settings['saved_player_id'] ?? 0 );
 
-        // Use renderer
+            if ( ! $post_id ) {
+                if ( leanpl_is_elementor_editor() ) {
+                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
+                        . esc_html__( 'Select a saved player.', 'vapfem' ) . '</div>';
+                }
+                return;
+            }
+
+            $post = get_post( $post_id );
+            if ( ! $post || $post->post_type !== 'lean_player' ) {
+                if ( leanpl_is_elementor_editor() ) {
+                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
+                        . esc_html__( 'Player not found.', 'vapfem' ) . '</div>';
+                }
+                return;
+            }
+
+            echo Player_Shortcode::get_instance()->render_player_shortcode( [ 'id' => $post_id ], null );
+            return;
+        }
+
+        // Manual mode: build config from widget settings and render directly.
+        $config   = $this->elementor_to_audio_config_adapter( $settings );
         $renderer = Player_Renderer::get_instance();
-        $renderer->render_audio_player($config);
+        $renderer->render_audio_player( $config );
+    }
+
+    /**
+     * Build the dropdown list of saved audio players for the widget panel.
+     * Returns an array of [ post_id => title ] with a blank first option.
+     */
+    private function get_saved_players_options() {
+        $options = [ '' => esc_html__( '— Select a player —', 'vapfem' ) ];
+
+        $players = get_posts( [
+            'post_type'   => 'lean_player',
+            'post_status' => 'publish',
+            'numberposts' => -1,
+            'orderby'     => 'title',
+            'order'       => 'ASC',
+            'meta_query'  => [
+                [
+                    'key'   => '_player_type',
+                    'value' => 'audio',
+                ],
+            ],
+        ] );
+
+        foreach ( $players as $player ) {
+            $title = $player->post_title !== ''
+                ? $player->post_title
+                : sprintf( esc_html__( 'Player #%d', 'vapfem' ), $player->ID );
+
+            $options[ $player->ID ] = $title;
+        }
+
+        return $options;
     }
 
     /**
@@ -710,6 +136,8 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
             'preload'            => $settings['preload'],
             'controls'           => $settings['controls'],
             'debug_mode'         => $settings['debug_mode'] === 'true',
+            'poster'             => $settings['poster']['url'] ?? '',
+            'audio_title'        => $settings['audio_title'] ?? '',
         ];
     }
 

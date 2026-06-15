@@ -1,3 +1,9 @@
+// Depends on leanplUtils (player-utils.js) for three shared concerns:
+//   autoInit   — stamped DOM-ready + MutationObserver boot (same pattern as main.js)
+//   build*Config / playerRegistry — shared config builder and autopause registry
+//   emit       — shared CustomEvent helper (keeps the leanpl: prefix in one place)
+// These are not duplicated here intentionally; player-utils.js is the utility layer
+// and this file is a consumer of it.
 (function ($) {
     "use strict";
 
@@ -16,15 +22,50 @@
         if (debug) { console.warn.apply(console, ['[LPL Playlist]'].concat([].slice.call(arguments))); }
     }
 
-    log('playlist.js loaded at', new Date().toLocaleString('en-US'));
-
-    // ─── Entry Point ────────────────────────────────────────────────────────────
     // ─── Boot / Initialization ──────────────────────────────────────────────────
+    // One guarded init, two triggers (DOM ready + MutationObserver).
+    // See leanplUtils.autoInit. Works identically under shortcodes, Elementor,
+    // Gutenberg, and AJAX/popup-injected DOM. The element stamp in autoInit
+    // guarantees initPlaylist runs at most once per element.
 
-    $(document).ready(function() {
-        $('.lpl-playlist').each(function () {
-            initPlaylist($(this));
-        });
+    var INIT_STAMP = 'lpl-auto-init';
+
+    window.LeanPL = window.LeanPL || {};
+    window.LeanPL.playlist = {
+        initAll: function (root) {
+            var scope = root || document;
+            var nodes = scope.querySelectorAll('.lpl-playlist');
+            for (var i = 0; i < nodes.length; i++) {
+                if (!nodes[i].classList.contains(INIT_STAMP)) {
+                    nodes[i].classList.add(INIT_STAMP);
+                    initPlaylist($(nodes[i]));
+                }
+            }
+        },
+        init: function (el) {
+            if (el.classList.contains(INIT_STAMP)) { return; }
+            el.classList.add(INIT_STAMP);
+            initPlaylist($(el));
+        },
+        get: function (el) {
+            return el.__leanplPlaylist || null;
+        },
+        destroy: function (el) {
+            var inst = el.__leanplPlaylist;
+            if (inst) {
+                inst.player.destroy();
+                inst.$playlist.off('click', '.lpl-playlist__item');
+                inst.$playlist.off('keydown', '.lpl-playlist__item');
+                el.__leanplPlaylist = null;
+                el.classList.remove(INIT_STAMP);
+            }
+        }
+    };
+
+    // leanplUtils.autoInit handles the stamping/scanning contract (lpl-auto-init guard,
+    // DOM ready, MutationObserver). Duplicating that logic here would diverge over time.
+    leanplUtils.autoInit('.lpl-playlist', function (el) {
+        initPlaylist($(el));
     });
 
     function initPlaylist($playlist) {
@@ -64,10 +105,23 @@
         var player = new Plyr( $playerEl[0], plyrConfig );
         leanplUtils.playerRegistry.register(player);
 
-        player.once('ready', function () {
+        var emitDetail = function (extra) {
+            return Object.assign({ source: 'playlist', playerType: isAudio ? 'audio' : 'video', player: player, el: $playlist[0] }, extra || {});
+        };
+        player.on('ready', function () { leanplUtils.emit($playlist[0], 'playlist:ready', emitDetail()); });
+        player.on('play',  function () { leanplUtils.emit($playlist[0], 'playlist:play',  emitDetail()); });
+        player.on('pause', function () { leanplUtils.emit($playlist[0], 'playlist:pause', emitDetail()); });
+        player.on('ended', function () { leanplUtils.emit($playlist[0], 'playlist:ended', emitDetail()); });
+
+        if (player.ready) {
             hideLoading($loading);
             scrollActiveItemIntoView($playlist, config);
-        });
+        } else {
+            player.once('ready', function () {
+                hideLoading($loading);
+                scrollActiveItemIntoView($playlist, config);
+            });
+        }
 
         // Apply CSS variable theming from config.
         // Cascade: per-playlist accent_color overrides the global brand_color.
@@ -98,6 +152,9 @@
         if (config.autoplay_next) {
             player.on('ended', playNextIfAny.bind(null, $playlist, player, $loading));
         }
+
+        // Internal instance ref. Double-underscore = not public API. Access via LeanPL.playlist.get(el).
+        $playlist[0].__leanplPlaylist = { player: player, $playlist: $playlist, config: config };
 
     }
 
@@ -156,29 +213,45 @@
         // Sync the now-playing header if present (audio playlists).
         syncNowPlaying($playlist, source);
 
+        var isAudioTrack = ($playlist.data('lpl-playlist-config') || {}).playlist_type === 'audio';
+        leanplUtils.emit($playlist[0], 'playlist:trackchange', {
+            source: 'playlist',
+            playerType: isAudioTrack ? 'audio' : 'video',
+            player: player,
+            el: $playlist[0],
+            trackSource: source
+        });
+
         player.source = source;
+
+        var trackSrc = source.sources && source.sources[0] && source.sources[0].src;
+        if ( trackSrc ) {
+            player.download = trackSrc;
+        }
 
         // YouTube/Vimeo embeds need a short delay before play(): Plyr's 'ready' fires before
         // the iframe player is ready to accept play(). Without delay, play() is ignored when
         // switching back from HTML5 (e.g. YT → Vimeo → HTML5 → YT). HTML5 plays immediately.
-        player.once('ready', function () {
-            var provider = source.sources && source.sources[0] && source.sources[0].provider;
-            var isEmbed = provider === 'youtube' || provider === 'vimeo';
-            var playFn = function () {
-                // Plyr's play() returns a Promise for HTML5 media, but can return
-                // undefined/null for embeds or when the media is not ready to play
-                // (e.g. YouTube/Vimeo mid-load, autoplay blocked). Guard before .catch
-                // so a missing Promise never throws "Cannot read properties of undefined".
-                var p = player.play();
-                if (p && typeof p.catch === 'function') {
-                    p.catch(function () {});
-                }
-            };
-            if (isEmbed) {
-                setTimeout(playFn, 200);
-            } else {
-                playFn();
+        var provider = source.sources && source.sources[0] && source.sources[0].provider;
+        var isEmbed = provider === 'youtube' || provider === 'vimeo';
+
+        var playFn = function () {
+            // Plyr's play() returns a Promise for HTML5 media, but can return
+            // undefined/null for embeds or when the media is not ready to play
+            // (e.g. YouTube/Vimeo mid-load, autoplay blocked). Guard before .catch
+            // so a missing Promise never throws "Cannot read properties of undefined".
+            var p = player.play();
+            if (p && typeof p.catch === 'function') {
+                p.catch(function () {});
             }
+        };
+
+        // When switching from an embed (Vimeo/YouTube) to HTML5, Plyr fires 'ready' twice:
+        // the 2nd ready (~180ms after the 1st) calls player.stop() internally, killing any
+        // play() that was triggered by the 1st ready. Waiting 400ms from the 1st ready clears
+        // both ready cycles for HTML5. Embeds need 200ms for the iframe player to accept play().
+        player.once('ready', function () {
+            setTimeout(playFn, isEmbed ? 200 : 400);
         });
 
         player.once('playing', function () {
@@ -189,11 +262,14 @@
         player.once('error', function () {
             warn('error');
             hideLoading($loading);
+            getActiveItem($playlist).removeClass('lpl-playlist__item--loading');
         });
     }
 
     function markItemPlaying($playlist) {
-        getActiveItem($playlist).addClass('lpl-playlist__item--playing');
+        getActiveItem($playlist)
+            .removeClass('lpl-playlist__item--loading')
+            .addClass('lpl-playlist__item--playing');
     }
 
     function unmarkItemPlaying($playlist) {
@@ -350,11 +426,11 @@
         // active item and never clears --playing off the old one.
         $playlist
             .find('.lpl-playlist__item')
-            .removeClass('lpl-playlist__item--active lpl-playlist__item--playing')
+            .removeClass('lpl-playlist__item--active lpl-playlist__item--playing lpl-playlist__item--loading')
             .attr('aria-pressed', 'false');
 
         $item
-            .addClass('lpl-playlist__item--active')
+            .addClass('lpl-playlist__item--active lpl-playlist__item--loading')
             .attr('aria-pressed', 'true');
     }
 

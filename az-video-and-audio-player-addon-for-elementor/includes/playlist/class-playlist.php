@@ -114,6 +114,10 @@ class Playlist {
             array_flip( $user_keys )
         );
 
+        if ( $playlist_id > 0 && ! in_array( get_post_status( $playlist_id ), [ 'publish', 'draft' ], true ) ) {
+            return '<div class="lpl-error" style="padding: 10px; background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 4px;">' . esc_html__( 'Playlist not found.', 'vapfem' ) . '</div>';
+        }
+
         // Ensure assets are loaded even when used with do_shortcode().
         if ( ! wp_script_is( 'leanpl-main', 'enqueued' ) ) {
             Assets_Manager::get_instance()->load_assets_by_context( 'frontend' );

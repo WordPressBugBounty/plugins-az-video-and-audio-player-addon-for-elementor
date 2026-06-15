@@ -142,6 +142,94 @@ window.leanplUtils = (function () {
         };
     })();
 
+    /**
+     * Universal element auto-initializer.
+     *
+     * One guarded init contract, many safe triggers. The same pattern slick
+     * and owl carousel use to work identically under Gutenberg, raw
+     * shortcodes, and AJAX-injected DOM.
+     *
+     * The init runs at most once per element: the element is stamped with the
+     * class `lpl-auto-init` (mirrors slick's `.slick-initialized` guard). Every
+     * trigger below funnels through the same guarded scan, so re-entry from
+     * a MutationObserver firing or document ready is always harmless.
+     *
+     * Triggers:
+     *   1. DOM ready            → shortcode + any DOM already present at load.
+     *   2. MutationObserver on <body> → AJAX, popups, tabs, lazy-load, and any
+     *      future page builder, with zero builder-specific code.
+     *
+     * @param {string}   selector  CSS selector for the root element(s).
+     * @param {function} initFn    Called once per element as initFn(element).
+     *                             `element` is a raw DOM node.
+     */
+    var INIT_STAMP = 'lpl-auto-init';
+
+    function autoInit(selector, initFn) {
+        // Idempotent per-element scan. Safe to call any number of times.
+        function scan(root) {
+            var scope = root && root.querySelectorAll ? root : document;
+            var nodes = scope.querySelectorAll(selector);
+
+            for (var i = 0; i < nodes.length; i++) {
+                var el = nodes[i];
+                if (el.classList.contains(INIT_STAMP)) {
+                    continue;
+                }
+                el.classList.add(INIT_STAMP);
+                initFn(el);
+            }
+
+            // A MutationObserver-added node may itself match the selector
+            // (not just its descendants), so check the root too.
+            if (root && root.nodeType === 1 && root.matches && root.matches(selector)) {
+                if (!root.classList.contains(INIT_STAMP)) {
+                    root.classList.add(INIT_STAMP);
+                    initFn(root);
+                }
+            }
+        }
+
+        // ── Trigger 1: DOM ready ────────────────────────────────────────────
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function () { scan(document); });
+        } else {
+            scan(document);
+        }
+
+        // ── Trigger 2: MutationObserver for late/dynamic DOM ────────────────
+        // Covers AJAX content, popups, tabs, lazy-load — anything that injects
+        // matching DOM after load with no document.ready or element_ready.
+        if (typeof MutationObserver !== 'undefined') {
+            var observer = new MutationObserver(function (mutations) {
+                for (var m = 0; m < mutations.length; m++) {
+                    var added = mutations[m].addedNodes;
+                    for (var n = 0; n < added.length; n++) {
+                        if (added[n].nodeType === 1) {
+                            scan(added[n]);
+                        }
+                    }
+                }
+            });
+
+            function startObserver() {
+                if (document.body) {
+                    observer.observe(document.body, { childList: true, subtree: true });
+                }
+            }
+
+            if (document.body) {
+                startObserver();
+            } else {
+                document.addEventListener('DOMContentLoaded', startObserver);
+            }
+        }
+    }
+
+    function emit(el, name, detail) {
+        el.dispatchEvent(new CustomEvent('leanpl:' + name, { bubbles: true, detail: detail }));
+    }
+
     // Expose public API on window.LeanPL.
     window.LeanPL = window.LeanPL || {};
     window.LeanPL.players = playerRegistry;
@@ -153,7 +241,9 @@ window.leanplUtils = (function () {
         buildCommonConfig:  buildCommonConfig,
         buildVideoConfig:   buildVideoConfig,
         buildAudioConfig:   buildAudioConfig,
-        playerRegistry:     playerRegistry
+        playerRegistry:     playerRegistry,
+        autoInit:           autoInit,
+        emit:               emit
     };
 
 })();

@@ -4,22 +4,31 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Video and audio player with playlist for WordPress. Plays YouTube, Vimeo, HTML5 video, and audio. Works with Elementor, Gutenberg, and Classic Editor.
 
 == Description ==
-Lean Player is a video and audio player plugin for WordPress. It plays YouTube videos, Vimeo videos, HTML5 video files, and audio files (MP3, AAC, OGG, WAV, M4A). You can embed players anywhere using a shortcode, the Elementor widget, the Block Editor, or the Classic Editor.
+🎬 [See Players in Action](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
+🎵 [See Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc)
+🌐 [Visit Official Website](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
+⚡ [Upgrade to Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing)
 
-Version 3.1 adds a full playlist feature. You can create a video or audio playlist, choose where the track list sits (left, right, top, or bottom of the player), show thumbnails and duration, and let it auto-advance through items. The playlist works with YouTube, Vimeo, HTML5 video, and audio files, and embeds with [lean_playlist id="123"]. A working playlist is free. A small set of styling and power-user options require Pro.
+Lean Player is a lightweight video and audio player for WordPress with full playlist support. Embed players and playlists anywhere in 3 steps:
+
+1. Create a player or playlist from the admin
+2. Copy the shortcode
+3. Paste it anywhere — or use the Elementor widget, Block Editor, or Classic Editor
+
+Works with **YouTube**, **Vimeo**, **MP4 video** (upload or direct URL/CDN), and **audio files** (MP3, AAC, OGG, WAV, M4A — upload or direct URL/CDN). Plays nicely with **Elementor**, **Block Editor**, and **Classic Editor** on any theme, without slowing your site down.
+
+[Players Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc) | [Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc) | [Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing) | [Support](https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor/)
+
+[youtube https://www.youtube.com/watch?v=NsJ56JBPuVU]
 
 Lean Player also helps keep media-heavy pages fast. With Media Preload, you choose whether video and audio should load only basic info, wait until the visitor clicks play, or start loading immediately. This is useful for pages with multiple players or playlists.
-
-👉 [Players Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
-👉 [Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc)
-👉 [Purchase Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing)
 
 == Features ==
 
@@ -93,44 +102,53 @@ Lean Player also helps keep media-heavy pages fast. With Media Preload, you choo
 * Automatic Thumbnail - auto-fetch thumbnails from YouTube and Vimeo when no custom image is set [PRO]
 
 **Integration:**
-* Elementor widgets (video & audio)
+* Elementor widgets (video, audio & playlist)
 * Block Editor (Gutenberg) support
 * Classic Editor support
 * Shortcode support everywhere
 
-== Video Player Elementor Widget/Addon Options (All FREE) ==
+== Video Player Elementor Widget ==
 
-* Video Type (YouTube/Vimeo/HTML5)
-* YouTube Video URL
-* Vimeo Video URL
-* HTML5 Video File (Upload or URL)
-* Preview Thumbnail
-* Autoplay
-* Start Muted
-* Initial Volume
-* Loop Playback
-* HTML5 Media Preload - Choose Metadata, None, or Auto loading
-* Click Video to Play/Pause
-* Fullscreen Button
-* Starting Playback Speed
-* Picture-in-picture (PIP)
-* Keyboard Shortcuts
-* Reset to Start When Finished
-* 20+ Design & Styling options
+All player options are available directly in the Elementor panel - no shortcode needed. Widget-specific additions:
 
-== Audio Player Elementor Widget/Addon Options (All FREE) ==
+* Saved Player mode - pick an existing saved player by name; its settings apply automatically
+* Player Accent Color - per-widget brand color override
+* Controls Bar Color - per-widget icon and text color
+* Per Element Style (Pro) - granular colors for play button, progress bar, volume slider, settings icon, tooltips, settings menu, and timer
+* Layout (Pro) - icon size, button spacing, corner radius, progress track height
 
-* Audio Upload or URL - Supported formats: MP3, OGG, WAV, M4A, AAC, and audio streams (MP3, AAC streams)
-* Autoplay
-* Start Muted
-* Initial Volume
-* Loop Playback
-* HTML5 Media Preload - Choose Metadata, None, or Auto loading
-* Starting Playback Speed
-* Keyboard Shortcuts
-* 20+ Styling options
+== Audio Player Elementor Widget ==
+
+All player options are available directly in the Elementor panel - no shortcode needed. Widget-specific additions:
+
+* Saved Player mode - pick an existing saved player by name; its settings apply automatically
+* Poster Card Style - background, text, border color, padding, radius, and thumbnail radius
+* Player Accent Color - per-widget brand color override
+* Controls Bar Color - per-widget icon and text color
+* Per Element Style (Pro) - granular colors for play button, progress bar, volume slider, download button, tooltips, settings menu, and timer
+* Layout (Pro) - icon size, button spacing, corner radius, progress track height
+
+== Playlist Elementor Widget ==
+
+Embed any saved playlist on an Elementor page without a shortcode. All playlist settings (panel position, layout, colors, auto-advance) are configured in the Playlist Manager, not the widget.
+
+* Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.1.3 =
+* Added: Saved-player mode in the Elementor Video Player widget. Select an existing saved player by name instead of re-entering the URL and settings.
+* Added: Saved-player mode in the Elementor Audio Player widget. Same as video: pick a saved player and embed it directly from the widget.
+* Fixed: Accent color now applies consistently to the progress track and handle across all player types.
+* Fixed: Media library now filters to audio or video files when selecting a source file.
+* Fixed: Volume range thumb colour now matches the player accent colour.
+* Fixed: Switching from a Vimeo track back to an HTML5 track in a playlist left the video stopped instead of playing.
+* Fixed: YouTube and Vimeo players sharing a page all showed the same poster image. The inline poster style is now scoped to each player's ID.
+* Improved: Playlist track item shows a loading spinner between click and playback, replacing the static play icon during the load gap.
+* Fixed: Plain Vimeo video ID (e.g. 76979871) now accepted in the Vimeo URL field.
+* Fixed: Plain YouTube video ID (e.g. bTqVqk7FSmY) now accepted in the YouTube URL field.
+* Fixed: Visibility icon in the Preview Player metabox now vertically centered.
+* Fixed: Astra theme overriding background on focused speed button in player controls.
+
 = Version: 3.1.2 =
 * Fixed: Switching playlist tracks could log a JavaScript console error ("Cannot read properties of undefined") on YouTube and Vimeo items. Playback was unaffected; the error is now suppressed.
 

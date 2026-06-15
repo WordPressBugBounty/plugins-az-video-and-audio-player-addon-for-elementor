@@ -287,8 +287,10 @@ class Metaboxes {
             ],
             '_fullscreen_enabled' => [
                 'type' => 'select',
-                'label' => __('Fullscreen Button', 'vapfem'),
-                'desc' => __('Show a fullscreen button on the player', 'vapfem'),
+                'label' => __('Allow Fullscreen', 'vapfem'),
+                'desc' => __('Let viewers expand the video to fullscreen.', 'vapfem'),
+                'tooltip' => __('<strong>What it does</strong><br>Lets viewers open the video in fullscreen.<br><br><strong>On:</strong> the fullscreen button, double-click on the video, and the F key all work.<br><strong>Off:</strong> all three are disabled, fullscreen is fully turned off.<br><br><strong>Note:</strong> the Player Controls list only sets whether the button shows in the bar. To fully disable fullscreen, turn this off.', 'vapfem'),
+                'tooltip_width' => 'wide',
                 'options' => [
                     '' => __('Use Global Option', 'vapfem'),
                     '1' => __('Yes', 'vapfem'),
@@ -325,7 +327,9 @@ class Metaboxes {
             '_ratio' => [
                 'type' => 'text',
                 'label' => __('Video Shape (Aspect Ratio)', 'vapfem'),
-                'desc' => __('Sets the width-to-height shape of the player so the page does not jump while the video loads.<br>• <strong>Leave empty</strong> for automatic (most widescreen videos are 16:9).<br>• Enter <code>width:height</code> to force a shape, for example <code>16:9</code> (widescreen), <code>4:3</code> (older TV), <code>1:1</code> (square), or <code>9:16</code> (vertical / phone).<br>Video-only. Has no effect on audio players.', 'vapfem'),
+                'desc' => __('Sets the player shape so the page does not jump while the video loads.', 'vapfem'),
+                'tooltip' => __('<strong>What it does</strong><br>Reserves the player shape up front so the page does not jump while the video loads.<br><br><strong>Leave empty</strong> for automatic (most widescreen videos are 16:9).<br><br><strong>Enter <code>width:height</code></strong> to force a shape, for example <code>16:9</code> (widescreen), <code>4:3</code> (older TV), <code>1:1</code> (square), or <code>9:16</code> (vertical / phone).', 'vapfem'),
+                'tooltip_width' => 'wide',
                 'placeholder' => __('16:9', 'vapfem'),
                 'group' => 'video_options',
             ],

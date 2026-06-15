@@ -7,26 +7,60 @@
     var buildCommonConfig = leanplUtils.buildCommonConfig;
     var buildVideoConfig  = leanplUtils.buildVideoConfig;
     var buildAudioConfig  = leanplUtils.buildAudioConfig;
-    var playerRegistry  = leanplUtils.playerRegistry;
+    var playerRegistry    = leanplUtils.playerRegistry;
+    var INIT_STAMP        = 'lpl-auto-init';
 
-    // Initialize on document ready
-    $(document).ready(function() {
-        initializeAllPlayers();
-    });
+    window.LeanPL = window.LeanPL || {};
+    window.LeanPL.player = {
+        initAll: function (root) {
+            var scope = root || document;
+            var videos = scope.querySelectorAll('.lpl-player.lpl-player--video');
+            var audios  = scope.querySelectorAll('.lpl-player.lpl-player--audio');
+            for (var i = 0; i < videos.length; i++) {
+                if (!videos[i].classList.contains(INIT_STAMP)) {
+                    videos[i].classList.add(INIT_STAMP);
+                    initVideoPlayer(videos[i]);
+                }
+            }
+            for (var i = 0; i < audios.length; i++) {
+                if (!audios[i].classList.contains(INIT_STAMP)) {
+                    audios[i].classList.add(INIT_STAMP);
+                    initAudioPlayer(audios[i]);
+                }
+            }
+        },
+        init: function (el) {
+            if (el.classList.contains(INIT_STAMP)) { return; }
+            el.classList.add(INIT_STAMP);
+            if (el.classList.contains('lpl-player--video')) {
+                initVideoPlayer(el);
+            } else if (el.classList.contains('lpl-player--audio')) {
+                initAudioPlayer(el);
+            }
+        },
+        get: function (el) {
+            return el.__leanplPlayer || null;
+        },
+        destroy: function (el) {
+            var player = el.__leanplPlayer;
+            if (player) {
+                player.destroy();
+                el.__leanplPlayer = null;
+                el.classList.remove(INIT_STAMP);
+            }
+        }
+    };
 
-    // Setup Elementor integration
-    $(window).on('elementor/frontend/init', function () {
-        // initializeDemoButtons();
-        elementorFrontend.hooks.addAction('frontend/element_ready/vapfem_video_player.default', initializeVideoPlayers);
-        elementorFrontend.hooks.addAction('frontend/element_ready/vapfem_audio_player.default', initializeAudioPlayers);
-
-        // For shortcodes
-        elementorFrontend.hooks.addAction('frontend/element_ready/widget', initializeAllPlayers);
-    });
+    // One guarded init, two triggers (DOM ready + MutationObserver).
+    // See leanplUtils.autoInit. The element stamp guarantees
+    // each player is initialized at most once regardless of how many triggers
+    // fire — shortcode, Elementor frontend/editor, Gutenberg, or AJAX DOM.
+    leanplUtils.autoInit('.lpl-player.lpl-player--video', initVideoPlayer);
+    leanplUtils.autoInit('.lpl-player.lpl-player--audio', initAudioPlayer);
 
     /**
      * Parse player settings from data attribute
-     * 
+     *
      * @param {HTMLElement} element Player element
      * @returns {Object|null} Parsed settings or null if invalid
      */
@@ -46,10 +80,9 @@
 
     /**
      * Log player configuration if debug mode is enabled
-     * 
+     *
      * @param {string} playerType Type of player ('video' or 'audio')
      * @param {Object} config Player configuration
-     * @param {Object} settings Player settings
      */
     function logConfigIfDebug(playerType, config) {
         if (config.debug) {
@@ -59,65 +92,59 @@
     }
 
     /**
-     * Initialize video players
-     * 
-     * @param {jQuery} $scope Optional scope element (for Elementor)
-     * @param {jQuery} $ jQuery instance
+     * Initialize a single video player element.
+     * Called once per element by leanplUtils.autoInit.
+     *
+     * @param {HTMLElement} element Video player root element.
      */
-    function initializeVideoPlayers($scope, $) {
-        var playerElements = document.querySelectorAll('.lpl-player.lpl-player--video');
+    function initVideoPlayer(element) {
+        var settings = parsePlayerSettings(element);
 
-        for (var i = 0; i < playerElements.length; i++) {
-            var element = playerElements[i];
-            var settings = parsePlayerSettings(element);
-
-            if (!settings) {
-                continue;
-            }
-
-            var commonConfig = buildCommonConfig(settings);
-            var videoConfig = buildVideoConfig(settings, commonConfig);
-            
-            logConfigIfDebug('video', videoConfig);
-            
-            var player = new Plyr(element, videoConfig);
-            playerRegistry.register(player);
+        if (!settings) {
+            return;
         }
+
+        var commonConfig = buildCommonConfig(settings);
+        var videoConfig = buildVideoConfig(settings, commonConfig);
+
+        logConfigIfDebug('video', videoConfig);
+
+        var player = new Plyr(element, videoConfig);
+        playerRegistry.register(player);
+        element.__leanplPlayer = player;
+
+        player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'video', playerType: 'video', player: player, el: element }); });
+        player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'video', playerType: 'video', player: player, el: element }); });
+        player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'video', playerType: 'video', player: player, el: element }); });
+        player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'video', playerType: 'video', player: player, el: element }); });
     }
 
     /**
-     * Initialize audio players
-     * 
-     * @param {jQuery} $scope Optional scope element (for Elementor)
-     * @param {jQuery} $ jQuery instance
+     * Initialize a single audio player element.
+     * Called once per element by leanplUtils.autoInit.
+     *
+     * @param {HTMLElement} element Audio player root element.
      */
-    function initializeAudioPlayers($scope, $) {
-        var playerElements = document.querySelectorAll('.lpl-player.lpl-player--audio');
+    function initAudioPlayer(element) {
+        var settings = parsePlayerSettings(element);
 
-        for (var i = 0; i < playerElements.length; i++) {
-            var element = playerElements[i];
-            var settings = parsePlayerSettings(element);
-
-            if (!settings) {
-                continue;
-            }
-
-            var commonConfig = buildCommonConfig(settings);
-            var audioConfig = buildAudioConfig(settings, commonConfig);
-            
-            logConfigIfDebug('audio', audioConfig);
-            
-            var player = new Plyr(element, audioConfig);
-            playerRegistry.register(player);
+        if (!settings) {
+            return;
         }
-    }
 
-    /**
-     * Initialize all players (for shortcodes and non-Elementor contexts)
-     */
-    function initializeAllPlayers() {
-        initializeVideoPlayers();
-        initializeAudioPlayers();
+        var commonConfig = buildCommonConfig(settings);
+        var audioConfig = buildAudioConfig(settings, commonConfig);
+
+        logConfigIfDebug('audio', audioConfig);
+
+        var player = new Plyr(element, audioConfig);
+        playerRegistry.register(player);
+        element.__leanplPlayer = player;
+
+        player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+        player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'audio', playerType: 'audio', player: player, el: element }); });
+        player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+        player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'audio', playerType: 'audio', player: player, el: element }); });
     }
 
 })(jQuery);

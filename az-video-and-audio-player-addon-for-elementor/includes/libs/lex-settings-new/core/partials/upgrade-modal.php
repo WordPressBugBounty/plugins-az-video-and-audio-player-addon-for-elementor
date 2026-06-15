@@ -69,7 +69,7 @@
         
         <!-- Header: Title left, Close right -->
         <div class="lex-modal__header">
-            <h3><?php echo esc_html__('Unlock Premium Features', 'lex-settings'); ?></h3>
+            <h3><?php echo esc_html__('You\'re one step away', 'lex-settings'); ?> 🚀</h3>
             <button class="lex-modal__close" aria-label="<?php echo esc_attr__('Close', 'lex-settings'); ?>" onclick="closeUpgradeModal()">
                 <span class="dashicons dashicons-no-alt"></span>
             </button>
@@ -77,12 +77,8 @@
 
         <!-- Content: Centered paragraph + button -->
         <div class="lex-modal__content">
-            <p class="lex-upgrade-pro-notice">
-                <?php echo __('Our free version has great features! <br> This one is part of PRO.', 'lex-settings'); ?>
-            </p>
-
             <p class="lex-upgrade-description">
-                <?php echo esc_html__('Unlock all premium features, priority support, and regular updates. Get the most out of this plugin with our PRO version.', 'lex-settings'); ?>
+                <?php echo esc_html__('Unlock all premium features, priority support, and regular updates, plus everything we build next.', 'lex-settings'); ?>
             </p>
 
             <div class="lex-upgrade-cta-container">

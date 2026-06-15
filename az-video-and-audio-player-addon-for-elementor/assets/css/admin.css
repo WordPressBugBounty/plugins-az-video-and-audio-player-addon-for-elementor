@@ -76,6 +76,11 @@ Table of contents:
     line-height: 1;
 }
 
+.lpl-preview-metabox .dashicons-visibility {
+    display: flex;
+    align-items: center;
+}
+
 .post-type-lean_playlist a.preview.button.lpl-pla__preview-btn--dirty{
     opacity: 0.45;
     pointer-events: none;

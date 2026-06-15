@@ -419,9 +419,8 @@ class FieldRenderer {
         foreach ($properties as $key => $value) {
             if (is_array($value) && isset($field_config[$key]) && is_array($field_config[$key])) {
                 // Special handling for options arrays (associative arrays that should preserve keys)
-                if ($key === 'options') {
-                    // For options, replace entirely to preserve numeric string keys
-                    // array_merge() re-indexes numeric string keys, so we use direct assignment
+                if ($key === 'options' || $key === 'library_type') {
+                    // Replace entirely: options (preserves numeric string keys), library_type (field overrides default)
                     $field_config[$key] = $value;
                 } else {
                     // Merge arrays (like classes)

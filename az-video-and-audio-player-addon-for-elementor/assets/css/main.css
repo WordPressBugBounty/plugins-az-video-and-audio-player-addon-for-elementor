@@ -14,6 +14,11 @@ video.lpl-player--video,
 	height: auto;
 }
 
+/* Plyr colours the volume thumb with --plyr-color-main but leaves the progress thumb white at position 0 — visually inconsistent before playback starts. This ties both thumbs to the same colour. */
+.plyr {
+	--plyr-range-thumb-background: var(--plyr-color-main, #00b2ff);
+}
+
 .plyr__controls input[type=range]::-webkit-slider-runnable-track{
 	box-shadow: none;
 }
@@ -56,7 +61,7 @@ video.lpl-player--video,
  *   glass    →  F: glassmorphism
  */
 
-.lpl-audio-with-poster {
+.lpl-player-wrap.lpl-audio.has-poster {
     /* layout tokens */
     --lpl-audio-radius:   12px;
     --lpl-audio-thumb-radius: 6px;
@@ -89,7 +94,7 @@ video.lpl-player--video,
 }
 
 /* skin: dark (C) */
-.lpl-audio-with-poster[data-skin="dark"] {
+.lpl-player-wrap.lpl-audio[data-skin="dark"] {
     --lpl-audio-bg:     #1a1d23;
     --lpl-audio-text:   #e0e3ea;
     --lpl-audio-border: #2e3138;
@@ -102,7 +107,7 @@ video.lpl-player--video,
 }
 
 /* skin: glass (F) */
-.lpl-audio-with-poster[data-skin="glass"] {
+.lpl-player-wrap.lpl-audio[data-skin="glass"] {
     --lpl-audio-bg:       rgba(255, 255, 255, 0.55);
     --lpl-audio-text:     #1a1d23;
     --lpl-audio-border:   rgba(255, 255, 255, 0.50);
@@ -111,7 +116,7 @@ video.lpl-player--video,
 }
 
 /* poster image */
-.lpl-audio-poster {
+.lpl-player-wrap.lpl-audio img.lpl-audio-poster {
     flex-shrink: 0;
     width: var(--lpl-audio-thumb-size);
     height: var(--lpl-audio-thumb-size);
@@ -158,4 +163,9 @@ body.theme-customify .elementor-widget-vapfem_audio_player .plyr__control--overl
 }
 .theme-customify .plyr--full-ui input[type=range]{
 	box-shadow: none;
+}
+
+/*astra theme support*/
+body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
+    background-color: unset;
 }

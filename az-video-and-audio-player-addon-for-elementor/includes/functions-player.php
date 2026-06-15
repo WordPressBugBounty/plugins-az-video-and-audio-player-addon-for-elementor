@@ -168,11 +168,29 @@ function leanpl_parse_video_url($url) {
         ];
     }
 
+    // YouTube plain 11-char ID
+    if (preg_match('/^[A-Za-z0-9_-]{11}$/', $url)) {
+        return [
+            'type' => 'youtube',
+            'id' => $url,
+            'sources' => []
+        ];
+    }
+
     // Vimeo patterns
     if (preg_match('/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|)(\d+)(?:|\/\?))/', $url, $matches)) {
         return [
             'type' => 'vimeo',
             'id' => $matches[1],
+            'sources' => []
+        ];
+    }
+
+    // Vimeo plain numeric ID
+    if (preg_match('/^\d+$/', $url)) {
+        return [
+            'type' => 'vimeo',
+            'id' => $url,
             'sources' => []
         ];
     }

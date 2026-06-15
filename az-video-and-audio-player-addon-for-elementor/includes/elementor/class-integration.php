@@ -41,9 +41,11 @@ class Integration {
         // Load widget files
         require_once LEANPL_DIR . '/includes/elementor/widgets/video-player.php';
         require_once LEANPL_DIR . '/includes/elementor/widgets/audio-player.php';
+        require_once LEANPL_DIR . '/includes/elementor/widgets/playlist.php';
 
         // Register widgets
         $widgets_manager->register(new \LeanPL_Video_Player());
         $widgets_manager->register(new \LeanPL_Audio_Player());
+        $widgets_manager->register(new \LeanPL_Playlist_Widget());
     }
 }

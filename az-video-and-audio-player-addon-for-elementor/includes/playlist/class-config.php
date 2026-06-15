@@ -125,7 +125,7 @@ class Config {
         foreach ( $saved_items as $entry ) {
             $player_id = absint( $entry['id'] ?? 0 );
 
-            if ( $player_id < 1 || get_post_status( $player_id ) !== 'publish' ) {
+            if ( $player_id < 1 || ! in_array( get_post_status( $player_id ), [ 'publish', 'draft' ], true ) ) {
                 continue;
             }
 
