@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,9 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.1.4 =
+* Improved: Regenerated POT language file to include all current translatable strings.
+
 = Version: 3.1.3 =
 * Added: Saved-player mode in the Elementor Video Player widget. Select an existing saved player by name instead of re-entering the URL and settings.
 * Added: Saved-player mode in the Elementor Audio Player widget. Same as video: pick a saved player and embed it directly from the widget.
