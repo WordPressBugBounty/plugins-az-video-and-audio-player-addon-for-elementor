@@ -41,11 +41,20 @@ class Integration {
         // Load widget files
         require_once LEANPL_DIR . '/includes/elementor/widgets/video-player.php';
         require_once LEANPL_DIR . '/includes/elementor/widgets/audio-player.php';
-        require_once LEANPL_DIR . '/includes/elementor/widgets/playlist.php';
 
         // Register widgets
         $widgets_manager->register(new \LeanPL_Video_Player());
         $widgets_manager->register(new \LeanPL_Audio_Player());
-        $widgets_manager->register(new \LeanPL_Playlist_Widget());
+
+        // The playlist widget renders via the playlist runtime class, which is
+        // only loaded when the playlist feature is enabled (see class-base.php).
+        // Registering the widget while the feature is off lets Elementor call its
+        // render() on a missing class -> fatal "Class LeanPL\Playlist\Playlist not
+        // found". Gate registration on the same flag so the widget only exists when
+        // its runtime does.
+        if ( leanpl_get_option( 'playlist.enabled', true ) ) {
+            require_once LEANPL_DIR . '/includes/elementor/widgets/playlist.php';
+            $widgets_manager->register(new \LeanPL_Playlist_Widget());
+        }
     }
 }
