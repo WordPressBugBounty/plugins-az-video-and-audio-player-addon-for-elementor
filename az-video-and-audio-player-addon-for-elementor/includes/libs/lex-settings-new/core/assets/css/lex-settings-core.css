@@ -162,7 +162,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 .lex-nav-header__logo {
     width: 40px;
     height: 40px;
-    background: var(--lex-color-primary);
+    background: var(--wp-color-gray-2);
     border-radius: var(--lex-radius-md);
     display: flex;
     align-items: center;
@@ -171,7 +171,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-nav-header__logo .dashicons {
-    color: var(--lex-color-primary-contrast);
+    color: var(--lex-color-text);
     font-size: var(--lex-font-size-3xl);
     width: 24px;
     height: 24px;

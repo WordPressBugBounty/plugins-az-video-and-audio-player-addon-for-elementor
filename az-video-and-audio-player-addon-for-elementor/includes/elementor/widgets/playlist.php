@@ -62,15 +62,6 @@ class LeanPL_Playlist_Widget extends \Elementor\Widget_Base {
             return;
         }
 
-        // @future: render live playlist preview inside the Elementor editor
-        if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-            echo '<div style="padding:20px;background:#f0f0f0;border-radius:6px;color:#555;text-align:center;line-height:1.6;">'
-                . '<strong style="display:block;margin-bottom:6px;">' . esc_html( get_the_title( $playlist_id ) ) . '</strong>'
-                . '<span style="font-size:12px;">' . esc_html__( 'Live preview in the editor is on our roadmap. The playlist renders correctly on the frontend.', 'vapfem' ) . '</span>'
-                . '</div>';
-            return;
-        }
-
         echo Playlist::get_instance()->render_shortcode( [ 'id' => $playlist_id ] );
     }
 
