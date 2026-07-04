@@ -64,6 +64,28 @@ class Menu {
                 remove_all_actions('all_admin_notices');
             }
         });
+
+        // Core upgrade-modal partial now defaults to '#'; supply our real link.
+        add_filter('lex_settings/upgrade_cta', array($this, 'filter_upgrade_cta'), 10, 2);
+    }
+
+    /**
+     * Set the upgrade-modal button URL for our settings instance.
+     * Other instances pass through untouched. Keeps the existing external
+     * marketing URL + new-tab behavior.
+     *
+     * @param array  $cta         url/target/label for the CTA button.
+     * @param string $instance_id The lex-settings instance the modal belongs to.
+     * @return array
+     */
+    public function filter_upgrade_cta($cta, $instance_id) {
+        if ('leanpl' !== $instance_id) {
+            return $cta;
+        }
+
+        $cta['url'] = leanpl_get_upgrade_url(array('utm_medium' => 'modal'));
+        // target stays '_blank' (external marketing page).
+        return $cta;
     }
 
     /**
@@ -279,17 +301,6 @@ class Menu {
                 leanpl_get_upgrade_url(array('utm_medium' => 'menu'))
             );
         }
-        
-        // Submenu - Hire Me
-        // @future: Enable this if we feel like it's necessary
-        // add_submenu_page(
-        //     'lean_player-settings',
-        //     esc_html__('Hire Me', 'vapfem'),
-        //     esc_html__('Hire Me', 'vapfem'),
-        //     'manage_options',
-        //     'lean_player-hire-me',
-        //     array($this, 'hire_me_page')
-        // );
     }
 
     /**

@@ -82,8 +82,20 @@
             </p>
 
             <div class="lex-upgrade-cta-container">
-                <a href="<?php echo leanpl_get_upgrade_url(array('utm_medium' => 'modal')); ?>" target="_blank" class="lex-upgrade-cta-btn">
-                    <?php echo esc_html__('View Pricing & Upgrade', 'lex-settings'); ?>
+                <?php
+                // Neutral default; each plugin sets url/target via lex_settings/upgrade_cta,
+                // guarded by instance_id. Keeps this core partial plugin-agnostic.
+                $cta = apply_filters( 'lex_settings/upgrade_cta', [
+                    'url'    => '#',
+                    'target' => '_blank',
+                    'label'  => __( 'View Pricing & Upgrade', 'lex-settings' ),
+                ], $this->settings->getConfig( 'instance_id' ) );
+
+                // _blank without noopener is a security smell; add it automatically.
+                $rel = ( '_blank' === ( $cta['target'] ?? '' ) ) ? ' rel="noopener"' : '';
+                ?>
+                <a href="<?php echo esc_url( $cta['url'] ); ?>"<?php echo ! empty( $cta['target'] ) ? ' target="' . esc_attr( $cta['target'] ) . '"' : ''; ?><?php echo $rel; ?> class="lex-upgrade-cta-btn">
+                    <?php echo esc_html( $cta['label'] ); ?>
                 </a>
             </div>
             

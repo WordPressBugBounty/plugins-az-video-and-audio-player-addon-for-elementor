@@ -222,13 +222,11 @@ class Config_Merger {
             $final_value = $default;
         }
         
-        // Convert volume from 0-100 (stored format) to 0-1 (player format)
+        // Convert volume from 0-100 (stored format) to 0-1 (player format), clamped to valid range.
+        // Delegates to leanpl_float_clamp_0_1() (functions-converter.php) so shortcode and
+        // metabox/Elementor volume values share one clamp rule instead of two copies drifting apart.
         if ($key === 'volume' && is_numeric($final_value)) {
-            // If value is > 1, assume it's 0-100 format and convert to 0-1
-            if ($final_value > 1) {
-                $final_value = $final_value / 100;
-            }
-            // If value is already 0-1, leave it as-is (backward compatibility)
+            $final_value = leanpl_float_clamp_0_1($final_value);
         }
         
         return $final_value;
