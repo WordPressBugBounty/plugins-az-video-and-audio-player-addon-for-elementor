@@ -180,6 +180,7 @@ class Base {
         require_once LEANPL_DIR . '/includes/shortcodes/class-video-shortcode.php';
         require_once LEANPL_DIR . '/includes/shortcodes/class-audio-shortcode.php';
         require_once LEANPL_DIR . '/includes/shortcodes/class-player-shortcode.php';
+        require_once LEANPL_DIR . '/includes/shortcodes/class-timestamp-shortcode.php';
 
         // Load playlist feature conditionally
         if ( leanpl_get_option( 'playlist.enabled', true ) ) {

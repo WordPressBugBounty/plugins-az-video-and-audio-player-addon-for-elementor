@@ -67,6 +67,7 @@ class Item_View {
         if ( $is_active ) {
             $classes[] = 'lpl-playlist__item--active';
         }
+        $classes[] = 'lpl-playlist__item-' . $this->get_item_id();
         return implode( ' ', array_filter( $classes ) );
     }
 
@@ -77,6 +78,19 @@ class Item_View {
      */
     public function get_source_json() {
         return wp_json_encode( $this->item );
+    }
+
+    /**
+     * Get the underlying lean_player post ID, folded into get_classes() as
+     * `lpl-playlist__item-{id}`.
+     *
+     * Not unique per DOM node: the same player can appear in a playlist
+     * more than once, and every instance shares this ID.
+     *
+     * @return int
+     */
+    public function get_item_id() {
+        return absint( $this->item['id'] ?? 0 );
     }
 
     /**

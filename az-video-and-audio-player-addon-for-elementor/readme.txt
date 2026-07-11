@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.7
+Stable tag: 3.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,8 @@ Works with **YouTube**, **Vimeo**, **MP4 video** (upload or direct URL/CDN), and
 
 Lean Player also helps keep media-heavy pages fast. With Media Preload, you choose whether video and audio should load only basic info, wait until the visitor clicks play, or start loading immediately. This is useful for pages with multiple players or playlists.
 
+Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lean_timestamp time="1:30"]Jump to intro[/lean_timestamp]` anywhere in your post content, and clicking it seeks the player to that time and starts playback, no page reload. Great for podcast show notes, course sections, and video reviews.
+
 == Features ==
 
 **Player Management:**
@@ -39,6 +41,7 @@ Lean Player also helps keep media-heavy pages fast. With Media Preload, you choo
 * **Admin Columns** - View all players at a glance with Player Type, Source Type, Source, Autoplay status, and copy-ready Shortcode
 * **Preview Player** - Preview your player before publishing directly from the players list or from the player edit page
 * **Simple Shortcode** - [lean_player id="123"] to embed anywhere
+* **Timestamp Links** - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] to jump a player to a specific moment from your post content
 * **Player Categories** - Group and organize players using categories
 
 **Video Sources:**
@@ -135,6 +138,10 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.1.8 =
+* Added: Timestamp links - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] jumps a player to a specific moment from your post content.
+* Improved: Elementor's saved-player dropdown now shows the player ID alongside its title.
+
 = Version: 3.1.7 =
 * Fixed: Out-of-range volume values no longer overflow the player's valid range.
 

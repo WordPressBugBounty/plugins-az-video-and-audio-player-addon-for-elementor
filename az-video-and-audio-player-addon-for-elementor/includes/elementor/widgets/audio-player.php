@@ -109,7 +109,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
 
         foreach ( $players as $player ) {
             $title = $player->post_title !== ''
-                ? $player->post_title
+                ? sprintf( '%s (%d)', $player->post_title, $player->ID )
                 : sprintf( esc_html__( 'Player #%d', 'vapfem' ), $player->ID );
 
             $options[ $player->ID ] = $title;

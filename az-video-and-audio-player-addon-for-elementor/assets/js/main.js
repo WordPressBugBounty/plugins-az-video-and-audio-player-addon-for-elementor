@@ -104,6 +104,11 @@
             return;
         }
 
+        // Capture the wrapper before Plyr mutates the DOM: for YouTube/Vimeo,
+        // Plyr replaces `element` itself with its own iframe markup, so
+        // `element` can end up detached from the tree. The wrapper never is.
+        var wrapper = element.closest('.lpl-player-wrap');
+
         var commonConfig = buildCommonConfig(settings);
         var videoConfig = buildVideoConfig(settings, commonConfig);
 
@@ -112,6 +117,9 @@
         var player = new Plyr(element, videoConfig);
         playerRegistry.register(player);
         element.__leanplPlayer = player;
+        if (wrapper) {
+            wrapper.__leanplPlayer = player;
+        }
 
         player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'video', playerType: 'video', player: player, el: element }); });
         player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'video', playerType: 'video', player: player, el: element }); });
@@ -132,6 +140,8 @@
             return;
         }
 
+        var wrapper = element.closest('.lpl-player-wrap');
+
         var commonConfig = buildCommonConfig(settings);
         var audioConfig = buildAudioConfig(settings, commonConfig);
 
@@ -140,6 +150,9 @@
         var player = new Plyr(element, audioConfig);
         playerRegistry.register(player);
         element.__leanplPlayer = player;
+        if (wrapper) {
+            wrapper.__leanplPlayer = player;
+        }
 
         player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'audio', playerType: 'audio', player: player, el: element }); });
         player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'audio', playerType: 'audio', player: player, el: element }); });

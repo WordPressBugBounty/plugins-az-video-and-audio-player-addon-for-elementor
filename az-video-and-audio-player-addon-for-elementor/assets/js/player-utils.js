@@ -143,6 +143,148 @@ window.leanplUtils = (function () {
     })();
 
     /**
+     * Resolve which Plyr instance a [lean_timestamp] link should control.
+     *
+     *   - No target id      → first registered player (page-wide default).
+     *   - Target id set      → the saved player's wrapper (#lpl-player-{id}).
+     *   - Target id set but
+     *     nothing found      → warn and do nothing (no surprising fallback).
+     *
+     * No playlist targeting: a playlist id can only ever resolve to whichever
+     * track happens to be currently loaded, not the specific track/time the
+     * link author meant — silently seeking the wrong content is worse than
+     * not supporting it.
+     *
+     * @param {string|null} targetId Raw `data-lpl-player` value, or null.
+     * @return {Object|null} Plyr instance, or null.
+     */
+    function resolveTimestampPlayer(targetId) {
+        if (!targetId) {
+            var players = playerRegistry.all();
+            return players.length ? players[0] : null;
+        }
+
+        var wrapper = document.getElementById('lpl-player-' + targetId);
+        if (wrapper && wrapper.__leanplPlayer) {
+            return wrapper.__leanplPlayer;
+        }
+
+        console.warn('[LeanPL] lean_timestamp: no player found for id "' + targetId + '"');
+        return null;
+    }
+
+    /**
+     * Scroll a timestamp target's wrapper into view when it's off screen.
+     * `player.elements.container` is Plyr's own wrapper; walk up to the
+     * plugin's `.lpl-player-wrap` / `.lpl-playlist-wrap` so the whole card
+     * (poster, title, controls) ends up centered, not just the Plyr chrome.
+     *
+     * @param {Object} player Plyr instance
+     */
+    function scrollTimestampTargetIntoView(player) {
+        var container = player.elements && player.elements.container;
+        var target = (container && container.closest)
+            ? (container.closest('.lpl-player-wrap, .lpl-playlist-wrap') || container)
+            : container;
+
+        if (!target || typeof target.getBoundingClientRect !== 'function') {
+            return;
+        }
+
+        var rect = target.getBoundingClientRect();
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        var inView = rect.top >= 0 && rect.bottom <= viewportHeight;
+
+        if (!inView) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    /**
+     * Play a player, retrying once (muted) if the browser's autoplay policy
+     * rejects the initial attempt. Cheap insurance for the case where the
+     * timestamp click itself doesn't count as a strong enough user gesture.
+     *
+     * @param {Object} player Plyr instance
+     */
+    function playTimestampTarget(player) {
+        var playPromise = player.play();
+
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function (err) {
+                if (err && err.name === 'NotAllowedError') {
+                    player.muted = true;
+                    player.play().catch(function () {});
+                }
+            });
+        }
+    }
+
+    /**
+     * Seek a player to `secs` and play it.
+     *
+     * @param {Object} player Plyr instance
+     * @param {number} secs   Target time in seconds
+     */
+    function seekTimestampPlayer(player, secs) {
+        if (player.duration && secs > player.duration) {
+            console.warn('[LeanPL] lean_timestamp: time ' + secs + 's exceeds player duration ' + player.duration + 's');
+            return;
+        }
+
+        // YouTube mutes itself on a pre-play seek (Plyr's autoplay-policy
+        // workaround). The click is a user gesture, so restore sound
+        // afterwards, unless the player was deliberately configured muted.
+        var wasConfiguredMuted = !!(player.config && player.config.muted);
+
+        function restoreMute() {
+            if (!wasConfiguredMuted) {
+                player.muted = false;
+            }
+        }
+
+        if (player.duration) {
+            player.currentTime = secs;
+            playTimestampTarget(player);
+            restoreMute();
+        } else {
+            playTimestampTarget(player);          // triggers load
+            player.once('canplay', function () {  // seek once seekable
+                player.currentTime = secs;
+                restoreMute();
+            });
+        }
+    }
+
+    /**
+     * [lean_timestamp] click handler. Delegated at the document level so it
+     * works regardless of when the shortcode's markup enters the DOM.
+     */
+    document.addEventListener('click', function (e) {
+        var el = e.target.closest ? e.target.closest('.lpl-timestamp') : null;
+        if (!el) {
+            return;
+        }
+
+        // Real <a href="#">, not a <button>: always suppress the navigation,
+        // even if the seek itself can't proceed below (bad time, no player).
+        e.preventDefault();
+
+        var secs = parseInt(el.getAttribute('data-lpl-time'), 10);
+        if (isNaN(secs)) {
+            return;
+        }
+
+        var player = resolveTimestampPlayer(el.getAttribute('data-lpl-player'));
+        if (!player) {
+            return;
+        }
+
+        scrollTimestampTargetIntoView(player);
+        seekTimestampPlayer(player, secs);
+    });
+
+    /**
      * Universal element auto-initializer.
      *
      * One guarded init contract, many safe triggers. The same pattern slick

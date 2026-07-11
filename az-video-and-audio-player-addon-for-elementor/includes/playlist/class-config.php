@@ -166,6 +166,7 @@ class Config {
         }
 
         return [
+            'id'       => $player_id,
             'title'    => $title,
             'meta'     => $meta_text,
             'duration' => $duration,

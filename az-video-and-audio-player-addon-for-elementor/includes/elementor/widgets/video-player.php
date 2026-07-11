@@ -102,7 +102,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
 
         foreach ( $players as $player ) {
             $options[ $player->ID ] = $player->post_title !== ''
-                ? $player->post_title
+                ? sprintf( '%s (%d)', $player->post_title, $player->ID )
                 : sprintf( esc_html__( 'Player #%d', 'vapfem' ), $player->ID );
         }
 
