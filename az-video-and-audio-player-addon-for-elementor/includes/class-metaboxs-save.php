@@ -194,7 +194,7 @@ class Metabox_Save {
         }
 
         $raw_value = $_POST[$field_name];
-        $sanitized_value = $this->sanitize($field_config['type'], $raw_value);
+        $sanitized_value = $this->sanitize($field_config['sanitize'] ?? $field_config['type'], $raw_value);
         
         $final_value = ($sanitized_value !== null) ? $sanitized_value : '';
         update_post_meta($post_id, $field_name, $final_value);
@@ -249,6 +249,9 @@ class Metabox_Save {
                 if (is_numeric($raw_value)) {
                     return absint($raw_value);
                 }
+                return esc_url_raw(wp_unslash($raw_value));
+
+            case 'url':
                 return esc_url_raw(wp_unslash($raw_value));
 
             default:

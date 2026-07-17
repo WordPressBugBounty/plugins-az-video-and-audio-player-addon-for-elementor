@@ -53,6 +53,7 @@ class Player_Renderer {
     private const VIDEO_ONLY_SETTINGS_KEYS = [
         'click_to_play', 'hide_controls', 'reset_on_end',
         'fullscreen_enabled', 'quality_default', 'ratio',
+        'poster',
     ];
 
     /**
@@ -424,6 +425,40 @@ class Player_Renderer {
     /**
      * Render custom poster style scoped to this player instance.
      *
+     * Plyr's YouTube/Vimeo providers unconditionally auto-fetch the
+     * provider's own default thumbnail and set it as an inline style on
+     * `.plyr__poster` (see plyr.min.js), regardless of whether a custom
+     * `poster` was passed into Plyr's config. That auto-fetch (a network
+     * round-trip to the provider's thumbnail CDN) commonly resolves before
+     * our config-driven poster gets applied, so passing `poster` through
+     * Plyr's config alone is not reliable for embedded providers.
+     *
+     * `!important` here is required, not stylistic: it's the only way to
+     * beat Plyr's inline-style override regardless of timing, since
+     * `!important` in an author stylesheet outranks a non-important inline
+     * style in the CSS cascade no matter which one is applied later.
+     *
+     * `opacity` must be forced too: Plyr's own CSS (assets/css/plyr.css)
+     * hides `.plyr__poster` by default (`opacity: 0`) and only reveals it
+     * via `.plyr--stopped.plyr__poster-enabled .plyr__poster { opacity: 1 }`
+     * — `plyr__poster-enabled` is added by Plyr's JS asynchronously (inside
+     * `setPoster()`'s network-dependent success callback) and is just as
+     * race-prone as the background-image override above. Without forcing
+     * opacity, the correct image can be set on an invisible element (0%
+     * opacity), which is exactly what happens for Vimeo in practice — the
+     * background-image override "succeeds" while the element stays
+     * invisible and the provider's own iframe content shows through
+     * underneath instead.
+     *
+     * The rule is scoped to `:not(.plyr--playing)` so it steps aside once
+     * real playback starts — `plyr--playing`/`plyr--paused` are toggled by
+     * Plyr's `checkPlaying()` on actual media events (play/pause/timeupdate),
+     * a different, reliable code path from the network-racy poster-enable
+     * classes above. Forcing opacity unconditionally (no play-state scope)
+     * was tried first and regressed: the poster stayed glued on top of the
+     * video during active playback for every provider, since our override
+     * doesn't know or care whether the video started.
+     *
      * @param array $config  Configuration
      * @param int   $post_id Player post ID (used to scope the CSS selector)
      * @return void
@@ -434,12 +469,11 @@ class Player_Renderer {
         }
 
         $post_id = absint($post_id);
-        $selector = $post_id > 0
-            ? '#lpl-player-' . $post_id . ' .plyr__poster'
-            : '.plyr__poster';
+        $scope = $post_id > 0 ? '#lpl-player-' . $post_id . ' ' : '';
+        $selector = $scope . '.plyr:not(.plyr--playing) .plyr__poster';
 
         printf(
-            '<style type="text/css">%s { background-image: url(\'%s\'); }</style>',
+            '<style type="text/css">%s { background-image: url(\'%s\') !important; opacity: 1 !important; }</style>',
             esc_attr($selector),
             esc_url($config['poster'])
         );

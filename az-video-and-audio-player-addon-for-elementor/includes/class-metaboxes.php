@@ -108,6 +108,7 @@ class Metaboxes {
             ],
             '_html5_video_url' => [
                 'type' => 'text',
+                'sanitize' => 'url',
                 'label' => __('Video URL', 'vapfem'),
                 'desc' => __('Enter direct URL to video file (e.g., https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4)', 'vapfem'),
                 'placeholder' => __('https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4', 'vapfem'),
@@ -137,6 +138,7 @@ class Metaboxes {
             ],
             '_html5_audio_url' => [
                 'type' => 'text',
+                'sanitize' => 'url',
                 'label' => __('Audio URL', 'vapfem'),
                 'desc' => __('Enter direct URL to audio file (e.g., https://download.samplelib.com/mp3/sample-15s.mp3)', 'vapfem'),
                 'placeholder' => __('https://download.samplelib.com/mp3/sample-15s.mp3', 'vapfem'),

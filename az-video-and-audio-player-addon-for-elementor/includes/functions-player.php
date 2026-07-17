@@ -157,7 +157,11 @@ function leanpl_resolve_playlist_custom_config() {
  * @return array Video info with type, id, and sources
  */
 function leanpl_parse_video_url($url) {
-    $url = sanitize_text_field(wp_unslash($url));
+    // Do not use sanitize_text_field() here: it strips %XX sequences (e.g. %20),
+    // corrupting file URLs that contain spaces/special chars. YouTube/Vimeo IDs are
+    // extracted via strict regex below, and html5 URLs are esc_url()'d on output,
+    // so tag-stripping + trim is sufficient and safe while preserving encoding.
+    $url = trim(wp_strip_all_tags(wp_unslash($url)));
 
     // YouTube patterns
     if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {

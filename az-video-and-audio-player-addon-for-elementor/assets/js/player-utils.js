@@ -73,7 +73,8 @@ window.leanplUtils = (function () {
                 default: getIntegerSetting(settings, 'quality_default', 576),
                 options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240]
             },
-            ratio: settings.ratio || ''
+            ratio: settings.ratio || '',
+            poster: settings.poster || ''
         });
     }
 

@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.8
+Stable tag: 3.1.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,13 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.1.10 =
+* Fixed: Video URLs with percent-encoded characters (e.g. %20 for spaces) were corrupted again when rendering, breaking playback even after the URL saved correctly. The read/parse path no longer strips encoding.
+
+= Version: 3.1.9 =
+* Fixed: Audio/Video URL field stripped percent-encoded characters (e.g. %20) on save, corrupting URLs with spaces or special characters and breaking playback.
+* Fixed: Custom Thumbnail was ignored on YouTube/Vimeo video players — the provider's own default thumbnail showed instead.
+
 = Version: 3.1.8 =
 * Added: Timestamp links - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] jumps a player to a specific moment from your post content.
 * Improved: Elementor's saved-player dropdown now shows the player ID alongside its title.
