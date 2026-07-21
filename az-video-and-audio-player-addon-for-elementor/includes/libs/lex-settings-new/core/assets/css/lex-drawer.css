@@ -1,0 +1,132 @@
+/**
+ * Lex Drawer - non-modal side panel
+ *
+ * No backdrop: the page behind stays visible and interactive.
+ * See lex-drawer.js for the a11y contract this layout implies.
+ */
+
+:root {
+    --lex-drawer-width: 560px;
+    --lex-drawer-bg: var(--lex-color-surface);
+    --lex-drawer-border-color: var(--lex-color-border);
+    --lex-drawer-title-color: var(--lex-color-text);
+    --lex-drawer-close-color: var(--lex-color-text-muted);
+    --lex-drawer-close-hover-color: var(--lex-color-text);
+    --lex-drawer-shadow: -8px 0 40px color-mix(in srgb, var(--wp-color-black) 12%, transparent);
+    --lex-drawer-transition: 0.25s;
+}
+
+/* ============================================
+   DRAWER
+   ============================================ */
+
+.lex-drawer {
+    position: fixed;
+    top: var(--wp-admin--admin-bar--height, 32px);
+    bottom: 0;
+    width: var(--lex-drawer-width, 560px);
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background: var(--lex-drawer-bg);
+    box-shadow: var(--lex-drawer-shadow);
+    visibility: hidden;
+
+    /* Above page content, below #wpadminbar (99999) and
+       .lex-modal-backdrop (100000): an upgrade modal opened from inside the
+       drawer must layer over it. */
+    z-index: 9999;
+
+    /* Duration must match TRANSITION_MS in lex-drawer.js. visibility flips
+       instantly on open and only after the slide-out completes on close. */
+    transition: transform var(--lex-drawer-transition) ease,
+                visibility 0s linear var(--lex-drawer-transition);
+}
+
+.lex-drawer--right {
+    right: 0;
+    border-left: 1px solid var(--lex-drawer-border-color);
+    transform: translateX(100%);
+}
+
+.lex-drawer--left {
+    left: 0;
+    border-right: 1px solid var(--lex-drawer-border-color);
+    transform: translateX(-100%);
+}
+
+.lex-drawer.is-open {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--lex-drawer-transition) ease,
+                visibility 0s linear;
+}
+
+.lex-drawer:focus {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lex-drawer,
+    .lex-drawer.is-open {
+        transition: none;
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.lex-drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lex-space-3, 12px);
+    flex: 0 0 auto;
+    padding: var(--lex-space-3, 16px);
+    border-bottom: 1px solid var(--lex-drawer-border-color);
+}
+
+.lex-drawer__title {
+    display: block;
+    margin: 0;
+    padding: 0;
+    font-size: var(--lex-font-size-lg, 15px);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--lex-drawer-title-color);
+}
+
+.lex-drawer__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-inline-start: auto;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--lex-drawer-close-color);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--lex-radius-sm, 4px);
+    cursor: pointer;
+}
+
+.lex-drawer__close:hover,
+.lex-drawer__close:focus {
+    color: var(--lex-drawer-close-hover-color);
+    border-color: var(--lex-color-border-hover, var(--lex-drawer-border-color));
+}
+
+/* ============================================
+   BODY
+   ============================================ */
+
+.lex-drawer__body {
+    flex: 1;
+    padding: var(--lex-space-4, 16px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}

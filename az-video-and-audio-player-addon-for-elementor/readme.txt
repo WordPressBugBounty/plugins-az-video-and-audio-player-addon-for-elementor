@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 4.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.1.10
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,8 +138,16 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.2.0 =
+* Added: Playlist Quick Add - add a playlist item by pasting a URL, with instant append to the list (no page reload). Titles for YouTube and Vimeo links are fetched automatically.
+* Added: Bulk Add - create many playlist items at once by pasting one URL per line (up to 50).
+* Added: Edit a playlist track without leaving the page - the Edit button now opens a side panel instead of a new browser tab.
+* Improved: Playlist builder rebuilt around the item list, with the secondary add paths (details, bulk, existing players, upload) moved into a side panel.
+* Added: Available Playback Speeds - choose which speeds appear in the player's settings menu, so you can trim options like 4x that most sites never need.
+* Fixed: Playback speed could not be changed in audio playlists. The settings menu was taller than the player area and got clipped, making every speed option unclickable.
+
 = Version: 3.1.10 =
-* Fixed: Video URLs with percent-encoded characters (e.g. %20 for spaces) were corrupted again when rendering, breaking playback even after the URL saved correctly. The read/parse path no longer strips encoding.
+* Fixed: Video URLs with percent-encoded characters (e.g. %20 for spaces) were corrupted when rendering, breaking playback even after the URL saved correctly. The read/parse path no longer strips encoding.
 
 = Version: 3.1.9 =
 * Fixed: Audio/Video URL field stripped percent-encoded characters (e.g. %20) on save, corrupting URLs with spaces or special characters and breaking playback.

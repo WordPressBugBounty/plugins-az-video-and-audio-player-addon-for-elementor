@@ -204,17 +204,7 @@ class Metaboxes {
                 'desc' => __('Choose the speed this player starts with.', 'vapfem'),
                 'tooltip' => __('<strong>What it does</strong><br>Sets the speed this player uses when it first loads.<br><br><strong>Common choices</strong><br>Many visitors prefer podcasts, lessons, and videos at faster speeds like 1.25x or 1.5x.<br><br><strong>Note</strong><br>YouTube and Vimeo only support speeds from 0.5x to 2x. Options outside that range will be hidden automatically.', 'vapfem'),
                 'tooltip_width' => 'wide',
-                'options' => [
-                    '' => __('Use Global Option', 'vapfem'),
-                    '0.5' => __('0.5x (Slow)', 'vapfem'),
-                    '0.75' => __('0.75x', 'vapfem'),
-                    '1' => __('1x (Normal)', 'vapfem'),
-                    '1.25' => __('1.25x', 'vapfem'),
-                    '1.5' => __('1.5x', 'vapfem'),
-                    '1.75' => __('1.75x', 'vapfem'),
-                    '2' => __('2x (Fast)', 'vapfem'),
-                    '4' => __('4x (Very Fast)', 'vapfem'),
-                ],
+                'options' => [ '' => __('Use Global Option', 'vapfem') ] + leanpl_get_speed_registry(),
                 'group' => 'playback_options',
             ],
             '_seek_time' => [

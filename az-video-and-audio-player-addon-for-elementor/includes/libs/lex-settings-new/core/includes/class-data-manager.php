@@ -75,8 +75,11 @@ class DataManager {
         $option_key = $this->settings->getConfig('option_key');
         $saved = get_option($option_key, []);
         
-        // Merge: saved values override defaults
-        $merged = array_replace_recursive($defaults, $saved);
+        // Merge: saved values override defaults. Uses mergeSettings() rather than
+        // array_replace_recursive() so numeric-list values (is_multiple checkbox
+        // fields) replace the default list wholesale instead of merging by index,
+        // matching the write-path semantics in save().
+        $merged = $this->mergeSettings($defaults, $saved);
         
         // Cache the result
         $this->cached_settings = $merged;

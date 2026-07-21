@@ -125,7 +125,7 @@ class Menu {
             'logo' => 'dashicons dashicons-video-alt3',      // Dashicon for header logo
             'option_key' => 'leanpl_settings',     // For future settings
             'defaults' => $default_settings,       // Default settings array
-            'version' => LEANPL_VERSION,
+            'version' => leanpl_get_version(),
             'dropdown_label' => esc_html__('Shortcodes', 'vapfem'),
             // Use callback instead of allowed_pages - leverages existing leanpl_is_our_admin_page() function
             'page_check_callback' => 'leanpl_is_our_admin_page',

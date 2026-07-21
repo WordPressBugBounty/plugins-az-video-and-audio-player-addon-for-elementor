@@ -40,7 +40,7 @@ class Player_Renderer {
      */
     private const COMMON_SETTINGS_KEYS = [
         'autoplay', 'muted', 'volume', 'loop',
-        'seek_time', 'invert_time', 'speed_selected',
+        'seek_time', 'invert_time', 'speed_selected', 'speed_options',
         'controls', 'storage_enabled', 'debug_mode',
         'keyboard_focused', 'keyboard_global',
         'tooltips_seek', 'tooltips_controls',

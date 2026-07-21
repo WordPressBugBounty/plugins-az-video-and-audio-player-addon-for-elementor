@@ -86,17 +86,19 @@ $settings->fieldRenderer->render('select', 'speed_selected', [
     'desc'          => esc_html__('Speed players use when they first load', 'vapfem'),
     'tooltip'       => __('Sets the default speed for all players site-wide.<br><br>Override per player or widget as needed.<br><br><strong>Popular choices:</strong> 1.25x or 1.5x for podcasts and lessons.', 'vapfem'),
     'tooltip_width' => 'wide',
-    'options'       => [
-        '0.5'  => esc_html__('0.5x (Slow)', 'vapfem'),
-        '0.75' => esc_html__('0.75x', 'vapfem'),
-        '1'    => esc_html__('1x (Normal)', 'vapfem'),
-        '1.25' => esc_html__('1.25x', 'vapfem'),
-        '1.5'  => esc_html__('1.5x', 'vapfem'),
-        '1.75' => esc_html__('1.75x', 'vapfem'),
-        '2'    => esc_html__('2x (Fast)', 'vapfem'),
-        '4'    => esc_html__('4x (Very Fast)', 'vapfem'),
-    ],
+    'options'       => leanpl_get_speed_registry(),
     'default'       => $defaults['speed_selected'] ?? null,
+]);
+
+// Available Playback Speeds
+$settings->fieldRenderer->render('checkbox', 'speed_options', [
+    'label'         => esc_html__('Available Playback Speeds', 'vapfem'),
+    'desc'          => __('<strong>Uncheck all = use the default set.</strong> Choose which speeds visitors can pick from the player settings menu.', 'vapfem'),
+    'tooltip'       => __('Controls which speeds appear in the player\'s settings menu.<br><br>Trim the list to keep the menu short — most sites never need 4x.<br><br><strong>Note</strong><br>YouTube and Vimeo only support 0.5x to 2x. Speeds outside that range are hidden automatically on those players.', 'vapfem'),
+    'tooltip_width' => 'wide',
+    'is_multiple'   => true,
+    'options'       => leanpl_get_speed_registry(),
+    'default'       => $defaults['speed_options'] ?? null,
 ]);
 
 $sr->endSection();

@@ -17,7 +17,7 @@ $settings->fieldRenderer->render( 'checkbox', 'playlist.enabled', [
 
 $settings->fieldRenderer->render( 'checkbox', 'playlist.auto_thumbnail', [
     'label'          => esc_html__( 'Automatic Thumbnail', 'vapfem' ),
-    'desc'           => esc_html__( 'Use the video provider\'s thumbnail when no custom image is uploaded. Supports YouTube and Vimeo. Private or deleted videos will show no thumbnail.', 'vapfem' ),
+    'desc'           => esc_html__( 'Use the video provider\'s thumbnail for playlist items when no custom image is uploaded. Supports YouTube and Vimeo. Private or deleted videos will show no thumbnail.', 'vapfem' ),
     'checkbox_label' => esc_html__( 'Yes', 'vapfem' ),
     'default'        => $playlist_defaults['auto_thumbnail'] ?? false,
     'disabled'       => true,

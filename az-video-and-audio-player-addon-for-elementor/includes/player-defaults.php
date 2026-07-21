@@ -86,6 +86,11 @@ return [
         // Note: Speed is converted to object format { selected: value, options: [...] } in JavaScript
         // YouTube and Vimeo will ignore/hide options outside 0.5-2 range automatically
 
+        // Speeds offered in the player's settings menu — derived from
+        // leanpl_get_speed_registry() in functions-player.php. floatval() normalizes
+        // the registry's mixed int/string keys (PHP casts '1', '2', '4' to int).
+        'speed_options' => array_map( 'floatval', array_keys( leanpl_get_speed_registry() ) ),
+
         // Default controls — derived from leanpl_get_controls_registry() in functions-player.php
         'controls' => array_keys( array_filter( leanpl_get_controls_registry(), fn( $c ) => $c['default'] ) ),
 

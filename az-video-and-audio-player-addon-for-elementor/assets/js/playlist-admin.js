@@ -1,12 +1,11 @@
 /**
  * Playlist Builder Admin JS
  *
- * Two modes driven by data-mode on .lpl-pla__builder:
- *   playlist — compact ordered list, shown when saved items exist on load
- *   library  — two-column picker, shown on new posts or via "+ Add More"
+ * The omnibox is the fast path: paste a link, hit Add. Everything else lives
+ * behind secondary links — upload opens wp.media directly, the rest deep-link
+ * into the drawer (Add with details / Bulk Add / Browse existing players).
  *
  * Single source of truth: #lpl-pla-builder-item-list holds .lpl-pla__builder-item-row elements.
- * In library mode the item list is slotted into the right column via CSS flex.
  * Hidden inputs _playlist_items[N][id] live inside each row; reindexed after mutations.
  *
  * Also handles:
@@ -28,19 +27,80 @@
             this.$searchInput    = $('#lpl-pla-builder-player-search');
             this.$categoryFilter = $('#lpl-pla-builder-category-filter');
             this.$addAllBtn      = $('#lpl-pla-builder-add-all');
-            this.$editItemsBtn      = $('#lpl-pla-builder-edit-items-btn');
             this.$removeAllBtnCol   = $('#lpl-pla-builder-remove-all-btn');
             this.$searchEmpty       = $('#lpl-pla-builder-search-empty');
 
+            // Omnibox: the primary add path
+            this.$omniUrl    = $('#lpl-pla-omnibox-url');
+            this.$omniAdd    = $('#lpl-pla-omnibox-add');
+            this.$omniError  = $('#lpl-pla-omnibox-error');
+            this.$uploadBtn  = $('#lpl-pla-builder-upload-btn');
+
+            // Quick Add form (lex-rendered fields; media pickers owned by lex-settings-core)
+            this.$qaUrl          = $('#lex__qa_url');
+            this.$qaAttachmentId = $('#lex__qa_media');
+            this.$qaMediaRemove  = $('#lex__qa_media_remove');
+            this.$qaTitle        = $('#lex__qa_title');
+            this.$qaThumbId      = $('#lex__qa_poster');
+            this.$qaThumbRemove  = $('#lex__qa_poster_remove');
+            this.$qaDuration     = $('#lex__qa_duration');
+            this.$qaMetaText     = $('#lex__qa_meta_text');
+            this.$qaSubmit       = $('#lpl-pla-qa-submit');
+            this.$qaError        = $('#lpl-pla-qa-error');
+
+            // Batch Add form
+            this.$baUrls     = $('#lex__ba_urls');
+            this.$baSubmit   = $('#lpl-pla-ba-submit');
+            this.$baError    = $('#lpl-pla-ba-error');
+            this.$baFailures = $('#lpl-pla-ba-failures');
+
+            // Edit Track form (same lex-rendered fields as Quick Add, own _ed_* ids)
+            this.$edUrl          = $('#lex__ed_url');
+            this.$edAttachmentId = $('#lex__ed_media');
+            this.$edMediaPreview = $('#lex__ed_media_preview');
+            this.$edMediaRemove  = $('#lex__ed_media_remove');
+            this.$edTitle        = $('#lex__ed_title');
+            this.$edDuration     = $('#lex__ed_duration');
+            this.$edMetaText     = $('#lex__ed_meta_text');
+            this.$edThumbId      = $('#lex__ed_poster');
+            this.$edThumbPreview = $('#lex__ed_poster_preview');
+            this.$edThumbRemove  = $('#lex__ed_poster_remove');
+            this.$edThumbPreviewWrapper = $('#lex__ed_poster_preview_wrapper');
+            this.$edThumbPreviewImage   = $('#lex__ed_poster_preview_image');
+            this.$edSubmit       = $('#lpl-pla-ed-submit');
+            this.$edError        = $('#lpl-pla-ed-error');
+            this.$edFullEditor   = $('#lpl-pla-ed-full-editor');
+            this.editingId       = null;
+
             this.bindEvents();
-            this.filterByType( i18n.playlist_type || 'video' );
+            this.filterPlayers();
             this.reindex();
             this.updateMeta();
         },
 
         bindEvents: function() {
-            // Mode
-            this.$editItemsBtn.on('click', this.enterLibraryMode.bind(this));
+            // Omnibox
+            this.$omniAdd.on('click', this.onOmniboxAdd.bind(this));
+            this.$omniUrl.on('keydown', this.onOmniboxKeydown.bind(this));
+            this.$omniUrl.on('paste', this.onOmniboxPaste.bind(this));
+            this.$uploadBtn.on('click', this.onUploadClick.bind(this));
+
+            // Enter in any builder text field must never submit the post.
+            // Delegated, so it also covers the drawer's QA/BA fields.
+            this.$root.on('keydown', 'input[type="text"]', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                }
+            });
+
+            // A collapsed metabox display:none's .inside, which would take the
+            // fixed-positioned drawer with it — leaving it open but invisible,
+            // with no way to close it.
+            $(document).on('postbox-toggled', function(_, postbox) {
+                if ($(postbox).find('#lpl-pla-builder-drawer').length && window.lexDrawer) {
+                    window.lexDrawer.close('lpl-pla-builder-drawer');
+                }
+            });
 
             // Library: checkbox add/remove
             this.$playerList.on('change', '.lpl-pla__builder-player-checkbox', this.onCheckboxChange.bind(this));
@@ -58,31 +118,147 @@
             // Add all visible
             this.$addAllBtn.on('click', this.onAddAllClick.bind(this));
 
+            // Quick Add: URL and upload are mutually exclusive.
+            // lex-settings-core triggers 'change' on the hidden input on both select and remove.
+            this.$qaAttachmentId.on('change', this.onQaMediaChange.bind(this));
+            this.$qaUrl.on('input', this.onQaUrlInput.bind(this));
+            this.$qaSubmit.on('click', this.onQuickAddSubmit.bind(this));
+
+            // Batch Add
+            this.$baSubmit.on('click', this.onBatchAddSubmit.bind(this));
+
+            // Edit Track: the row's Edit button also opens the drawer via its
+            // data-lex-drawer-open attribute (handled by lex-drawer.js) — this
+            // fetches the track's data and prefills the panel.
+            this.$itemList.on('click', '.lpl-pla__builder-edit-link', this.onEditClick.bind(this));
+            this.$edSubmit.on('click', this.onEditSubmit.bind(this));
+            // URL and upload are mutually exclusive here too, same as Quick Add.
+            this.$edAttachmentId.on('change', this.onEdMediaChange.bind(this));
+            this.$edUrl.on('input', this.onEdUrlInput.bind(this));
+
             // Drag to reorder
             this.initSortable();
         },
 
-        // ── Mode ─────────────────────────────────────────
+        // ── Omnibox ───────────────────────────────────────
 
-        enterLibraryMode: function() {
-            this.$root.attr('data-mode', 'library');
+        showOmniError: function(message) {
+            this.$omniError.text(message).show();
         },
 
-        enterPlaylistMode: function() {
-            this.$root.attr('data-mode', 'playlist');
+        // A paste or a typed value holding more than one link is a Bulk Add
+        // job. Detect it here rather than silently mangling the input.
+        isMultiUrl: function(text) {
+            return /[\n\r]/.test(text) || (text.trim().split(/\s+/).filter(Boolean).length > 1);
         },
 
-        currentMode: function() {
-            return this.$root.attr('data-mode');
+        onOmniboxKeydown: function(e) {
+            if (e.key !== 'Enter' && e.keyCode !== 13) {
+                return;
+            }
+            // Enter in a lone text input submits the form — and saves the post.
+            e.preventDefault();
+            this.onOmniboxAdd();
         },
 
-        // ── Type filter ───────────────────────────────────
+        onOmniboxPaste: function(e) {
+            var clip = e.originalEvent && e.originalEvent.clipboardData;
+            if (!clip) {
+                return;
+            }
 
-        filterByType: function(type) {
-            this.$playerList.children('.lpl-pla__builder-player-row').each(function() {
-                $(this).toggleClass('lpl-pla__builder-player-row--hidden', $(this).data('type') !== type);
+            var text = clip.getData('text') || '';
+            if (!this.isMultiUrl(text)) {
+                return;
+            }
+
+            e.preventDefault();
+            this.showOmniError('Multiple links detected — use Bulk Add.');
+        },
+
+        onOmniboxAdd: function() {
+            var self = this;
+            var url  = this.$omniUrl.val().trim();
+
+            this.$omniError.hide();
+
+            if (!url) {
+                this.showOmniError('Paste a media link first.');
+                return;
+            }
+
+            // Same class of input, arriving by typing rather than paste.
+            if (this.isMultiUrl(url)) {
+                this.showOmniError('Multiple links detected — use Bulk Add.');
+                return;
+            }
+
+            this.$omniAdd.prop('disabled', true);
+
+            $.post(i18n.ajax_url, {
+                action:        'leanpl_playlist_quick_add',
+                nonce:         i18n.nonce,
+                url:           url,
+                playlist_type: i18n.playlist_type
+            }).done(function(response) {
+                if (response.success) {
+                    self.applyQuickAddResult(response.data);
+                    self.$omniUrl.val('');
+                } else {
+                    self.showOmniError((response.data && response.data.message) || 'Something went wrong.');
+                }
+            }).fail(function() {
+                self.showOmniError('Request failed. Please try again.');
+            }).always(function() {
+                self.$omniAdd.prop('disabled', false);
             });
-            this.updateSearchEmptyState();
+        },
+
+        // ── Upload ────────────────────────────────────────
+
+        onUploadClick: function() {
+            var self = this;
+
+            if (!window.wp || !window.wp.media) {
+                return;
+            }
+
+            if (!this.mediaFrame) {
+                this.mediaFrame = wp.media({
+                    title:    'Select media',
+                    library:  { type: i18n.playlist_type === 'audio' ? 'audio' : 'video' },
+                    button:   { text: 'Add to playlist' },
+                    multiple: false
+                });
+
+                this.mediaFrame.on('select', function() {
+                    var attachment = self.mediaFrame.state().get('selection').first().toJSON();
+                    self.addFromAttachment(attachment.id);
+                });
+            }
+
+            this.mediaFrame.open();
+        },
+
+        addFromAttachment: function(attachmentId) {
+            var self = this;
+
+            this.$omniError.hide();
+
+            $.post(i18n.ajax_url, {
+                action:        'leanpl_playlist_quick_add',
+                nonce:         i18n.nonce,
+                attachment_id: attachmentId,
+                playlist_type: i18n.playlist_type
+            }).done(function(response) {
+                if (response.success) {
+                    self.applyQuickAddResult(response.data);
+                } else {
+                    self.showOmniError((response.data && response.data.message) || 'Something went wrong.');
+                }
+            }).fail(function() {
+                self.showOmniError('Request failed. Please try again.');
+            });
         },
 
         // ── Checkbox ──────────────────────────────────────
@@ -109,7 +285,6 @@
             var title       = $row.data('title');
             var sourceType  = $row.data('source-type') || 'self-hosted';
             var sourceLabel = $row.data('source-label') || '';
-            var editUrl     = 'post.php?post=' + playerId + '&action=edit';
 
             this.$itemList.find('.lpl-pla__builder-items-empty').remove();
 
@@ -120,7 +295,7 @@
                     '<span class="lpl-pla__builder-item-title">' + this.escHtml(title) + '</span>' +
                     '<span class="lpl-pla__builder-badge lpl-pla__builder-badge--' + this.esc(sourceType) + '">' + this.escHtml(sourceLabel) + '</span>' +
                     '<div class="lpl-pla__builder-item-actions">' +
-                        '<a href="' + this.esc(editUrl) + '" target="_blank" class="lpl-pla__builder-edit-link">Edit</a>' +
+                        '<button type="button" class="lpl-pla__builder-edit-link" data-lex-drawer-open="lpl-pla-builder-drawer" data-lex-drawer-vtab="edit-track">Edit</button>' +
                         '<button type="button" class="lpl-pla__builder-remove-btn" title="Remove">&#215;</button>' +
                     '</div>' +
                     '<input type="hidden" name="_placeholder" value="' + this.esc(playerId) + '" />' +
@@ -160,6 +335,7 @@
             displayOptions.updatePreviewState();
             this.updateMeta();
             this.toggleItemsEmpty();
+            this.notifyItemsChanged();
         },
 
         // ── Added state ───────────────────────────────────
@@ -174,7 +350,7 @@
         filterPlayers: function() {
             var category   = this.$categoryFilter.val();
             var search     = this.$searchInput.val().toLowerCase().trim();
-            var activeType = this.$root.find('[name="_playlist_type"]:checked').val() || 'video';
+            var activeType = i18n.playlist_type || 'video';
 
             this.$playerList.find('.lpl-pla__builder-player-row').each(function() {
                 var $r    = $(this);
@@ -210,6 +386,400 @@
             });
         },
 
+        // ── Quick Add ─────────────────────────────────────
+
+        onQaMediaChange: function() {
+            // Upload chosen → clear the URL field (mutually exclusive).
+            // Remove also fires change with an empty value; nothing to clear then.
+            if (this.$qaAttachmentId.val()) {
+                this.$qaUrl.val('');
+            }
+        },
+
+        onQaUrlInput: function() {
+            // URL typed → clear any chosen upload via the lex remove button.
+            // The remove handler empties the hidden input, so the change
+            // handler above sees '' and does not loop.
+            if (this.$qaUrl.val().trim() !== '' && this.$qaAttachmentId.val()) {
+                this.$qaMediaRemove.trigger('click');
+            }
+        },
+
+        showQaError: function(message) {
+            this.$qaError.text(message).show();
+        },
+
+        onQuickAddSubmit: function() {
+            var self  = this;
+            var url   = this.$qaUrl.val().trim();
+            var attId = this.$qaAttachmentId.val();
+            var title = this.$qaTitle.val().trim();
+
+            this.$qaError.hide();
+
+            if (!url && !attId) {
+                this.showQaError('Enter a media URL or choose an upload.');
+                return;
+            }
+
+            this.$qaSubmit.prop('disabled', true);
+
+            $.post(i18n.ajax_url, {
+                action:        'leanpl_playlist_quick_add',
+                nonce:         i18n.nonce,
+                url:           url,
+                attachment_id: attId,
+                title:         title,
+                poster_id:     this.$qaThumbId.val(),
+                duration:      this.$qaDuration.val(),
+                meta_text:     this.$qaMetaText.val(),
+                playlist_type: i18n.playlist_type
+            }).done(function(response) {
+                if (response.success) {
+                    self.applyQuickAddResult(response.data);
+                    self.resetQuickAddForm();
+                } else {
+                    self.showQaError((response.data && response.data.message) || 'Something went wrong.');
+                }
+            }).fail(function() {
+                self.showQaError('Request failed. Please try again.');
+            }).always(function() {
+                self.$qaSubmit.prop('disabled', false);
+            });
+        },
+
+        // The success path shared by the omnibox, the upload link, and Quick
+        // Add: all three hit the same endpoint and land the same row.
+        applyQuickAddResult: function(data) {
+            this.addItemFromData(data);
+            this.insertLibraryRow(data);
+            this.toast('success', 'Track added to playlist.');
+        },
+
+        resetQuickAddForm: function() {
+            this.$qaUrl.val('');
+            this.$qaTitle.val('');
+            this.$qaDuration.val('');
+            this.$qaMetaText.val('');
+            // Lex remove handlers clear hidden input, preview, image wrapper,
+            // and re-disable themselves. trigger('click') fires them even
+            // while the button carries the disabled attribute; the handler
+            // is a no-op when nothing is selected.
+            this.$qaMediaRemove.trigger('click');
+            this.$qaThumbRemove.trigger('click');
+            this.$qaError.hide();
+        },
+
+        // ── Batch Add ─────────────────────────────────────
+
+        showBaError: function(message) {
+            this.$baError.text(message).show();
+        },
+
+        onBatchAddSubmit: function() {
+            var self = this;
+            var urls = this.$baUrls.val().trim();
+
+            this.$baError.hide();
+            this.$baFailures.hide().empty();
+
+            if (!urls) {
+                this.showBaError('Paste at least one URL, one per line.');
+                return;
+            }
+
+            this.$baSubmit.prop('disabled', true);
+
+            $.post(i18n.ajax_url, {
+                action:        'leanpl_playlist_batch_add',
+                nonce:         i18n.nonce,
+                urls:          urls,
+                playlist_type: i18n.playlist_type
+            }).done(function(response) {
+                // Over-cap and nonce/cap failures land here: nothing was created,
+                // so the textarea is left exactly as the user pasted it.
+                if (!response.success) {
+                    self.showBaError((response.data && response.data.message) || 'Something went wrong.');
+                    return;
+                }
+
+                var added  = response.data.added || [];
+                var failed = response.data.failed || [];
+
+                $.each(added, function(_, data) {
+                    self.addItemFromData(data);
+                    self.insertLibraryRow(data);
+                });
+
+                self.renderBatchFailures(failed);
+
+                // Keep only the rejected lines, so the user can fix and retry
+                // without re-adding what already succeeded.
+                self.$baUrls.val($.map(failed, function(f) { return f.url; }).join('\n'));
+
+                self.toast(
+                    failed.length ? 'info' : 'success',
+                    self.batchSummary(added.length, failed.length)
+                );
+            }).fail(function() {
+                self.showBaError('Request failed. Please try again.');
+            }).always(function() {
+                self.$baSubmit.prop('disabled', false);
+            });
+        },
+
+        batchSummary: function(addedCount, failedCount) {
+            var summary = addedCount + (addedCount === 1 ? ' track added' : ' tracks added');
+            if (failedCount) {
+                summary += ', ' + failedCount + ' failed';
+            }
+            return summary + '.';
+        },
+
+        renderBatchFailures: function(failed) {
+            if (!failed.length) {
+                return;
+            }
+
+            var self = this;
+            var html = $.map(failed, function(f) {
+                return '<li>' + self.escHtml(f.url) +
+                    '<strong>' + self.escHtml(f.reason) + '</strong></li>';
+            }).join('');
+
+            this.$baFailures.html(html).show();
+        },
+
+        // ── Edit Track ────────────────────────────────────
+
+        showEdError: function(message) {
+            this.$edError.text(message).show();
+        },
+
+        onEdMediaChange: function() {
+            // Upload chosen → clear the URL field (mutually exclusive).
+            // Remove also fires change with an empty value; nothing to clear then.
+            if (this.$edAttachmentId.val()) {
+                this.$edUrl.val('');
+            }
+        },
+
+        onEdUrlInput: function() {
+            // URL typed → clear any chosen upload via the lex remove button.
+            if (this.$edUrl.val().trim() !== '' && this.$edAttachmentId.val()) {
+                this.$edMediaRemove.trigger('click');
+            }
+        },
+
+        // Row's Edit button clicked: remember which track, fetch its current
+        // data (not the row's cached data, which can be stale), then prefill.
+        onEditClick: function(e) {
+            var self     = this;
+            var playerId = $(e.currentTarget).closest('.lpl-pla__builder-item-row').data('player-id');
+
+            this.editingId = playerId;
+            this.$edError.hide();
+            this.resetEditForm();
+            this.$edSubmit.prop('disabled', true);
+
+            $.post(i18n.ajax_url, {
+                action:    'leanpl_playlist_get_player',
+                nonce:     i18n.nonce,
+                player_id: playerId
+            }).done(function(response) {
+                if (response.success) {
+                    self.fillEditForm(response.data);
+                } else {
+                    self.showEdError((response.data && response.data.message) || 'Could not load this track.');
+                }
+            }).fail(function() {
+                self.showEdError('Request failed. Please try again.');
+            }).always(function() {
+                self.$edSubmit.prop('disabled', false);
+            });
+        },
+
+        fillEditForm: function(d) {
+            this.$edUrl.val(d.url || '');
+            this.$edTitle.val(d.title || '');
+            this.$edDuration.val(d.duration || '');
+            this.$edMetaText.val(d.meta_text || '');
+
+            this.setMediaField(this.$edAttachmentId, this.$edMediaPreview, this.$edMediaRemove, d.attachment_id, d.attachment_url);
+            this.setMediaField(this.$edThumbId, this.$edThumbPreview, this.$edThumbRemove, d.poster_id, d.poster_url, this.$edThumbPreviewWrapper, this.$edThumbPreviewImage);
+
+            this.$edFullEditor.attr('href', 'post.php?post=' + d.id + '&action=edit');
+        },
+
+        resetEditForm: function() {
+            this.$edUrl.val('');
+            this.$edTitle.val('');
+            this.$edDuration.val('');
+            this.$edMetaText.val('');
+            this.clearMediaField(this.$edAttachmentId, this.$edMediaPreview, this.$edMediaRemove);
+            this.clearMediaField(this.$edThumbId, this.$edThumbPreview, this.$edThumbRemove, this.$edThumbPreviewWrapper);
+            this.$edFullEditor.attr('href', '#');
+        },
+
+        // Fill a lex media field the same way its own wp.media picker does on
+        // selection, so nothing downstream (remove button, preview) can tell
+        // the difference between a user pick and a prefill. $previewWrapper /
+        // $previewImage are only passed for image fields (the poster).
+        setMediaField: function($hidden, $preview, $remove, id, url, $previewWrapper, $previewImage) {
+            if (!id) {
+                this.clearMediaField($hidden, $preview, $remove, $previewWrapper);
+                return;
+            }
+            $hidden.val(id).trigger('change');
+            $preview.val(url || '');
+            $remove.prop('disabled', false);
+            if ($previewWrapper && $previewWrapper.length && $previewImage && $previewImage.length) {
+                $previewImage.attr('src', url || '');
+                $previewWrapper.show();
+            }
+        },
+
+        clearMediaField: function($hidden, $preview, $remove, $previewWrapper) {
+            $hidden.val('').trigger('change');
+            $preview.val('');
+            $remove.prop('disabled', true);
+            if ($previewWrapper && $previewWrapper.length) {
+                $previewWrapper.hide();
+            }
+        },
+
+        onEditSubmit: function() {
+            var self = this;
+
+            this.$edError.hide();
+            this.$edSubmit.prop('disabled', true);
+
+            $.post(i18n.ajax_url, {
+                action:        'leanpl_playlist_update_player',
+                nonce:         i18n.nonce,
+                player_id:     this.editingId,
+                url:           this.$edUrl.val().trim(),
+                attachment_id: this.$edAttachmentId.val(),
+                title:         this.$edTitle.val().trim(),
+                poster_id:     this.$edThumbId.val(),
+                duration:      this.$edDuration.val(),
+                meta_text:     this.$edMetaText.val(),
+                playlist_type: i18n.playlist_type
+            }).done(function(response) {
+                if (!response.success) {
+                    self.showEdError((response.data && response.data.message) || 'Something went wrong.');
+                    return;
+                }
+                self.refreshRow(response.data);
+                self.refreshLibraryRow(response.data);
+                self.toast('success', 'Track updated.');
+                if (window.lexDrawer) {
+                    window.lexDrawer.close('lpl-pla-builder-drawer');
+                }
+            }).fail(function() {
+                self.showEdError('Request failed. Please try again.');
+            }).always(function() {
+                self.$edSubmit.prop('disabled', false);
+            });
+        },
+
+        // Update the builder row in place — same title + badge fields Quick
+        // Add sets on a new row, just applied to the existing one.
+        refreshRow: function(data) {
+            var $row = this.$itemList.find('[data-player-id="' + data.id + '"]');
+            $row.find('.lpl-pla__builder-item-title').text(data.title);
+            $row.find('.lpl-pla__builder-badge')
+                .attr('class', 'lpl-pla__builder-badge lpl-pla__builder-badge--' + this.esc(data.source_type))
+                .text(data.source_label);
+        },
+
+        // The Existing Players list carries its own copy of title/badge/
+        // duration/meta as data-* attributes (used for search + Add All) —
+        // keep it in sync too.
+        refreshLibraryRow: function(data) {
+            var $row = this.$playerList.find('.lpl-pla__builder-player-row[data-player-id="' + data.id + '"]');
+            if (!$row.length) {
+                return;
+            }
+            $row.attr({
+                'data-title':        data.title,
+                'data-source-type':  data.source_type,
+                'data-source-label': data.source_label,
+                'data-duration':     data.duration || '',
+                'data-meta-text':    data.meta_text || ''
+            });
+            // Also update jQuery's data cache: addItem() and filterPlayers()
+            // read via $row.data(), which caches on first read (init filtering)
+            // and ignores later .attr() writes. Without this, re-adding an
+            // edited row or searching by its new title uses the stale value.
+            $row.data({
+                'title':        data.title,
+                'source-type':  data.source_type,
+                'source-label': data.source_label,
+                'duration':     data.duration || '',
+                'meta-text':    data.meta_text || ''
+            });
+            $row.find('.lpl-pla__builder-player-title').text(data.title);
+            $row.find('.lpl-pla__builder-badge')
+                .attr('class', 'lpl-pla__builder-badge lpl-pla__builder-badge--' + this.esc(data.source_type))
+                .text(data.source_label);
+        },
+
+        // ── Shared add-from-AJAX helpers ──────────────────
+
+        addItemFromData: function(data) {
+            // Fake row object carrying the data attrs addItem() reads.
+            var $fake = $('<div>').data({
+                'title':        data.title,
+                'source-type':  data.source_type,
+                'source-label': data.source_label
+            });
+            this.addItem($fake, String(data.id));
+        },
+
+        insertLibraryRow: function(data) {
+            // Newly created player should also appear (checked) in the
+            // Existing Players list so uncheck-to-remove works immediately.
+            this.$playerList.find('.lpl-pla__builder-picker-empty--no-players').remove();
+            this.$playerList.prepend(
+                '<label class="lpl-pla__builder-player-row lpl-pla__builder-player-row--added"' +
+                    ' data-player-id="' + this.esc(data.id) + '"' +
+                    ' data-categories=""' +
+                    ' data-title="' + this.esc(data.title) + '"' +
+                    ' data-type="' + this.esc(i18n.playlist_type || 'video') + '"' +
+                    ' data-source-type="' + this.esc(data.source_type) + '"' +
+                    ' data-source-label="' + this.esc(data.source_label) + '"' +
+                    ' data-duration="' + this.esc(data.duration || '') + '"' +
+                    ' data-meta-text="' + this.esc(data.meta_text || '') + '"' +
+                '>' +
+                    '<input type="checkbox" class="lpl-pla__builder-player-checkbox" value="' + this.esc(data.id) + '" checked />' +
+                    '<span class="lpl-pla__builder-player-title">' + this.escHtml(data.title) + '</span>' +
+                    '<span class="lpl-pla__builder-badge lpl-pla__builder-badge--' + this.esc(data.source_type) + '">' + this.escHtml(data.source_label) + '</span>' +
+                '</label>'
+            );
+        },
+
+        toast: function(type, message) {
+            var api = (window.lexSettings && window.lexSettings.notifications) || null;
+            if (!api) {
+                // The lex notifications script attaches its API to an
+                // instance-named global (e.g. leanPlayerSettings).
+                for (var key in window) {
+                    if (key.slice(-8) === 'Settings' && window[key] && window[key].notifications) {
+                        api = window[key].notifications;
+                        break;
+                    }
+                }
+            }
+            if (api) {
+                api.show(type, message);
+            }
+        },
+
+        notifyItemsChanged: function() {
+            $(document).trigger('leanpl:playlist:items-changed');
+        },
+
         // ── Reindex ───────────────────────────────────────
 
         reindex: function() {
@@ -219,14 +789,7 @@
             });
             displayOptions.dirty = true;
             displayOptions.updatePreviewState();
-        },
-
-        getItemIds: function() {
-            var ids = [];
-            this.$itemList.find('.lpl-pla__builder-item-row').each(function() {
-                ids.push(String($(this).data('player-id')));
-            });
-            return ids;
+            this.notifyItemsChanged();
         },
 
         // ── Meta / count ──────────────────────────────────
@@ -244,8 +807,8 @@
             if (!hasItems && !this.$itemList.find('.lpl-pla__builder-items-empty').length) {
                 this.$itemList.html(
                     '<div class="lpl-pla__builder-items-empty">' +
-                        '<p class="lpl-pla__builder-items-empty-title">No players selected yet.</p>' +
-                        '<p class="lpl-pla__builder-items-empty-sub">Choose players from the left to build this playlist.</p>' +
+                        '<p class="lpl-pla__builder-items-empty-title">No tracks yet.</p>' +
+                        '<p class="lpl-pla__builder-items-empty-sub">Paste a link above, or use the links below to upload, bulk add, or browse existing players.</p>' +
                     '</div>'
                 );
             }
@@ -291,8 +854,9 @@
     // ─── Display Options Tabs (vertical) ──────────────────────────────────────
 
     var vtabs = {
-        storageKey: function() {
-            return 'lpl_do_tab_' + i18n.post_id;
+        storageKey: function( $container ) {
+            var tabId = ( $container && $container.data('tab') ) || 'default';
+            return 'lpl_do_tab_' + tabId + '_' + i18n.post_id;
         },
         activate: function( $btn, $container ) {
             var vtab = $btn.data('vtab');
@@ -300,6 +864,17 @@
             $btn.addClass('lex-vtabs__btn--active');
             $container.find('.lex-vtab-pane').hide();
             var $pane = $container.find('.lex-vtab-pane[data-vtab="' + vtab + '"]').show();
+
+            // The builder drawer's title doubles as "which mode am I in":
+            // Edit Track while that panel is active, Add tracks otherwise.
+            // The nav (Quick Add / Bulk Add / Existing Players) belongs to the
+            // add flow only — hide it while editing so it can't throw the user
+            // out of the edit they're doing.
+            if ( $container.data('tab') === 'builder-drawer' ) {
+                var isEdit = vtab === 'edit-track';
+                $('#lpl-pla-builder-drawer-title').text( isEdit ? 'Edit track' : 'Add tracks' );
+                $container.find('.lex-vtabs__nav-wrap').toggle( !isEdit );
+            }
 
             // Lazy-init wpColorPicker on color fields that were hidden at page load.
             // wpColorPicker is idempotent — fields already initialized are skipped via the
@@ -315,23 +890,31 @@
             }
         },
         init: function() {
-            var self     = this;
-            var savedTab = localStorage.getItem( self.storageKey() );
-            var isAudio  = i18n.playlist_type === 'audio';
+            var self    = this;
+            var isAudio = i18n.playlist_type === 'audio';
 
             $('.lex-vtabs').each(function() {
                 var $container = $(this);
                 var $nav = $container.find('.lex-vtabs__nav');
                 if (!$nav.length) { return; }
 
+                var savedTab = localStorage.getItem( self.storageKey( $container ) );
+
                 if ( !isAudio ) {
                     $nav.find('button[data-vtab="a-audio"]').hide();
                     $container.find('.lex-vtab-pane[data-vtab="a-audio"]').hide();
                 }
 
+                // Edit Track only opens from a row's Edit button (lex-drawer's
+                // activateVtab() finds and clicks this hidden nav button) — it
+                // must never be reachable by clicking through the tabs.
+                if ( $container.data('tab') === 'builder-drawer' ) {
+                    $nav.find('button[data-vtab="edit-track"]').hide();
+                }
+
                 $nav.on('click', 'button', function(e) {
                     self.activate( $(e.currentTarget), $container );
-                    localStorage.setItem( self.storageKey(), $(e.currentTarget).data('vtab') );
+                    localStorage.setItem( self.storageKey( $container ), $(e.currentTarget).data('vtab') );
                 });
 
                 var $restore = savedTab
@@ -342,7 +925,7 @@
         },
         onTabClick: function(e, $container) {
             this.activate( $(e.currentTarget), $container );
-            localStorage.setItem( this.storageKey(), $(e.currentTarget).data('vtab') );
+            localStorage.setItem( this.storageKey( $container ), $(e.currentTarget).data('vtab') );
         }
     };
 
@@ -528,12 +1111,15 @@
 
     $(document).ready(function() {
         if ($('body').hasClass('post-type-lean_playlist')) {
-            // Edit screen: builder + display options
+            // Edit screen: builder + display options.
+            // vtabs.init() binds every .lex-vtabs on the screen, including the
+            // builder's — it can't be gated on the display-options metabox.
+            vtabs.init();
+
             if ($('.lpl-pla__builder').length) {
                 builder.init();
             }
             if ($('.lpl-pla__display-options').length) {
-                vtabs.init();
                 displayOptions.init();
 
                 $(document).on('click', '.lpl-preview-metabox a.preview.button, #preview-action a', function(e) {

@@ -104,6 +104,7 @@ class Settings {
         require_once __DIR__ . '/includes/class-field-renderer.php';
         require_once __DIR__ . '/includes/class-section-renderer.php';
         require_once __DIR__ . '/includes/class-vtabs.php';
+        require_once __DIR__ . '/includes/class-drawer.php';
         require_once __DIR__ . '/includes/class-widget-renderer.php';
         require_once __DIR__ . '/includes/class-ajax-handler.php';
         require_once __DIR__ . '/includes/class-menu.php';

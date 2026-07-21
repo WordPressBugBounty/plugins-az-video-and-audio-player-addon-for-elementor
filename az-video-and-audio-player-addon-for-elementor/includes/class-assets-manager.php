@@ -144,6 +144,9 @@ class Assets_Manager {
 
         // -- Load admin assets --
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+
+        // -- Plugin-context body class (scopes admin CSS to our screens) --
+        add_filter('admin_body_class', [$this, 'add_scope_body_class']);
         
         // -- Load frontend assets --
         add_action('wp_enqueue_scripts', [$this, 'common_frontend_enqueue']);
@@ -153,6 +156,24 @@ class Assets_Manager {
         // Note: Widget frontend assets are loaded via widget registration, so we don't need to load them here.
         //       But we need to register the assets for the editor.
         add_action('elementor/editor/after_enqueue_scripts', [$this, 'register_n_enqueue_elementor_editor_assets']);
+    }
+
+    /**
+     * Add the plugin-scope body class on our own admin screens.
+     *
+     * Metaboxes render into WordPress's #poststuff and the settings page is a
+     * separate tree, so there is no single wrapper element for "our plugin".
+     * A body class on our screens is that hook: CSS scoped to `.lpl-scope`
+     * applies across every surface we render, and nowhere else.
+     *
+     * @param string $classes Space-separated body classes.
+     * @return string
+     */
+    public function add_scope_body_class($classes) {
+        if (leanpl_is_our_admin_page()) {
+            $classes .= ' lpl-scope';
+        }
+        return $classes;
     }
 
     /**

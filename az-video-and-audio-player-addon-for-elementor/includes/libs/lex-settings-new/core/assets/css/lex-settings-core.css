@@ -924,6 +924,12 @@ label .lex-pro-badge--auto,
     max-width: 100px;
 }
 
+/* Readonly inputs/textareas: soft gray to signal non-editable */
+.lex-field input[readonly],
+.lex-field textarea[readonly] {
+    background-color: var(--wp-color-gray-2);
+}
+
 .lex-field-type--radio label{
     cursor: pointer;
 }
@@ -2347,6 +2353,10 @@ button .dashicons {
 .lex-media__preview {
     width: 100%;
     margin-right: 0;
+    /* RTL so a URL too long for the input truncates at the start and keeps the
+       filename visible, rather than showing only the domain. */
+    direction: rtl;
+    text-align: left;
 }
 
 /* Image preview thumbnail */
@@ -2616,6 +2626,15 @@ button .dashicons {
     opacity: .6;
 }
 
+.lex-vtabs__nav button .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+    opacity: .6;
+}
+
 .lex-vtabs__nav button:hover {
     background: var(--wp-color-gray-2);
 }
@@ -2650,25 +2669,26 @@ button .dashicons {
 .lex-vtabs__content {
     flex: 1;
     min-width: 0;
+    box-sizing: border-box;
 }
 
 .lex-settings-section--vtab-member { display: none; }
 .lex-settings-section--vtab-member.is-active-vtab { display: block; }
 
-/* Horizontal layout */
+/* Horizontal layout — segmented control */
 .lex-vtabs[data-layout="horizontal"] {
     flex-direction: column;
 }
 
 .lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav {
     flex-direction: row;
-    width: auto;
+    width: fit-content;
     flex-shrink: unset;
     position: static;
-    background: #fff;
-    border: 1px solid #dcdcde;
-    border-radius: var(--lex-radius-md);
-    padding: 5px;
+    background: #e9eaeb;
+    border: 0;
+    border-radius: 7px;
+    padding: 3px;
     gap: 2px;
     align-self: flex-start;
 }
@@ -2676,25 +2696,63 @@ button .dashicons {
 .lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button {
     flex: 0 0 auto;
     width: auto;
-    padding: 7px 14px;
-    border-radius: var(--lex-radius-sm);
+}
+
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button svg,
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button .dashicons {
+    opacity: 1;
 }
 
 .lex-vtabs[data-layout="horizontal"] .lex-vtabs__nav button:hover {
-    background: var(--wp-color-gray-2);
+    color: var(--lex-color-text);
+    background: rgba(0, 0, 0, .04);
 }
 
 .lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active {
-    background: var(--lex-color-apple-blue) !important;
-    color: #fff !important;
+    background: #fff;
+    color: var(--lex-color-apple-blue);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 }
 
-.lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active svg {
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active svg,
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__btn--active .dashicons {
     opacity: 1;
 }
 
 .lex-vtabs[data-layout="horizontal"] .lex-vtabs__content {
     width: 100%;
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    padding: var(--lex-space-3);
+}
+
+/* Framed content — unified card look, opt-in via data-variant="framed" */
+.lex-vtabs[data-layout="horizontal"][data-variant="framed"] {
+    gap: 0;
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-sm);
+    overflow: hidden;
+    margin-bottom: var(--lex-space-6);
+}
+
+.lex-vtabs[data-layout="horizontal"][data-variant="framed"] .lex-vtabs__nav-wrap {
+    width: auto;
+    align-self: stretch;
+    background: #fff;
+    padding: var(--lex-space-2);
+    border-radius: calc(var(--lex-radius-sm) - 1px) calc(var(--lex-radius-sm) - 1px) 0 0;
+    border-bottom: 1px solid var(--lex-color-border);
+}
+
+.lex-vtabs[data-layout="horizontal"][data-variant="framed"] .lex-vtabs__content {
+    background: #fff;
+    padding: var(--lex-space-3);
+    /* Cancel the default detached-mode border/radius above — the outer
+       [data-variant="framed"] wrapper already provides border + overflow:hidden
+       clipping, so the content pane must not draw its own border here too. */
+    border: 0;
+    border-radius: 0;
 }
 
 @media (max-width: 782px) {

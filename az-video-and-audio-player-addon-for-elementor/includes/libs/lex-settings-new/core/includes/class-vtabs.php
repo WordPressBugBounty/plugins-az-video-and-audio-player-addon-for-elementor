@@ -49,7 +49,7 @@ class Vtabs {
 			return ! empty( $g['tabs'] ) && is_array( $g['tabs'] );
 		} ) );
 
-		$out  = '<div class="lex-vtabs__nav">';
+		$out  = '<div class="lex-vtabs__nav-wrap"><div class="lex-vtabs__nav">';
 		$last = count( $groups ) - 1;
 
 		foreach ( $groups as $i => $group ) {
@@ -75,7 +75,7 @@ class Vtabs {
 			}
 		}
 
-		$out .= '</div>';
+		$out .= '</div></div>';
 		return $out;
 	}
 }

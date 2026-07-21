@@ -13,6 +13,40 @@ window.leanplUtils = (function () {
         return settings[key] !== undefined ? parseInt(settings[key], 10) : defaultValue;
     }
 
+    var DEFAULT_SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4];
+
+    /**
+     * Build Plyr's speed.options array from the speed_options setting.
+     *
+     * Values arrive from PHP as strings, so they are coerced and filtered.
+     * An empty or missing list falls back to the full default set — the merger
+     * treats [] as "inherit", so an empty speed menu should never be reachable.
+     *
+     * The selected speed is always included: Plyr renders the menu with nothing
+     * checked if speed.selected is absent from speed.options.
+     */
+    function getSpeedOptions(settings, selected) {
+        var raw = Array.isArray(settings.speed_options) ? settings.speed_options : [];
+
+        var options = raw
+            .map(Number)
+            .filter(function (value) {
+                return isFinite(value) && value > 0;
+            });
+
+        if (!options.length) {
+            options = DEFAULT_SPEED_OPTIONS.slice();
+        }
+
+        if (isFinite(selected) && selected > 0 && options.indexOf(selected) === -1) {
+            options.push(selected);
+        }
+
+        return options.sort(function (a, b) {
+            return a - b;
+        });
+    }
+
     function isDebugModeEnabled(settings) {
         var playerDebugMode = getBooleanSetting(settings, 'debug_mode', false);
         var envDebugMode = (typeof leanpl_params !== 'undefined' && leanpl_params.debugMode) || false;
@@ -22,6 +56,7 @@ window.leanplUtils = (function () {
     function buildCommonConfig(settings) {
         var debugMode = isDebugModeEnabled(settings);
         var storageEnabled = getBooleanSetting(settings, 'storage_enabled', true);
+        var speedSelected = getNumberSetting(settings, 'speed_selected', 1);
 
         // Disable storage in debug mode
         if (debugMode) {
@@ -39,8 +74,8 @@ window.leanplUtils = (function () {
                 seek:     getBooleanSetting(settings, 'tooltips_seek', true)
             },
             speed: {
-                selected: getNumberSetting(settings, 'speed_selected', 1),
-                options:  [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4]
+                selected: speedSelected,
+                options:  getSpeedOptions(settings, speedSelected)
             },
             storage: {
                 enabled: storageEnabled,

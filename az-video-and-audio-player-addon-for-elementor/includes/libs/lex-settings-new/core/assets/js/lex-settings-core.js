@@ -1485,15 +1485,32 @@ window.LexSettings.log = window.lexLog;
                 var $nav = $('.lex-nav-header');
                 var stickyOffset = ($nav.length ? $nav.outerHeight() : 0) + (window.adminbarHeight || parseInt($('#wpadminbar').outerHeight()) || 32);
                 var scrollGap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lex-scroll-gap')) || 19;
-                $('html, body').animate({ scrollTop: $content.offset().top - stickyOffset - scrollGap }, 150);
+                var targetTop = $content.offset().top - stickyOffset - scrollGap;
+                if (Math.abs($(window).scrollTop() - targetTop) >= 10) {
+                    $('html, body').animate({ scrollTop: targetTop }, 150);
+                }
             }
         }
 
         try { localStorage.setItem(key, vtab); } catch(_) {}
     }
 
+    /**
+     * Whether a vtabs group scrolls its content into view on tab click.
+     * Vertical tabs move the panel top, so scrolling helps. Horizontal tabs sit
+     * inline above a fixed panel, so scrolling is a pointless jump.
+     * data-scroll="true|false" on the .lex-vtabs wrapper overrides the default.
+     */
+    function lexVtabShouldScroll($wrapper) {
+        var attr = $wrapper.attr('data-scroll');
+        if (attr === 'true')  return true;
+        if (attr === 'false') return false;
+        return $wrapper.data('layout') !== 'horizontal';
+    }
+
     $('body').on('click', '.lex-vtabs__nav button', function(e) {
-        activateLexVtab($(e.currentTarget), true);
+        var $btn = $(e.currentTarget);
+        activateLexVtab($btn, lexVtabShouldScroll($btn.closest('.lex-vtabs')));
     });
 
     // Vtabs on inactive tabs (not the active one) — init immediately on ready.

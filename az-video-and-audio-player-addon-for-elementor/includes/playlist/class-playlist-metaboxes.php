@@ -89,51 +89,7 @@ class Playlist_Metaboxes {
      * @return array{type: string, label: string}
      */
     private function get_source_type_data( $player_id ) {
-        $player_type = get_post_meta( $player_id, '_player_type', true ) ?: 'video';
-
-        if ( $player_type === 'audio' ) {
-            $audio_source_type = get_post_meta( $player_id, '_audio_source_type', true ) ?: 'upload';
-            if ( $audio_source_type === 'link' ) {
-                return [
-                    'type'  => 'external',
-                    'label' => __( 'External Link', 'vapfem' ),
-                ];
-            }
-            return [
-                'type'  => 'self-hosted',
-                'label' => __( 'Self Hosted', 'vapfem' ),
-            ];
-        }
-
-        // Video branch
-        $video_type = get_post_meta( $player_id, '_video_type', true ) ?: 'html5';
-
-        if ( $video_type === 'youtube' ) {
-            return [
-                'type'  => 'youtube',
-                'label' => __( 'YouTube', 'vapfem' ),
-            ];
-        }
-
-        if ( $video_type === 'vimeo' ) {
-            return [
-                'type'  => 'vimeo',
-                'label' => __( 'Vimeo', 'vapfem' ),
-            ];
-        }
-
-        $html5_source_type = get_post_meta( $player_id, '_html5_source_type', true ) ?: 'upload';
-        if ( $html5_source_type === 'link' ) {
-            return [
-                'type'  => 'external',
-                'label' => __( 'External Link', 'vapfem' ),
-            ];
-        }
-
-        return [
-            'type'  => 'self-hosted',
-            'label' => __( 'Self Hosted', 'vapfem' ),
-        ];
+        return leanpl_get_player_source_badge( $player_id );
     }
 
     /**
@@ -213,7 +169,7 @@ class Playlist_Metaboxes {
             wp_send_json_error( 'forbidden' );
         }
 
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'leanpl_save_for_preview' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'leanpl_playlist_admin' ) ) {
             wp_send_json_error( 'invalid_nonce' );
         }
 
@@ -299,164 +255,365 @@ class Playlist_Metaboxes {
             $player_categories[ $player->ID ] = is_array( $terms ) ? implode( ',', $terms ) : '';
         }
 
-        $initial_mode = empty( $saved_ids ) ? 'library' : 'playlist';
-
         wp_localize_script( 'leanpl-playlist-admin', 'leanplPlaylistAdmin', [
-            'playlist_type'         => $playlist_type,
-            'initial_mode'          => $initial_mode,
-            'add_new_url'           => esc_url( admin_url( 'post-new.php?post_type=lean_player' ) ),
-            'ajax_url'               => admin_url( 'admin-ajax.php' ),
-            'save_for_preview_nonce' => wp_create_nonce( 'leanpl_save_for_preview' ),
-            'post_id'                => $post->ID,
+            'playlist_type' => $playlist_type,
+            'ajax_url'      => admin_url( 'admin-ajax.php' ),
+            'nonce'         => wp_create_nonce( 'leanpl_playlist_admin' ),
+            'post_id'       => $post->ID,
         ] );
 
+        // Per-type input hints (video vs audio) so the copy matches what the
+        // creator actually accepts. See leanpl_get_playlist_source_hints().
+        $source_hints = leanpl_get_playlist_source_hints( $playlist_type );
+
         ?>
-        <div class="lpl-pla__builder" data-mode="<?php echo esc_attr( $initial_mode ); ?>">
+        <div class="lpl-pla__builder">
 
+            <!-- Add panel: the omnibox is the fast path, the links are the
+                 alternatives. Boxed together so the whole "how do I add a
+                 track" story reads as one place. -->
+            <div class="lpl-pla__add-panel">
+                <div class="lpl-pla__omnibox">
+                    <input
+                        type="text"
+                        class="lpl-pla__omnibox-url"
+                        id="lpl-pla-omnibox-url"
+                        placeholder="<?php echo esc_attr( $source_hints['omnibox'] ); ?>"
+                    />
+                    <button type="button" class="button button-primary" id="lpl-pla-omnibox-add">
+                        <?php esc_html_e( 'Add', 'vapfem' ); ?>
+                    </button>
+                </div>
+                <p class="lpl-pla__omnibox-error" id="lpl-pla-omnibox-error" style="display:none;"></p>
 
-            <!-- Playlist mode header -->
-            <div class="lpl-pla__builder-playlist-header">
-                <button type="button" class="button lpl-pla__builder-add-more-btn" id="lpl-pla-builder-edit-items-btn">
-                    <?php esc_html_e( '+ Add More', 'vapfem' ); ?>
-                </button>
+                <p class="lpl-pla__omnibox-hint">
+                    <?php esc_html_e( 'Pasting a link adds it instantly and creates the player for you.', 'vapfem' ); ?>
+                </p>
+
+                <!-- Upload opens wp.media directly; the rest deep-link into the drawer. -->
+                <div class="lpl-pla__builder-links">
+                    <button type="button" class="lpl-pla__builder-link" id="lpl-pla-builder-upload-btn">
+                        <?php echo leanpl_ssot( 'icons', 'upload_svg' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?>
+                        <?php esc_html_e( 'Upload a file', 'vapfem' ); ?>
+                    </button>
+                    <button type="button" class="lpl-pla__builder-link" data-lex-drawer-open="lpl-pla-builder-drawer" data-lex-drawer-vtab="quick-add">
+                        <?php echo leanpl_ssot( 'icons', 'add_track_svg' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?>
+                        <?php esc_html_e( 'Add with details', 'vapfem' ); ?>
+                    </button>
+                    <button type="button" class="lpl-pla__builder-link" data-lex-drawer-open="lpl-pla-builder-drawer" data-lex-drawer-vtab="batch-add">
+                        <?php echo leanpl_ssot( 'icons', 'batch_add_svg' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?>
+                        <?php esc_html_e( 'Bulk Add', 'vapfem' ); ?>
+                    </button>
+                    <button type="button" class="lpl-pla__builder-link" data-lex-drawer-open="lpl-pla-builder-drawer" data-lex-drawer-vtab="existing">
+                        <?php echo leanpl_ssot( 'icons', 'items_svg' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?>
+                        <?php esc_html_e( 'Browse existing players', 'vapfem' ); ?>
+                    </button>
+                </div>
             </div>
 
             <!-- Type stored as hidden input for JS filtering only -->
             <input type="hidden" name="_playlist_type" value="<?php echo esc_attr( $playlist_type ); ?>" />
 
-            <!-- Library mode: two-column layout -->
-            <div class="lpl-pla__builder-columns">
-
-                <!-- Left: Available Players -->
-                <div class="lpl-pla__builder-col lpl-pla__builder-col--left">
-                    <div class="lpl-pla__builder-col-header">
-                        <span class="lpl-pla__builder-col-title"><?php esc_html_e( 'Available Players', 'vapfem' ); ?></span>
-                    </div>
-                    <div class="lpl-pla__builder-search-wrap">
-                        <input
-                            type="text"
-                            class="lpl-pla__builder-search"
-                            id="lpl-pla-builder-player-search"
-                            placeholder="<?php echo esc_attr__( 'Search by player title...', 'vapfem' ); ?>"
-                        />
-                    </div>
-                    <div class="lpl-pla__builder-filter-row">
-                        <select class="lpl-pla__builder-category-filter" id="lpl-pla-builder-category-filter">
-                            <option value=""><?php esc_html_e( 'All categories', 'vapfem' ); ?></option>
-                            <?php if ( ! is_wp_error( $categories ) ) : ?>
-                                <?php foreach ( $categories as $cat ) : ?>
-                                    <option value="<?php echo esc_attr( $cat->slug ); ?>">
-                                        <?php echo esc_html( $cat->name ); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                        <button type="button" class="button lpl-pla__builder-add-all" id="lpl-pla-builder-add-all">
-                            <?php esc_html_e( 'Add all from selected category', 'vapfem' ); ?>
+            <!-- Item list: the builder's primary surface -->
+            <div class="lpl-pla__builder-items">
+                <div class="lpl-pla__builder-items-header">
+                    <span class="lpl-pla__builder-items-title"><?php esc_html_e( 'Selected Playlist Items', 'vapfem' ); ?></span>
+                    <div class="lpl-pla__builder-items-header-right">
+                        <span class="lpl-pla__builder-count-pill" id="lpl-pla-builder-selected-count">
+                            <?php echo esc_html( count( $saved_ids ) . ' ' . __( 'selected', 'vapfem' ) ); ?>
+                        </span>
+                        <button type="button" class="lpl-pla__builder-remove-all-btn" id="lpl-pla-builder-remove-all-btn"<?php echo empty( $saved_ids ) ? ' style="display:none;"' : ''; ?>>
+                            <?php esc_html_e( 'Remove all', 'vapfem' ); ?>
                         </button>
                     </div>
-                    <div class="lpl-pla__builder-player-list" id="lpl-pla-builder-player-list">
-                        <?php if ( empty( $players ) ) : ?>
-                            <div class="lpl-pla__builder-left-empty lpl-pla__builder-left-empty--no-players">
-                                <p class="lpl-pla__builder-left-empty-title">
-                                    <?php echo $playlist_type === 'audio'
-                                        ? esc_html__( 'No audio players found.', 'vapfem' )
-                                        : esc_html__( 'No video players found.', 'vapfem' ); ?>
-                                </p>
-                                <p class="lpl-pla__builder-left-empty-sub"><?php esc_html_e( 'Create a player first, then return here.', 'vapfem' ); ?></p>
-                                <a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=lean_player' ) ); ?>" target="_blank" class="button button-primary lpl-pla__builder-add-new-btn">
-                                    <?php esc_html_e( 'Add New Player', 'vapfem' ); ?>
-                                </a>
-                            </div>
-                        <?php else : ?>
-                            <?php foreach ( $players as $player ) :
-                                $source_data = $this->get_source_type_data( $player->ID );
-                                $player_type = get_post_meta( $player->ID, '_player_type', true ) ?: 'video';
-                                $is_checked  = in_array( $player->ID, $saved_ids, true );
-                                $cats_attr   = isset( $player_categories[ $player->ID ] ) ? $player_categories[ $player->ID ] : '';
-                                $duration    = get_post_meta( $player->ID, '_duration', true );
-                                $meta_text   = get_post_meta( $player->ID, '_meta_text', true );
-                            ?>
-                                <label
-                                    class="lpl-pla__builder-player-row<?php echo esc_attr( $is_checked ? ' lpl-pla__builder-player-row--added' : '' ); ?>"
-                                    data-player-id="<?php echo esc_attr( $player->ID ); ?>"
-                                    data-categories="<?php echo esc_attr( $cats_attr ); ?>"
-                                    data-title="<?php echo esc_attr( $player->post_title ); ?>"
-                                    data-type="<?php echo esc_attr( $player_type ); ?>"
-                                    data-source-type="<?php echo esc_attr( $source_data['type'] ); ?>"
-                                    data-source-label="<?php echo esc_attr( $source_data['label'] ); ?>"
-                                    data-duration="<?php echo esc_attr( $duration ); ?>"
-                                    data-meta-text="<?php echo esc_attr( $meta_text ); ?>"
-                                >
-                                    <input type="checkbox" class="lpl-pla__builder-player-checkbox" value="<?php echo esc_attr( $player->ID ); ?>" <?php checked( $is_checked ); ?> />
-                                    <span class="lpl-pla__builder-player-title"><?php echo esc_html( $player->post_title ); ?></span>
-                                    <span class="lpl-pla__builder-badge lpl-pla__builder-badge--<?php echo esc_attr( $source_data['type'] ); ?>"><?php echo esc_html( $source_data['label'] ); ?></span>
-                                </label>
-                            <?php endforeach; ?>
-                            <div class="lpl-pla__builder-left-empty lpl-pla__builder-left-empty--search" id="lpl-pla-builder-search-empty" style="display:none;">
-                                <p class="lpl-pla__builder-left-empty-title"><?php esc_html_e( 'No players match your search.', 'vapfem' ); ?></p>
-                                <p class="lpl-pla__builder-left-empty-sub"><?php esc_html_e( 'Try another keyword or category.', 'vapfem' ); ?></p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
                 </div>
-
-                <!-- Right: item list lives here in library mode -->
-                <div class="lpl-pla__builder-col lpl-pla__builder-col--right">
-                    <div class="lpl-pla__builder-col-header">
-                        <span class="lpl-pla__builder-col-title"><?php esc_html_e( 'Selected Playlist Items', 'vapfem' ); ?></span>
-                        <div class="lpl-pla__builder-col-header-right">
-                            <span class="lpl-pla__builder-count-pill" id="lpl-pla-builder-selected-count">
-                                <?php echo esc_html( count( $saved_ids ) . ' ' . __( 'selected', 'vapfem' ) ); ?>
-                            </span>
-                            <button type="button" class="lpl-pla__builder-remove-all-btn" id="lpl-pla-builder-remove-all-btn"<?php echo empty( $saved_ids ) ? ' style="display:none;"' : ''; ?>>
-                                <?php esc_html_e( 'Remove all', 'vapfem' ); ?>
-                            </button>
+                <div class="lpl-pla__builder-item-list" id="lpl-pla-builder-item-list">
+                    <?php if ( empty( $saved_ids ) ) : ?>
+                        <div class="lpl-pla__builder-items-empty">
+                            <p class="lpl-pla__builder-items-empty-title"><?php esc_html_e( 'No tracks yet.', 'vapfem' ); ?></p>
+                            <p class="lpl-pla__builder-items-empty-sub"><?php esc_html_e( 'Paste a link above, or use the links below to upload, bulk add, or browse existing players.', 'vapfem' ); ?></p>
                         </div>
-                    </div>
-                    <!-- Item list: always rendered here, left col collapses in playlist mode -->
-                    <div class="lpl-pla__builder-item-list" id="lpl-pla-builder-item-list">
-                        <?php if ( empty( $saved_ids ) ) : ?>
-                            <div class="lpl-pla__builder-items-empty">
-                                <p class="lpl-pla__builder-items-empty-title"><?php esc_html_e( 'No players selected yet.', 'vapfem' ); ?></p>
-                                <p class="lpl-pla__builder-items-empty-sub"><?php esc_html_e( 'Choose players from the left to build this playlist.', 'vapfem' ); ?></p>
-                            </div>
-                        <?php else : ?>
-                            <?php
-                            $index = 0;
-                            foreach ( $saved_items as $item ) :
-                                $player_id   = absint( $item['id'] );
-                                $player      = get_post( $player_id );
-                                if ( ! $player || $player->post_status !== 'publish' ) {
-                                    continue;
-                                }
-                                $source_data = $this->get_source_type_data( $player_id );
-                                $edit_url    = get_edit_post_link( $player_id, 'raw' );
-                            ?>
-                                <div class="lpl-pla__builder-item-row" data-player-id="<?php echo esc_attr( $player_id ); ?>">
-                                    <span class="lpl-pla__builder-drag-handle" aria-hidden="true">&#8801;</span>
-                                    <span class="lpl-pla__builder-item-num"><?php echo esc_html( $index + 1 ); ?></span>
-                                    <span class="lpl-pla__builder-item-title"><?php echo esc_html( $player->post_title ); ?></span>
-                                    <span class="lpl-pla__builder-badge lpl-pla__builder-badge--<?php echo esc_attr( $source_data['type'] ); ?>">
-                                        <?php echo esc_html( $source_data['label'] ); ?>
-                                    </span>
-                                    <div class="lpl-pla__builder-item-actions">
-                                        <a href="<?php echo esc_url( $edit_url ); ?>" target="_blank" class="lpl-pla__builder-edit-link">
-                                            <?php esc_html_e( 'Edit', 'vapfem' ); ?>
-                                        </a>
-                                        <button type="button" class="lpl-pla__builder-remove-btn" title="<?php echo esc_attr__( 'Remove', 'vapfem' ); ?>">&#215;</button>
-                                    </div>
-                                    <input type="hidden" name="_playlist_items[<?php echo esc_attr( $index ); ?>][id]" value="<?php echo esc_attr( $player_id ); ?>" />
+                    <?php else : ?>
+                        <?php
+                        $index = 0;
+                        foreach ( $saved_items as $item ) :
+                            $player_id   = absint( $item['id'] );
+                            $player      = get_post( $player_id );
+                            if ( ! $player || $player->post_status !== 'publish' ) {
+                                continue;
+                            }
+                            $source_data = $this->get_source_type_data( $player_id );
+                        ?>
+                            <div class="lpl-pla__builder-item-row" data-player-id="<?php echo esc_attr( $player_id ); ?>">
+                                <span class="lpl-pla__builder-drag-handle" aria-hidden="true">&#8801;</span>
+                                <span class="lpl-pla__builder-item-num"><?php echo esc_html( $index + 1 ); ?></span>
+                                <span class="lpl-pla__builder-item-title"><?php echo esc_html( $player->post_title ); ?></span>
+                                <span class="lpl-pla__builder-badge lpl-pla__builder-badge--<?php echo esc_attr( $source_data['type'] ); ?>">
+                                    <?php echo esc_html( $source_data['label'] ); ?>
+                                </span>
+                                <div class="lpl-pla__builder-item-actions">
+                                    <button type="button" class="lpl-pla__builder-edit-link"
+                                            data-lex-drawer-open="lpl-pla-builder-drawer"
+                                            data-lex-drawer-vtab="edit-track">
+                                        <?php esc_html_e( 'Edit', 'vapfem' ); ?>
+                                    </button>
+                                    <button type="button" class="lpl-pla__builder-remove-btn" title="<?php echo esc_attr__( 'Remove', 'vapfem' ); ?>">&#215;</button>
                                 </div>
-                            <?php
-                                $index++;
-                            endforeach;
-                            ?>
-                        <?php endif; ?>
-                    </div>
+                                <input type="hidden" name="_playlist_items[<?php echo esc_attr( $index ); ?>][id]" value="<?php echo esc_attr( $player_id ); ?>" />
+                            </div>
+                        <?php
+                            $index++;
+                        endforeach;
+                        ?>
+                    <?php endif; ?>
                 </div>
+            </div>
 
-            </div><!-- .lpl-pla__builder-columns -->
+            <?php
+            // Hoisted: the batch-add pane consumes $fr too, so binding it inside
+            // the quick-add pane made pane order load-bearing.
+            $fr = \Lex\Settings\V2\Settings::getInstance( 'leanpl' )->fieldRenderer;
+
+            \Lex\Settings\V2\Services\Drawer::render_open( [
+                'id'    => 'lpl-pla-builder-drawer',
+                'title' => __( 'Add tracks', 'vapfem' ),
+                'width' => '560px',
+                'side'  => 'right',
+                'class' => 'lpl-pla__builder-drawer',
+            ] );
+            ?>
+                    <div class="lex-vtabs" data-layout="horizontal" data-tab="builder-drawer" data-variant="detached">
+                        <?php
+                        echo \Lex\Settings\V2\Services\Vtabs::render_nav_flat( [
+                            [
+                                'id'    => 'quick-add',
+                                'label' => __( 'Quick Add', 'vapfem' ),
+                                'icon'  => leanpl_ssot( 'icons', 'add_track_svg' ),
+                            ],
+                            [
+                                // id stays 'batch': renaming it churns the JS,
+                                // endpoint, and nonce flow for zero user benefit.
+                                'id'    => 'batch-add',
+                                'label' => __( 'Bulk Add', 'vapfem' ),
+                                'icon'  => leanpl_ssot( 'icons', 'batch_add_svg' ),
+                            ],
+                            [
+                                'id'    => 'existing',
+                                'label' => __( 'Existing Players', 'vapfem' ),
+                                'icon'  => leanpl_ssot( 'icons', 'items_svg' ),
+                            ],
+                            [
+                                // No dedicated way to tab into this one — it only
+                                // opens from a row's Edit button. Kept in the nav
+                                // list (rather than a separate button) so lex-drawer's
+                                // activateVtab() can find and click it; playlist-admin.js
+                                // hides this specific button with CSS at init.
+                                'id'    => 'edit-track',
+                                'label' => __( 'Edit Track', 'vapfem' ),
+                                'icon'  => leanpl_ssot( 'icons', 'edit_svg' ),
+                            ],
+                        ] );
+                        ?>
+
+                        <div class="lex-vtabs__content">
+                            <div class="lex-vtab-pane" data-vtab="existing">
+                                <div class="lpl-pla__builder-search-wrap">
+                                    <input
+                                        type="text"
+                                        class="lpl-pla__builder-search"
+                                        id="lpl-pla-builder-player-search"
+                                        placeholder="<?php echo esc_attr__( 'Search by player title...', 'vapfem' ); ?>"
+                                    />
+                                </div>
+                                <div class="lpl-pla__builder-filter-row">
+                                    <select class="lpl-pla__builder-category-filter" id="lpl-pla-builder-category-filter">
+                                        <option value=""><?php esc_html_e( 'All categories', 'vapfem' ); ?></option>
+                                        <?php if ( ! is_wp_error( $categories ) ) : ?>
+                                            <?php foreach ( $categories as $cat ) : ?>
+                                                <option value="<?php echo esc_attr( $cat->slug ); ?>">
+                                                    <?php echo esc_html( $cat->name ); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    <button type="button" class="button lpl-pla__builder-add-all" id="lpl-pla-builder-add-all">
+                                        <?php esc_html_e( 'Add all from selected category', 'vapfem' ); ?>
+                                    </button>
+                                </div>
+                                <div class="lpl-pla__builder-player-list" id="lpl-pla-builder-player-list">
+                                    <?php if ( empty( $players ) ) : ?>
+                                        <div class="lpl-pla__builder-picker-empty lpl-pla__builder-picker-empty--no-players">
+                                            <p class="lpl-pla__builder-picker-empty-title">
+                                                <?php echo $playlist_type === 'audio'
+                                                    ? esc_html__( 'No audio players found.', 'vapfem' )
+                                                    : esc_html__( 'No video players found.', 'vapfem' ); ?>
+                                            </p>
+                                            <p class="lpl-pla__builder-picker-empty-sub"><?php esc_html_e( 'Create a player first, then return here.', 'vapfem' ); ?></p>
+                                            <a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=lean_player' ) ); ?>" target="_blank" class="button button-primary lpl-pla__builder-add-new-btn">
+                                                <?php esc_html_e( 'Add New Player', 'vapfem' ); ?>
+                                            </a>
+                                        </div>
+                                    <?php else : ?>
+                                        <?php foreach ( $players as $player ) :
+                                            $source_data = $this->get_source_type_data( $player->ID );
+                                            $player_type = get_post_meta( $player->ID, '_player_type', true ) ?: 'video';
+                                            $is_checked  = in_array( $player->ID, $saved_ids, true );
+                                            $cats_attr   = isset( $player_categories[ $player->ID ] ) ? $player_categories[ $player->ID ] : '';
+                                            $duration    = get_post_meta( $player->ID, '_duration', true );
+                                            $meta_text   = get_post_meta( $player->ID, '_meta_text', true );
+                                        ?>
+                                            <label
+                                                class="lpl-pla__builder-player-row<?php echo esc_attr( $is_checked ? ' lpl-pla__builder-player-row--added' : '' ); ?>"
+                                                data-player-id="<?php echo esc_attr( $player->ID ); ?>"
+                                                data-categories="<?php echo esc_attr( $cats_attr ); ?>"
+                                                data-title="<?php echo esc_attr( $player->post_title ); ?>"
+                                                data-type="<?php echo esc_attr( $player_type ); ?>"
+                                                data-source-type="<?php echo esc_attr( $source_data['type'] ); ?>"
+                                                data-source-label="<?php echo esc_attr( $source_data['label'] ); ?>"
+                                                data-duration="<?php echo esc_attr( $duration ); ?>"
+                                                data-meta-text="<?php echo esc_attr( $meta_text ); ?>"
+                                            >
+                                                <input type="checkbox" class="lpl-pla__builder-player-checkbox" value="<?php echo esc_attr( $player->ID ); ?>" <?php checked( $is_checked ); ?> />
+                                                <span class="lpl-pla__builder-player-title"><?php echo esc_html( $player->post_title ); ?></span>
+                                                <span class="lpl-pla__builder-badge lpl-pla__builder-badge--<?php echo esc_attr( $source_data['type'] ); ?>"><?php echo esc_html( $source_data['label'] ); ?></span>
+                                            </label>
+                                        <?php endforeach; ?>
+                                        <div class="lpl-pla__builder-picker-empty lpl-pla__builder-picker-empty--search" id="lpl-pla-builder-search-empty" style="display:none;">
+                                            <p class="lpl-pla__builder-picker-empty-title"><?php esc_html_e( 'No players match your search.', 'vapfem' ); ?></p>
+                                            <p class="lpl-pla__builder-picker-empty-sub"><?php esc_html_e( 'Try another keyword or category.', 'vapfem' ); ?></p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <div class="lex-vtab-pane" data-vtab="quick-add">
+                                <table class="form-table lex-fields--label-above lpl-pla__qa-fields">
+                                    <?php
+                                    $fr->render( 'text', '_qa_url', [
+                                        'label'       => __( 'Media URL', 'vapfem' ),
+                                        'placeholder' => $source_hints['qa_url'],
+                                        'value'       => '',
+                                    ] );
+                                    $fr->render( 'media', '_qa_media', [
+                                        'label'        => __( 'Or Upload', 'vapfem' ),
+                                        'button_text'  => __( 'Select / Upload Media', 'vapfem' ),
+                                        'remove_text'  => __( 'Remove', 'vapfem' ),
+                                        'library_type' => [ $playlist_type === 'audio' ? 'audio' : 'video' ],
+                                        'placeholder'  => __( 'No media selected', 'vapfem' ),
+                                        'value'        => '',
+                                    ] );
+                                    $fr->render( 'text', '_qa_title', [
+                                        'label' => __( 'Title', 'vapfem' ),
+                                        'value' => '',
+                                    ] );
+                                    $fr->render( 'text', '_qa_duration', [
+                                        'label'       => __( 'Duration', 'vapfem' ),
+                                        'placeholder' => __( 'e.g. 3:45', 'vapfem' ),
+                                        'value'       => '',
+                                        'classes'     => [ 'lpl-pla__qa-field--half' ],
+                                    ] );
+                                    $fr->render( 'text', '_qa_meta_text', [
+                                        'label'       => __( 'Meta Text', 'vapfem' ),
+                                        'placeholder' => __( 'e.g. Episode 12', 'vapfem' ),
+                                        'value'       => '',
+                                        'classes'     => [ 'lpl-pla__qa-field--half' ],
+                                    ] );
+                                    $fr->render( 'media', '_qa_poster', [
+                                        'label'        => __( 'Custom Thumbnail', 'vapfem' ),
+                                        'button_text'  => __( 'Select Image', 'vapfem' ),
+                                        'remove_text'  => __( 'Remove', 'vapfem' ),
+                                        'library_type' => [ 'image' ],
+                                        'placeholder'  => __( 'No image selected', 'vapfem' ),
+                                        'value'        => '',
+                                    ] );
+                                    ?>
+                                </table>
+
+                                <p class="lpl-pla__qa-error" id="lpl-pla-qa-error" style="display:none;"></p>
+
+                                <div class="lpl-pla__drawer-actions">
+                                    <button type="button" class="button button-primary" id="lpl-pla-qa-submit"><?php esc_html_e( 'Add to Playlist', 'vapfem' ); ?></button>
+                                </div>
+                            </div>
+
+                            <div class="lex-vtab-pane" data-vtab="batch-add">
+                                <table class="form-table lex-fields--label-above lpl-pla__ba-fields">
+                                    <?php
+                                    $fr->render( 'textarea', '_ba_urls', [
+                                        'label'       => __( 'Media URLs', 'vapfem' ),
+                                        'placeholder' => $source_hints['ba_placeholder'],
+                                        'desc'        => $source_hints['ba_desc'],
+                                        'rows'        => 8,
+                                        'value'       => '',
+                                    ] );
+                                    ?>
+                                </table>
+
+                                <p class="lpl-pla__ba-error" id="lpl-pla-ba-error" style="display:none;"></p>
+                                <ul class="lpl-pla__ba-failures" id="lpl-pla-ba-failures" style="display:none;"></ul>
+
+                                <div class="lpl-pla__drawer-actions">
+                                    <button type="button" class="button button-primary" id="lpl-pla-ba-submit"><?php esc_html_e( 'Add All', 'vapfem' ); ?></button>
+                                </div>
+                            </div>
+
+                            <div class="lex-vtab-pane" data-vtab="edit-track">
+                                <table class="form-table lex-fields--label-above lpl-pla__ed-fields">
+                                    <?php
+                                    $fr->render( 'text', '_ed_url', [
+                                        'label'       => __( 'Media URL', 'vapfem' ),
+                                        'placeholder' => $source_hints['qa_url'],
+                                        'value'       => '',
+                                    ] );
+                                    $fr->render( 'media', '_ed_media', [
+                                        'label'        => __( 'Or Upload', 'vapfem' ),
+                                        'button_text'  => __( 'Select / Upload Media', 'vapfem' ),
+                                        'remove_text'  => __( 'Remove', 'vapfem' ),
+                                        'library_type' => [ $playlist_type === 'audio' ? 'audio' : 'video' ],
+                                        'placeholder'  => __( 'No media selected', 'vapfem' ),
+                                        'value'        => '',
+                                    ] );
+                                    $fr->render( 'text', '_ed_title', [
+                                        'label' => __( 'Title', 'vapfem' ),
+                                        'value' => '',
+                                    ] );
+                                    $fr->render( 'text', '_ed_duration', [
+                                        'label'       => __( 'Duration', 'vapfem' ),
+                                        'placeholder' => __( 'e.g. 3:45', 'vapfem' ),
+                                        'value'       => '',
+                                        'classes'     => [ 'lpl-pla__qa-field--half' ],
+                                    ] );
+                                    $fr->render( 'text', '_ed_meta_text', [
+                                        'label'       => __( 'Meta Text', 'vapfem' ),
+                                        'placeholder' => __( 'e.g. Episode 12', 'vapfem' ),
+                                        'value'       => '',
+                                        'classes'     => [ 'lpl-pla__qa-field--half' ],
+                                    ] );
+                                    $fr->render( 'media', '_ed_poster', [
+                                        'label'        => __( 'Custom Thumbnail', 'vapfem' ),
+                                        'button_text'  => __( 'Select Image', 'vapfem' ),
+                                        'remove_text'  => __( 'Remove', 'vapfem' ),
+                                        'library_type' => [ 'image' ],
+                                        'placeholder'  => __( 'No image selected', 'vapfem' ),
+                                        'value'        => '',
+                                    ] );
+                                    ?>
+                                </table>
+
+                                <p class="lpl-pla__ed-error" id="lpl-pla-ed-error" style="display:none;"></p>
+
+                                <div class="lpl-pla__drawer-actions">
+                                    <button type="button" class="button button-primary" id="lpl-pla-ed-submit"><?php esc_html_e( 'Save Changes', 'vapfem' ); ?></button>
+                                    <a href="#" id="lpl-pla-ed-full-editor" target="_blank" class="lpl-pla__ed-full-editor">
+                                        <?php esc_html_e( 'Open full editor', 'vapfem' ); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- .lex-vtabs -->
+            <?php \Lex\Settings\V2\Services\Drawer::render_close(); ?>
+
         </div><!-- .lpl-pla__builder -->
         <?php
     }

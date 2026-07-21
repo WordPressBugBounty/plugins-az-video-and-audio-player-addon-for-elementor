@@ -126,7 +126,6 @@ if ($is_image_field && $media_id) {
                 class="lex-media__preview <?php echo $input_class; ?>"
                 value="<?php echo esc_url($media_url); ?>"
                 placeholder="<?php echo esc_attr($placeholder); ?>"
-                style="width:70%; margin-right:10px;"
                 readonly
                 <?php if ($is_disabled): ?>disabled<?php endif; ?>
             />

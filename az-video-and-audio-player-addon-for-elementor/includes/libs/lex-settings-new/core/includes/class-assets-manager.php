@@ -201,7 +201,14 @@ class AssetManager {
             ["{$instance_id}-lex-settings-core"],
             $version
         );
-        
+
+        wp_enqueue_style(
+            "{$instance_id}-lex-drawer",
+            $base_url . 'assets/css/lex-drawer.css',
+            ["{$instance_id}-lex-settings-core"],
+            $version
+        );
+
         // Enqueue Select2 CSS (global handle - third-party library)
         if (!wp_style_is('select2', 'registered')) {
             wp_register_style(
@@ -277,7 +284,15 @@ class AssetManager {
             $version,
             true
         );
-        
+
+        wp_enqueue_script(
+            "{$instance_id}-lex-drawer",
+            $base_url . 'assets/js/lex-drawer.js',
+            ["{$instance_id}-lex-settings-core"],
+            $version,
+            true
+        );
+
         wp_enqueue_script(
             "{$instance_id}-lex-settings-box-model",
             $base_url . 'assets/js/lex-settings-box-model.js',

@@ -44,6 +44,40 @@ Table of contents:
     --lpl-admin-shadow-builder-card-hover: 0 2px 8px color-mix(in srgb, var(--wp-color-blue-50) 12%, transparent);
     --lpl-admin-shadow-highlight: 0 1px 2px color-mix(in srgb, var(--wp-color-black) 10%, transparent);
     --lpl-admin-shadow-highlight-minimal: 0 0.5px 1px color-mix(in srgb, var(--wp-color-black) 3%, transparent);
+
+    /* Playlist builder tokens */
+    --lpl-b-blue:          var(--wp-color-blue-50);
+    --lpl-b-blue-bg:       var(--wp-color-blue-0);
+
+    --lpl-b-red:           var(--wp-color-red-50);
+
+    --lpl-b-border:        var(--wp-color-gray-5);
+    --lpl-b-radius:        6px;
+    --lpl-b-radius-sm:     var(--lex-radius-sm, 4px);
+    --lpl-b-radius-pill:   10px;
+
+    --lpl-b-text-mid:      var(--wp-color-gray-60);
+    --lpl-b-text-faint:    var(--wp-color-gray-30);
+
+    --lpl-b-surface:       var(--wp-color-white);
+
+    --lpl-b-font-base:     var(--lex-font-size-md);
+    --lpl-b-font-sm:       var(--lex-font-size-xs, 11px);
+    --lpl-b-font-xs:       var(--lex-font-size-xs);
+}
+
+/* External-link affordance: any new-tab link inside our admin surfaces.
+   Scoped to body.lpl-scope so it never touches foreign markup on shared
+   screens. Silent to screen readers via the empty CSS alt. */
+.lpl-scope a[target="_blank"]::after {
+    content: " \2197" / "";
+    font-size: 0.85em;
+    color: var(--lpl-b-text-faint);
+}
+
+/* Body scope also covers WP's own chrome; keep the arrow off the admin menu. */
+.lpl-scope .wp-submenu a[target="_blank"]::after {
+    content: none;
 }
 
 /* 1. General Layout & Structure
@@ -1711,75 +1745,84 @@ body.post-type-lean_playlist #postbox-container-1 {
 /* 11. Playlist Builder
 ================================================== */
 
-/* Design tokens */
 .lpl-pla__builder {
-    --lpl-b-blue:          var(--wp-color-blue-50);
-    --lpl-b-blue-bg:       var(--wp-color-blue-0);
-
-
-    --lpl-b-red:           var(--wp-color-red-50);
-
-    --lpl-b-border:        var(--wp-color-gray-5);
-    --lpl-b-radius:        6px;
-    --lpl-b-radius-sm:     var(--lex-radius-sm, 4px);
-    --lpl-b-radius-pill:   10px;
-
-    --lpl-b-text-mid:      var(--wp-color-gray-60);
-    --lpl-b-text-faint:    var(--wp-color-gray-30);
-
-    --lpl-b-surface:       var(--wp-color-white);
-
-    --lpl-b-font-base:     var(--lex-font-size-md);
-    --lpl-b-font-sm:       var(--lex-font-size-xs, 11px);
-    --lpl-b-font-xs:       var(--lex-font-size-xs);
     padding-block-start: var(--lpl-admin-builder-offset);
 }
 
-/* ── Mode rules ── */
-
-/* Columns always visible — left col collapses in playlist mode */
-.lpl-pla__builder-columns {
-    display: flex;
-    gap: var(--lex-space-4, 16px);
-    align-items: flex-start;
-    transition: gap 0.25s ease;
+/* ── Add panel ── */
+.lpl-pla__add-panel {
+    padding: var(--lex-space-4, 16px);
+    margin-block-end: var(--lex-space-4, 16px);
+    background: var(--wp-color-gray-2);
+    border: 1px solid color-mix(in srgb, var(--lpl-b-blue) 30%, transparent);
+    border-radius: var(--lpl-b-radius);
 }
 
-.lpl-pla__builder[data-mode="playlist"] .lpl-pla__builder-columns {
-    gap: 0;
-}
-
-/* Left col: animate open/closed */
-.lpl-pla__builder-col--left {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    transition: flex 0.25s ease, opacity 0.25s ease, padding 0.25s ease;
-}
-
-/* Playlist mode: collapse left col, hide type row and playlist header */
-.lpl-pla__builder[data-mode="playlist"] .lpl-pla__builder-col--left {
-    flex: 0 0 0%;
-    opacity: 0;
-    padding: 0;
-    border: none;
-    max-height: 0;
-    overflow: hidden;
-}
-
-
-/* Library mode: hide playlist header */
-.lpl-pla__builder[data-mode="library"] .lpl-pla__builder-playlist-header {
-    display: none;
-}
-
-
-/* ── Playlist mode header ── */
-.lpl-pla__builder-playlist-header {
+/* ── Omnibox ── */
+.lpl-pla__omnibox {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--lpl-admin-space-compact, 10px);
+    gap: var(--lex-space-2, 8px);
+}
+
+.lpl-pla__omnibox-url {
+    flex: 1;
+    min-width: 0;
+}
+
+.lpl-pla__omnibox-error {
+    margin: var(--lex-space-2, 8px) 0 0;
+    font-size: var(--lpl-b-font-sm);
+    color: var(--lpl-b-red);
+}
+
+.lpl-pla__omnibox-hint {
+    margin: var(--lex-space-2, 8px) 0 0;
+    font-size: var(--lpl-b-font-sm);
+    color: var(--lpl-b-text-mid);
+}
+
+/* ── Secondary add paths ── */
+.lpl-pla__builder-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--lex-space-2, 8px);
+    margin-block-start: var(--lex-space-3, 12px);
+    padding-block-start: var(--lex-space-3, 12px);
+    border-block-start: 1px solid color-mix(in srgb, var(--lpl-b-blue) 20%, transparent);
+}
+
+.lpl-pla__builder-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lex-space-1, 4px);
+    padding-block: var(--lex-space-1, 4px);
+    padding-inline: var(--lex-space-2, 8px);
+    border: 1px solid var(--lpl-b-blue);
+    border-radius: var(--lpl-b-radius-sm);
+    cursor: pointer;
+    font-size: var(--lpl-b-font-sm);
+    line-height: 1.8;
+    background: var(--lpl-b-blue-bg);
+    color: var(--lpl-b-blue);
+}
+
+.lpl-pla__builder-link svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+}
+
+.lpl-pla__builder-link:hover {
+    background: var(--lex-color-apple-blue);
+    border-color: var(--lex-color-apple-blue);
+    color: var(--wp-color-white);
+}
+
+.lpl-pla__builder-link:focus-visible {
+    outline: 2px solid var(--lpl-b-blue);
+    outline-offset: 2px;
 }
 
 
@@ -1872,9 +1915,14 @@ body.post-type-lean_playlist #postbox-container-1 {
 }
 
 .lpl-pla__builder-edit-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
     font-size: var(--lpl-b-font-sm);
     color: var(--lpl-b-blue);
     text-decoration: none;
+    cursor: pointer;
 }
 
 .lpl-pla__builder-edit-link:hover {
@@ -1933,30 +1981,21 @@ body.post-type-lean_playlist #postbox-container-1 {
 /* ── Type row ── */
 
 
-/* ── Two-column layout ── */
-.lpl-pla__builder-col {
-    flex: 1;
-    min-width: 0;
-    background: var(--lpl-b-surface);
-    border: 1px solid var(--lpl-b-border);
-    border-radius: var(--lpl-b-radius);
-    padding: var(--lpl-admin-builder-column-padding);
-}
-
-.lpl-pla__builder-col-header {
+/* ── Item list header ── */
+.lpl-pla__builder-items-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--lpl-admin-space-compact, 10px);
 }
 
-.lpl-pla__builder-col-header-right {
+.lpl-pla__builder-items-header-right {
     display: flex;
     align-items: center;
     gap: var(--lex-space-2, 8px);
 }
 
-.lpl-pla__builder-col-title {
+.lpl-pla__builder-items-title {
     font-size: var(--lpl-b-font-base);
     font-weight: 600;
     color: var(--wp-color-gray-90);
@@ -2015,6 +2054,14 @@ body.post-type-lean_playlist #postbox-container-1 {
     border: 1px solid var(--lpl-b-border);
     border-radius: var(--lpl-b-radius-sm);
     background: var(--wp-color-gray-0);
+}
+
+/* ── Drawer context ──
+   The 380px cap above was tuned to the old two-column layout. In the drawer
+   the body is already the scroll container, so let the list run and scroll
+   the whole pane as one. */
+.lex-drawer .lpl-pla__builder-player-list {
+    max-height: none;
 }
 
 /* Player row */
@@ -2080,14 +2127,14 @@ body.post-type-lean_playlist #postbox-container-1 {
 .lpl-pla__builder-badge--self-hosted { background: var(--wp-color-green-0); color: var(--wp-color-green-40); }
 .lpl-pla__builder-badge--external   { background: var(--wp-color-yellow-0); color: var(--wp-color-yellow-50); }
 
-/* Left empty states */
-.lpl-pla__builder-left-empty {
+/* Picker empty states */
+.lpl-pla__builder-picker-empty {
     padding-block: var(--lex-space-6, 24px);
     padding-inline: var(--lex-space-4, 16px);
     text-align: center;
 }
 
-.lpl-pla__builder-left-empty-title {
+.lpl-pla__builder-picker-empty-title {
     font-size: var(--lpl-b-font-base);
     color: var(--lpl-b-text-mid);
     margin-block: 0 var(--lex-space-1, 4px);
@@ -2095,7 +2142,7 @@ body.post-type-lean_playlist #postbox-container-1 {
     font-weight: 500;
 }
 
-.lpl-pla__builder-left-empty-sub {
+.lpl-pla__builder-picker-empty-sub {
     font-size: var(--lpl-b-font-sm);
     color: var(--lpl-b-text-faint);
     margin-block: 0 var(--lex-space-3, 12px);
@@ -2352,4 +2399,119 @@ tr.lpl-pla__do-field--changed th,
 tr.lpl-pla__do-field--changed td {
     background-color: var(--wp-color-yellow-0);
     transition: background-color 1.8s ease;
+}
+
+/* ── Playlist builder: Quick Add / Batch Add forms ─────────────── */
+
+/* The lex horizontal-vtabs base rule frames the content pane (border + padding).
+   That framing is unwanted inside our drawer — the drawer already provides the
+   container. Framework-correct fix would be a [data-variant="detached"] reset in
+   lex CSS; overriding here for now, scoped to the drawer and chained through the
+   base selector so it outweighs it (0,4,0 vs 0,3,0) without !important. */
+.lpl-pla__builder-drawer .lex-vtabs[data-layout="horizontal"] .lex-vtabs__content {
+    border: 0;
+    padding: 0;
+}
+
+.lpl-pla__qa-error,
+.lpl-pla__ed-error {
+    color: #d63638;
+    margin: 8px 0;
+}
+
+/* Label-above layout for the Quick Add / Edit Track fields tables */
+.lpl-pla__qa-fields th,
+.lpl-pla__ed-fields th {
+    display: block;
+    width: auto;
+    padding: 0;
+    padding-bottom: 4px;
+}
+
+.lpl-pla__qa-fields td,
+.lpl-pla__ed-fields td {
+    display: block;
+    padding: 0;
+    padding-bottom: 4px;
+}
+
+.lpl-pla__qa-fields tr.lex-field input,
+.lpl-pla__ed-fields tr.lex-field input {
+    width: 100%;
+}
+
+/* Duration + Meta Text sit side by side, two columns */
+.lpl-pla__qa-fields tbody,
+.lpl-pla__ed-fields tbody {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.lpl-pla__qa-fields tr.lex-field,
+.lpl-pla__ed-fields tr.lex-field {
+    flex: 1 1 100%;
+}
+
+.lpl-pla__qa-fields tr.lpl-pla__qa-field--half,
+.lpl-pla__ed-fields tr.lpl-pla__qa-field--half {
+    flex: 1 1 calc(50% - 8px);
+}
+
+.lpl-pla__qa-fields tr.lpl-pla__qa-field--half + tr.lpl-pla__qa-field--half,
+.lpl-pla__ed-fields tr.lpl-pla__qa-field--half + tr.lpl-pla__qa-field--half {
+    margin-left: 16px;
+}
+
+/* Action row at the bottom of each drawer pane (Quick Add / Bulk Add / Edit
+   Track), separated from the fields above by a divider. */
+.lpl-pla__drawer-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 5px;
+    padding-top: 16px;
+    border-top: 1px solid var(--lpl-b-border);
+}
+
+.lpl-pla__ed-full-editor {
+    font-size: var(--lpl-b-font-sm);
+}
+
+/* Label-above layout for the Batch Add fields table */
+.lpl-pla__ba-fields th,
+.lpl-pla__ba-fields td {
+    display: block;
+    width: auto;
+    padding: 0;
+    padding-bottom: 4px;
+}
+
+.lpl-pla__ba-fields tr.lex-field textarea {
+    width: 100%;
+}
+
+.lpl-pla__ba-error {
+    color: #d63638;
+    margin: 8px 0;
+}
+
+/* Per-URL failure reasons, one row per rejected line */
+.lpl-pla__ba-failures {
+    margin: 8px 0;
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: var(--lpl-b-font-xs);
+}
+
+.lpl-pla__ba-failures li {
+    margin: 0 0 4px;
+    color: var(--lpl-b-text-faint);
+    word-break: break-all;
+}
+
+.lpl-pla__ba-failures li strong {
+    display: block;
+    color: #d63638;
+    font-weight: 400;
+    word-break: normal;
 }

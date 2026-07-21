@@ -97,6 +97,12 @@ if (!defined('ABSPATH')) {
                 <td><?php echo esc_html__('Default playback speed.', 'vapfem'); ?></td>
             </tr>
             <tr>
+                <td><code>speed_options</code> <span class="lpl-option-scope lpl-option-scope--both"><?php echo esc_html__('Both', 'vapfem'); ?></span></td>
+                <td>0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4</td>
+                <td><?php echo esc_html__('all', 'vapfem'); ?></td>
+                <td><?php echo esc_html__('Which speeds appear in the player settings menu. Global Settings only.', 'vapfem'); ?></td>
+            </tr>
+            <tr>
                 <td><code>debug_mode</code> <span class="lpl-option-scope lpl-option-scope--both"><?php echo esc_html__('Both', 'vapfem'); ?></span></td>
                 <td>yes, no, true, false</td>
                 <td>false</td>
