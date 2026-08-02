@@ -288,6 +288,7 @@ class Playlist_Metaboxes {
 
                 <p class="lpl-pla__omnibox-hint">
                     <?php esc_html_e( 'Pasting a link adds it instantly and creates the player for you.', 'vapfem' ); ?>
+                    <span class="lpl-pla__omnibox-hint-examples"><?php echo esc_html( $source_hints['omnibox_examples'] ); ?></span>
                 </p>
 
                 <!-- Upload opens wp.media directly; the rest deep-link into the drawer. -->

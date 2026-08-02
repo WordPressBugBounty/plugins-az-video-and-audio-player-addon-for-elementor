@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Lean Player - Video and Audio Player with Playlist for WordPress, Elementor and Gutenberg 3.1.3\n"
+"Project-Id-Version: Lean Player - Video and Audio Player with Playlist for WordPress, Elementor and Gutenberg 3.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-20T12:36:05+00:00\n"
+"POT-Creation-Date: 2026-08-02T09:40:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: vapfem\n"
@@ -132,62 +132,62 @@ msgstr ""
 msgid "Skip & Deactivate"
 msgstr ""
 
-#: includes/admin/class-menu.php:100
-#: includes/admin/class-menu.php:204
-#: includes/admin/class-menu.php:205
+#: includes/admin/class-menu.php:122
+#: includes/admin/class-menu.php:226
+#: includes/admin/class-menu.php:227
 msgid "Lean Player"
 msgstr ""
 
-#: includes/admin/class-menu.php:101
+#: includes/admin/class-menu.php:123
 msgid "Video & Audio Player"
 msgstr ""
 
-#: includes/admin/class-menu.php:107
+#: includes/admin/class-menu.php:129
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/admin/class-menu.php:127
+#: includes/admin/class-menu.php:149
 msgid "Player Defaults"
 msgstr ""
 
-#: includes/admin/class-menu.php:135
+#: includes/admin/class-menu.php:157
 #: includes/elementor/widgets/playlist.php:15
 #: includes/elementor/widgets/playlist/trait-content-controls.php:9
 #: includes/libs/lex-settings-new/config/tabs/playlist-shortcode.php:7
 msgid "Playlist"
 msgstr ""
 
-#: includes/admin/class-menu.php:143
-#: includes/class-metaboxes.php:442
-#: includes/class-metaboxes.php:798
-#: includes/playlist/class-playlist-metaboxes.php:586
-#: includes/playlist/class-playlist-metaboxes.php:679
+#: includes/admin/class-menu.php:165
+#: includes/class-metaboxes.php:434
+#: includes/class-metaboxes.php:790
+#: includes/playlist/class-playlist-metaboxes.php:744
+#: includes/playlist/class-playlist-metaboxes.php:837
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/class-menu.php:151
+#: includes/admin/class-menu.php:173
 msgid "Import/Export"
 msgstr ""
 
-#: includes/admin/class-menu.php:159
-#: includes/admin/class-menu.php:216
-#: includes/admin/class-menu.php:217
+#: includes/admin/class-menu.php:181
+#: includes/admin/class-menu.php:238
+#: includes/admin/class-menu.php:239
 msgid "Quick Start"
 msgstr ""
 
-#: includes/admin/class-menu.php:167
+#: includes/admin/class-menu.php:189
 msgid "Video Player Shortcode"
 msgstr ""
 
-#: includes/admin/class-menu.php:175
+#: includes/admin/class-menu.php:197
 msgid "Audio Player Shortcode"
 msgstr ""
 
-#: includes/admin/class-menu.php:183
+#: includes/admin/class-menu.php:205
 msgid "Playlist Shortcode"
 msgstr ""
 
-#: includes/admin/class-menu.php:191
+#: includes/admin/class-menu.php:213
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:7
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:54
 #: includes/libs/lex-settings-new/config/tabs/playlist-shortcode.php:66
@@ -195,50 +195,44 @@ msgstr ""
 msgid "All Shortcode Options"
 msgstr ""
 
-#: includes/admin/class-menu.php:226
-#: includes/admin/class-menu.php:227
+#: includes/admin/class-menu.php:248
+#: includes/admin/class-menu.php:249
 #: includes/class-custom-posts.php:50
 msgid "All Players"
 msgstr ""
 
-#: includes/admin/class-menu.php:235
-#: includes/admin/class-menu.php:236
+#: includes/admin/class-menu.php:257
+#: includes/admin/class-menu.php:258
 #: includes/class-custom-posts.php:46
-#: includes/playlist/class-playlist-metaboxes.php:368
+#: includes/playlist/class-playlist-metaboxes.php:454
 msgid "Add New Player"
 msgstr ""
 
-#: includes/admin/class-menu.php:244
-#: includes/admin/class-menu.php:245
+#: includes/admin/class-menu.php:266
+#: includes/admin/class-menu.php:267
 #: includes/class-custom-posts.php:94
 #: includes/class-custom-posts.php:96
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/class-menu.php:254
-#: includes/admin/class-menu.php:255
+#: includes/admin/class-menu.php:276
+#: includes/admin/class-menu.php:277
 msgid "Playlists"
 msgstr ""
 
-#: includes/admin/class-menu.php:264
-#: includes/admin/class-menu.php:265
-#: includes/admin/class-menu.php:410
-#: includes/admin/class-menu.php:444
+#: includes/admin/class-menu.php:286
+#: includes/admin/class-menu.php:287
+#: includes/admin/class-menu.php:426
+#: includes/admin/class-menu.php:460
 #: includes/functions-player.php:103
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-menu.php:276
-#: includes/admin/class-menu.php:277
-msgid "Upgrade to Premium"
-msgstr ""
-
-#: includes/admin/class-menu.php:435
-#: pro/freemius-loader.php:88
+#: includes/admin/class-menu.php:451
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/admin/class-menu.php:445
+#: includes/admin/class-menu.php:461
 msgid "Settings framework not available."
 msgstr ""
 
@@ -252,13 +246,13 @@ msgid "Source Type"
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:50
-#: includes/class-metaboxes.php:421
+#: includes/class-metaboxes.php:413
 msgid "Source"
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:51
-#: includes/class-metaboxes.php:147
-#: includes/class-metaboxes.php:825
+#: includes/class-metaboxes.php:149
+#: includes/class-metaboxes.php:817
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:134
 #: includes/elementor/widgets/video-player/trait-content-controls.php:252
 #: includes/libs/lex-settings-new/config/tabs/settings.php:37
@@ -266,7 +260,7 @@ msgid "Autoplay"
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:52
-#: includes/class-metaboxes.php:390
+#: includes/class-metaboxes.php:382
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:29
 #: includes/libs/lex-settings-new/config/tabs/playlist-shortcode.php:29
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:29
@@ -281,16 +275,16 @@ msgid "Media ID: "
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:216
-#: includes/class-metaboxes.php:151
-#: includes/class-metaboxes.php:162
-#: includes/class-metaboxes.php:173
-#: includes/class-metaboxes.php:193
-#: includes/class-metaboxes.php:261
-#: includes/class-metaboxes.php:282
-#: includes/class-metaboxes.php:296
-#: includes/class-metaboxes.php:308
-#: includes/class-metaboxes.php:321
-#: includes/class-metaboxes.php:342
+#: includes/class-metaboxes.php:153
+#: includes/class-metaboxes.php:164
+#: includes/class-metaboxes.php:175
+#: includes/class-metaboxes.php:195
+#: includes/class-metaboxes.php:253
+#: includes/class-metaboxes.php:274
+#: includes/class-metaboxes.php:288
+#: includes/class-metaboxes.php:300
+#: includes/class-metaboxes.php:313
+#: includes/class-metaboxes.php:334
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:137
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:154
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:171
@@ -318,36 +312,36 @@ msgstr ""
 #: includes/libs/lex-settings-new/config/tabs/settings.php:40
 #: includes/libs/lex-settings-new/config/tabs/settings.php:50
 #: includes/libs/lex-settings-new/config/tabs/settings.php:66
-#: includes/libs/lex-settings-new/config/tabs/settings.php:129
-#: includes/libs/lex-settings-new/config/tabs/settings.php:191
-#: includes/libs/lex-settings-new/config/tabs/settings.php:225
-#: includes/libs/lex-settings-new/config/tabs/settings.php:235
-#: includes/libs/lex-settings-new/config/tabs/settings.php:262
-#: includes/libs/lex-settings-new/config/tabs/settings.php:270
-#: includes/libs/lex-settings-new/config/tabs/settings.php:280
-#: includes/libs/lex-settings-new/config/tabs/settings.php:290
-#: includes/playlist/class-playlist-metaboxes.php:732
-#: includes/playlist/class-playlist-metaboxes.php:743
-#: includes/playlist/class-playlist-metaboxes.php:761
-#: includes/playlist/class-playlist-metaboxes.php:779
-#: includes/playlist/class-playlist-metaboxes.php:784
-#: includes/playlist/class-playlist-metaboxes.php:789
-#: includes/playlist/class-playlist-metaboxes.php:794
-#: includes/playlist/class-playlist-metaboxes.php:837
+#: includes/libs/lex-settings-new/config/tabs/settings.php:131
+#: includes/libs/lex-settings-new/config/tabs/settings.php:193
+#: includes/libs/lex-settings-new/config/tabs/settings.php:227
+#: includes/libs/lex-settings-new/config/tabs/settings.php:237
+#: includes/libs/lex-settings-new/config/tabs/settings.php:264
+#: includes/libs/lex-settings-new/config/tabs/settings.php:272
+#: includes/libs/lex-settings-new/config/tabs/settings.php:282
+#: includes/libs/lex-settings-new/config/tabs/settings.php:292
+#: includes/playlist/class-playlist-metaboxes.php:890
+#: includes/playlist/class-playlist-metaboxes.php:901
+#: includes/playlist/class-playlist-metaboxes.php:919
+#: includes/playlist/class-playlist-metaboxes.php:937
+#: includes/playlist/class-playlist-metaboxes.php:942
+#: includes/playlist/class-playlist-metaboxes.php:947
+#: includes/playlist/class-playlist-metaboxes.php:952
+#: includes/playlist/class-playlist-metaboxes.php:995
 msgid "Yes"
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:218
-#: includes/class-metaboxes.php:152
-#: includes/class-metaboxes.php:163
-#: includes/class-metaboxes.php:174
-#: includes/class-metaboxes.php:194
-#: includes/class-metaboxes.php:262
-#: includes/class-metaboxes.php:283
-#: includes/class-metaboxes.php:297
-#: includes/class-metaboxes.php:309
-#: includes/class-metaboxes.php:322
-#: includes/class-metaboxes.php:343
+#: includes/class-metaboxes.php:154
+#: includes/class-metaboxes.php:165
+#: includes/class-metaboxes.php:176
+#: includes/class-metaboxes.php:196
+#: includes/class-metaboxes.php:254
+#: includes/class-metaboxes.php:275
+#: includes/class-metaboxes.php:289
+#: includes/class-metaboxes.php:301
+#: includes/class-metaboxes.php:314
+#: includes/class-metaboxes.php:335
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:138
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:155
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:172
@@ -374,7 +368,7 @@ msgid "No"
 msgstr ""
 
 #: includes/admin/class-player-table-columns.php:237
-#: includes/class-metaboxes.php:984
+#: includes/class-metaboxes.php:976
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:20
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:37
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:42
@@ -397,7 +391,7 @@ msgstr ""
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:47
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:52
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:57
-#: includes/playlist/class-playlist-metaboxes.php:497
+#: includes/playlist/class-playlist-metaboxes.php:655
 #: includes/playlist/class-playlist-table-columns.php:126
 msgid "Copy"
 msgstr ""
@@ -640,8 +634,7 @@ msgid "Choose the type of player"
 msgstr ""
 
 #: includes/class-metaboxes.php:54
-#: includes/functions-player.php:254
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:120
+#: includes/functions-player.php:284
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:126
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:132
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:138
@@ -650,14 +643,15 @@ msgstr ""
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:156
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:162
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:168
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:174
 #: includes/playlist/class-playlist-table-columns.php:96
 msgid "Video"
 msgstr ""
 
 #: includes/class-metaboxes.php:55
-#: includes/functions-player.php:252
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:188
-#: includes/playlist/class-playlist-metaboxes.php:601
+#: includes/functions-player.php:282
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:194
+#: includes/playlist/class-playlist-metaboxes.php:759
 #: includes/playlist/class-playlist-table-columns.php:96
 msgid "Audio"
 msgstr ""
@@ -672,20 +666,20 @@ msgid "Choose the video source type"
 msgstr ""
 
 #: includes/class-metaboxes.php:66
-#: includes/functions-player.php:285
-#: includes/functions-player.php:301
+#: includes/functions-player.php:315
+#: includes/functions-player.php:331
+#: includes/functions-player.php:647
 #: includes/libs/lex-settings-new/config/tabs/quick-start.php:59
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:35
-#: includes/playlist/class-playlist-metaboxes.php:114
 msgid "YouTube"
 msgstr ""
 
 #: includes/class-metaboxes.php:67
 #: includes/elementor/widgets/video-player/trait-content-controls.php:55
-#: includes/functions-player.php:287
+#: includes/functions-player.php:317
+#: includes/functions-player.php:654
 #: includes/libs/lex-settings-new/config/tabs/quick-start.php:81
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:40
-#: includes/playlist/class-playlist-metaboxes.php:121
 msgid "Vimeo"
 msgstr ""
 
@@ -745,9 +739,13 @@ msgid "Select / Upload Video"
 msgstr ""
 
 #: includes/class-metaboxes.php:104
-#: includes/class-metaboxes.php:133
-#: includes/class-metaboxes.php:271
-#: includes/playlist/class-playlist-metaboxes.php:447
+#: includes/class-metaboxes.php:134
+#: includes/class-metaboxes.php:263
+#: includes/playlist/class-playlist-metaboxes.php:361
+#: includes/playlist/class-playlist-metaboxes.php:501
+#: includes/playlist/class-playlist-metaboxes.php:525
+#: includes/playlist/class-playlist-metaboxes.php:572
+#: includes/playlist/class-playlist-metaboxes.php:596
 msgid "Remove"
 msgstr ""
 
@@ -755,476 +753,444 @@ msgstr ""
 msgid "No video selected"
 msgstr ""
 
-#: includes/class-metaboxes.php:111
+#: includes/class-metaboxes.php:112
 msgid "Video URL"
 msgstr ""
 
-#: includes/class-metaboxes.php:112
+#: includes/class-metaboxes.php:113
 msgid "Enter direct URL to video file (e.g., https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4)"
 msgstr ""
 
-#: includes/class-metaboxes.php:113
+#: includes/class-metaboxes.php:114
 msgid "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
 msgstr ""
 
-#: includes/class-metaboxes.php:118
+#: includes/class-metaboxes.php:119
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:50
 msgid "Audio Upload or URL"
 msgstr ""
 
-#: includes/class-metaboxes.php:119
+#: includes/class-metaboxes.php:120
 msgid "Choose how to provide the audio"
 msgstr ""
 
-#: includes/class-metaboxes.php:122
+#: includes/class-metaboxes.php:123
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:54
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:66
 msgid "Upload Audio"
 msgstr ""
 
-#: includes/class-metaboxes.php:123
+#: includes/class-metaboxes.php:124
 msgid "Audio Link (CDN/URL)"
 msgstr ""
 
-#: includes/class-metaboxes.php:130
+#: includes/class-metaboxes.php:131
 msgid "HTML5 Audio File"
 msgstr ""
 
-#: includes/class-metaboxes.php:131
+#: includes/class-metaboxes.php:132
 msgid "Select an audio file from the media library. Supported formats: MP3, OGG, WAV, M4A, AAC"
 msgstr ""
 
-#: includes/class-metaboxes.php:132
+#: includes/class-metaboxes.php:133
 msgid "Select / Upload Audio"
 msgstr ""
 
-#: includes/class-metaboxes.php:135
+#: includes/class-metaboxes.php:136
 msgid "No audio selected"
 msgstr ""
 
-#: includes/class-metaboxes.php:140
+#: includes/class-metaboxes.php:142
 msgid "Audio URL"
 msgstr ""
 
-#: includes/class-metaboxes.php:141
+#: includes/class-metaboxes.php:143
 msgid "Enter direct URL to audio file (e.g., https://download.samplelib.com/mp3/sample-15s.mp3)"
 msgstr ""
 
-#: includes/class-metaboxes.php:142
+#: includes/class-metaboxes.php:144
 msgid "https://download.samplelib.com/mp3/sample-15s.mp3"
 msgstr ""
 
-#: includes/class-metaboxes.php:148
+#: includes/class-metaboxes.php:150
 msgid "Try to start this player automatically when the page loads. <strong>If autoplay does not work, turn on \"Start Muted\" below.</strong> Most browsers only allow autoplay when sound is off. <a href=\"https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay\" target=\"_blank\" rel=\"noopener noreferrer\">Learn more about autoplay policies</a>."
 msgstr ""
 
-#: includes/class-metaboxes.php:150
-#: includes/class-metaboxes.php:161
-#: includes/class-metaboxes.php:172
-#: includes/class-metaboxes.php:206
-#: includes/class-metaboxes.php:235
-#: includes/class-metaboxes.php:260
-#: includes/class-metaboxes.php:281
-#: includes/class-metaboxes.php:295
-#: includes/class-metaboxes.php:307
-#: includes/class-metaboxes.php:320
-#: includes/class-metaboxes.php:341
+#: includes/class-metaboxes.php:152
+#: includes/class-metaboxes.php:163
+#: includes/class-metaboxes.php:174
+#: includes/class-metaboxes.php:207
+#: includes/class-metaboxes.php:227
+#: includes/class-metaboxes.php:252
+#: includes/class-metaboxes.php:273
+#: includes/class-metaboxes.php:287
+#: includes/class-metaboxes.php:299
+#: includes/class-metaboxes.php:312
+#: includes/class-metaboxes.php:333
 msgid "Use Global Option"
 msgstr ""
 
-#: includes/class-metaboxes.php:158
-#: includes/class-metaboxes.php:825
+#: includes/class-metaboxes.php:160
+#: includes/class-metaboxes.php:817
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:151
 #: includes/elementor/widgets/video-player/trait-content-controls.php:269
 #: includes/libs/lex-settings-new/config/tabs/settings.php:47
 msgid "Start Muted"
 msgstr ""
 
-#: includes/class-metaboxes.php:159
+#: includes/class-metaboxes.php:161
 msgid "Start this player with sound off. Required for autoplay in modern browsers."
 msgstr ""
 
-#: includes/class-metaboxes.php:169
+#: includes/class-metaboxes.php:171
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:168
 #: includes/elementor/widgets/video-player/trait-content-controls.php:286
 #: includes/libs/lex-settings-new/config/tabs/settings.php:65
 msgid "Loop Playback"
 msgstr ""
 
-#: includes/class-metaboxes.php:170
+#: includes/class-metaboxes.php:172
 msgid "Play again automatically when finished"
 msgstr ""
 
-#: includes/class-metaboxes.php:180
+#: includes/class-metaboxes.php:182
 #: includes/elementor/widgets/video-player/trait-content-controls.php:302
 #: includes/libs/lex-settings-new/config/tabs/settings.php:73
 msgid "Initial Volume"
 msgstr ""
 
-#: includes/class-metaboxes.php:181
+#: includes/class-metaboxes.php:183
 msgid "Choose how loud this player starts, from 0% (mute) to 100% (full volume). Viewers can still change the volume while watching."
 msgstr ""
 
-#: includes/class-metaboxes.php:190
-#: includes/class-metaboxes.php:848
+#: includes/class-metaboxes.php:192
+#: includes/class-metaboxes.php:840
 msgid "Storage"
 msgstr ""
 
-#: includes/class-metaboxes.php:191
+#: includes/class-metaboxes.php:193
 msgid "Allow use of local storage to store user settings (volume, speed, quality, etc.)"
 msgstr ""
 
-#: includes/class-metaboxes.php:201
+#: includes/class-metaboxes.php:203
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:270
 #: includes/elementor/widgets/video-player/trait-content-controls.php:499
 #: includes/libs/lex-settings-new/config/tabs/settings.php:85
 msgid "Starting Playback Speed"
 msgstr ""
 
-#: includes/class-metaboxes.php:202
+#: includes/class-metaboxes.php:204
 msgid "Choose the speed this player starts with."
 msgstr ""
 
-#: includes/class-metaboxes.php:203
+#: includes/class-metaboxes.php:205
 msgid "<strong>What it does</strong><br>Sets the speed this player uses when it first loads.<br><br><strong>Common choices</strong><br>Many visitors prefer podcasts, lessons, and videos at faster speeds like 1.25x or 1.5x.<br><br><strong>Note</strong><br>YouTube and Vimeo only support speeds from 0.5x to 2x. Options outside that range will be hidden automatically."
 msgstr ""
 
-#: includes/class-metaboxes.php:207
-#: includes/libs/lex-settings-new/config/tabs/settings.php:90
-msgid "0.5x (Slow)"
-msgstr ""
-
-#: includes/class-metaboxes.php:208
-#: includes/libs/lex-settings-new/config/tabs/settings.php:91
-msgid "0.75x"
-msgstr ""
-
-#: includes/class-metaboxes.php:209
-#: includes/libs/lex-settings-new/config/tabs/settings.php:92
-msgid "1x (Normal)"
-msgstr ""
-
-#: includes/class-metaboxes.php:210
-#: includes/libs/lex-settings-new/config/tabs/settings.php:93
-msgid "1.25x"
-msgstr ""
-
-#: includes/class-metaboxes.php:211
-#: includes/libs/lex-settings-new/config/tabs/settings.php:94
-msgid "1.5x"
-msgstr ""
-
 #: includes/class-metaboxes.php:212
-#: includes/libs/lex-settings-new/config/tabs/settings.php:95
-msgid "1.75x"
-msgstr ""
-
-#: includes/class-metaboxes.php:213
-#: includes/libs/lex-settings-new/config/tabs/settings.php:96
-msgid "2x (Fast)"
-msgstr ""
-
-#: includes/class-metaboxes.php:214
-#: includes/libs/lex-settings-new/config/tabs/settings.php:97
-msgid "4x (Very Fast)"
-msgstr ""
-
-#: includes/class-metaboxes.php:220
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:202
 #: includes/elementor/widgets/video-player/trait-content-controls.php:360
-#: includes/libs/lex-settings-new/config/tabs/settings.php:206
+#: includes/libs/lex-settings-new/config/tabs/settings.php:208
 msgid "Skip Forward/Back Amount"
 msgstr ""
 
-#: includes/class-metaboxes.php:221
+#: includes/class-metaboxes.php:213
 msgid "How many seconds to skip forward or backward when viewers use keyboard shortcuts (arrow keys) for fast forward or rewind. For example, 10 seconds means each press of the arrow key jumps 10 seconds. Note: Clicking on the progress bar will still jump directly to that position."
 msgstr ""
 
-#: includes/class-metaboxes.php:232
-#: includes/libs/lex-settings-new/config/tabs/settings.php:175
+#: includes/class-metaboxes.php:224
+#: includes/libs/lex-settings-new/config/tabs/settings.php:177
 msgid "Time Display Format"
 msgstr ""
 
-#: includes/class-metaboxes.php:233
+#: includes/class-metaboxes.php:225
 msgid "Choose what the time display shows:<br>• <strong>Remaining Time (Countdown):</strong> counts down how much time is left (for example, \"-2:30\")<br>• <strong>Elapsed Time:</strong> counts up how much has already played (for example, \"2:30\").<br>Default: Remaining time."
 msgstr ""
 
-#: includes/class-metaboxes.php:236
-#: includes/libs/lex-settings-new/config/tabs/settings.php:180
+#: includes/class-metaboxes.php:228
+#: includes/libs/lex-settings-new/config/tabs/settings.php:182
 msgid "Remaining Time (Countdown)"
 msgstr ""
 
-#: includes/class-metaboxes.php:237
-#: includes/libs/lex-settings-new/config/tabs/settings.php:181
+#: includes/class-metaboxes.php:229
+#: includes/libs/lex-settings-new/config/tabs/settings.php:183
 msgid "Elapsed Time (Incremental)"
 msgstr ""
 
-#: includes/class-metaboxes.php:245
-#: includes/libs/lex-settings-new/config/tabs/settings.php:154
+#: includes/class-metaboxes.php:237
+#: includes/libs/lex-settings-new/config/tabs/settings.php:156
 msgid "Player Controls"
 msgstr ""
 
-#: includes/class-metaboxes.php:246
+#: includes/class-metaboxes.php:238
 msgid "<strong>Uncheck all = Use Global Option.</strong> <br>Choose which buttons appear on the player (play, progress bar, volume, etc.) and in which order. Check a control to show it, uncheck to hide it."
 msgstr ""
 
-#: includes/class-metaboxes.php:257
+#: includes/class-metaboxes.php:249
 msgid "Seek Tooltips"
 msgstr ""
 
-#: includes/class-metaboxes.php:258
+#: includes/class-metaboxes.php:250
 msgid "Hover over the progress/scrubber bar → shows the time at that point (e.g. \"1:24\"). Helps you see where you'll jump before clicking."
 msgstr ""
 
-#: includes/class-metaboxes.php:268
+#: includes/class-metaboxes.php:260
+#: includes/playlist/class-playlist-metaboxes.php:523
+#: includes/playlist/class-playlist-metaboxes.php:594
 msgid "Custom Thumbnail"
 msgstr ""
 
-#: includes/class-metaboxes.php:269
+#: includes/class-metaboxes.php:261
 msgid "Video: thumbnail before playback. Audio: album art in the player. Playlist: cover image in the playlist list."
 msgstr ""
 
-#: includes/class-metaboxes.php:270
+#: includes/class-metaboxes.php:262
+#: includes/playlist/class-playlist-metaboxes.php:524
+#: includes/playlist/class-playlist-metaboxes.php:595
 msgid "Select Image"
 msgstr ""
 
-#: includes/class-metaboxes.php:273
+#: includes/class-metaboxes.php:265
 msgid "No poster image selected"
 msgstr ""
 
-#: includes/class-metaboxes.php:278
+#: includes/class-metaboxes.php:270
 #: includes/elementor/widgets/video-player/trait-content-controls.php:326
-#: includes/libs/lex-settings-new/config/tabs/settings.php:261
+#: includes/libs/lex-settings-new/config/tabs/settings.php:263
 msgid "Click Video to Play/Pause"
 msgstr ""
 
-#: includes/class-metaboxes.php:279
-#: includes/libs/lex-settings-new/config/tabs/settings.php:263
+#: includes/class-metaboxes.php:271
+#: includes/libs/lex-settings-new/config/tabs/settings.php:265
 msgid "Allow clicking on the video to play or pause"
 msgstr ""
 
-#: includes/class-metaboxes.php:290
-#: includes/libs/lex-settings-new/config/tabs/settings.php:269
+#: includes/class-metaboxes.php:282
+#: includes/libs/lex-settings-new/config/tabs/settings.php:271
 msgid "Allow Fullscreen"
 msgstr ""
 
-#: includes/class-metaboxes.php:291
-#: includes/libs/lex-settings-new/config/tabs/settings.php:271
+#: includes/class-metaboxes.php:283
+#: includes/libs/lex-settings-new/config/tabs/settings.php:273
 msgid "Let viewers expand the video to fullscreen."
 msgstr ""
 
-#: includes/class-metaboxes.php:292
-#: includes/libs/lex-settings-new/config/tabs/settings.php:272
+#: includes/class-metaboxes.php:284
+#: includes/libs/lex-settings-new/config/tabs/settings.php:274
 msgid "<strong>What it does</strong><br>Lets viewers open the video in fullscreen.<br><br><strong>On:</strong> the fullscreen button, double-click on the video, and the F key all work.<br><strong>Off:</strong> all three are disabled, fullscreen is fully turned off.<br><br><strong>Note:</strong> the Player Controls list only sets whether the button shows in the bar. To fully disable fullscreen, turn this off."
 msgstr ""
 
-#: includes/class-metaboxes.php:304
-#: includes/libs/lex-settings-new/config/tabs/settings.php:279
+#: includes/class-metaboxes.php:296
+#: includes/libs/lex-settings-new/config/tabs/settings.php:281
 msgid "Auto-Hide Controls"
 msgstr ""
 
-#: includes/class-metaboxes.php:305
-#: includes/libs/lex-settings-new/config/tabs/settings.php:281
+#: includes/class-metaboxes.php:297
+#: includes/libs/lex-settings-new/config/tabs/settings.php:283
 msgid "Hide controls while playing, show on hover or tap"
 msgstr ""
 
-#: includes/class-metaboxes.php:317
+#: includes/class-metaboxes.php:309
 #: includes/elementor/widgets/video-player/trait-content-controls.php:394
-#: includes/libs/lex-settings-new/config/tabs/settings.php:289
+#: includes/libs/lex-settings-new/config/tabs/settings.php:291
 msgid "Reset to Start When Finished"
 msgstr ""
 
-#: includes/class-metaboxes.php:318
-#: includes/libs/lex-settings-new/config/tabs/settings.php:291
+#: includes/class-metaboxes.php:310
+#: includes/libs/lex-settings-new/config/tabs/settings.php:293
 msgid "Video-only. Reset to the beginning after playback ends. Has no effect on audio players."
 msgstr ""
 
-#: includes/class-metaboxes.php:329
+#: includes/class-metaboxes.php:321
 msgid "Video Shape (Aspect Ratio)"
 msgstr ""
 
-#: includes/class-metaboxes.php:330
+#: includes/class-metaboxes.php:322
 msgid "Sets the player shape so the page does not jump while the video loads."
 msgstr ""
 
-#: includes/class-metaboxes.php:331
+#: includes/class-metaboxes.php:323
 msgid "<strong>What it does</strong><br>Reserves the player shape up front so the page does not jump while the video loads.<br><br><strong>Leave empty</strong> for automatic (most widescreen videos are 16:9).<br><br><strong>Enter <code>width:height</code></strong> to force a shape, for example <code>16:9</code> (widescreen), <code>4:3</code> (older TV), <code>1:1</code> (square), or <code>9:16</code> (vertical / phone)."
 msgstr ""
 
-#: includes/class-metaboxes.php:333
+#: includes/class-metaboxes.php:325
 #: includes/elementor/widgets/video-player/trait-content-controls.php:585
 msgid "16:9"
 msgstr ""
 
-#: includes/class-metaboxes.php:338
+#: includes/class-metaboxes.php:330
 #: includes/elementor/widgets/video-player/trait-content-controls.php:446
-#: includes/libs/lex-settings-new/config/tabs/settings.php:190
+#: includes/libs/lex-settings-new/config/tabs/settings.php:192
 msgid "Control Button Tooltips"
 msgstr ""
 
-#: includes/class-metaboxes.php:339
+#: includes/class-metaboxes.php:331
 msgid "Hover over a button (play, mute, fullscreen) → shows its name as a little bubble (\"Play\", \"Mute\")."
 msgstr ""
 
-#: includes/class-metaboxes.php:349
+#: includes/class-metaboxes.php:341
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:290
 #: includes/elementor/widgets/video-player/trait-content-controls.php:546
-#: includes/libs/lex-settings-new/config/tabs/settings.php:112
+#: includes/libs/lex-settings-new/config/tabs/settings.php:114
 msgid "HTML5 Media Preload"
 msgstr ""
 
-#: includes/class-metaboxes.php:350
+#: includes/class-metaboxes.php:342
 msgid "Choose how much HTML5 media loads before the visitor presses play."
 msgstr ""
 
-#: includes/class-metaboxes.php:351
+#: includes/class-metaboxes.php:343
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:291
 #: includes/elementor/widgets/video-player/trait-content-controls.php:547
 msgid "<strong>Metadata</strong><br>Loads only basic media details when the page opens, such as duration. The actual audio/video starts loading when the visitor presses play. Recommended for most sites.<br><br><strong>None</strong><br>Does not load the media until the visitor presses play. Best when a page has many players or you want to save bandwidth.<br><br><strong>Auto</strong><br>Tells the browser to start loading the media early, before the visitor presses play. Use only when this media is important and most visitors are likely to play it."
 msgstr ""
 
-#: includes/class-metaboxes.php:354
+#: includes/class-metaboxes.php:346
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:295
 #: includes/elementor/widgets/video-player/trait-content-controls.php:551
-#: includes/libs/lex-settings-new/config/tabs/settings.php:117
+#: includes/libs/lex-settings-new/config/tabs/settings.php:119
 msgid "Metadata (Recommended)"
 msgstr ""
 
-#: includes/class-metaboxes.php:355
+#: includes/class-metaboxes.php:347
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:296
 #: includes/elementor/widgets/video-player/trait-content-controls.php:552
-#: includes/libs/lex-settings-new/config/tabs/settings.php:118
+#: includes/libs/lex-settings-new/config/tabs/settings.php:120
 msgid "None"
 msgstr ""
 
-#: includes/class-metaboxes.php:356
+#: includes/class-metaboxes.php:348
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:297
 #: includes/elementor/widgets/video-player/trait-content-controls.php:553
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:170
-#: includes/libs/lex-settings-new/config/tabs/settings.php:119
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:176
+#: includes/libs/lex-settings-new/config/tabs/settings.php:121
 msgid "Auto"
 msgstr ""
 
-#: includes/class-metaboxes.php:363
+#: includes/class-metaboxes.php:355
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:18
 #: includes/elementor/widgets/video-player/trait-style-controls.php:19
 #: includes/libs/lex-settings-new/config/tabs/styling.php:28
 msgid "Player Accent Color"
 msgstr ""
 
-#: includes/class-metaboxes.php:364
+#: includes/class-metaboxes.php:356
 msgid "Overrides the global accent color for this player. Leave empty to inherit."
 msgstr ""
 
-#: includes/class-metaboxes.php:427
+#: includes/class-metaboxes.php:419
 #: includes/libs/lex-settings-new/config/tabs/settings.php:22
-#: includes/playlist/class-playlist-metaboxes.php:606
+#: includes/playlist/class-playlist-metaboxes.php:764
 msgid "Behavior"
 msgstr ""
 
-#: includes/class-metaboxes.php:432
-#: includes/class-metaboxes.php:865
+#: includes/class-metaboxes.php:424
+#: includes/class-metaboxes.php:857
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:26
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:233
 #: includes/elementor/widgets/video-player/trait-style-controls.php:27
 #: includes/elementor/widgets/video-player/trait-style-controls.php:151
-#: includes/libs/lex-settings-new/config/tabs/settings.php:142
+#: includes/libs/lex-settings-new/config/tabs/settings.php:144
 msgid "Controls"
 msgstr ""
 
-#: includes/class-metaboxes.php:437
-#: includes/class-metaboxes.php:905
-#: includes/libs/lex-settings-new/config/tabs/settings.php:246
-#: includes/libs/lex-settings-new/config/tabs/settings.php:250
+#: includes/class-metaboxes.php:429
+#: includes/class-metaboxes.php:897
+#: includes/libs/lex-settings-new/config/tabs/settings.php:248
+#: includes/libs/lex-settings-new/config/tabs/settings.php:252
 msgid "Video-Only"
 msgstr ""
 
-#: includes/class-metaboxes.php:449
+#: includes/class-metaboxes.php:441
 msgid "Playlist Data"
 msgstr ""
 
-#: includes/class-metaboxes.php:456
+#: includes/class-metaboxes.php:448
 msgid "Optional"
 msgstr ""
 
-#: includes/class-metaboxes.php:576
+#: includes/class-metaboxes.php:568
 msgid "What kind of player?"
 msgstr ""
 
-#: includes/class-metaboxes.php:577
+#: includes/class-metaboxes.php:569
 msgid "Choose once. This sets the source fields."
 msgstr ""
 
-#: includes/class-metaboxes.php:583
+#: includes/class-metaboxes.php:575
 #: includes/elementor/widgets/video-player.php:15
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:7
 msgid "Video Player"
 msgstr ""
 
-#: includes/class-metaboxes.php:584
-#: includes/playlist/class-playlist-metaboxes.php:880
+#: includes/class-metaboxes.php:576
+#: includes/playlist/class-playlist-metaboxes.php:1038
 msgid "YouTube, Vimeo, or self-hosted video files"
 msgstr ""
 
-#: includes/class-metaboxes.php:590
+#: includes/class-metaboxes.php:582
 #: includes/elementor/widgets/audio-player.php:19
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:7
 msgid "Audio Player"
 msgstr ""
 
-#: includes/class-metaboxes.php:591
-#: includes/playlist/class-playlist-metaboxes.php:887
+#: includes/class-metaboxes.php:583
+#: includes/playlist/class-playlist-metaboxes.php:1045
 msgid "Music, podcasts, or audiobooks"
 msgstr ""
 
-#: includes/class-metaboxes.php:626
+#: includes/class-metaboxes.php:618
 msgid "VIDEO: Source Configuration"
 msgstr ""
 
-#: includes/class-metaboxes.php:720
+#: includes/class-metaboxes.php:712
 msgid "AUDIO: Source Configuration"
 msgstr ""
 
-#: includes/class-metaboxes.php:767
+#: includes/class-metaboxes.php:759
 msgid "Playlist Data (Optional)"
 msgstr ""
 
-#: includes/class-metaboxes.php:773
+#: includes/class-metaboxes.php:765
 #: includes/functions-player.php:79
+#: includes/playlist/class-playlist-metaboxes.php:511
+#: includes/playlist/class-playlist-metaboxes.php:582
 msgid "Duration"
 msgstr ""
 
-#: includes/class-metaboxes.php:774
+#: includes/class-metaboxes.php:766
 msgid "Used only for playlist display. Example: 3:45"
 msgstr ""
 
-#: includes/class-metaboxes.php:780
+#: includes/class-metaboxes.php:772
+#: includes/playlist/class-playlist-metaboxes.php:517
+#: includes/playlist/class-playlist-metaboxes.php:588
 msgid "Meta Text"
 msgstr ""
 
-#: includes/class-metaboxes.php:781
+#: includes/class-metaboxes.php:773
 msgid "Shown below the title in the playlist list. E.g. BBC News, Serial Podcast, Chapter 3."
 msgstr ""
 
-#: includes/class-metaboxes.php:782
+#: includes/class-metaboxes.php:774
 msgid "e.g., BBC News"
 msgstr ""
 
-#: includes/class-metaboxes.php:820
+#: includes/class-metaboxes.php:812
 #: includes/libs/lex-settings-new/config/tabs/settings.php:26
 msgid "Auto-Start"
 msgstr ""
 
-#: includes/class-metaboxes.php:831
+#: includes/class-metaboxes.php:823
 #: includes/libs/lex-settings-new/config/tabs/settings.php:57
 msgid "Playback"
 msgstr ""
 
-#: includes/class-metaboxes.php:836
+#: includes/class-metaboxes.php:828
 msgid "Loop"
 msgstr ""
 
-#: includes/class-metaboxes.php:836
+#: includes/class-metaboxes.php:828
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:160
 #: includes/elementor/widgets/video-player/trait-content-controls.php:607
 #: includes/elementor/widgets/video-player/trait-style-controls.php:91
@@ -1232,57 +1198,57 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: includes/class-metaboxes.php:836
+#: includes/class-metaboxes.php:828
 msgid "Speed"
 msgstr ""
 
-#: includes/class-metaboxes.php:843
-#: includes/libs/lex-settings-new/config/tabs/settings.php:104
+#: includes/class-metaboxes.php:835
+#: includes/libs/lex-settings-new/config/tabs/settings.php:106
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-metaboxes.php:848
+#: includes/class-metaboxes.php:840
 msgid "Preload"
 msgstr ""
 
-#: includes/class-metaboxes.php:860
-#: includes/libs/lex-settings-new/config/tabs/settings.php:146
+#: includes/class-metaboxes.php:852
+#: includes/libs/lex-settings-new/config/tabs/settings.php:148
 msgid "Buttons & Order"
 msgstr ""
 
-#: includes/class-metaboxes.php:870
-#: includes/libs/lex-settings-new/config/tabs/settings.php:167
+#: includes/class-metaboxes.php:862
+#: includes/libs/lex-settings-new/config/tabs/settings.php:169
 msgid "Time & Tooltips"
 msgstr ""
 
-#: includes/class-metaboxes.php:875
+#: includes/class-metaboxes.php:867
 msgid "Invert Time"
 msgstr ""
 
-#: includes/class-metaboxes.php:875
+#: includes/class-metaboxes.php:867
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:202
 #: includes/elementor/widgets/video-player/trait-style-controls.php:120
 msgid "Tooltips"
 msgstr ""
 
-#: includes/class-metaboxes.php:882
-#: includes/libs/lex-settings-new/config/tabs/settings.php:198
+#: includes/class-metaboxes.php:874
+#: includes/libs/lex-settings-new/config/tabs/settings.php:200
 msgid "Keyboard"
 msgstr ""
 
-#: includes/class-metaboxes.php:887
+#: includes/class-metaboxes.php:879
 msgid "Seek Time"
 msgstr ""
 
-#: includes/class-metaboxes.php:937
+#: includes/class-metaboxes.php:929
 msgid "Video Specific Options (Optional)"
 msgstr ""
 
-#: includes/class-metaboxes.php:958
+#: includes/class-metaboxes.php:950
 msgid "Save the post to generate the shortcode."
 msgstr ""
 
-#: includes/class-metaboxes.php:990
+#: includes/class-metaboxes.php:982
 msgid "Paste this shortcode into any page, post, or widget to display the player."
 msgstr ""
 
@@ -1312,11 +1278,11 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: includes/class-player-renderer.php:300
+#: includes/class-player-renderer.php:301
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: includes/class-player-renderer.php:357
+#: includes/class-player-renderer.php:358
 #: includes/functions-player.php:121
 msgid "Download"
 msgstr ""
@@ -1440,7 +1406,7 @@ msgstr ""
 
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:236
 #: includes/elementor/widgets/video-player/trait-content-controls.php:412
-#: includes/libs/lex-settings-new/config/tabs/settings.php:221
+#: includes/libs/lex-settings-new/config/tabs/settings.php:223
 msgid "Keyboard Shortcuts"
 msgstr ""
 
@@ -1451,7 +1417,7 @@ msgstr ""
 
 #: includes/elementor/widgets/audio-player/trait-content-controls.php:253
 #: includes/elementor/widgets/video-player/trait-content-controls.php:429
-#: includes/libs/lex-settings-new/config/tabs/settings.php:232
+#: includes/libs/lex-settings-new/config/tabs/settings.php:234
 msgid "Global Keyboard Shortcuts"
 msgstr ""
 
@@ -1569,7 +1535,7 @@ msgstr ""
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:211
 #: includes/elementor/widgets/video-player/trait-style-controls.php:122
 #: includes/elementor/widgets/video-player/trait-style-controls.php:129
-#: includes/playlist/class-playlist-metaboxes.php:683
+#: includes/playlist/class-playlist-metaboxes.php:841
 msgid "Background"
 msgstr ""
 
@@ -1739,8 +1705,8 @@ msgstr ""
 
 #: includes/elementor/widgets/audio-player/trait-style-controls.php:169
 #: includes/elementor/widgets/video-player/trait-style-controls.php:100
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:122
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:158
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:128
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:164
 msgid "Empty"
 msgstr ""
 
@@ -1803,19 +1769,15 @@ msgid "Select a playlist to preview it here."
 msgstr ""
 
 #: includes/elementor/widgets/playlist.php:59
-#: includes/playlist/class-playlist.php:118
+#: includes/playlist/class-playlist.php:122
 msgid "Playlist not found."
 msgstr ""
 
 #: includes/elementor/widgets/playlist.php:69
-msgid "Live preview in the editor is on our roadmap. The playlist renders correctly on the frontend."
-msgstr ""
-
-#: includes/elementor/widgets/playlist.php:78
 msgid "— Select —"
 msgstr ""
 
-#: includes/elementor/widgets/playlist.php:88
+#: includes/elementor/widgets/playlist.php:79
 msgid "Playlist #%d"
 msgstr ""
 
@@ -2054,6 +2016,7 @@ msgid "Base spacing token used throughout the player — control bar padding, ga
 msgstr ""
 
 #: includes/functions-admin.php:41
+#: includes/libs/lex-settings-new/core/includes/class-drawer.php:57
 msgid "Close"
 msgstr ""
 
@@ -2085,22 +2048,169 @@ msgstr ""
 msgid "Fullscreen (Video Only)"
 msgstr ""
 
-#: includes/functions-player.php:271
-#: includes/functions-player.php:293
+#: includes/functions-player.php:150
+msgid "0.5x (Slow)"
+msgstr ""
+
+#: includes/functions-player.php:151
+msgid "0.75x"
+msgstr ""
+
+#: includes/functions-player.php:152
+msgid "1x (Normal)"
+msgstr ""
+
+#: includes/functions-player.php:153
+msgid "1.25x"
+msgstr ""
+
+#: includes/functions-player.php:154
+msgid "1.5x"
+msgstr ""
+
+#: includes/functions-player.php:155
+msgid "1.75x"
+msgstr ""
+
+#: includes/functions-player.php:156
+msgid "2x (Fast)"
+msgstr ""
+
+#: includes/functions-player.php:157
+msgid "4x (Very Fast)"
+msgstr ""
+
+#: includes/functions-player.php:301
+#: includes/functions-player.php:323
 msgid "Uploaded File"
 msgstr ""
 
-#: includes/functions-player.php:273
-#: includes/functions-player.php:295
+#: includes/functions-player.php:303
+#: includes/functions-player.php:325
 msgid "External File"
 msgstr ""
 
-#: includes/functions-player.php:277
+#: includes/functions-player.php:307
 msgid "Audio File"
 msgstr ""
 
-#: includes/functions-player.php:299
+#: includes/functions-player.php:329
 msgid "HTML5 Video"
+msgstr ""
+
+#. translators: %s: YouTube video ID.
+#: includes/functions-player.php:465
+msgid "YouTube Video (%s)"
+msgstr ""
+
+#. translators: %s: Vimeo video ID.
+#: includes/functions-player.php:467
+msgid "Vimeo Video (%s)"
+msgstr ""
+
+#: includes/functions-player.php:632
+#: includes/functions-player.php:662
+msgid "External Link"
+msgstr ""
+
+#: includes/functions-player.php:637
+#: includes/functions-player.php:668
+#: includes/libs/lex-settings-new/config/tabs/audio-player.php:35
+#: includes/libs/lex-settings-new/config/tabs/video-player.php:45
+msgid "Self Hosted"
+msgstr ""
+
+#: includes/functions-player.php:688
+msgid "Paste a direct audio file link (MP3, WAV, M4A…)"
+msgstr ""
+
+#: includes/functions-player.php:689
+msgid ""
+"e.g. https://example.com/song.mp3, https://example.com/episode.m4a,\n"
+"or any direct .wav file URL."
+msgstr ""
+
+#: includes/functions-player.php:690
+msgid "Direct audio file URL (MP3, WAV, M4A…)"
+msgstr ""
+
+#: includes/functions-player.php:691
+msgid ""
+"One URL per line, e.g:\n"
+"https://example.com/song.mp3\n"
+"https://example.com/episode.m4a\n"
+"https://example.com/track.wav"
+msgstr ""
+
+#: includes/functions-player.php:692
+msgid "Direct audio file links, one per line. Titles are taken from the file name. Up to 50 per batch."
+msgstr ""
+
+#: includes/functions-player.php:697
+msgid "Paste a YouTube, Vimeo, or direct media link…"
+msgstr ""
+
+#: includes/functions-player.php:698
+msgid ""
+"e.g. https://www.youtube.com/watch?v=bTqVqk7FSmY, https://vimeo.com/22439234,\n"
+"or any direct .mp4 file URL."
+msgstr ""
+
+#: includes/functions-player.php:699
+msgid "YouTube, Vimeo, or direct media file URL"
+msgstr ""
+
+#: includes/functions-player.php:700
+msgid ""
+"One URL per line, e.g:\n"
+"https://www.youtube.com/watch?v=bTqVqk7FSmY\n"
+"https://vimeo.com/22439234\n"
+"https://example.com/video.mp4"
+msgstr ""
+
+#: includes/functions-player.php:701
+msgid "YouTube, Vimeo, or direct media file links. Titles are fetched automatically. Up to 50 per batch."
+msgstr ""
+
+#: includes/functions-player.php:757
+msgid "Please enter a media URL or choose an upload."
+msgstr ""
+
+#: includes/functions-player.php:766
+msgid "That media file could not be found."
+msgstr ""
+
+#: includes/functions-player.php:782
+msgid "That file is not a video or audio file."
+msgstr ""
+
+#: includes/functions-player.php:786
+msgid "That does not look like a valid URL."
+msgstr ""
+
+#: includes/functions-player.php:842
+msgid "Unsupported media URL. Use a YouTube, Vimeo, or direct media file link."
+msgstr ""
+
+#: includes/functions-player.php:849
+msgid "That URL is a video source, but this is an audio playlist."
+msgstr ""
+
+#: includes/functions-player.php:850
+msgid "That URL is an audio source, but this is a video playlist."
+msgstr ""
+
+#: includes/functions-player.php:900
+msgid "Untitled"
+msgstr ""
+
+#: includes/functions-player.php:911
+msgid "Could not create the player. Please try again."
+msgstr ""
+
+#: includes/functions-player.php:964
+#: includes/functions-player.php:1061
+msgid "That track could not be found."
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:8
@@ -2112,26 +2222,26 @@ msgid "Common"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:14
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:112
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:180
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:118
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:186
 msgid "Option"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:15
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:113
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:181
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:119
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:187
 msgid "Values"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:16
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:114
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:182
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:120
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:188
 msgid "Default"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:17
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:115
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:183
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:121
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:189
 msgid "Description"
 msgstr ""
 
@@ -2149,6 +2259,7 @@ msgstr ""
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:88
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:94
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:100
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:106
 msgid "Both"
 msgstr ""
 
@@ -2185,7 +2296,7 @@ msgid "Initial volume level, where 0 is muted and 1 is full volume."
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:60
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:190
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:196
 msgid "All controls"
 msgstr ""
 
@@ -2221,103 +2332,111 @@ msgstr ""
 msgid "Default playback speed."
 msgstr ""
 
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:102
+msgid "all"
+msgstr ""
+
 #: includes/libs/lex-settings-new/config/tabs/all-options.php:103
+msgid "Which speeds appear in the player settings menu. Global Settings only."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:109
 msgid "Enable debug mode for troubleshooting."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:108
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:114
 msgid "Video Only"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:121
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:127
 msgid "Valid image URL"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:123
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:129
 msgid "Thumbnail image shown before video plays."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:129
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:135
 msgid "Click anywhere on the video to play or pause."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:135
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:141
 msgid "Hide controls after inactivity."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:141
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:147
 msgid "Reset video to the start when playback ends."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:147
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:153
 msgid "Enable the fullscreen control."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:153
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:159
 msgid "Show tooltips on control buttons."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:157
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:163
 msgid "url1|quality1,url2|quality2"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:159
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:165
 msgid "Multiple quality sources for HTML5 video."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:165
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:171
 msgid "Default quality when the video plays."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:169
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:175
 msgid "etc."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:171
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:177
 msgid "Force an aspect ratio for videos, using the format width:height."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:176
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:182
 msgid "Audio Only"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:191
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:197
 msgid "Which control buttons to show for audio players."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:197
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:203
 msgid "Note"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:198
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:204
 msgid "Autoplay Browser Policy:"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:199
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:205
 msgid "Modern browsers block autoplay with sound enabled to improve user experience and reduce unwanted audio. If you set"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:199
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:205
 msgid "without"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:199
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:205
 msgid "the video/audio may not start automatically. To ensure autoplay works:"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:201
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:207
 msgid "Use"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:201
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:207
 msgid "for autoplay to work reliably"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:202
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:208
 msgid "Or rely on user interaction (click to play) for audio-enabled playback"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/all-options.php:203
+#: includes/libs/lex-settings-new/config/tabs/all-options.php:209
 msgid "This is a browser security feature, not a plugin limitation"
 msgstr ""
 
@@ -2344,13 +2463,6 @@ msgstr ""
 #: includes/libs/lex-settings-new/config/tabs/playlist-shortcode.php:28
 #: includes/libs/lex-settings-new/config/tabs/video-player.php:28
 msgid "Example"
-msgstr ""
-
-#: includes/libs/lex-settings-new/config/tabs/audio-player.php:35
-#: includes/libs/lex-settings-new/config/tabs/video-player.php:45
-#: includes/playlist/class-playlist-metaboxes.php:104
-#: includes/playlist/class-playlist-metaboxes.php:135
-msgid "Self Hosted"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/audio-player.php:40
@@ -2442,7 +2554,7 @@ msgid "Automatic Thumbnail"
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/playlist.php:20
-msgid "Use the video provider's thumbnail when no custom image is uploaded. Supports YouTube and Vimeo. Private or deleted videos will show no thumbnail."
+msgid "Use the video provider's thumbnail for playlist items when no custom image is uploaded. Supports YouTube and Vimeo. Private or deleted videos will show no thumbnail."
 msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/quick-start.php:8
@@ -2602,10 +2714,10 @@ msgstr ""
 
 #: includes/libs/lex-settings-new/config/tabs/settings.php:29
 #: includes/libs/lex-settings-new/config/tabs/settings.php:60
-#: includes/libs/lex-settings-new/config/tabs/settings.php:107
-#: includes/libs/lex-settings-new/config/tabs/settings.php:149
-#: includes/libs/lex-settings-new/config/tabs/settings.php:170
-#: includes/libs/lex-settings-new/config/tabs/settings.php:201
+#: includes/libs/lex-settings-new/config/tabs/settings.php:109
+#: includes/libs/lex-settings-new/config/tabs/settings.php:151
+#: includes/libs/lex-settings-new/config/tabs/settings.php:172
+#: includes/libs/lex-settings-new/config/tabs/settings.php:203
 msgid "- Applies to all players"
 msgstr ""
 
@@ -2649,71 +2761,83 @@ msgstr ""
 msgid "Sets the default speed for all players site-wide.<br><br>Override per player or widget as needed.<br><br><strong>Popular choices:</strong> 1.25x or 1.5x for podcasts and lessons."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:113
+#: includes/libs/lex-settings-new/config/tabs/settings.php:95
+msgid "Available Playback Speeds"
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:96
+msgid "<strong>Uncheck all = use the default set.</strong> Choose which speeds visitors can pick from the player settings menu."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:97
+msgid "Controls which speeds appear in the player's settings menu.<br><br>Trim the list to keep the menu short — most sites never need 4x.<br><br><strong>Note</strong><br>YouTube and Vimeo only support 0.5x to 2x. Speeds outside that range are hidden automatically on those players."
+msgstr ""
+
+#: includes/libs/lex-settings-new/config/tabs/settings.php:115
 msgid "How much media loads before the visitor presses play"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:114
+#: includes/libs/lex-settings-new/config/tabs/settings.php:116
 msgid "<ul><li><strong>Metadata (Recommended)</strong><br>Loads only duration and basic info. Media loads on play.</li><li><strong>None</strong><br>Nothing loads until the visitor presses play. Best for pages with many players.</li><li><strong>Auto</strong><br>Browser starts loading early, before play. Use only when most visitors will play this media.</li></ul>"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:126
+#: includes/libs/lex-settings-new/config/tabs/settings.php:128
 msgid "Pause Other Players"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:127
+#: includes/libs/lex-settings-new/config/tabs/settings.php:129
 msgid "When one player starts, all other players on the same page pause automatically.<br><br>Recommended when you have multiple players on the same page."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:130
+#: includes/libs/lex-settings-new/config/tabs/settings.php:132
 msgid "Pause other players when one starts playing"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:155
+#: includes/libs/lex-settings-new/config/tabs/settings.php:157
 msgid "Choose which buttons appear on the player (play, progress bar, volume, etc.). Check a control to show it, uncheck to hide it, and drag to change the order they appear in the control bar."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:176
+#: includes/libs/lex-settings-new/config/tabs/settings.php:178
 msgid "<ul><li><strong>Remaining Time (Countdown)</strong><br>Counts down from total. Example: -2:30</li><li><strong>Elapsed Time</strong><br>Counts up from zero. Example: 2:30</li></ul>"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:178
+#: includes/libs/lex-settings-new/config/tabs/settings.php:180
 msgid "Choose what the time counter shows during playback."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:192
+#: includes/libs/lex-settings-new/config/tabs/settings.php:194
 msgid "Hover over a button (play, mute, fullscreen) → shows its name as a little bubble (\"Play\", \"Mute\"). Works on video and audio."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:207
+#: includes/libs/lex-settings-new/config/tabs/settings.php:209
 msgid "Seconds to skip per keyboard shortcut press.<br><ul><li>Arrow right / left — skip forward or back</li><li>Example: 10 sec means each press jumps 10 seconds</li></ul><strong>Note:</strong> Clicking the progress bar always jumps directly to that position."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:209
+#: includes/libs/lex-settings-new/config/tabs/settings.php:211
 msgid "Seconds to skip per keyboard shortcut press."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:222
+#: includes/libs/lex-settings-new/config/tabs/settings.php:224
 msgid "Control playback with keyboard keys:<br><ul><li><strong>Space</strong> — play / pause</li><li><strong>Arrow keys</strong> — seek forward / back</li><li><strong>M</strong> — mute</li><li><strong>F</strong> — fullscreen</li></ul>Works when the player is focused (clicked or tabbed into)."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:226
+#: includes/libs/lex-settings-new/config/tabs/settings.php:228
 msgid "Enable keyboard shortcuts when the player is focused"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:233
+#: includes/libs/lex-settings-new/config/tabs/settings.php:235
 msgid "Keyboard shortcuts work even when the player is not focused.<br><br><strong>Caution:</strong> Only enable this if you have one player per page.<br>With multiple players, all of them respond to the same keys at once."
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:236
+#: includes/libs/lex-settings-new/config/tabs/settings.php:238
 msgid "Enable keyboard shortcuts from anywhere on the page"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:253
+#: includes/libs/lex-settings-new/config/tabs/settings.php:255
 msgid "- Applies to video players only"
 msgstr ""
 
-#: includes/libs/lex-settings-new/config/tabs/settings.php:256
+#: includes/libs/lex-settings-new/config/tabs/settings.php:258
 msgid "Set once, applies to every video player on your site. Override individually when you need a one-off change.<br><strong>Note:</strong> Reset to Start When Finished is ignored for playlist players. They auto-advance instead."
 msgstr ""
 
@@ -2737,6 +2861,25 @@ msgstr ""
 msgid "Multi Quality"
 msgstr ""
 
+#: includes/playlist/ajax-actions.php:26
+#: includes/playlist/ajax-actions.php:74
+msgid "You are not allowed to create players."
+msgstr ""
+
+#: includes/playlist/ajax-actions.php:91
+msgid "Paste at least one URL, one per line."
+msgstr ""
+
+#. translators: 1: number of URLs pasted. 2: maximum allowed per batch.
+#: includes/playlist/ajax-actions.php:98
+msgid "Too many URLs: %1$d pasted, %2$d is the maximum per batch. Nothing was added."
+msgstr ""
+
+#: includes/playlist/ajax-actions.php:151
+#: includes/playlist/ajax-actions.php:176
+msgid "You are not allowed to edit this track."
+msgstr ""
+
 #: includes/playlist/class-playlist-metaboxes.php:56
 msgid "Playlist Builder"
 msgstr ""
@@ -2745,385 +2888,473 @@ msgstr ""
 msgid "Look & Feel"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:99
-#: includes/playlist/class-playlist-metaboxes.php:129
-msgid "External Link"
+#: includes/playlist/class-playlist-metaboxes.php:284
+msgid "Add"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:320
-msgid "+ Add More"
+#: includes/playlist/class-playlist-metaboxes.php:290
+msgid "Pasting a link adds it instantly and creates the player for you."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:333
-msgid "Available Players"
+#: includes/playlist/class-playlist-metaboxes.php:298
+msgid "Upload a file"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:340
-msgid "Search by player title..."
+#: includes/playlist/class-playlist-metaboxes.php:302
+msgid "Add with details"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:345
-msgid "All categories"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:355
-msgid "Add all from selected category"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:363
-msgid "No audio players found."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:364
-msgid "No video players found."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:366
-msgid "Create a player first, then return here."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:397
-msgid "No players match your search."
-msgstr ""
-
+#: includes/playlist/class-playlist-metaboxes.php:306
 #: includes/playlist/class-playlist-metaboxes.php:398
-msgid "Try another keyword or category."
+msgid "Bulk Add"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:407
+#: includes/playlist/class-playlist-metaboxes.php:310
+msgid "Browse existing players"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:321
 msgid "Selected Playlist Items"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:410
+#: includes/playlist/class-playlist-metaboxes.php:324
 msgid "selected"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:413
+#: includes/playlist/class-playlist-metaboxes.php:327
 msgid "Remove all"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:421
-msgid "No players selected yet."
+#: includes/playlist/class-playlist-metaboxes.php:334
+msgid "No tracks yet."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:422
-msgid "Choose players from the left to build this playlist."
+#: includes/playlist/class-playlist-metaboxes.php:335
+msgid "Paste a link above, or use the links below to upload, bulk add, or browse existing players."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:445
+#: includes/playlist/class-playlist-metaboxes.php:359
 msgid "Edit"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:473
-msgid "Save the playlist to generate the shortcode."
+#: includes/playlist/class-playlist-metaboxes.php:380
+msgid "Add tracks"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:391
+msgid "Quick Add"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:403
+msgid "Existing Players"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:413
+msgid "Edit Track"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:426
+msgid "Search by player title..."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:431
+msgid "All categories"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:441
+msgid "Add all from selected category"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:449
+msgid "No audio players found."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:450
+msgid "No video players found."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:452
+msgid "Create a player first, then return here."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:483
+msgid "No players match your search."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:484
+msgid "Try another keyword or category."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:494
+#: includes/playlist/class-playlist-metaboxes.php:565
+msgid "Media URL"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:499
+#: includes/playlist/class-playlist-metaboxes.php:570
+msgid "Or Upload"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:500
+#: includes/playlist/class-playlist-metaboxes.php:571
+msgid "Select / Upload Media"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:503
-msgid "Paste this shortcode into any page, post, or widget to display the playlist."
+#: includes/playlist/class-playlist-metaboxes.php:574
+msgid "No media selected"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:558
-msgid "Choose a ready-made style as your starting point, hit Apply, then tweak anything you like."
+#: includes/playlist/class-playlist-metaboxes.php:507
+#: includes/playlist/class-playlist-metaboxes.php:578
+msgid "Title"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:562
-msgid "Quick Start:"
+#: includes/playlist/class-playlist-metaboxes.php:512
+#: includes/playlist/class-playlist-metaboxes.php:583
+msgid "e.g. 3:45"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:564
-msgid "Choose a style..."
+#: includes/playlist/class-playlist-metaboxes.php:518
+#: includes/playlist/class-playlist-metaboxes.php:589
+msgid "e.g. Episode 12"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:568
-msgid "Custom"
+#: includes/playlist/class-playlist-metaboxes.php:527
+#: includes/playlist/class-playlist-metaboxes.php:598
+msgid "No image selected"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:570
-msgid "Apply"
+#: includes/playlist/class-playlist-metaboxes.php:536
+msgid "Add to Playlist"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:581
-msgid "Layout"
+#: includes/playlist/class-playlist-metaboxes.php:544
+msgid "Media URLs"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:591
-msgid "Header"
+#: includes/playlist/class-playlist-metaboxes.php:557
+msgid "Add All"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:596
-msgid "List Items"
+#: includes/playlist/class-playlist-metaboxes.php:607
+msgid "Save Changes"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:619
-msgid "Where should the playlist appear?"
+#: includes/playlist/class-playlist-metaboxes.php:609
+msgid "Open full editor"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:622
-msgid "Right"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:623
-msgid "Left"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:624
-msgid "Bottom"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:625
-msgid "Top"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:629
-msgid "How should items look?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:630
-msgid "List shows one item per row. Grid shows items as cards. Grid only applies when position is Bottom or Top."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:633
-msgid "List"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:634
-msgid "Grid"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:640
-msgid "How many columns?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:641
-msgid "Only applies when layout is Grid."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:650
-msgid "Panel width"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:651
-msgid "Width of the playlist panel when position is Left or Right. Example: 360px or 30%."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:655
-msgid "Max width"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:656
-msgid "Maximum width of the entire playlist (player + panel). Use 100% to fill the container, or a fixed value like 900px."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:660
-msgid "Panel height mode"
+#: includes/playlist/class-playlist-metaboxes.php:631
+msgid "Save the playlist to generate the shortcode."
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:661
-msgid "Sync makes the panel the same height as the player. Fixed lets you set a maximum height manually."
+msgid "Paste this shortcode into any page, post, or widget to display the playlist."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:664
-msgid "Sync: follow player height"
+#: includes/playlist/class-playlist-metaboxes.php:716
+msgid "Choose a ready-made style as your starting point, hit Apply, then tweak anything you like."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:665
-msgid "Fixed: set a max height"
+#: includes/playlist/class-playlist-metaboxes.php:720
+msgid "Quick Start:"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:669
-msgid "Panel max height"
+#: includes/playlist/class-playlist-metaboxes.php:722
+msgid "Choose a style..."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:670
-msgid "Only applies when Panel height mode is Fixed. Example: 400px."
+#: includes/playlist/class-playlist-metaboxes.php:726
+msgid "Custom"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:683
-#: includes/playlist/class-playlist-metaboxes.php:686
-msgid "Skin"
+#: includes/playlist/class-playlist-metaboxes.php:728
+msgid "Apply"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:683
-msgid "Accent Color"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:687
-msgid "Light is best for light-background pages. Dark works well embedded in dark layouts."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:690
-msgid "Light"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:691
-msgid "Dark"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:697
-msgid "Accent color"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:703
-msgid "Background style"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:704
-msgid "Controls the background of the playlist panel."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:707
-msgid "Solid (use skin color)"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:708
-msgid "Custom gradient"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:714
-msgid "Gradient CSS"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:715
-msgid "Only applies when Background style is Custom gradient. Paste a value from cssgradient.io."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:730
-msgid "Show playlist header?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:735
-msgid "Title text"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:736
-msgid "Only shown when \"Show playlist title?\" is on."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:738
-msgid "e.g. Playlist, Up Next, Episodes..."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:741
-msgid "Show item count?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:746
-msgid "Count label"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:747
-msgid "The word after the number, e.g. \"Videos\" shows as \"4 Videos\". Only shown when \"Show item count?\" is on."
+#: includes/playlist/class-playlist-metaboxes.php:739
+msgid "Layout"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:749
-msgid "e.g. Videos, Tracks, Episodes..."
+msgid "Header"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:759
-msgid "Show thumbnails?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:765
-msgid "<strong>Pro:</strong> Auto-fetch thumbnails from YouTube and Vimeo when no custom image is set.<br>Enable in <strong>Settings &rsaquo; Playlist &rsaquo; Automatic Thumbnail</strong>."
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:768
-msgid "Thumbnail shape"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:771
-msgid "16:9 (Widescreen)"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:772
-msgid "1:1 (Square)"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:776
-msgid "Show duration badge on thumbnail?"
+#: includes/playlist/class-playlist-metaboxes.php:754
+msgid "List Items"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:777
-msgid "Only applies when thumbnails are shown."
+msgid "Where should the playlist appear?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:780
+msgid "Right"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:781
+msgid "Left"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:782
-msgid "Show duration next to title?"
+msgid "Bottom"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:783
+msgid "Top"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:787
-msgid "Show item numbers?"
+msgid "How should items look?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:788
+msgid "List shows one item per row. Grid shows items as cards. Grid only applies when position is Bottom or Top."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:791
+msgid "List"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:792
-msgid "Show meta text (channel, author, artist)?"
-msgstr ""
-
-#: includes/playlist/class-playlist-metaboxes.php:797
-msgid "Play icon"
+msgid "Grid"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:798
-msgid "Controls where the play/pause icon appears. \"Active item only\" shows it only on the current item. \"Always\" shows it on all items."
+msgid "How many columns?"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:801
-msgid "Active item only"
+#: includes/playlist/class-playlist-metaboxes.php:799
+msgid "Only applies when layout is Grid."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:802
-msgid "Always"
+#: includes/playlist/class-playlist-metaboxes.php:808
+msgid "Panel width"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:803
-msgid "Hidden"
+#: includes/playlist/class-playlist-metaboxes.php:809
+msgid "Width of the playlist panel when position is Left or Right. Example: 360px or 30%."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:816
-msgid "Now playing display"
+#: includes/playlist/class-playlist-metaboxes.php:813
+msgid "Max width"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:817
-msgid "Only affects audio playlists. Compact shows a small strip with title and thumbnail. Large shows a portrait card above the controls."
+#: includes/playlist/class-playlist-metaboxes.php:814
+msgid "Maximum width of the entire playlist (player + panel). Use 100% to fill the container, or a fixed value like 900px."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:820
-msgid "Compact"
+#: includes/playlist/class-playlist-metaboxes.php:818
+msgid "Panel height mode"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:821
-msgid "Large"
+#: includes/playlist/class-playlist-metaboxes.php:819
+msgid "Sync makes the panel the same height as the player. Fixed lets you set a maximum height manually."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:834
-msgid "Automatically play next item?"
+#: includes/playlist/class-playlist-metaboxes.php:822
+msgid "Sync: follow player height"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:835
-msgid "When the current item finishes, the next one starts automatically."
+#: includes/playlist/class-playlist-metaboxes.php:823
+msgid "Fixed: set a max height"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:840
-msgid "Start from which item?"
+#: includes/playlist/class-playlist-metaboxes.php:827
+msgid "Panel max height"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:828
+msgid "Only applies when Panel height mode is Fixed. Example: 400px."
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:841
-msgid "The item number that is active when the playlist first loads. 1 = first item."
+#: includes/playlist/class-playlist-metaboxes.php:844
+msgid "Skin"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:841
+msgid "Accent Color"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:845
+msgid "Light is best for light-background pages. Dark works well embedded in dark layouts."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:848
+msgid "Light"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:849
+msgid "Dark"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:855
+msgid "Accent color"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:861
+msgid "Background style"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:862
+msgid "Controls the background of the playlist panel."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:865
+msgid "Solid (use skin color)"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:866
+msgid "Custom gradient"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:872
-msgid "What kind of playlist?"
+msgid "Gradient CSS"
 msgstr ""
 
 #: includes/playlist/class-playlist-metaboxes.php:873
+msgid "Only applies when Background style is Custom gradient. Paste a value from cssgradient.io."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:888
+msgid "Show playlist header?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:893
+msgid "Title text"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:894
+msgid "Only shown when \"Show playlist title?\" is on."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:896
+msgid "e.g. Playlist, Up Next, Episodes..."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:899
+msgid "Show item count?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:904
+msgid "Count label"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:905
+msgid "The word after the number, e.g. \"Videos\" shows as \"4 Videos\". Only shown when \"Show item count?\" is on."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:907
+msgid "e.g. Videos, Tracks, Episodes..."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:917
+msgid "Show thumbnails?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:923
+msgid "<strong>Pro:</strong> Auto-fetch thumbnails from YouTube and Vimeo when no custom image is set.<br>Enable in <strong>Settings &rsaquo; Playlist &rsaquo; Automatic Thumbnail</strong>."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:926
+msgid "Thumbnail shape"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:929
+msgid "16:9 (Widescreen)"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:930
+msgid "1:1 (Square)"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:934
+msgid "Show duration badge on thumbnail?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:935
+msgid "Only applies when thumbnails are shown."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:940
+msgid "Show duration next to title?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:945
+msgid "Show item numbers?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:950
+msgid "Show meta text (channel, author, artist)?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:955
+msgid "Play icon"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:956
+msgid "Controls where the play/pause icon appears. \"Active item only\" shows it only on the current item. \"Always\" shows it on all items."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:959
+msgid "Active item only"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:960
+msgid "Always"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:961
+msgid "Hidden"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:974
+msgid "Now playing display"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:975
+msgid "Only affects audio playlists. Compact shows a small strip with title and thumbnail. Large shows a portrait card above the controls."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:978
+msgid "Compact"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:979
+msgid "Large"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:992
+msgid "Automatically play next item?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:993
+msgid "When the current item finishes, the next one starts automatically."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:998
+msgid "Start from which item?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:999
+msgid "The item number that is active when the playlist first loads. 1 = first item."
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:1030
+msgid "What kind of playlist?"
+msgstr ""
+
+#: includes/playlist/class-playlist-metaboxes.php:1031
 msgid "Choose once. This determines which players appear in the builder."
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:879
+#: includes/playlist/class-playlist-metaboxes.php:1037
 msgid "Video Playlist"
 msgstr ""
 
-#: includes/playlist/class-playlist-metaboxes.php:886
+#: includes/playlist/class-playlist-metaboxes.php:1044
 msgid "Audio Playlist"
 msgstr ""
 
@@ -3339,31 +3570,4 @@ msgstr ""
 
 #: includes/views/html-hire-page.php:143
 msgid "Within 24 hours"
-msgstr ""
-
-#: pro/freemius-loader.php:73
-#: pro/freemius-loader.php:74
-#: pro/freemius-loader.php:120
-msgid "License"
-msgstr ""
-
-#: pro/freemius-loader.php:121
-msgid "Your license is active."
-msgstr ""
-
-#: pro/freemius-loader.php:122
-msgid "View Account"
-msgstr ""
-
-#: pro/freemius-loader.php:131
-#: pro/freemius-loader.php:139
-msgid "License Activation"
-msgstr ""
-
-#: pro/freemius-loader.php:132
-msgid "Please activate your license to continue."
-msgstr ""
-
-#: pro/freemius-loader.php:140
-msgid "Please wait while Freemius initializes..."
 msgstr ""

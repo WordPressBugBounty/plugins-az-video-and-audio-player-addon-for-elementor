@@ -57,21 +57,64 @@ function leanpl_get_installed_time() {
 }
 
 /**
+ * Resolve the plugin edition (free or pro)
+ *
+ * The only place these rules live. Resolved once per request and cached, so
+ * every caller sees the same answer no matter when it asks. Do not call this
+ * directly for gating, use leanpl_should_load_pro() / leanpl_is_pro_active().
+ *
+ * @return string 'pro' or 'free'
+ */
+function leanpl_detect_edition() {
+    static $edition = null;
+
+    if ($edition !== null) {
+        return $edition;
+    }
+
+    // 1. No pro code shipped, nothing else can make this pro. Keeps the answer
+    //    honest in the wp.org build, where .distignore strips pro/ but the
+    //    override below still ships whatever the repo had.
+    if (!file_exists(LEANPL_DIR . '/pro/pro-loader.php')) {
+        return $edition = 'free';
+    }
+
+    // 2. Standalone PRO build (folder has -pro suffix)
+    if (strpos(plugin_basename(LEANPL_FILE), '-pro/') !== false) {
+        return $edition = 'pro';
+    }
+
+    // 3. Development: check the override
+    if (defined('LEANPL_EDITION_OVERRIDE') && LEANPL_EDITION_OVERRIDE === 'pro') {
+        return $edition = 'pro';
+    }
+
+    // 4. Default: FREE mode
+    return $edition = 'free';
+}
+
+/**
+ * Check if pro code should load
+ *
+ * The single edition predicate. Safe to call at any point after the plugin
+ * file has defined LEANPL_DIR / LEANPL_FILE, including inside bootstrap.
+ *
+ * @return bool True if this install runs in pro mode
+ */
+function leanpl_should_load_pro() {
+    return leanpl_detect_edition() === 'pro';
+}
+
+/**
  * Check if pro version is active
- * 
- * Respects LEANPL_MODE toggle for testing
- * 
+ *
+ * Feature-gating name for leanpl_should_load_pro(). Same answer, reads better
+ * at call sites that gate a feature rather than a require.
+ *
  * @return bool True if pro is active, false otherwise
  */
 function leanpl_is_pro_active() {
-    // If in free mode, always return false
-    if (defined('LEANPL_MODE') && LEANPL_MODE === 'free') {
-        return false;
-    }
-    
-    // Check if pro file exists and is loaded
-    return file_exists(LEANPL_DIR . '/pro/pro-loader.php') && 
-           function_exists('leanpl_pro_init');
+    return leanpl_should_load_pro();
 }
 
 function leanpl_ssot( $section, $key = null ) {
@@ -167,6 +210,7 @@ function leanpl_get_our_page_identifiers() {
         'page_slugs' => array(
             'lean_player-settings',
             'lean_player-hire-me',
+            'lean_player-settings-tab',
             // 'lean_player-license' removed - added via filter hook from pro folder
         ),
         

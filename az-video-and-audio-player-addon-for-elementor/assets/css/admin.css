@@ -66,6 +66,16 @@ Table of contents:
     --lpl-b-font-xs:       var(--lex-font-size-xs);
 }
 
+/* #fs_connect div also carries class="wrap" (see freemius/templates/connect.php).
+   lex-settings-core.css has a rule "#wpcontent .wrap" with higher specificity
+   (1 id + 5 classes) that was overriding margin here on Freemius connect page.
+   Adding #wpcontent + .wrap bumps our id/class count above it, so no !important
+   needed and lex-settings-core.css stays untouched for every other page. */
+   #wpcontent #fs_connect.wrap {
+    margin-right: auto;
+    margin-top: 60px;
+}
+
 /* External-link affordance: any new-tab link inside our admin surfaces.
    Scoped to body.lpl-scope so it never touches foreign markup on shared
    screens. Silent to screen readers via the empty CSS alt. */
@@ -1780,6 +1790,18 @@ body.post-type-lean_playlist #postbox-container-1 {
     margin: var(--lex-space-2, 8px) 0 0;
     font-size: var(--lpl-b-font-sm);
     color: var(--lpl-b-text-mid);
+}
+
+/* Accepted-source examples sit below the hint, one step quieter. The string
+   carries its own line break (see leanpl_get_playlist_source_hints), so
+   pre-line keeps the provider URLs and the direct-file note on separate rows. */
+.lpl-pla__omnibox-hint-examples {
+    display: block;
+    margin-top: var(--lex-space-1, 4px);
+    font-size: var(--lpl-b-font-xs);
+    color: var(--lpl-b-text-faint);
+    white-space: pre-line;
+    word-break: break-word;
 }
 
 /* ── Secondary add paths ── */

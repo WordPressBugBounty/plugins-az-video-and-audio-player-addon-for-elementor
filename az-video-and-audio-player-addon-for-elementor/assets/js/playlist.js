@@ -471,7 +471,7 @@
             var merged = Object.assign({}, opts, { preventScroll: true });
             origFocus.call(this, merged);
         };
-        console.log('[LPL Playlist] focus preventScroll patch applied');
+        log('focus preventScroll patch applied');
         setTimeout(function () {
             HTMLElement.prototype.focus = origFocus;
         }, 200);

@@ -292,15 +292,15 @@ class Menu {
 
         // Submenu - Upgrade Now
 
-        if( !leanpl_is_pro_active() ) {
-            add_submenu_page(
-                'lean_player-settings',
-                esc_html__('Upgrade to Premium', 'vapfem'),
-                esc_html__('Upgrade to Premium', 'vapfem'),
-                'manage_options',
-                leanpl_get_upgrade_url(array('utm_medium' => 'menu'))
-            );
-        }
+        // if( !leanpl_is_pro_active() ) {
+            // add_submenu_page(
+            //     'lean_player-settings',
+            //     esc_html__('Upgrade to Premium', 'vapfem'),
+            //     esc_html__('Upgrade to Premium', 'vapfem'),
+            //     'manage_options',
+            //     leanpl_get_upgrade_url(array('utm_medium' => 'menu'))
+            // );
+        // }
     }
 
     /**
@@ -347,6 +347,11 @@ class Menu {
         // Highlight Playlists submenu when on playlist list or add new page
         if ( $post_type === 'lean_playlist' && in_array( $pagenow, [ 'edit.php', 'post-new.php' ], true ) ) {
             $submenu_file = 'edit.php?post_type=lean_playlist';
+        }
+
+        // Freemius admin.php?page=lean_player-settings-account
+        if ( $parent_file === 'lean_player-settings-account' ){
+            $submenu_file = 'admin.php?page=lean_player-settings-account';
         }
 
         return $submenu_file;
@@ -408,7 +413,7 @@ class Menu {
                 $(window).on('hashchange', updateMenuHighlight);
 
                 // Open upgrade link in new tab
-                $('.wp-submenu a[href*="leanplugins.com"]').attr('target', '_blank');
+               // $('.wp-submenu a[href*="leanplugins.com"]').attr('target', '_blank');
             });
 JS
         );

@@ -169,3 +169,8 @@ body.theme-customify .elementor-widget-vapfem_audio_player .plyr__control--overl
 body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
     background-color: unset;
 }
+
+/* Preview page playlist - With default WordPress themes the container is too small so player controls are cramped */
+.wp-singular.lean_playlist-template-default .lpl-playlist-wrap{
+    max-width: 80%;
+}

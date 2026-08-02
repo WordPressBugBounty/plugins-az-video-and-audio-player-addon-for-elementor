@@ -1,10 +1,10 @@
 === Lean Player - Video and Audio Player with Playlist for WordPress, Elementor and Gutenberg ===
 Contributors: azplugins
 Tags: video player, audio player, playlist, elementor, YouTube player
-Requires at least: 4.0
+Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.2.0
+Stable tag: 3.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,13 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.2.1 =
+* Added: Freemius for improving the plugin usage
+* Added: Example links under the playlist Quick Add box, so you can see what a valid URL looks like.
+* Fixed: Playlist preview page was too narrow on default WordPress themes, cramping the player controls.
+* Updated: Minimum requirements declared in the plugin header, so incompatible sites are stopped before activation.
+* Updated: Language translation template (.pot) regenerated with the latest strings and a few other minor things
+
 = Version: 3.2.0 =
 * Added: Playlist Quick Add - add a playlist item by pasting a URL, with instant append to the list (no page reload). Titles for YouTube and Vimeo links are fetched automatically.
 * Added: Bulk Add - create many playlist items at once by pasting one URL per line (up to 50).
@@ -365,21 +372,23 @@ The preview opens in a new tab, showing only the player without your site's head
 
 = Does this plugin use any third-party services? =
 
-Yes. When you deactivate this plugin, a feedback modal appears. If you choose to submit feedback, these 5 pieces of information are sent to our server:
+Yes. This plugin uses the [Freemius](https://freemius.com/) SDK for licensing, seamless upgrades, and optional insights that help us improve the plugin.
 
-* Your deactivation reason (from the options provided)
-* Your optional comment (if you write one)
-* Plugin version
-* WordPress version
-* PHP version
+Freemius does not collect any data by default. On activation you will see an opt-in screen where you can choose to share non-sensitive diagnostic data. Opting in helps us understand the environments the plugin runs in, catch compatibility issues early, and prioritize the features that matter most. If you opt in, Freemius collects basic site and environment details, your plugin activation events, and your admin name and email address.
 
-This feedback helps us understand real-world issues and prioritize fixes. You can click "Skip & Deactivate" to skip feedback entirely.
+Skipping the opt-in is completely fine, the plugin works fully either way and no data is sent during normal usage. Purchasing or activating a Pro license connects to Freemius to validate the license and deliver automatic updates.
 
-Service Used: Supabase (https://supabase.com/)
-Privacy Policy: https://supabase.com/privacy
-Terms of Service: https://supabase.com/terms
+On opt-in, a copy of that same non-sensitive diagnostic data is also sent to our own database hosted on Supabase. Having it on hand helps us spot compatibility issues sooner, see which setups need attention, and keep making the plugin better for everyone.
 
-The feedback is only sent when you click "Submit & Deactivate". Nothing is collected during normal plugin usage.
+Separately, when you deactivate the plugin you are asked why. This is optional: you can skip it and deactivate right away. If you do choose a reason and submit it, that reason, any comment you add, and basic version details about your plugin, WordPress and PHP install are sent to the same Supabase database. No user name or email is ever included.
+
+**Service Used:** Freemius (https://freemius.com/)
+**Privacy Policy:** https://freemius.com/privacy/
+**Terms of Service:** https://freemius.com/terms/
+
+**Service Used:** Supabase (https://supabase.com/)
+**Privacy Policy:** https://supabase.com/privacy
+**Terms of Service:** https://supabase.com/terms
 
 == Screenshots ==
 1. Activate Lean Player and open its settings

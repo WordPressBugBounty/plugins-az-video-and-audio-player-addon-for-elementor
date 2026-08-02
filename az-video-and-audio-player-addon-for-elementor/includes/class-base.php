@@ -5,6 +5,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Early deps: functions.php defines leanpl_is_pro_active(), which freemius-init
+// reads in bootstrap() long before load_dependencies() runs.
+require_once LEANPL_DIR . '/includes/functions.php';
+
 /**
  * Main Plugin Base Class
  * 
@@ -32,8 +36,8 @@ class Base {
      * Called from main plugin file before plugins_loaded action
      */
     public static function bootstrap($plugin_file) {
-        // Check if we should load pro features (respects LEANPL_MODE_SWITCH)
-        $should_load_pro = self::should_load_pro();
+        // Check if we should load pro features
+        $should_load_pro = leanpl_should_load_pro();
         
         // Load pro-loader early if it exists and we're in pro mode
         if ($should_load_pro) {
@@ -42,6 +46,9 @@ class Base {
                 require_once $pro_loader_path;
             }
         }
+
+        // Reads leanpl_is_pro_active() for its is_premium / pricing-menu decisions.
+        require_once LEANPL_DIR . '/includes/freemius-init.php';
         
         /**
          * Fires early in bootstrap, before plugins_loaded action
@@ -66,58 +73,14 @@ class Base {
     }
 
     /**
-     * Check if pro features should be loaded
-     * Respects LEANPL_MODE_SWITCH for development mode switching
-     * 
-     * @return bool True if pro mode is active
-     */
-    private static function should_load_pro() {
-        // 1. Check if this is standalone PRO (folder has -pro suffix)
-        if (strpos(plugin_basename(LEANPL_FILE), '-pro/') !== false) {
-            return true;
-        }
-        
-        // 2. Development: Check mode switch
-        if (defined('LEANPL_MODE_SWITCH') && LEANPL_MODE_SWITCH === 'pro') {
-            return true;
-        }
-        
-        // 3. Default: FREE mode
-        return false;
-    }
-
-    /**
      * Callback for plugins_loaded action
      */
     public static function plugins_loaded_cb() {
-        // Detect and define plugin mode
-        if (!defined('LEANPL_MODE')) {
-            define('LEANPL_MODE', self::detect_mode());
-        }
-        
         // Initialize base plugin
         self::get_instance();
         
         // Load Pro features if available
         self::load_pro();
-    }
-
-    /**
-     * Detect plugin mode (free or pro)
-     */
-    private static function detect_mode() {
-        // 1. Check if this is standalone PRO (folder has -pro suffix)
-        if (strpos(plugin_basename(LEANPL_FILE), '-pro/') !== false) {
-            return 'pro';
-        }
-        
-        // 2. Development: Check mode switch
-        if (LEANPL_MODE_SWITCH === 'pro') {
-            return 'pro';
-        }
-        
-        // 3. Default: FREE mode
-        return 'free';
     }
 
     /**
@@ -134,7 +97,7 @@ class Base {
      * Load Pro features if available
      */
     private static function load_pro() {
-        if (LEANPL_MODE === 'pro' && file_exists(LEANPL_DIR . '/pro/pro-loader.php')) {
+        if (leanpl_should_load_pro() && file_exists(LEANPL_DIR . '/pro/pro-loader.php')) {
             require_once LEANPL_DIR . '/pro/pro-loader.php';
             
             if (function_exists('leanpl_pro_init')) {
@@ -149,7 +112,6 @@ class Base {
     private function __construct() {
         $this->load_textdomain();
         $this->load_dependencies();
-        $this->init_deactivation_feedback();
         $this->init_integrations();
         $this->maybe_create_demos();
     }
@@ -166,7 +128,6 @@ class Base {
      */
     private function load_dependencies() {
         // Load utility functions first
-        require_once LEANPL_DIR . '/includes/functions.php';
         require_once LEANPL_DIR . '/includes/functions-converter.php';
         require_once LEANPL_DIR . '/includes/functions-player.php';
         require_once LEANPL_DIR . '/includes/functions-admin.php';
@@ -197,7 +158,9 @@ class Base {
 
         // Load admin files
         if (is_admin()) {
-            require_once LEANPL_DIR . '/includes/admin/class-deactivation-feedback.php';
+            // Deactivation feedback now rides the Freemius dialog (see diagnostic-data.php),
+            // so the in-house modal class is no longer loaded.
+            // require_once LEANPL_DIR . '/includes/admin/class-deactivation-feedback.php';
             require_once LEANPL_DIR . '/includes/admin/class-menu.php';
             require_once LEANPL_DIR . '/includes/admin/class-settings-page.php';
             require_once LEANPL_DIR . '/includes/admin/class-player-table-columns.php';
@@ -207,6 +170,11 @@ class Base {
         require_once LEANPL_DIR . '/includes/elementor/class-integration.php';
     }
 
+    /**
+     * Retired. Deactivation feedback now rides the Freemius dialog and is captured
+     * server-side in includes/diagnostic-data.php, so the in-house modal is no longer
+     * wired up. Kept for reference until the class file is removed.
+     */
     private function init_deactivation_feedback() {
         // Initialize deactivation feedback (admin only if class exists)
         if (is_admin() && !leanpl_is_pro_active() && class_exists('\LeanPL\Admin\Deactivation_Feedback')) {

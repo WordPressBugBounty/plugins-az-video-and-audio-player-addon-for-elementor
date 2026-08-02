@@ -680,23 +680,25 @@ function leanpl_get_player_source_badge( $player_id ) {
  * is no oEmbed source to fetch from).
  *
  * @param string $playlist_type 'video' or 'audio'.
- * @return array{omnibox: string, qa_url: string, ba_placeholder: string, ba_desc: string}
+ * @return array{omnibox: string, omnibox_examples: string, qa_url: string, ba_placeholder: string, ba_desc: string}
  */
 function leanpl_get_playlist_source_hints( $playlist_type ) {
     if ( $playlist_type === 'audio' ) {
         return [
-            'omnibox'        => __( 'Paste a direct audio file link (MP3, WAV, M4A…)', 'vapfem' ),
-            'qa_url'         => __( 'Direct audio file URL (MP3, WAV, M4A…)', 'vapfem' ),
-            'ba_placeholder' => __( "One URL per line, e.g:\nhttps://example.com/song.mp3\nhttps://example.com/episode.m4a\nhttps://example.com/track.wav", 'vapfem' ),
-            'ba_desc'        => __( 'Direct audio file links, one per line. Titles are taken from the file name. Up to 50 per batch.', 'vapfem' ),
+            'omnibox'          => __( 'Paste a direct audio file link (MP3, WAV, M4A…)', 'vapfem' ),
+            'omnibox_examples' => __( "e.g. https://example.com/song.mp3, https://example.com/episode.m4a,\nor any direct .wav file URL.", 'vapfem' ),
+            'qa_url'           => __( 'Direct audio file URL (MP3, WAV, M4A…)', 'vapfem' ),
+            'ba_placeholder'   => __( "One URL per line, e.g:\nhttps://example.com/song.mp3\nhttps://example.com/episode.m4a\nhttps://example.com/track.wav", 'vapfem' ),
+            'ba_desc'          => __( 'Direct audio file links, one per line. Titles are taken from the file name. Up to 50 per batch.', 'vapfem' ),
         ];
     }
 
     return [
-        'omnibox'        => __( 'Paste a YouTube, Vimeo, or direct media link…', 'vapfem' ),
-        'qa_url'         => __( 'YouTube, Vimeo, or direct media file URL', 'vapfem' ),
-        'ba_placeholder' => __( "One URL per line, e.g:\nhttps://www.youtube.com/watch?v=bTqVqk7FSmY\nhttps://vimeo.com/22439234\nhttps://example.com/video.mp4", 'vapfem' ),
-        'ba_desc'        => __( 'YouTube, Vimeo, or direct media file links. Titles are fetched automatically. Up to 50 per batch.', 'vapfem' ),
+        'omnibox'          => __( 'Paste a YouTube, Vimeo, or direct media link…', 'vapfem' ),
+        'omnibox_examples' => __( "e.g. https://www.youtube.com/watch?v=bTqVqk7FSmY, https://vimeo.com/22439234,\nor any direct .mp4 file URL.", 'vapfem' ),
+        'qa_url'           => __( 'YouTube, Vimeo, or direct media file URL', 'vapfem' ),
+        'ba_placeholder'   => __( "One URL per line, e.g:\nhttps://www.youtube.com/watch?v=bTqVqk7FSmY\nhttps://vimeo.com/22439234\nhttps://example.com/video.mp4", 'vapfem' ),
+        'ba_desc'          => __( 'YouTube, Vimeo, or direct media file links. Titles are fetched automatically. Up to 50 per batch.', 'vapfem' ),
     ];
 }
 
