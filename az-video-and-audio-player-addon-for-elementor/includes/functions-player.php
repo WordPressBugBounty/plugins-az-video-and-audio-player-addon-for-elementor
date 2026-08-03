@@ -554,6 +554,28 @@ function leanpl_get_video_thumbnail_url($player_id) {
 }
 
 /**
+ * Get the lowercase file extension from a media URL.
+ *
+ * Reads the extension from the URL *path* only. pathinfo() on a whole URL
+ * treats everything after the last dot as the extension, so a signed CDN link
+ * like `song.mp3?Expires=1&Signature=xy` yields `mp3?Expires=1&Signature=xy`.
+ * That value feeds the MIME helpers and ends up in `<source type="">`, where a
+ * malformed type makes the browser refuse to play the file with no error.
+ *
+ * @param string $url Media URL.
+ * @return string Lowercase extension, or '' when the URL has none (live streams).
+ */
+function leanpl_get_url_extension( $url ) {
+    if ( empty( $url ) ) {
+        return '';
+    }
+
+    $path = (string) wp_parse_url( $url, PHP_URL_PATH );
+
+    return strtolower( (string) pathinfo( $path, PATHINFO_EXTENSION ) );
+}
+
+/**
  * Get MIME type for video file based on extension
  *
  * @param string $file_extension File extension (e.g., 'mp4', 'webm', 'ogg')
@@ -561,11 +583,18 @@ function leanpl_get_video_thumbnail_url($player_id) {
  */
 function leanpl_get_video_mime_type($file_extension) {
     $ext = strtolower($file_extension);
+    // Extensions whose MIME type is not simply 'video/{ext}'. Browsers refuse
+    // the literal video/ogv, video/mkv and video/mov, so the fallback below
+    // would silently kill playback for those containers.
     $mime_map = [
         'mp4'  => 'video/mp4',
+        'm4v'  => 'video/mp4',
         'webm' => 'video/webm',
         'ogg'  => 'video/ogg',
         'ogv'  => 'video/ogg',
+        'mkv'  => 'video/x-matroska',
+        'mov'  => 'video/quicktime',
+        '3gp'  => 'video/3gpp',
     ];
     return isset($mime_map[$ext]) ? $mime_map[$ext] : 'video/' . $ext;
 }
@@ -580,14 +609,19 @@ function leanpl_get_audio_mime_type($file_extension) {
     // Normalize extension to lowercase
     $ext = strtolower($file_extension);
     
-    // Map file extensions to correct MIME types
+    // Map file extensions to correct MIME types. opus and oga are Ogg
+    // containers: browsers refuse the literal audio/opus and audio/oga, so
+    // without these the fallback below silently kills playback.
     $mime_map = [
         'mp3' => 'audio/mpeg',
         'ogg' => 'audio/ogg',
+        'oga' => 'audio/ogg',
+        'opus' => 'audio/ogg',
         'wav' => 'audio/wav',
         'm4a' => 'audio/mp4',
         'aac' => 'audio/aac',
         'aacp' => 'audio/aac',
+        'flac' => 'audio/flac',
     ];
     
     // Return mapped MIME type or default to audio/{extension}
@@ -786,8 +820,7 @@ function leanpl_detect_player_source( $url, $attachment_id, $playlist_type ) {
             return new WP_Error( 'invalid_url', __( 'That does not look like a valid URL.', 'vapfem' ) );
         }
 
-        $path = (string) wp_parse_url( $url, PHP_URL_PATH );
-        $ext  = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+        $ext = leanpl_get_url_extension( $url );
 
         $audio_exts = [ 'mp3', 'm4a', 'aac', 'wav' ];
         $video_exts = [ 'mp4', 'webm', 'ogv' ];

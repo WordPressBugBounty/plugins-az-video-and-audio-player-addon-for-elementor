@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Lean Player is a lightweight video and audio player for WordPress with full play
 2. Copy the shortcode
 3. Paste it anywhere — or use the Elementor widget, Block Editor, or Classic Editor
 
-Works with **YouTube**, **Vimeo**, **MP4 video** (upload or direct URL/CDN), and **audio files** (MP3, AAC, OGG, WAV, M4A — upload or direct URL/CDN). Plays nicely with **Elementor**, **Block Editor**, and **Classic Editor** on any theme, without slowing your site down.
+Works with **YouTube**, **Vimeo**, **MP4 video** (upload or direct URL/CDN), and **audio files** (MP3, AAC, OGG, WAV, M4A, FLAC — upload or direct URL/CDN). Plays nicely with **Elementor**, **Block Editor**, and **Classic Editor** on any theme, without slowing your site down.
 
 [Players Demo](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc) | [Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc) | [Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing) | [Support](https://wordpress.org/support/plugin/az-video-and-audio-player-addon-for-elementor/)
 
@@ -50,7 +50,7 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * HTML5 video (upload or URL/CDN)
 
 **Audio Sources:**
-* Supported formats: MP3, OGG, WAV, M4A, AAC
+* Supported formats: MP3, OGG, WAV, M4A, AAC, FLAC
 * Audio streaming support (MP3, AAC streams)
 * Media library upload or direct URL/streaming URL
 
@@ -138,6 +138,14 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.2.2 =
+* Fixed: Player controls ran together on themes that reset margins and padding.
+* Fixed: Playlist titles truncated and rows too tall on themes with a global clearfix.
+* Fixed: Signed CDN links with a `?` in them (S3, CloudFront) never played.
+* Fixed: .opus audio never played.
+* Fixed: .ogv, .mkv, .mov, .3gp and .m4v used the wrong file type.
+* Improved: Plugin styles now load after the theme's styles.
+
 = Version: 3.2.1 =
 * Added: Freemius for improving the plugin usage
 * Added: Example links under the playlist Quick Add box, so you can see what a valid URL looks like.
@@ -324,7 +332,8 @@ Replace "123" with your player's ID. You can find the shortcode for each player 
 * HTML5 video files (MP4, WebM, OGG)
 
 **Audio Sources:**
-* Supported formats: MP3, OGG, WAV, M4A, AAC
+* Supported formats: MP3, OGG, WAV, M4A, AAC, FLAC
+* OPUS is supported via a direct URL/CDN link. WordPress does not allow .opus files in the media library, so it cannot be uploaded.
 * Audio streaming support for live streams (MP3, AAC streams)
 
 You can upload files through the WordPress media library, use direct URLs/CDN links, or stream live audio from streaming URLs.
@@ -334,7 +343,7 @@ You can upload files through the WordPress media library, use direct URLs/CDN li
 Yes! The plugin provides two Elementor widgets:
 
 * **Video Player** - Add YouTube, Vimeo, or HTML5 videos
-* **Audio Player** - Add audio files (MP3, OGG, WAV, M4A, AAC)
+* **Audio Player** - Add audio files (MP3, OGG, WAV, M4A, AAC, FLAC)
 
 Both widgets appear in the "General" category in the Elementor editor. You can customize all player settings directly from the Elementor widget panel.
 

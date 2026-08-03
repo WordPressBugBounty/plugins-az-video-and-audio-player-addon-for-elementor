@@ -41,7 +41,19 @@ if ( ! function_exists( 'leanpl_fs' ) ) {
 				'type'                => 'plugin',
 				'public_key'          => 'pk_4d7befc98ab04b3d4b85608830932',
 				'is_premium'          => $is_pro,
-				'premium_suffix'      => 'Starter',
+				// Shortens the name Freemius shows to just "Lean Player".
+				//
+				// Freemius has no filter for the product name: get_plugin_name() reads
+				// the plugin header directly and every Freemius surface (opt-in notice,
+				// admin notice badge, menu and page titles, activation and deactivation
+				// messages) is built from it. The only lever is premium_suffix, which
+				// set_name() strips off the end of the header name when it matches.
+				//
+				// So this must stay an EXACT match for everything in the "Plugin Name:"
+				// header after "Lean Player", compared case-insensitively. Change the
+				// header and this silently stops matching, bringing the long name back
+				// everywhere. Keep the two in sync.
+				'premium_suffix'      => '- Video and Audio Player with Playlist for WordPress, Elementor and Gutenberg',
 				'has_premium_version' => true,
 				'is_premium_only'     => false,
 				'has_addons'          => false,

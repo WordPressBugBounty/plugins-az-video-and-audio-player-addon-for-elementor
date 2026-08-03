@@ -140,7 +140,7 @@ class Assets_Manager {
 
         // -- Register all assets --
         add_action('admin_enqueue_scripts', [$this, 'register_all']);
-        add_action('wp_enqueue_scripts', [$this, 'register_all']);
+        add_action('wp_enqueue_scripts', [$this, 'register_all'], 20); // Ensure theme's assets are loaded first
 
         // -- Load admin assets --
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
@@ -150,7 +150,7 @@ class Assets_Manager {
         
         // -- Load frontend assets --
         add_action('wp_enqueue_scripts', [$this, 'common_frontend_enqueue']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_if_shortcode'], 20);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_if_shortcode'], 30);
 
         // -- Load Elementor assets --
         // Note: Widget frontend assets are loaded via widget registration, so we don't need to load them here.

@@ -81,17 +81,12 @@ class Player_Markup_Data {
     }
 
     /**
-     * Get source extension from URL (e.g. mp4).
+     * Get source extension from URL (e.g. mp4), lowercased.
      *
      * @return string
      */
     public function get_source_extension() {
-        $url = $this->get_source_url();
-        if ( empty( $url ) ) {
-            return '';
-        }
-        $path = wp_parse_url( $url, PHP_URL_PATH );
-        return $path ? pathinfo( $path, PATHINFO_EXTENSION ) : '';
+        return leanpl_get_url_extension( $this->get_source_url() );
     }
 
     /**

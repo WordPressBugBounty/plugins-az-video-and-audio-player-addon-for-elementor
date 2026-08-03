@@ -261,11 +261,11 @@ class Player_Renderer {
      * @return void
      */
     private function render_html5_audio_markup($config, $data_settings) {
-        // Get file extension for type attribute
+        // Get file extension for type attribute. Extensionless URLs (live
+        // streams) fall back to mp3 so the type attribute stays well-formed.
         $file_extension = '';
         if (!empty($config['url'])) {
-            $path_info = pathinfo($config['url']);
-            $file_extension = isset($path_info['extension']) ? $path_info['extension'] : 'mp3';
+            $file_extension = leanpl_get_url_extension($config['url']) ?: 'mp3';
         }
 
         // Get correct MIME type for the file extension
@@ -342,12 +342,15 @@ class Player_Renderer {
 
                   if (empty($video_link)) continue;
 
-                  $extension = pathinfo($video_link, PATHINFO_EXTENSION);
+                  // Extensionless URLs fall back to mp4 so the type attribute
+                  // stays well-formed rather than rendering a bare "video/".
+                  $extension = leanpl_get_url_extension($video_link) ?: 'mp4';
+                  $mime_type = leanpl_get_video_mime_type($extension);
                   $size = isset($html5_video['size']) ? $html5_video['size'] : '';
                   ?>
                   <source
                       src="<?php echo esc_url($video_link); ?>"
-                      type="video/<?php echo esc_attr($extension); ?>"
+                      type="<?php echo esc_attr($mime_type); ?>"
                       size="<?php echo esc_attr($size); ?>"
                   />
                   <?php

@@ -174,3 +174,96 @@ body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
 .wp-singular.lean_playlist-template-default .lpl-playlist-wrap{
     max-width: 80%;
 }
+
+/* silverstorm-theme support */
+
+
+/* ── Theme compat: blanket clearfix pseudo neutralizer ────────────────────────
+ *
+ * Covers both the single player and the playlist. Lives here rather than in
+ * playlist.css because the two share the 'frontend' asset context and always
+ * load together, so one rule in one file serves both.
+ *
+ * Some themes ship a Bootstrap-era global clearfix that injects `content: ""`
+ * on every block element on the page, e.g. the Silverstorm theme (v1.0.33,
+ * themes/silverstorm/style.css) with:
+ *
+ *   html.silverstorm-theme div:before,
+ *   html.silverstorm-theme div:after { content: ""; display: table; order: 1; }
+ *
+ * Inside our flex/grid containers those pseudos become flex/grid items. They
+ * are zero-width, so they look harmless, but the `gap` around them is not:
+ * every gap container silently loses 2 x gap from its flex-grow child, and
+ * grid containers gain a phantom auto-placed row. Measured on Silverstorm:
+ * track titles 16px narrower (premature ellipsis), now-playing info 32px
+ * narrower, items list 12px taller, .lpl-playlist grid rows 360px -> 360px 0px.
+ *
+ * Written generically (no theme class) because this clearfix is a common
+ * pattern, not a Silverstorm quirk.
+ *
+ * Specificity: theme selectors of this shape are 0-1-3, so we need two classes
+ * to outrank them. The doubled class and the descendant scope both land at
+ * 0-2-x, which wins regardless of stylesheet load order.
+ *
+ * Scope is `div` only: our frontend markup emits no other block tag inside
+ * these wrappers. The .plyr exclusion protects Plyr's own pseudos (menu arrow)
+ * without styling the third-party lib.
+ *
+ * NOTE: any future pseudo-element on a div inside these wrappers will be
+ * silently suppressed by this rule. Put frontend pseudos on spans, or add an
+ * exclusion here.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lpl-player-wrap.lpl-player-wrap::before,
+.lpl-player-wrap.lpl-player-wrap::after,
+.lpl-playlist.lpl-playlist::before,
+.lpl-playlist.lpl-playlist::after,
+.lpl-playlist-wrap.lpl-playlist-wrap::before,
+.lpl-playlist-wrap.lpl-playlist-wrap::after,
+.lpl-player-wrap div:not(.plyr, .plyr *)::before,
+.lpl-player-wrap div:not(.plyr, .plyr *)::after,
+.lpl-playlist div:not(.plyr, .plyr *)::before,
+.lpl-playlist div:not(.plyr, .plyr *)::after {
+    content: none;
+}
+
+/* ── Theme compat: universal margin/padding reset guard ──────────────────────
+ *
+ * Themes that ship `* { margin: 0; padding: 0 }` (Silverstorm v1.0.33 uses
+ * `html.silverstorm-theme *`) land at specificity 0-1-1, which outranks every
+ * single-class Plyr rule (0-1-0). Plyr rules using two or more classes survive
+ * untouched, so only the six declarations below actually get clobbered.
+ * `box-sizing` needs no guard: Plyr is already border-box.
+ *
+ * Prefixing with `.plyr ` lifts each rule to 0-2-0, winning regardless of
+ * stylesheet load order. Values mirror plyr.css, including its var fallbacks,
+ * so per-player token overrides still apply.
+ *
+ * Written generically (no theme class) because this reset is a common pattern.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.plyr .plyr__control {
+    padding: calc(var(--plyr-control-spacing, 10px) * 0.7);
+}
+
+.plyr .plyr__control--overlaid {
+    padding: calc(var(--plyr-control-spacing, 10px) * 1.5);
+}
+
+.plyr .plyr__progress {
+    margin-right: var(--plyr-range-thumb-height, 13px);
+}
+
+.plyr .plyr__progress__buffer {
+    margin: calc(var(--plyr-range-track-height, 5px) / 2 * -1)
+        calc(var(--plyr-range-thumb-height, 13px) / 2 * -1) 0;
+}
+
+.plyr .plyr__tooltip {
+    padding: calc(var(--plyr-control-spacing, 10px) / 2)
+        calc(var(--plyr-control-spacing, 10px) / 1.333);
+    margin-bottom: var(--plyr-control-spacing, 10px);
+}
+
+.plyr .plyr__menu__container {
+    margin-bottom: var(--plyr-control-spacing, 10px);
+}
+
