@@ -138,9 +138,15 @@ class Player_Shortcode {
         // Per-player accent color (empty string means inherit from global)
         $per_player_primary_color = Metaboxes::get_field_value($post_id, '_primary_color');
         if (!empty($per_player_primary_color)) {
-            $config['primary_color'] = $per_player_primary_color;
+            $config['per_player_primary_color'] = $per_player_primary_color;
         }
-        
+
+        // Per-player layout preset (empty string means inherit from global)
+        $per_player_layout = Metaboxes::get_field_value($post_id, '_player_layout');
+        if (!empty($per_player_layout)) {
+            $config['player_layout'] = $per_player_layout;
+        }
+
         // Special processing (not direct match)
         if ($player_type === 'video') {
             $this->process_video_source($post_id, $config);
@@ -151,9 +157,22 @@ class Player_Shortcode {
         // Process poster
         $config['poster'] = $this->process_poster($post_id);
 
-        // Audio title shown alongside poster (only when poster is set)
-        if ($player_type === 'audio' && !empty($config['poster'])) {
-            $config['audio_title'] = get_the_title($post_id);
+        // Audio title. With a poster: custom text wins, empty falls back to
+        // the post title — unchanged from before this field existed, so
+        // upgraded sites with a poster keep showing what they always showed.
+        // Without a poster: no auto fallback. A no-poster player that never
+        // touched this field must stay silent (that's most existing audio
+        // players), so only genuinely explicit text turns a title on — and
+        // even then, the renderer only displays it on the Classic layout
+        // (render_html5_audio_markup()).
+        if ($player_type === 'audio') {
+            $custom_title = Metaboxes::get_field_value($post_id, '_audio_title');
+            if (!empty($config['poster'])) {
+                $config['audio_title'] = !empty($custom_title) ? $custom_title : get_the_title($post_id);
+            } elseif (!empty($custom_title)) {
+                $config['audio_title'] = $custom_title;
+            }
+            $config['audio_title_enabled'] = Metaboxes::get_field_value($post_id, '_audio_title_enabled') !== '0';
         }
 
         $renderer = Player_Renderer::get_instance();

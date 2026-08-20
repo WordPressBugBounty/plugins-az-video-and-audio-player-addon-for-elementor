@@ -110,6 +110,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         foreach ( $players as $player ) {
             $title = $player->post_title !== ''
                 ? sprintf( '%s (%d)', $player->post_title, $player->ID )
+                /* translators: %d: Player post ID, shown when the player has no title */
                 : sprintf( esc_html__( 'Player #%d', 'vapfem' ), $player->ID );
 
             $options[ $player->ID ] = $title;

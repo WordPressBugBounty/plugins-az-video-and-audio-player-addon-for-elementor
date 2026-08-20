@@ -49,6 +49,9 @@ function leanpl_get_playlist_meta_field_schema() {
         'show_duration_in_list' => [ 'sanitize' => 'sanitize_key', 'checkbox' => true ],
         'show_meta'             => [ 'sanitize' => 'sanitize_key', 'checkbox' => true ],
 
+        // Player
+        'player_layout'         => [ 'sanitize' => 'sanitize_key' ],
+
         // Audio
         'now_playing_style'     => [ 'sanitize' => 'sanitize_key' ],
 

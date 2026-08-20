@@ -1,3 +1,10 @@
+15 Aug 2026
+- Changed: 'enable_demo' => true no longer loads example tabs onto the host instance's own menu — it now spawns a dedicated "Lex Settings" top-level menu (instance id lex_settings_demo, slug lex-settings-demo) showing all config/examples/tabs/ demos, so demo content never buries a real plugin settings screen. The framework self-registers the menu on 'admin_menu' (Settings::registerDemoMenu); hosts that defer their own Settings construction to 'admin_init' (translations) only need to load the framework file before 'admin_menu' fires for this to work. When no host opts into 'enable_demo', Settings::maybeRemoveDemoMenu (admin_init priority 999) hides the menu automatically
+- Added: vtabs submenu support — startVtab('id', 'label', ['parent' => 'parent-id']) nests a tab as a child; parent renders as expand/collapse toggle, children carry the real data-vtab panels (icon optional per child, falls back to a ↳ glyph)
+
+14 Aug 2026
+- Added: getTemplate() / locateTemplate() template override system (WooCommerce-style), consumed by nav header partials
+
 31 Dec 2025
 - Moved upgrade modal markup to assets manager
 

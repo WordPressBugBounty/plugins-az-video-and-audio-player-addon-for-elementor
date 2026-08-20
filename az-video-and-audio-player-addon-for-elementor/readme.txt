@@ -2,9 +2,9 @@
 Contributors: azplugins
 Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Video and audio player with playlist for WordPress. Plays YouTube, Vimeo, HTML5 
 🌐 [Visit Official Website](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
 ⚡ [Upgrade to Pro](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc&utm_campaign=upgrade#pricing)
 
-Lean Player is a lightweight video and audio player for WordPress with full playlist support. Embed players and playlists anywhere in 3 steps:
+Lean Player is a lightweight video and audio player for WordPress with full playlist support. A redesigned admin experience with instant live preview makes setup effortless. Embed players and playlists anywhere in 3 steps:
 
 1. Create a player or playlist from the admin
 2. Copy the shortcode
@@ -40,6 +40,7 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * **Per-Player Configuration** - Override global settings for individual players
 * **Admin Columns** - View all players at a glance with Player Type, Source Type, Source, Autoplay status, and copy-ready Shortcode
 * **Preview Player** - Preview your player before publishing directly from the players list or from the player edit page
+* **Live Preview** - See your changes reflected instantly on the edit screen as you configure a player or playlist, no save needed
 * **Simple Shortcode** - [lean_player id="123"] to embed anywhere
 * **Timestamp Links** - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] to jump a player to a specific moment from your post content
 * **Player Categories** - Group and organize players using categories
@@ -72,7 +73,8 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * Click to play/pause
 * Picture-in-picture (PIP) mode
 * Keyboard shortcuts
-* Custom Player Controls - Show/hide and reorder controls (play-large, play, progress, current-time, mute, volume, captions, settings, pip, airplay, fullscreen, download) [PRO]
+* Player Layout - Choose from 5 built-in layouts (Classic, Modern, Simple, Floating, Minimal), each with its own styling and control set
+* Custom Preset Builder - Build, name, and save your own control-bar preset (free): show/hide and reorder controls (play-large, play, progress, current-time, mute, volume, captions, settings, pip, airplay, fullscreen, download); applying a preset to a player [PRO]
 * Auto-Hide Controls - Hide controls during playback [PRO]
 
 **Design & Styling:**
@@ -138,6 +140,13 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.3.0 =
+* Fixed: Auto-Start accordion in the player metabox missing its collapse arrow.
+* Admin Redesign: New "Media Players" & "Playlists" list screens and Edit Player/Edit Playlist screens
+* Added: Inline live preview panel added to both Player and Playlist edit screens, reflecting field changes in real time
+* Added: Layout picker + full Custom Preset builder (pro) (create, edit, delete presets)
+* Updated: Lex Settings framework
+
 = Version: 3.2.2 =
 * Fixed: Player controls ran together on themes that reset margins and padding.
 * Fixed: Playlist titles truncated and rows too tall on themes with a global clearfix.

@@ -63,7 +63,7 @@
   --lpl-playlist-bg-hover: color-mix(in srgb, var(--lpl-playlist-text) 6%, var(--lpl-playlist-bg));
   --lpl-playlist-item-active-bg: color-mix(in srgb, var(--lpl-playlist-accent) 10%, var(--lpl-playlist-bg));
   --lpl-playlist-item-grid-active-bg: color-mix(in srgb, var(--lpl-playlist-accent) 6%, var(--lpl-playlist-bg));
-  --lpl-playlist-border: color-mix(in srgb, var(--lpl-playlist-text) 18%, var(--lpl-playlist-bg));
+  --lpl-playlist-border: color-mix(in srgb, var(--lpl-playlist-text) 13%, var(--lpl-playlist-bg));
   --lpl-playlist-border-active: color-mix(in srgb, var(--lpl-playlist-accent) 40%, transparent);
   --lpl-playlist-container-border: 1px solid var(--lpl-playlist-border);
 
@@ -161,8 +161,21 @@
 
 /* ─── 4. Panel ───────────────────────────────────────────────────────────── */
 
-.lpl-playlist__player-wrap {
+.lpl-playlist__player-area {
   grid-area: player;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Frame padding/radius only for side-by-side audio playlists - top/bottom
+   and video playlists keep the player flush against the panel. */
+.lpl-playlist--audio.lpl--position-right .lpl-playlist__player-area,
+.lpl-playlist--audio.lpl--position-left .lpl-playlist__player-area {
+  padding: var(--lex-space-3, 12px);
+  border-radius: var(--lpl-playlist-container-radius, 12px);
+}
+
+.lpl-playlist__player-wrap {
   position: relative;
   min-width: 0;
   min-height: 0;
@@ -504,7 +517,8 @@
   color: var(--lpl-playlist-text);
 }
 
-.lpl-playlist__item--active .lpl-playlist__item-title {
+.lpl-playlist__item--active .lpl-playlist__item-title,
+.lpl-playlist__item--active .lpl-playlist__item-meta {
   color: var(--lpl-playlist-accent);
 }
 
@@ -735,6 +749,7 @@
   box-shadow: var(--lpl-playlist-gradient-active-shadow);
 }
 
+.lpl-playlist.lpl--bg-gradient .lpl-playlist__item--active .lpl-playlist__item-title,
 .lpl-playlist.lpl--bg-gradient .lpl-playlist__item--active .lpl-playlist__item-meta,
 .lpl-playlist.lpl--bg-gradient .lpl-playlist__item--active .lpl-playlist__item-number,
 .lpl-playlist.lpl--bg-gradient .lpl-playlist__item--active .lpl-playlist__item-duration {
@@ -927,20 +942,58 @@
 /* ─── 15. Audio: player wrap ─────────────────────────────────────────────── */
 
 .lpl-playlist--audio .lpl-playlist__player-wrap {
-  padding: var(--lpl-playlist-space-fluid);
-  padding-block-start: var(--lex-space-3, 12px);
+  padding: var(--lpl-playlist-space-compact);
   background: var(--lpl-playlist-bg-raised);
   overflow: visible;
   z-index: 2;
   border-radius: var(--lpl-playlist-container-radius, 12px);
 }
 
-.lpl-playlist--audio.lpl--now-playing-compact.lpl--position-right .lpl-playlist__player-wrap {
-  margin-inline-start: var(--lex-space-2, 8px);
+.lpl-playlist--audio.lpl--position-left .lpl-playlist__panel {
+  border-radius: var(--lpl-playlist-container-radius, 12px) 0 0 var(--lpl-playlist-container-radius, 12px);
 }
 
-.lpl-playlist--audio.lpl--now-playing-compact.lpl--position-left .lpl-playlist__player-wrap {
-  margin-inline-end: var(--lex-space-2, 8px);
+/* Stacked positions: square off the edge shared with the panel so the two
+   don't show a double corner where they meet. */
+.lpl-playlist--audio.lpl--position-top .lpl-playlist__player-wrap {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.lpl-playlist--audio.lpl--position-bottom .lpl-playlist__player-wrap {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Divider between player and panel, drawn as a full-height pseudo-element on
+   the grid container rather than a border on .lpl-playlist__player-wrap /
+   .lpl-playlist__panel. Those two boxes size to their own content (grid's
+   align-items: start, so "now-playing large" can grow past the panel's
+   height without stretching it) and a border on either one would stop
+   wherever its own content ends, leaving a gap for whichever side is
+   shorter. Positioning at the fixed --lpl-playlist-panel-width boundary
+   keeps this correct for any layout without measuring content height. */
+.lpl-playlist--audio.lpl--position-right,
+.lpl-playlist--audio.lpl--position-left {
+  position: relative;
+}
+
+.lpl-playlist--audio.lpl--position-right::after,
+.lpl-playlist--audio.lpl--position-left::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--lpl-playlist-border);
+}
+
+.lpl-playlist--audio.lpl--position-right::after {
+  right: var(--lpl-playlist-panel-width, 360px);
+}
+
+.lpl-playlist--audio.lpl--position-left::after {
+  left: var(--lpl-playlist-panel-width, 360px);
 }
 
 /* ─── 16. Plyr audio overrides ───────────────────────────────────────────── */

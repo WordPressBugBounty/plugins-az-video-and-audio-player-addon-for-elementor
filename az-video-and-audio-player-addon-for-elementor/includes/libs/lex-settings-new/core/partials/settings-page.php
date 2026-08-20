@@ -12,8 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Include header template
-include $settings->getConfig('framework_path') . '/partials/header.php';
+// Render header template (override-aware)
+$settings->getTemplate('header', $settings->menu->getNavHeaderArgs());
 ?>
 
 <div class="lex-layout-container">

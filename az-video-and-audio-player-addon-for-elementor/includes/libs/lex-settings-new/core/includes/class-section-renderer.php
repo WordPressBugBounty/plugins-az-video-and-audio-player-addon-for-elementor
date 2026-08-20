@@ -46,7 +46,7 @@ class SectionRenderer {
      *
      * @param string $id    Vtab id (used as data-vtab attr value and localStorage key)
      * @param string $label Nav button label
-     * @param array  $options icon, order, is_pro, badge, tooltip, condition (all future-safe)
+     * @param array  $options icon, order, is_pro, badge, tooltip, condition, parent, expanded (all future-safe)
      */
     public function startVtab( $id, $label, $options = [] ) {
         $instance_id = $this->settings->getConfig( 'instance_id' );
@@ -59,6 +59,9 @@ class SectionRenderer {
             'icon'    => isset( $options['icon'] ) ? $options['icon'] : '',
             'order'   => isset( $options['order'] ) ? (int) $options['order'] : count( $this->vtab_registry ),
             'tab_layout' => isset( $options['tab_layout'] ) ? $options['tab_layout'] : '',
+            'parent'  => isset( $options['parent'] ) ? $options['parent'] : '',
+            // Parent-only: submenu starts open and stays open, no collapse arrow.
+            'expanded' => ! empty( $options['expanded'] ),
             'options' => $options,
         ];
         $this->current_vtab = $id;
@@ -69,11 +72,42 @@ class SectionRenderer {
         $this->current_vtab = null;
     }
 
-    /** Return vtab registry sorted by order. */
+    /**
+     * Return vtab registry sorted by order, with 'parent'-tagged tabs nested
+     * as 'children' on their parent entry and removed from the top level.
+     */
     public function getVtabRegistry() {
         $registry = array_values( $this->vtab_registry );
         usort( $registry, function( $a, $b ) { return $a['order'] <=> $b['order']; } );
-        return $registry;
+
+        $top      = [];
+        $children = [];
+        foreach ( $registry as $tab ) {
+            if ( ! empty( $tab['parent'] ) ) {
+                $children[ $tab['parent'] ][] = $tab;
+            } else {
+                $top[] = $tab;
+            }
+        }
+
+        foreach ( $top as &$tab ) {
+            if ( ! empty( $children[ $tab['id'] ] ) ) {
+                $tab['children'] = $children[ $tab['id'] ];
+                unset( $children[ $tab['id'] ] );
+            }
+        }
+        unset( $tab );
+
+        // Orphaned children (parent id never registered) fall back to top-level
+        // so misconfigured 'parent' values don't silently drop content.
+        foreach ( $children as $orphans ) {
+            foreach ( $orphans as $orphan ) {
+                unset( $orphan['parent'] );
+                $top[] = $orphan;
+            }
+        }
+
+        return $top;
     }
 
     /** Reset vtab state between tabs so vtabs from previous tab config don't leak. */

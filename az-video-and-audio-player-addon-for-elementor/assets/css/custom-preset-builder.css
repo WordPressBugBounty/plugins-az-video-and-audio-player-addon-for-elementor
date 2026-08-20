@@ -1,0 +1,346 @@
+/* Custom Preset Builder modal - extends .lex-modal-backdrop / .lex-modal tokens */
+
+/*
+ * The "Custom Preset" card has no name attribute (never the real submitted
+ * player_layout value), so it never gets the built-in :checked highlight the
+ * other 5 cards get natively. These force the same visual language on -
+ * checkmark + accent border - keyed off a JS-applied class instead.
+ */
+.lex-image-select-card.lpl-cpm__card--applied .lex-image-select-card__frame {
+    border-color: var(--lex-color-primary);
+}
+
+.lex-image-select-card.lpl-cpm__card--applied .lex-image-select-card__check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.lex-image-select-card.lpl-cpm__card--deleted .lex-image-select-card__title {
+    color: var(--lex-color-error, #d63638);
+}
+
+/* Admin-new redesign's tile grid (player + playlist edit screens) - the
+   applied/checkmark look reuses its own aria-selected Tailwind utilities
+   already compiled into tailwind-admin.css, only the deleted-name color
+   needs a rule of its own here. */
+[data-lpl-custom-preset-tile].lpl-cpm__card--deleted .lpl-cpm__custom-preset-label {
+    color: var(--lex-color-error, #d63638);
+}
+
+/* Admin_New_Icons::get('plus') hardcodes fill="#FFFFFF" (meant for a dark
+   layout preview thumbnail elsewhere) - reads as washed-out grey (or
+   invisible, on the locked/PRO tile's identical light background) on this
+   tile's light #F1F3F3 background. Scoped override, not a source-file edit:
+   the same icon is reused on other (dark-background) tiles across admin-new.
+   Keyed off .lpl-cpm__custom-preset-tile (always present, unlike
+   [data-lpl-custom-preset-tile] which edit-layout-grid.php omits entirely
+   when the tile is pro-locked) so the fix applies in both the unlocked and
+   locked/free states. Direct-child combinator targets only the plus icon (a
+   direct child of the frame div in edit-layout-grid.php) - the applied-state
+   checkmark badge is nested one level deeper (its own div wrapper) and must
+   keep its own white-on-brand-blue fill untouched. */
+.lpl-cpm__custom-preset-tile > div > svg path {
+    fill: #000000;
+}
+
+/* Classic metabox/Settings grid - the __custom_preset__ card has no `image`
+   (see settings.php / class-metaboxes.php's field config), so image-select.php
+   falls back to its generic "missing image" placeholder (a picture-frame
+   dashicon on a plain card) - reads as a broken thumbnail, not an
+   intentional "add" affordance. Restyle it to match admin-new's own add-tile
+   look (light fill, centered plus) instead: swap the dashicon glyph to
+   dashicons-plus-alt2 (\f543) via content, same icon font already loaded,
+   just a different glyph - no PHP template change needed for one option's
+   icon.
+
+   Targeted via .lpl-cpm__custom-preset-card (custom-preset-builder.js adds
+   it once, at page load) rather than the radio's [value="__custom_preset__"]
+   - applyPreset() rewrites that value to the real preset id once applied,
+   which would silently stop matching a value-based CSS selector. */
+.lex-image-select-card.lpl-cpm__custom-preset-card .lex-image-select-card__frame {
+    background: #f1f3f3;
+}
+
+.lex-image-select-card.lpl-cpm__custom-preset-card .lex-image-select-card__placeholder .dashicons.dashicons-format-image::before {
+    content: "\f543";
+    color: #8c8f94;
+}
+
+/*
+ * While a preset is applied, only the Custom Preset card should read as
+ * selected - mute the native :checked highlight on the (still genuinely
+ * checked) real layout card underneath, so there's one visible selection,
+ * not two.
+ */
+.lex-image-select-grid.lpl-cpm__real-check-hidden .lex-image-select-card:not(.lpl-cpm__card--applied) .lex-image-select-card__input:checked ~ .lex-image-select-card__frame {
+    border-color: var(--lex-color-border);
+}
+
+.lex-image-select-grid.lpl-cpm__real-check-hidden .lex-image-select-card:not(.lpl-cpm__card--applied) .lex-image-select-card__input:checked ~ .lex-image-select-card__frame .lex-image-select-card__check {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.lex-modal.lpl-cpm {
+    max-width: 900px;
+}
+
+.lpl-cpm__notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lex-space-4);
+    margin-top: var(--lex-space-4);
+    padding: var(--lex-space-4);
+    background: color-mix(in srgb, var(--lex-color-error, #d63638) 6%, transparent);
+    border-left: 3px solid var(--lex-color-error, #d63638);
+    border-radius: var(--lex-radius-sm);
+}
+
+.lpl-cpm__notice p {
+    margin: 0;
+    color: var(--lex-color-text);
+}
+
+.lpl-cpm__notice-cta {
+    flex-shrink: 0;
+    background: var(--lex-color-error, #d63638) !important;
+    border-color: var(--lex-color-error, #d63638) !important;
+    white-space: nowrap;
+}
+
+
+.lex-modal__content.lpl-cpm__content {
+    text-align: left;
+    padding: var(--lex-space-6);
+}
+
+.lpl-cpm__library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--lex-space-4);
+}
+
+.lpl-cpm__new-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--lex-space-2);
+    aspect-ratio: 4 / 3;
+    background: transparent;
+    border: 2px dashed var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    color: var(--lex-color-text-muted);
+    cursor: pointer;
+    transition: all var(--lex-transition-fast);
+}
+
+.lpl-cpm__new-card:hover {
+    border-color: var(--lex-color-primary);
+    color: var(--lex-color-primary);
+}
+
+.lpl-cpm__new-card .dashicons {
+    font-size: var(--lex-font-size-3xl);
+    width: var(--lex-space-8);
+    height: var(--lex-space-8);
+}
+
+.lpl-cpm__preset-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    aspect-ratio: 4 / 3;
+    padding: var(--lex-space-3);
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    cursor: pointer;
+    transition: all var(--lex-transition-fast);
+}
+
+.lpl-cpm__preset-card:hover {
+    border-color: var(--lex-color-primary);
+}
+
+/* Currently-applied preset, mirrors the image-select card's own checkmark language */
+.lpl-cpm__preset-card--applied {
+    border-color: var(--lex-color-primary);
+}
+
+.lpl-cpm__preset-card--applied::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--lex-color-primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath d='M7.5 13.5L4 10l1.4-1.4 2.1 2.1 6.1-6.1L15 6z'/%3E%3C/svg%3E");
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.lpl-cpm__preset-card-name {
+    font-weight: var(--lex-font-weight-semibold);
+    word-break: break-word;
+}
+
+.lpl-cpm__preset-card-actions {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    gap: var(--lex-space-2);
+    opacity: 0;
+    transition: opacity var(--lex-transition-fast);
+}
+
+.lpl-cpm__preset-card:hover .lpl-cpm__preset-card-actions {
+    opacity: 1;
+}
+
+.lpl-cpm__preset-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: var(--lex-color-surface);
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-sm);
+    color: var(--lex-color-text);
+    cursor: pointer;
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--wp-color-black, #000) 12%, transparent);
+    transition: all var(--lex-transition-fast);
+}
+
+.lpl-cpm__preset-card-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--wp-color-black, #000) 18%, transparent);
+}
+
+.lpl-cpm__preset-card-action[data-action="edit-preset"]:hover {
+    border-color: var(--lex-color-primary);
+    color: var(--lex-color-primary);
+}
+
+.lpl-cpm__preset-card-action[data-action="delete-preset"]:hover {
+    border-color: var(--lex-color-error, #d63638);
+    color: var(--lex-color-error, #d63638);
+}
+
+.lpl-cpm__preset-card-action .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.lpl-cpm__builder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lex-space-4);
+}
+
+.lpl-cpm__builder-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--lex-space-6);
+}
+
+.lpl-cpm__builder-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 40%);
+    gap: var(--lex-space-6);
+}
+
+.lpl-cpm__builder-preview {
+    border-radius: var(--lex-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 150ms ease;
+}
+
+.lpl-cpm__builder-preview.is-refreshing {
+    opacity: 0.35;
+}
+
+.lpl-cpm__builder-preview .plyr {
+    width: 100%;
+    border-radius: var(--lex-radius-md);
+}
+
+.lpl-cpm__field {
+    margin: 0 0 var(--lex-space-4);
+}
+
+.lpl-cpm__field label,
+.lpl-cpm__field-label {
+    display: block;
+    font-weight: var(--lex-font-weight-semibold);
+    margin-bottom: var(--lex-space-2);
+}
+
+.lpl-cpm__name-input,
+.lpl-cpm__start-from {
+    width: 100%;
+}
+
+.lpl-cpm__controls-list {
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    padding: var(--lex-space-2);
+}
+
+.lpl-cpm__controls-list .lex-sortable-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: var(--lex-space-2);
+    padding: var(--lex-space-1) var(--lex-space-2);
+}
+
+.lpl-cpm__controls-list .lex-sortable-checkbox-item.dragging {
+    opacity: 0.5;
+}
+
+.lpl-cpm__controls-list .lex-drag-handle {
+    cursor: grab;
+    color: var(--lex-color-text-muted);
+}
+
+.lpl-cpm__builder-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--lex-space-4);
+}
+
+@media (max-width: 640px) {
+    .lpl-cpm__builder-top,
+    .lpl-cpm__builder-bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .lpl-cpm__notice {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 520px) {
+    .lex-modal.lpl-cpm {
+        max-width: 100%;
+    }
+}

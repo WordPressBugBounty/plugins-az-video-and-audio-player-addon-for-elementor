@@ -148,6 +148,20 @@ class FieldRenderer {
         
         // Include template - renders directly
         include $template_path;
+
+        /**
+         * Fires after any field template renders, for every field type.
+         *
+         * $context is $properties as passed to render() - for metabox fields
+         * that's whatever prepare_field_args() built (includes 'post_id');
+         * for global Settings fields it's whatever the tab config passed (no post_id).
+         *
+         * @since 3.2.4
+         * @param string $key           Field key.
+         * @param array  $field_config  Merged/filtered field config.
+         * @param array  $context       Original $properties passed to render().
+         */
+        do_action( 'lex_settings/after_field_render', $key, $field_config, $properties );
     }
     
     /**

@@ -257,12 +257,25 @@ class AssetManager {
             );
         }
         wp_enqueue_script('select2');
-        
+
+        // Enqueue SortableJS (global handle - third-party library, drives every
+        // .lex-sortable-checkbox-container drag-and-drop across the framework)
+        if (!wp_script_is('sortablejs', 'registered')) {
+            wp_register_script(
+                'sortablejs',
+                $base_url . 'assets/js/Sortable.min.js',
+                [],
+                $version,
+                true
+            );
+        }
+        wp_enqueue_script('sortablejs');
+
         // Enqueue core functionality
         wp_enqueue_script(
             "{$instance_id}-lex-settings-core",
             $base_url . 'assets/js/lex-settings-core.js',
-            ['jquery', 'wp-color-picker', 'select2', "{$instance_id}-lex-settings-notifications"],
+            ['jquery', 'wp-color-picker', 'select2', 'sortablejs', "{$instance_id}-lex-settings-notifications"],
             $version,
             true
         );

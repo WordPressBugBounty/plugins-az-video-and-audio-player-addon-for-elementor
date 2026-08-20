@@ -22,6 +22,7 @@ return [
 		'batch_add_svg'  => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.75"/><path d="M9 9h9a2 2 0 012 2v9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>',
 		'upload_svg'     => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 16V4M8 8l4-4 4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>',
 		'edit_svg'       => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 20l4.5-1 11-11a2.121 2.121 0 00-3-3l-11 11L4 20z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+		'import_export_svg' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 16V4M4 7l3-3 3 3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 8v12M14 17l3 3 3-3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 	],
 
 	// -------- Brand URLs --------

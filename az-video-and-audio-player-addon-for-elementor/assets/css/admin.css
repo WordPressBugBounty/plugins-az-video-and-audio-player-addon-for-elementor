@@ -76,15 +76,6 @@ Table of contents:
     margin-top: 60px;
 }
 
-/* External-link affordance: any new-tab link inside our admin surfaces.
-   Scoped to body.lpl-scope so it never touches foreign markup on shared
-   screens. Silent to screen readers via the empty CSS alt. */
-.lpl-scope a[target="_blank"]::after {
-    content: " \2197" / "";
-    font-size: 0.85em;
-    color: var(--lpl-b-text-faint);
-}
-
 /* Body scope also covers WP's own chrome; keep the arrow off the admin menu. */
 .lpl-scope .wp-submenu a[target="_blank"]::after {
     content: none;
@@ -2536,4 +2527,36 @@ tr.lpl-pla__do-field--changed td {
     color: #d63638;
     font-weight: 400;
     word-break: normal;
+}
+
+/* Live Preview panel - always visible below the title, starts as a "View Player Preview" CTA */
+.lpl-live-preview-panel {
+    margin: 20px 0 0;
+    border: 1px solid var(--lpl-b-border, #dcdcde);
+    border-radius: 4px;
+    background: #fff;
+}
+
+.lpl-live-preview-panel__inner {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: opacity 200ms ease;
+}
+
+.lpl-live-preview-panel__inner.is-loading {
+    opacity: 0.35;
+}
+
+.lpl-live-preview-panel__inner--has-content {
+    display: block;
+    min-height: 0;
+    padding: 24px;
+}
+
+.lpl-live-preview-panel__error {
+    margin: 0;
+    color: var(--lex-color-error, #d63638);
 }

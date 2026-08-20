@@ -76,6 +76,7 @@ class LeanPL_Playlist_Widget extends \Elementor\Widget_Base {
         ] );
 
         foreach ( $playlists as $playlist ) {
+            /* translators: %d: Playlist post ID, shown when the playlist has no title */
             $options[ $playlist->ID ] = $playlist->post_title !== '' ? $playlist->post_title : sprintf( esc_html__( 'Playlist #%d', 'vapfem' ), $playlist->ID );
         }
 

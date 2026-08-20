@@ -5,17 +5,18 @@
  * Prefix: lex- (Lean EXample)
  */
 
- /* Override core WP style - Only for settings pages, exclude post types and Freemius license page */
-body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player-license"]) #wpcontent {
+ /* Override core WP style - scoped to the settings screen via the body class
+    added by Menu::addBodyClass(), so no other admin page is affected. */
+body.lex-settings-page #wpcontent {
    padding-left: 0;
 }
 
-body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player-license"]) #wpcontent .wrap {
+body.lex-settings-page #wpcontent .wrap {
     margin-right: 0;
     margin-top: -3px;
 }
 
-body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player-license"]) {
+body.lex-settings-page {
     background-color: var(--lex-admin-page-bg);
 }
 
@@ -134,7 +135,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
     border-bottom: 1px solid var(--lex-color-border);
     position: sticky;
     top: var(--lex-wp-adminbar-height);
-    z-index: 10000;
+    z-index: 9;
     margin-bottom: var(--lex-space-6); /* Spacing below header */
 }
 
@@ -162,7 +163,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 .lex-nav-header__logo {
     width: 40px;
     height: 40px;
-    background: var(--wp-color-gray-2);
+    background: var(--lex-color-brand-primary);
     border-radius: var(--lex-radius-md);
     display: flex;
     align-items: center;
@@ -171,7 +172,7 @@ body[class*="_page_"]:not(.post-new-php):not(.post-php):not([class*="lean_player
 }
 
 .lex-nav-header__logo .dashicons {
-    color: var(--lex-color-text);
+    color: #fff;
     font-size: var(--lex-font-size-3xl);
     width: 24px;
     height: 24px;
@@ -2410,6 +2411,196 @@ button .dashicons {
 }
 
 /* ============================================
+   IMAGE SELECT FIELD (Grid of Selectable Cards)
+   ============================================ */
+
+.lex-image-select {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.lex-image-select-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--lex-image-select-columns, 2), minmax(0, 1fr));
+    gap: var(--lex-space-3);
+    max-width: 520px;
+}
+
+.lex-image-select-card {
+    position: relative;
+    min-width: 0;
+}
+
+/*
+ * Reset wp-admin forms.css bleed. Core ships:
+ *
+ *   .form-table td fieldset label {
+ *       margin: 0.35em 0 0.5em !important;
+ *       display: inline-block;
+ *   }
+ *
+ * Both of this field's labels sit in a `td > fieldset`, so they inherit that
+ * inline-block + vertical margin and the grid layout breaks. Core's specificity
+ * is (0,1,3) and the margin is !important, so the override needs a higher
+ * specificity and its own !important on margin.
+ */
+.lex-field-type--image-select .lex-image-select label.lex-image-select-card__control,
+.lex-field-type--image-select .lex-image-select label.lex-image-select-card__title {
+    margin: 0 !important;
+    display: block;
+}
+
+/* Wraps the input + frame so the sibling combinator can drive the checked state */
+.lex-image-select-card__control {
+    display: block;
+    cursor: pointer;
+}
+
+/* Native radio kept for a11y, keyboard nav and zero-JS value collection */
+.lex-image-select-card__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lex-image-select-card__frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: var(--lex-image-select-aspect-ratio, 16 / 9);
+    border: 2px solid var(--lex-color-border);
+    border-radius: var(--lex-radius-md);
+    background: var(--lex-color-surface);
+    transition: border-color var(--lex-transition-fast), box-shadow var(--lex-transition-fast);
+}
+
+.lex-image-select-card__control:hover .lex-image-select-card__frame {
+    border-color: var(--wp-color-gray-20);
+}
+
+.lex-image-select-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lex-image-select-card__placeholder,
+.lex-image-select-card__lock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--wp-color-gray-0);
+    color: var(--wp-color-gray-20);
+}
+
+.lex-image-select-card__placeholder .dashicons,
+.lex-image-select-card__lock .dashicons {
+    width: 28px;
+    height: 28px;
+    font-size: 28px;
+    line-height: 1;
+}
+
+/* Checkmark badge - hidden until the card is checked */
+.lex-image-select-card__check {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--lex-color-primary);
+    color: var(--wp-color-white);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity var(--lex-transition-fast), transform var(--lex-transition-fast);
+}
+
+.lex-image-select-card__check .dashicons {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Selected state - pure CSS, no :has(), no JS */
+.lex-image-select-card__input:checked ~ .lex-image-select-card__frame {
+    border-color: var(--lex-color-primary);
+}
+
+.lex-image-select-card__input:checked ~ .lex-image-select-card__frame .lex-image-select-card__check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Keyboard focus ring */
+.lex-image-select-card__input:focus-visible ~ .lex-image-select-card__frame {
+    outline: 2px solid var(--lex-color-primary);
+    outline-offset: 2px;
+}
+
+.lex-image-select-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--lex-space-1);
+    margin-top: var(--lex-space-2);
+}
+
+.lex-image-select-card__title {
+    font-size: var(--lex-font-size-md);
+    font-weight: var(--lex-font-weight-medium);
+    color: var(--wp-color-gray-90);
+    cursor: pointer;
+}
+
+/* Locked (PRO) cards */
+.lex-image-select-card--locked .lex-image-select-card__control,
+.lex-image-select-card--locked .lex-image-select-card__title {
+    cursor: not-allowed;
+}
+
+.lex-image-select-card--locked .lex-image-select-card__frame {
+    background: var(--wp-color-gray-2);
+}
+
+.lex-image-select-card--locked .lex-image-select-card__control:hover .lex-image-select-card__frame {
+    border-color: var(--lex-color-border);
+}
+
+.lex-image-select-card--locked .lex-image-select-card__title {
+    color: var(--wp-color-gray-40);
+}
+
+/* Inherited (empty value, falls back to global option) - gray the cards, not the gutters */
+.lex-image-select-grid.lex-field--inherited {
+    background: transparent;
+}
+
+.lex-image-select-grid.lex-field--inherited .lex-image-select-card__frame {
+    background: var(--wp-color-gray-2);
+    opacity: 0.7;
+}
+
+@media screen and (max-width: 782px) {
+    .lex-image-select-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+}
+
+/* ============================================
    INHERITED FIELDS (Grayed Out When Empty)
    ============================================ */
 
@@ -2594,7 +2785,7 @@ button .dashicons {
 .lex-vtabs__nav {
     width: 180px;
     flex-shrink: 0;
-    background: var(--wp-color-gray-0);
+    background: var(--lex-color-surface);
     border-radius: var(--lex-radius-md);
     /* padding: 6px; */
     display: flex;
@@ -2622,6 +2813,8 @@ button .dashicons {
 }
 
 .lex-vtabs__nav button svg {
+    width: 16px;
+    height: 16px;
     flex-shrink: 0;
     opacity: .6;
 }
@@ -2666,10 +2859,142 @@ button .dashicons {
     opacity: 1 !important;
 }
 
+/* ── Vtabs submenu (parent + children) ────────────────────────────── */
+.lex-vtabs__item--has-children {
+    display: flex;
+    flex-direction: column;
+}
+
+.lex-vtabs__parent {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: var(--lex-font-size-md);
+    font-weight: 400;
+    border-radius: var(--lex-radius-sm);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--lex-color-text);
+    text-align: left;
+    position: relative;
+    transition: background .12s, color .12s;
+}
+
+.lex-vtabs__parent svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: .6;
+}
+
+.lex-vtabs__parent:hover {
+    background: var(--wp-color-gray-2);
+}
+
+.lex-vtabs__parent span:not(.lex-vtabs__chevron) {
+    flex: 1;
+}
+
+.lex-vtabs__chevron {
+    display: inline-flex;
+    flex-shrink: 0;
+    transition: transform .15s ease;
+}
+
+.lex-vtabs__chevron svg {
+    width: 14px;
+    height: 14px;
+    opacity: .5;
+}
+
+.lex-vtabs__item--has-children.is-open > .lex-vtabs__parent .lex-vtabs__chevron {
+    transform: rotate(180deg);
+}
+
+/* Only active-branch (a child is actually selected) gets the solid fill —
+   matches a plain top-level item's active state. Open-but-not-active-branch
+   (rare: expanded via keyboard/hover before a child is chosen) stays text-only. */
+.lex-vtabs__item--active-branch > .lex-vtabs__parent {
+    background: var(--wp-color-gray-2);
+    font-weight: 500 !important;
+}
+
+.lex-vtabs__item--active-branch > .lex-vtabs__parent svg,
+.lex-vtabs__item--active-branch > .lex-vtabs__parent .lex-vtabs__chevron svg {
+    opacity: 1;
+}
+
+.lex-vtabs__children {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 18px;
+    margin-top: 2px;
+}
+
+.lex-vtabs__item--has-children.is-open .lex-vtabs__children {
+    display: flex;
+}
+
+.lex-vtabs__children button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    font-size: var(--lex-font-size-md);
+    font-weight: 400;
+    border-radius: var(--lex-radius-sm);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    color: var(--lex-color-text);
+    text-align: left;
+    position: relative;
+    transition: background .12s, color .12s;
+}
+
+.lex-vtabs__children button:hover {
+    background: var(--wp-color-gray-2);
+}
+
+.lex-vtabs__children button svg,
+.lex-vtabs__child-arrow {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: .6;
+}
+
+.lex-vtabs__children button.lex-vtabs__btn--active {
+    background: var(--lex-color-apple-blue) !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+}
+
+.lex-vtabs__children button.lex-vtabs__btn--active svg,
+.lex-vtabs__children button.lex-vtabs__btn--active .lex-vtabs__child-arrow {
+    opacity: 1;
+    color: #fff;
+}
+
+/* Submenus are a vertical-nav feature only; horizontal segmented control
+   has no room for a submenu, so children stay inline and unstyled if present. */
+.lex-vtabs[data-layout="horizontal"] .lex-vtabs__item--has-children {
+    display: none;
+}
+
 .lex-vtabs__content {
     flex: 1;
     min-width: 0;
     box-sizing: border-box;
+}
+
+.lex-vtabs__content .lex-settings-section + .lex-settings-section {
+    margin-top: 0;
 }
 
 .lex-settings-section--vtab-member { display: none; }

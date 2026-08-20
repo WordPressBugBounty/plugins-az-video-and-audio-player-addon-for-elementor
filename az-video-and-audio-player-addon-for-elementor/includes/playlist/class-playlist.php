@@ -68,13 +68,6 @@ class Playlist {
         // AJAX hook registration is cheap and must work for any admin-ajax.php
         // request regardless of is_admin() timing, so it is not admin-gated.
         require_once LEANPL_PLAYLIST_DIR . '/ajax-actions.php';
-
-        // Admin-only playlist files
-        if ( is_admin() ) {
-            require_once LEANPL_PLAYLIST_DIR . '/class-playlist-metaboxes.php';
-            require_once LEANPL_PLAYLIST_DIR . '/class-playlist-metaboxes-save.php';
-            require_once LEANPL_PLAYLIST_DIR . '/class-playlist-table-columns.php';
-        }
     }
 
     /**

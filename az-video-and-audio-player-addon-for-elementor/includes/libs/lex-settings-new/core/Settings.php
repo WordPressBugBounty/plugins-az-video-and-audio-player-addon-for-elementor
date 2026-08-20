@@ -263,8 +263,16 @@ class Settings {
             'settings_group'   => $settings_group,
             'nonce_action'     => $nonce_action,
             'allowed_pages'    => isset($config['allowed_pages']) ? $config['allowed_pages'] : [],
+            // Page slugs that render this settings screen. Drives the
+            // lex-settings-page body class the layout CSS hooks onto.
+            // Defaults to menu_slug for the register_menu => true case.
+            'settings_pages'   => isset($config['settings_pages']) ? (array) $config['settings_pages'] : [$menu_slug],
             'page_check_callback' => isset($config['page_check_callback']) && is_callable($config['page_check_callback']) ? $config['page_check_callback'] : null,
             'dropdown_label'   => isset($config['dropdown_label']) ? $config['dropdown_label'] : __('More', 'lex-settings'),
+            'enable_demo'      => isset($config['enable_demo']) ? (bool) $config['enable_demo'] : false,
+            // Internal-only: marks the dedicated demo instance created by
+            // maybeActivateDemo() so it never spawns a second demo instance.
+            'is_demo_instance' => isset($config['is_demo_instance']) ? (bool) $config['is_demo_instance'] : false,
         ];
         
         // Merge user config with defaults
@@ -280,7 +288,12 @@ class Settings {
         
         // Set config_path - points to config/ directory (one level up from core/)
         $parsed['config_path'] = dirname($parsed['framework_path']) . '/config';
-        
+
+        // Set template_override_path - consumer plugin's drop-in override directory
+        $parsed['template_override_path'] = isset($config['template_override_path'])
+            ? $config['template_override_path']
+            : $parsed['config_path'] . '/templates';
+
         return $parsed;
     }
 
@@ -309,20 +322,74 @@ class Settings {
     }
 
     /**
-     * Auto-activate demo if examples directory exists
+     * Activate demo if opted in and examples directory exists.
+     *
+     * Opt-in only ('enable_demo' => true in config): the demo/example files
+     * ship inside the framework's own config/ dir, so an unguarded
+     * file_exists() check would auto-load them for every consuming plugin.
+     *
+     * The demo never rides on the host instance's own menu — a host plugin
+     * that already registers tabs (the common case) would just bury its
+     * real settings screen under a pile of example tabs. Instead this spins
+     * up a second, independent Settings instance with its own top-level
+     * "Lex Settings" menu (slug 'lex-settings-demo'), so the framework's
+     * examples stay one click away without touching the host's admin surface.
+     *
+     * Timing note: WordPress validates a requested admin page against the
+     * $menu global while it processes wp-admin/menu.php — entirely before
+     * the 'admin_init' hook fires. A host that (like this plugin) defers its
+     * own Settings construction to 'admin_init' (e.g. so translations are
+     * ready) therefore can never get add_menu_page() registered in time via
+     * this constructor alone — WordPress would 403 the page before this
+     * code ever runs. Such a host must pre-register the 'lex-settings-demo'
+     * page itself on its own early 'admin_menu' hook (see
+     * includes/admin/class-menu.php in this plugin for the pattern) and
+     * render it by fetching Settings::getInstance('lex_settings_demo') —
+     * which this method guarantees exists once any instance opts into
+     * enable_demo, regardless of registration timing. Consumers that
+     * construct Settings before 'admin_menu' fires (the common case) get a
+     * working menu automatically via 'register_menu' below with no extra
+     * wiring.
      */
     private function maybeActivateDemo() {
+        if (!$this->getConfig('enable_demo') || $this->getConfig('is_demo_instance')) {
+            return;
+        }
+
         $config_path = $this->getConfig('config_path');
         $examples_init = $config_path . '/examples/init.php';
-        
-        if (file_exists($examples_init)) {
-            // Pass instance_id to demo init so it can register tabs
-            // Using a constant that will be available in the demo init file
-            if (!defined('LEX_SETTINGS_DEMO_INSTANCE_ID')) {
-                define('LEX_SETTINGS_DEMO_INSTANCE_ID', $this->instance_id);
-            }
-            require_once $examples_init;
+
+        if (!file_exists($examples_init)) {
+            return;
         }
+
+        $demo_instance_id = 'lex_settings_demo';
+
+        // Two host instances both opting into enable_demo would otherwise try
+        // to register the same top-level menu twice.
+        if (self::getInstance($demo_instance_id)) {
+            return;
+        }
+
+        new self([
+            'instance_id'      => $demo_instance_id,
+            'framework_path'   => $this->getConfig('framework_path'),
+            'menu_slug'        => 'lex-settings-demo',
+            'page_title'       => __('Lex Settings', 'lex-settings'),
+            'menu_title'       => __('Lex Settings', 'lex-settings'),
+            'capability'       => 'manage_options',
+            'icon'             => 'dashicons-admin-generic',
+            'position'         => 99,
+            'register_menu'    => true,
+            'is_demo_instance' => true, // Prevents maybeActivateDemo() recursing into itself.
+        ]);
+
+        // Pass instance_id to demo init so it can register tabs.
+        // Using a constant that will be available in the demo init file.
+        if (!defined('LEX_SETTINGS_DEMO_INSTANCE_ID')) {
+            define('LEX_SETTINGS_DEMO_INSTANCE_ID', $demo_instance_id);
+        }
+        require_once $examples_init;
     }
 
     /**
@@ -413,5 +480,149 @@ class Settings {
     public static function getAllInstances() {
         return self::$instances;
     }
+
+    /**
+     * Pre-register the 'lex-settings-demo' top-level menu slug on 'admin_menu'.
+     *
+     * WordPress validates $_GET['page'] against the $menu global while it
+     * processes wp-admin/menu.php, before 'admin_init' fires. Hosts that
+     * defer Settings construction to 'admin_init' (e.g. for translations)
+     * can't get add_menu_page() registered in time themselves. This static
+     * closes that gap: it registers unconditionally, and
+     * maybeRemoveDemoMenu() (admin_init, priority 999) hides the menu when
+     * no host opted into 'enable_demo'.
+     */
+    public static function registerDemoMenu() {
+        add_menu_page(
+            __('Lex Settings', 'lex-settings'),
+            __('Lex Settings', 'lex-settings'),
+            'manage_options',
+            'lex-settings-demo',
+            [__CLASS__, 'renderDemoMenu'],
+            'dashicons-admin-generic',
+            99
+        );
+    }
+
+    /**
+     * Lazy render callback for the 'lex-settings-demo' slug. By page-
+     * dispatch time (after admin_init), maybeActivateDemo() has constructed
+     * the demo instance if any host set 'enable_demo' => true; fetch it and
+     * delegate to its menu's renderPage(). Prints a notice if no instance
+     * was constructed.
+     */
+    public static function renderDemoMenu() {
+        $demo = self::getInstance('lex_settings_demo');
+        if ($demo) {
+            $demo->menu->renderPage();
+            return;
+        }
+        echo '<div class="wrap"><p>' . esc_html__('Lex Settings demo did not initialize.', 'lex-settings') . '</p></div>';
+    }
+
+    /**
+     * Remove the 'lex-settings-demo' menu when nobody opted in. Runs on
+     * admin_init priority 999 so it fires after hosts that construct
+     * Settings at the default admin_init priority (10) - by then
+     * maybeActivateDemo has already built the demo instance if any host
+     * set 'enable_demo' => true.
+     */
+    public static function maybeRemoveDemoMenu() {
+        // admin_init also fires during admin-ajax.php requests, where the
+        // global $menu array is never built (menu.php isn't loaded there).
+        // remove_menu_page() foreach's over that global, so calling it here
+        // throws a PHP warning that corrupts any concurrent ajax response
+        // (e.g. Freemius's pricing-page JSON fetch). Nothing to remove in
+        // ajax context anyway, so skip.
+        if (wp_doing_ajax()) {
+            return;
+        }
+
+        if (!self::getInstance('lex_settings_demo')) {
+            remove_menu_page('lex-settings-demo');
+        }
+    }
+
+    /**
+     * Render a template, override-aware.
+     *
+     * Resolution order (first match wins, filters always have the last word):
+     *   1. {template_override_path}/{name}.php - consumer plugin's drop-in override
+     *   2. {default_path}/{name}.php - core default
+     *   3. lex_settings/template_path/{name} filter, then lex_settings/template_path filter
+     *
+     * $args is extracted into the template's local scope. $settings (this instance)
+     * and the raw $args array are always additionally available to the template.
+     *
+     * @param string $name          Template name, without .php extension.
+     * @param array  $args          Variables to expose to the template.
+     * @param string $override_path Optional. Overrides the default override directory.
+     * @param string $default_path  Optional. Overrides the default core directory.
+     * @return void
+     */
+    public function getTemplate($name, $args = [], $override_path = '', $default_path = '') {
+        $located = $this->locateTemplate($name, $override_path, $default_path);
+
+        if (!$located) {
+            return;
+        }
+
+        $settings = $this;
+        if (is_array($args)) {
+            extract($args, EXTR_SKIP);
+        }
+
+        include $located;
+    }
+
+    /**
+     * Resolve which template file wins. Returns absolute path.
+     *
+     * @param string $name          Template name, without .php extension.
+     * @param string $override_path Optional. Overrides the default override directory.
+     * @param string $default_path  Optional. Overrides the default core directory.
+     * @return string Absolute path to the resolved template, or '' if none found.
+     */
+    public function locateTemplate($name, $override_path = '', $default_path = '') {
+        $override_path = $override_path ? untrailingslashit($override_path) : untrailingslashit($this->getConfig('template_override_path'));
+        $default_path  = $default_path ? untrailingslashit($default_path) : untrailingslashit($this->getConfig('framework_path') . '/partials');
+
+        $path = '';
+
+        $override_file = $override_path . '/' . $name . '.php';
+        if (file_exists($override_file)) {
+            $path = $override_file;
+        }
+
+        if (!$path) {
+            $default_file = $default_path . '/' . $name . '.php';
+            if (file_exists($default_file)) {
+                $path = $default_file;
+            }
+        }
+
+        $path = apply_filters("lex_settings/template_path/{$name}", $path, [], $this->instance_id);
+        $path = apply_filters('lex_settings/template_path', $path, $name, [], $this->instance_id);
+
+        if (!$path || substr($path, -4) !== '.php' || !file_exists($path)) {
+            $default_file = $default_path . '/' . $name . '.php';
+            return file_exists($default_file) ? $default_file : '';
+        }
+
+        return $path;
+    }
+}
+
+// Self-register the demo menu hooks when the framework file loads inside
+// a WordPress admin request. Requires the host to load this file before
+// 'admin_menu' fires (e.g. at file-load time, not deferred to admin_init).
+// When no host opts into 'enable_demo', maybeRemoveDemoMenu() hides the
+// menu on admin_init priority 999 (after default-priority Settings
+// construction). Idempotent: a second host loading this file via
+// require_once is a no-op (the require_once guard) and the has_action
+// check skips re-registering.
+if (is_admin() && !has_action('admin_menu', ['\Lex\Settings\V2\Settings', 'registerDemoMenu'])) {
+    add_action('admin_menu', ['\Lex\Settings\V2\Settings', 'registerDemoMenu']);
+    add_action('admin_init', ['\Lex\Settings\V2\Settings', 'maybeRemoveDemoMenu'], 999);
 }
 

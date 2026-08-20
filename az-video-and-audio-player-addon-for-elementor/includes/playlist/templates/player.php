@@ -2,14 +2,13 @@
 /**
  * Playlist – Player markup.
  *
- * Expects: $config, $player_markup_data, $item_views, $start_index.
+ * Expects: $config, $player_markup_data, $item_views, $start_index,
+ * $is_audio_playlist (set by playlist.php before including this file).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-$is_audio_playlist = $config->get_playlist_type() === 'audio';
 
 // Now-playing header — audio playlists only.
 if ( $is_audio_playlist ) :

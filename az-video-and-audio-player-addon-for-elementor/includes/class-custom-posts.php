@@ -108,7 +108,7 @@ class Custom_Posts {
             ],
             'public'       => false,
             'show_ui'      => true,
-            'show_in_menu' => true,
+            'show_in_menu' => false, // Managed via custom menu
             'hierarchical' => false,
         ]);
     }

@@ -151,10 +151,15 @@ class Base {
          // Load post type and metaboxes. Used in frontend as well to fetch player data
         require_once LEANPL_DIR . '/includes/class-custom-posts.php';
         require_once LEANPL_DIR . '/includes/class-metaboxes.php';
-        require_once LEANPL_DIR . '/includes/class-metaboxs-save.php';
+        require_once LEANPL_DIR . '/includes/class-custom-preset-injector.php';
+        Custom_Preset_Injector::get_instance();
+        require_once LEANPL_DIR . '/includes/class-custom-preset-ajax.php';
+        Custom_Preset_Ajax::get_instance();
 
         // Load preview class (needed for frontend preview functionality)
         require_once LEANPL_DIR . '/includes/class-player-preview.php';
+        require_once LEANPL_DIR . '/includes/class-live-preview-ajax.php';
+        Live_Preview_Ajax::get_instance();
 
         // Load admin files
         if (is_admin()) {
@@ -163,7 +168,14 @@ class Base {
             // require_once LEANPL_DIR . '/includes/admin/class-deactivation-feedback.php';
             require_once LEANPL_DIR . '/includes/admin/class-menu.php';
             require_once LEANPL_DIR . '/includes/admin/class-settings-page.php';
-            require_once LEANPL_DIR . '/includes/admin/class-player-table-columns.php';
+            require_once LEANPL_DIR . '/includes/admin-new/class-admin-new-data-base.php';
+            require_once LEANPL_DIR . '/includes/admin-new/class-admin-new-icons.php';
+            require_once LEANPL_DIR . '/includes/admin-new/class-all-players-data.php';
+            require_once LEANPL_DIR . '/includes/admin-new/class-all-playlists-data.php';
+            require_once LEANPL_DIR . '/includes/admin-new/ajax-actions.php';
+            require_once LEANPL_DIR . '/includes/admin-new/fields.php';
+            require_once LEANPL_DIR . '/includes/admin-new/playlist-fields.php';
+            require_once LEANPL_DIR . '/includes/admin-new/class-metabox-save.php';
         }
 
         // Include Elementor integration
@@ -223,10 +235,6 @@ class Base {
 
             // Hook to 'admin_init' to ensure post types are registered and we're in admin
             add_action('admin_init', [$this, 'create_demos_on_admin_init'], 20);
-        }
-
-        if (!get_option('leanpl_demo_playlists_created')) {
-            add_action('admin_init', [$this, 'create_demo_playlists_on_admin_init'], 30);
         }
     }
 

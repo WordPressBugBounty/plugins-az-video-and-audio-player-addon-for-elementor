@@ -192,11 +192,10 @@ function leanpl_is_elementor_editor() {
  * that belong to this plugin's admin pages.
  * 
  * @return array Array with keys:
- *   - 'hooks' (array): WordPress hook suffixes (e.g., 'lean_player_page_lean_player-settings')
- *   - 'page_slugs' (array): Page slugs from $_GET['page'] (e.g., 'lean_player-settings')
+ *   - 'hooks' (array): WordPress hook suffixes (e.g., 'toplevel_page_lean-player')
+ *   - 'page_slugs' (array): Page slugs from $_GET['page'] (e.g., 'lean-player')
  *   - 'post_types' (array): Custom post types (e.g., 'lean_player')
- *   - 'screen_ids' (array): Screen IDs (e.g., 'lean_player', 'lean_player_page_lean_player-settings')
- *   - 'wildcards' (array): Wildcard patterns (e.g., 'lean_player-*')
+ *   - 'screen_ids' (array): Screen IDs (e.g., 'lean_player', 'toplevel_page_lean-player')
  */
 function leanpl_get_our_page_identifiers() {
     $identifiers = array(
@@ -208,29 +207,42 @@ function leanpl_get_our_page_identifiers() {
         
         // Page slugs (from $_GET['page'])
         'page_slugs' => array(
-            'lean_player-settings',
+            'lean-player',
             'lean_player-hire-me',
-            'lean_player-settings-tab',
+            'lean-player-settings',
+            'lean-player-playlist',
+            'lean_player-all-players-new',
+            'lean-player-edit',
+            'lean-playlist-edit',
             // 'lean_player-license' removed - added via filter hook from pro folder
         ),
-        
-        // Hook suffixes (format: 'parent_page_slug')
-        // For submenu pages under post type: '{post_type}_page_{page-slug}'
+
+        // Hook suffixes. Only the top-level page itself gets 'toplevel_page_{slug}';
+        // every real submenu under it gets '{parent_slug}_page_{submenu_slug}'
+        // (verified via get_plugin_page_hookname() against the actual add_submenu_page()
+        // calls in class-menu.php - WP does NOT use 'toplevel_page_' for submenus).
+        // The URL-only pages registered by Menu::register_url_only_page() have no
+        // parent at all, so they get the parentless 'admin_page_{slug}' form.
         'hooks' => array(
-            'lean_player_page_lean_player-settings',  // Settings submenu
-            'lean_player_page_lean_player-hire-me',    // Hire Me submenu
+            'toplevel_page_lean-player',                        // Main menu / Media Players landing
+            'lean-player_page_lean-player-settings',            // Settings submenu
+            'lean-player_page_lean-player-playlist',            // Playlist submenu
+            'lean-player_page_lean_player-hire-me',             // Hire Me submenu (legacy slug kept)
+            'admin_page_lean_player-all-players-new',           // All Players (URL-only page)
+            'admin_page_lean-player-edit',                      // Edit Player (URL-only page)
+            'admin_page_lean-playlist-edit',             // Edit Playlist (URL-only page)
         ),
-        
-        // Screen IDs (usually same as hooks or post types)
+
+        // Screen IDs (mirror hook suffixes for admin pages)
         'screen_ids' => array(
-            'lean_player',                                    // Post type screen
-            'lean_player_page_lean_player-settings',         // Settings page screen
-            'lean_player_page_lean_player-hire-me',          // Hire Me page screen
-        ),
-        
-        // Wildcard patterns (for flexible matching)
-        'wildcards' => array(
-            'lean_player-*',  // Matches any page starting with 'lean_player-'
+            'lean_player',                                      // Post type screen
+            'toplevel_page_lean-player',                        // Main menu page screen
+            'lean-player_page_lean-player-settings',            // Settings page screen
+            'lean-player_page_lean-player-playlist',            // Playlist page screen
+            'lean-player_page_lean_player-hire-me',             // Hire Me page screen (legacy slug)
+            'admin_page_lean_player-all-players-new',           // All Players page screen (URL-only)
+            'admin_page_lean-player-edit',                      // Edit Player page screen (URL-only)
+            'admin_page_lean-playlist-edit',             // Edit Playlist page screen (URL-only)
         ),
     );
     
@@ -238,10 +250,10 @@ function leanpl_get_our_page_identifiers() {
      * Filters plugin page identifiers
      * 
      * Allows pro features and extensions to add their own page identifiers
-     * (page slugs, hooks, screen IDs, post types, wildcards)
-     * 
+     * (page slugs, hooks, screen IDs, post types)
+     *
      * @since 3.0.0
-     * @param array $identifiers Array with keys: 'post_types', 'page_slugs', 'hooks', 'screen_ids', 'wildcards'
+     * @param array $identifiers Array with keys: 'post_types', 'page_slugs', 'hooks', 'screen_ids'
      * @return array Modified identifiers array
      */
     return apply_filters('leanpl/admin/page_identifiers', $identifiers);
@@ -307,19 +319,7 @@ function leanpl_is_our_admin_page($hook = null) {
     if (!empty($screen_id) && in_array($screen_id, $identifiers['screen_ids'], true)) {
         return true;
     }
-    
-    // Check wildcard patterns
-    foreach ($identifiers['wildcards'] as $pattern) {
-        if (strpos($pattern, '*') !== false) {
-            $regex = '/^' . str_replace(['*', '/'], ['.*', '\/'], preg_quote($pattern, '/')) . '$/';
-            if (preg_match($regex, $current_hook) || 
-                preg_match($regex, $screen_id) || 
-                preg_match($regex, $page_slug)) {
-                return true;
-            }
-        }
-    }
-    
+
     return false;
 }
 

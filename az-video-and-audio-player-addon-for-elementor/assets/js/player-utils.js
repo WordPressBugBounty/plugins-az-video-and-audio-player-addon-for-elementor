@@ -86,11 +86,29 @@ window.leanplUtils = (function () {
         };
     }
 
-    function buildVideoConfig(settings, commonConfig) {
-        var defaultControls = ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'];
+    var VIDEO_DEFAULT_CONTROLS = ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'];
+    var AUDIO_DEFAULT_CONTROLS = ['play', 'progress', 'mute', 'volume', 'settings'];
 
+    /**
+     * Resolve the Plyr controls array for a player type. Shared by the real
+     * player-boot config builders below and anything else (e.g. the Custom
+     * Preset builder's live preview) that needs the same "explicit list, or
+     * this type's default" rule without duplicating the default arrays.
+     *
+     * @param {Array|undefined} controls   Explicit control-name list, or falsy.
+     * @param {string}          playerType 'video' | 'audio'.
+     * @return {Array}
+     */
+    function getControls(controls, playerType) {
+        if (controls && controls.length) {
+            return controls;
+        }
+        return playerType === 'audio' ? AUDIO_DEFAULT_CONTROLS.slice() : VIDEO_DEFAULT_CONTROLS.slice();
+    }
+
+    function buildVideoConfig(settings, commonConfig) {
         return Object.assign({}, commonConfig, {
-            controls:     settings.controls || defaultControls,
+            controls:     getControls(settings.controls, 'video'),
             settings:     ['captions', 'quality', 'speed', 'loop'],
             clickToPlay:  getBooleanSetting(settings, 'click_to_play', true),
             hideControls: getBooleanSetting(settings, 'hide_controls', false),
@@ -114,10 +132,8 @@ window.leanplUtils = (function () {
     }
 
     function buildAudioConfig(settings, commonConfig) {
-        var defaultControls = ['play', 'progress', 'mute', 'volume', 'settings'];
-
         return Object.assign({}, commonConfig, {
-            controls: settings.controls || defaultControls
+            controls: getControls(settings.controls, 'audio')
         });
     }
 
@@ -416,6 +432,7 @@ window.leanplUtils = (function () {
         getBooleanSetting:  getBooleanSetting,
         getNumberSetting:   getNumberSetting,
         getIntegerSetting:  getIntegerSetting,
+        getControls:        getControls,
         buildCommonConfig:  buildCommonConfig,
         buildVideoConfig:   buildVideoConfig,
         buildAudioConfig:   buildAudioConfig,

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 return [
     // General
-    'enabled'              => true,
+    'enabled'              => false,
 
     // Layout
     'position'             => 'right',   // 'right' | 'left' | 'bottom' | 'top'
@@ -45,6 +45,7 @@ return [
     'auto_thumbnail'         => false,   // @pro auto-derive from YouTube/Vimeo when no custom poster
 
     // Player
+    'player_layout'     => '',           // '' = inherit global Player Layout, else a leanpl_get_player_layouts() key
     'now_playing_style' => 'compact',    // 'compact' | 'large'  (audio only)
 
     // Behavior

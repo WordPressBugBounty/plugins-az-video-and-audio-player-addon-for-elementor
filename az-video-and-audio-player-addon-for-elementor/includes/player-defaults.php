@@ -86,10 +86,11 @@ return [
         // Note: Speed is converted to object format { selected: value, options: [...] } in JavaScript
         // YouTube and Vimeo will ignore/hide options outside 0.5-2 range automatically
 
-        // Speeds offered in the player's settings menu — derived from
-        // leanpl_get_speed_registry() in functions-player.php. floatval() normalizes
-        // the registry's mixed int/string keys (PHP casts '1', '2', '4' to int).
-        'speed_options' => array_map( 'floatval', array_keys( leanpl_get_speed_registry() ) ),
+        // Speeds offered in the player's settings menu by default for new
+        // installs. A curated subset of leanpl_get_speed_registry(), not the
+        // full registry - 0.75x/1.75x/4x are available to opt into but not
+        // pre-checked, keeping the default speed menu short.
+        'speed_options' => [ 0.5, 1, 1.25, 1.5, 2 ],
 
         // Default controls — derived from leanpl_get_controls_registry() in functions-player.php
         'controls' => array_keys( array_filter( leanpl_get_controls_registry(), fn( $c ) => $c['default'] ) ),
@@ -99,6 +100,19 @@ return [
 
         // Styling
         'primary_color' => '#00b3ff', // Primary accent color for player controls (Plyr's default blue)
+
+        // Control-bar layout, surfaced in the UI as "Layout". Presentation only — never
+        // reaches Plyr, so it is deliberately absent from the renderer's
+        // *_SETTINGS_KEYS constants and from player-utils.js, same as 'preload'
+        // and 'primary_color'.
+        //
+        // Empty, not 'classic': nothing was explicitly chosen at any level yet.
+        // Classic is the practical outcome (it ships zero CSS, so an empty
+        // data-lpl-player-layout attribute behaves identically to "classic" on
+        // the frontend), but the stored/rendered value stays honest about
+        // whether a layout was actually picked. See resolve_player_layout()
+        // in class-player-renderer.php.
+        'player_layout' => '',
 
         // Debugging
         'debug_mode' => false,
@@ -134,6 +148,7 @@ return [
         // Poster / album art (resolved URL, not attachment ID)
         'poster'      => '',
         'audio_title' => '',
+        'audio_title_enabled' => true, // Show the title div next to the poster; only has any effect when a poster is set
         'audio_skin'  => 'default', // 'default' (light card), 'dark', 'glass'
 
         // Audio-specific controls (intentionally not using)

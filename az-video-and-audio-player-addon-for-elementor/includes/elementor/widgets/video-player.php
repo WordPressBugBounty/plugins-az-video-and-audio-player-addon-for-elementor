@@ -103,6 +103,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
         foreach ( $players as $player ) {
             $options[ $player->ID ] = $player->post_title !== ''
                 ? sprintf( '%s (%d)', $player->post_title, $player->ID )
+                /* translators: %d: Player post ID, shown when the player has no title */
                 : sprintf( esc_html__( 'Player #%d', 'vapfem' ), $player->ID );
         }
 

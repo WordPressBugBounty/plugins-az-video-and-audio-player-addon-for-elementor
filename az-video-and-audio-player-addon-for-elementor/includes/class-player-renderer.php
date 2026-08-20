@@ -79,6 +79,118 @@ class Player_Renderer {
     }
 
     /**
+     * Whether the audio title should actually be displayed.
+     *
+     * With a poster: whatever resolved into $config['audio_title'] (custom
+     * text or the post-title fallback — see class-player-shortcode.php).
+     * Without a poster: Classic only, and only ever the user's own explicit
+     * text (class-player-shortcode.php never fills the post-title fallback
+     * when there's no poster, so an empty value here already means "the user
+     * never asked for one"). '' counts as Classic here too — no layout ever
+     * explicitly chosen behaves identically to explicitly choosing Classic
+     * everywhere else in this feature (resolve_player_layout()), so this
+     * can't be the one place that treats them differently.
+     *
+     * @param array  $config Merged player config.
+     * @param string $layout Validated layout value (see resolve_player_layout()).
+     * @return bool
+     */
+    private function should_show_audio_title( array $config, string $layout ): bool {
+        $title_enabled = $config['audio_title_enabled'] ?? true;
+        $has_poster = !empty( $config['poster'] );
+        return $title_enabled && !empty( $config['audio_title'] ) && ( $has_poster || $layout === 'classic' || $layout === '' );
+    }
+
+    /**
+     * Validate the `player_layout` config value against the layout registry.
+     *
+     * `player_layout` holds one of two shapes (Lock A11 — live reference,
+     * not stamp-and-step-away): a real layout key, or a Custom Preset id
+     * (`preset_...`). A preset id resolves to *its own* stored `layout`
+     * field (always `classic` or `floating` — see resolve_layout_controls()),
+     * live, on every render. Delete the preset and this falls back to
+     * `classic`: rendering must not depend on a preset that no longer exists.
+     *
+     * Empty stays empty — nothing was explicitly chosen at any level (global
+     * or per-player), so the attribute stays honest about that rather than
+     * being silently promoted to 'classic'. Visually there is no difference:
+     * Classic ships zero CSS, so an empty data-lpl-player-layout attribute
+     * matches exactly as many rules as "classic" does (none). An invalid
+     * value (e.g. hand-edited post meta) gets the same empty treatment,
+     * never the raw unrecognized string.
+     *
+     * @param array $config Merged player config.
+     * @return string Validated layout value, or '' if unset/invalid.
+     */
+    private function resolve_player_layout( array $config ): string {
+        $layout = $config['player_layout'] ?? '';
+        if ( $layout === '' ) {
+            return '';
+        }
+
+        if ( $this->is_custom_preset_ref( $layout ) ) {
+            $resolved = Custom_Preset_Ajax::resolve_layout_ref( $layout );
+            return $this->validate_layout( $resolved['layout'] );
+        }
+
+        return $this->validate_layout( $layout );
+    }
+
+    /**
+     * @param string $layout Raw candidate layout value.
+     * @return string A known layout key, or '' if unrecognized.
+     */
+    private function validate_layout( string $layout ): string {
+        $allowed_layouts = array_keys( leanpl_get_player_layouts() );
+        return in_array( $layout, $allowed_layouts, true ) ? $layout : '';
+    }
+
+    /**
+     * @param string $value Raw `player_layout` config value.
+     * @return bool True if this is a Custom Preset reference, not a real layout key.
+     */
+    private function is_custom_preset_ref( string $value ): bool {
+        return strpos( $value, 'preset_' ) === 0;
+    }
+
+    /**
+     * Every layout in the registry owns a fixed controls array per player
+     * type — it fully replaces whatever $config['controls'] resolved to,
+     * the layout wins outright, no intersection. An unresolved layout
+     * (nothing chosen at any level — resolve_player_layout() stays '' in
+     * that case, deliberately, for the data-lpl-player-layout attribute)
+     * resolves to 'classic' here: Classic is the practical default, so an
+     * unset layout gets Classic's controls, not whatever stale value
+     * $config['controls'] happens to hold from the retired standalone
+     * Controls picker.
+     *
+     * A Custom Preset reference (Lock A11) is resolved first and, if found,
+     * wins outright too — its own controls array *is* the whole point of
+     * applying a preset. A deleted preset falls through to the classic
+     * default below.
+     *
+     * @param array  $config      Merged player config.
+     * @param string $layout      Validated layout value (see resolve_player_layout()).
+     * @param string $player_type 'video' or 'audio'.
+     * @return array Controls slugs to send to Plyr.
+     */
+    private function resolve_layout_controls( array $config, string $layout, string $player_type ): array {
+        $raw = $config['player_layout'] ?? '';
+        if ( $this->is_custom_preset_ref( $raw ) ) {
+            $resolved = Custom_Preset_Ajax::resolve_layout_ref( $raw );
+            if ( null !== $resolved['controls'] ) {
+                return $resolved['controls'];
+            }
+            // Deleted preset, or a preset with no stored controls — fall
+            // through to the classic default below.
+        }
+
+        $effective_layout = $layout === '' ? 'classic' : $layout;
+        $fixed = leanpl_get_player_layouts()[ $effective_layout ]['controls'][ $player_type ] ?? null;
+        return is_array( $fixed ) ? $fixed : ( $config['controls'] ?? [] );
+    }
+
+    /**
      * Build the value of an inline `style="..."` attribute for a player wrapper.
      *
      * Reads Plyr CSS variables from $config and returns the joined declarations
@@ -151,12 +263,16 @@ class Player_Renderer {
          */
         do_action('leanpl/player/before_render', $config, 'video');
 
+      $layout = $this->resolve_player_layout( $config );
+      $config['controls'] = $this->resolve_layout_controls( $config, $layout, 'video' );
+
       // Build data settings — allowlist via constants, all keys stay snake_case.
       $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::VIDEO_ONLY_SETTINGS_KEYS );
       $data_settings = array_intersect_key( $config, array_flip( $keys ) );
 
       $post_id = absint( $post_id );
       $wrap_attrs = $post_id > 0 ? ' id="lpl-player-' . esc_attr( $post_id ) . '"' : '';
+      $wrap_attrs .= ' data-lpl-player-layout="' . esc_attr( $layout ) . '"';
       $wrap_classes = 'lpl-player-wrap lpl-video' . ( ! empty( $config['poster'] ) ? ' has-poster' : '' );
       echo '<div class="' . esc_attr( $wrap_classes ) . '"' . $wrap_attrs . '>';
 
@@ -217,6 +333,9 @@ class Player_Renderer {
          */
         do_action('leanpl/player/before_render', $config, 'audio');
 
+        $layout = $this->resolve_player_layout( $config );
+        $config['controls'] = $this->resolve_layout_controls( $config, $layout, 'audio' );
+
         // Build data settings — allowlist via constants, all keys stay snake_case.
         $keys = array_merge( self::COMMON_SETTINGS_KEYS, self::AUDIO_ONLY_SETTINGS_KEYS );
         $data_settings = array_intersect_key( $config, array_flip( $keys ) );
@@ -229,10 +348,20 @@ class Player_Renderer {
         }
         $wrap_attrs   = $post_id > 0 ? ' id="lpl-player-' . esc_attr( $post_id ) . '"' : '';
         $wrap_attrs  .= ' data-skin="' . esc_attr( $skin ) . '"';
-        $wrap_classes = 'lpl-player-wrap lpl-audio' . ( ! empty( $config['poster'] ) ? ' has-poster' : '' );
+        $wrap_attrs  .= ' data-lpl-player-layout="' . esc_attr( $layout ) . '"';
+        // Card chrome (padding/border/radius/shadow) is driven by CSS off
+        // .has-poster or an explicit data-lpl-player-layout value — see
+        // main.css. Neither covers a title shown with '' (unset) layout —
+        // should_show_audio_title() treats '' as Classic (same rule as
+        // resolve_player_layout()), but the empty attribute value can't
+        // itself be a CSS selector target, so .has-title fills that one gap.
+        $has_poster = !empty( $config['poster'] );
+        $wrap_classes = 'lpl-player-wrap lpl-audio'
+            . ( $has_poster ? ' has-poster' : '' )
+            . ( ( ! $has_poster && $this->should_show_audio_title( $config, $layout ) ) ? ' has-title' : '' );
         echo '<div class="' . esc_attr( $wrap_classes ) . '"' . $wrap_attrs . '>';
 
-        $this->render_html5_audio_markup($config, $data_settings);
+        $this->render_html5_audio_markup($config, $data_settings, $layout);
 
         echo '</div>';
         
@@ -256,11 +385,12 @@ class Player_Renderer {
     /**
      * Render HTML5 audio player
      *
-     * @param array $config Configuration
-     * @param array $data_settings Data settings
+     * @param array  $config        Configuration
+     * @param array  $data_settings Data settings
+     * @param string $layout        Validated player_layout value (see resolve_player_layout()).
      * @return void
      */
-    private function render_html5_audio_markup($config, $data_settings) {
+    private function render_html5_audio_markup($config, $data_settings, $layout = '') {
         // Get file extension for type attribute. Extensionless URLs (live
         // streams) fall back to mp3 so the type attribute stays well-formed.
         $file_extension = '';
@@ -273,16 +403,24 @@ class Player_Renderer {
 
         $brand_style = $this->build_player_style( $config );
         $has_poster = !empty($config['poster']);
+        $has_title = $this->should_show_audio_title( $config, $layout );
 
-        if ( $has_poster ) : ?>
+        // .lpl-audio-info wraps the title + the <audio> element itself so its
+        // flex `gap` provides consistent spacing between them whether or not
+        // a poster is present — see --lpl-audio-info-gap in main.css.
+        $show_info_wrapper = $has_poster || $has_title;
+
+        if ( $show_info_wrapper ) :
+            if ( $has_poster ) : ?>
             <img
                 class="lpl-audio-poster"
                 src="<?php echo esc_url( $config['poster'] ); ?>"
                 alt="<?php echo esc_attr( $config['audio_title'] ?? '' ); ?>"
                 aria-hidden="true"
             />
+            <?php endif; ?>
             <div class="lpl-audio-info">
-                <?php if ( !empty( $config['audio_title'] ) ) : ?>
+                <?php if ( $has_title ) : ?>
                 <div class="lpl-audio-title"><?php echo esc_html( $config['audio_title'] ); ?></div>
                 <?php endif; ?>
         <?php endif; ?>
@@ -300,7 +438,7 @@ class Player_Renderer {
             />
             <?php esc_html_e('Your browser does not support the audio element.', 'vapfem'); ?>
         </audio>
-        <?php if ( $has_poster ) : ?>
+        <?php if ( $show_info_wrapper ) : ?>
             </div><!-- .lpl-audio-info -->
         <?php endif;
     }

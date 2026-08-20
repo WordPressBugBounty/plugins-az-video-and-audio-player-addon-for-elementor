@@ -25,12 +25,6 @@ if ( ! function_exists( 'leanpl_fs' ) ) {
 			// Include Freemius SDK (SDK now lives beside this file in includes/).
 			require_once dirname( __FILE__ ) . '/freemius/start.php';
 
-			// Set custom icon image for freemius opt-in screen
-			add_filter( 'fs_plugin_icon_az-video-and-audio-player-addon-for-elementor', function () {
-				$plugin_folder = dirname( plugin_basename( LEANPL_FILE ) );
-				return WP_PLUGIN_DIR . '/' . $plugin_folder . '/assets/img/icon-300x300.png';
-			} );
-
 			$is_pro = function_exists( 'leanpl_is_pro_active' ) && leanpl_is_pro_active();
 
 			// Freemius config
@@ -62,14 +56,38 @@ if ( ! function_exists( 'leanpl_fs' ) ) {
 				// Automatically removed in the free version. If you're not using the
 				// auto-generated free version, delete this line before uploading to wp.org.
 				'menu'                => array(
-					// Port with our existing menu
-					'slug'       => 'lean_player-settings',
-					'capability' => 'manage_options',
+					// Top-level menu slug. Matches `add_menu_page()` in
+					// includes/admin/class-menu.php so Freemius submenu items
+					// (Account / Pricing / Contact) attach under it.
+					'slug'       => 'lean-player',
+					// Mirrors the `edit_posts` cap on `add_menu_page()` so
+					// editors can open the parent menu without hitting the
+					// "Sorry, you are not allowed to access this page" gate.
+					// Individual Freemius submenu items still require
+					// `manage_options`, so editors just don't see those.
+					'capability' => 'edit_posts',
 					'support'    => false,
 					'pricing'    => !$is_pro,               // free users need the pricing/upgrade page
 					'contact'    => false,
 				),
 			) );
+
+			// Plugin icon for the opt-in screen and account page.
+			//
+			// Registered on the instance rather than as a raw add_filter() so the
+			// SDK builds the hook name itself. The raw form needs the slug spelled
+			// out ('fs_plugin_icon_<slug>'), which is a second copy of the value
+			// declared above and silently stops working if the two ever diverge.
+			//
+			// Returns false when the file is missing instead of a dead path: the
+			// SDK skips its entire fallback chain the moment this filter returns a
+			// string, without checking the file exists, so a dead path renders a
+			// broken image. The pro build has shipped without assets/img before.
+			$leanpl_fs->add_filter( 'plugin_icon', function () {
+				$icon = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( LEANPL_FILE ) ) . '/assets/img/icon-300x300.png';
+
+				return file_exists( $icon ) ? $icon : false;
+			} );
 		}
 
 		return $leanpl_fs;

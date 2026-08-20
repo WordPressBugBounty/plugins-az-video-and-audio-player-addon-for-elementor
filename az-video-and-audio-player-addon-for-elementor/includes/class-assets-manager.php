@@ -30,7 +30,7 @@ class Assets_Manager {
                 'file' => '/assets/js/plyr.min.js',
                 'deps' => ['jquery'],
                 'in_footer' => true,
-                'contexts' => ['frontend'],
+                'contexts' => ['frontend', 'admin'],
             ],
             // 'plyr-polyfilled' => [
             //     'file' => '/assets/js/plyr.polyfilled.min.js',
@@ -42,19 +42,27 @@ class Assets_Manager {
                 'file' => '/assets/js/player-utils.js',
                 'deps' => [],
                 'in_footer' => true,
-                'contexts' => ['frontend'],
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-main' => [
                 'file' => '/assets/js/main.js',
                 'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],
                 'in_footer' => true,
-                'contexts' => ['frontend'],
+                // 'admin' - needed for the lean_player live preview panel
+                // (class-player-preview.php) to auto-init Plyr on the real
+                // markup fragment the AJAX endpoint returns. enqueue_admin_assets()
+                // already scopes ALL 'admin'-context assets to our own admin
+                // pages (leanpl_is_our_admin_page()), so this doesn't leak
+                // elsewhere in wp-admin.
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-playlist' => [
                 'file' => '/assets/js/playlist.js',
                 'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],
                 'in_footer' => true,
-                'contexts' => ['frontend'],
+                // 'admin' - lean_playlist live preview panel (class-player-preview.php),
+                // same reasoning as leanpl-main above.
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-elementor' => [
                 'file' => '/assets/js/elementor.js',
@@ -62,23 +70,33 @@ class Assets_Manager {
                 'in_footer' => true,
                 'contexts' => ['elementor-widget'],
             ],
-            'leanpl-admin' => [
-                'file' => '/assets/js/admin.js',
+            'leanpl-custom-preset-builder' => [
+                'file' => '/assets/js/custom-preset-builder.js',
+                'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],
+                'in_footer' => true,
+                'contexts' => ['admin'],
+            ],
+            'leanpl-live-preview' => [
+                'file' => '/assets/js/live-preview.js',
                 'deps' => ['jquery'],
                 'in_footer' => true,
                 'contexts' => ['admin'],
             ],
-            'sortablejs' => [
-                'file' => '/assets/js/Sortable.min.js',
-                'deps' => [],
+            // 'sortablejs' is registered by the lex-settings-new framework's own
+            // asset manager (includes/libs/lex-settings-new/core/includes/class-assets-manager.php) -
+            // single canonical copy lives there now, this plugin just depends on
+            // the handle. Used here for the Playlist Items card's drag reorder.
+            'leanpl-admin-new' => [
+                'file' => '/assets/js/admin-new.js',
+                'deps' => ['jquery', 'wp-color-picker', 'sortablejs'],
                 'in_footer' => true,
-                'contexts' => ['admin-playlist'],
+                'contexts' => ['admin'],
             ],
-            'leanpl-playlist-admin' => [
-                'file' => '/assets/js/playlist-admin.js',
-                'deps' => ['jquery', 'sortablejs'],
+            'leanpl-admin-new-conditional-fields' => [
+                'file' => '/assets/js/admin-new-conditional-fields.js',
+                'deps' => ['jquery', 'leanpl-admin-new'],
                 'in_footer' => true,
-                'contexts' => ['admin-playlist'],
+                'contexts' => ['admin'],
             ],
         ],
         'styles' => [
@@ -92,19 +110,23 @@ class Assets_Manager {
                 'file' => '/assets/css/plyr.css',
                 'deps' => [],
                 'in_footer' => false,
-                'contexts' => ['frontend'],
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-main' => [
                 'file' => '/assets/css/main.css',
                 'deps' => ['leanpl-lex-tokens', 'plyr'],
                 'in_footer' => false,
-                'contexts' => ['frontend'],
+                // 'admin' - real frontend layout CSS for the lean_player live
+                // preview panel, see the script entry of the same handle above.
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-playlist' => [
                 'file' => '/assets/css/playlist.css',
                 'deps' => ['leanpl-lex-tokens', 'plyr'],
                 'in_footer' => false,
-                'contexts' => ['frontend'],
+                // 'admin' - lean_playlist live preview panel (class-player-preview.php),
+                // same reasoning as leanpl-main above.
+                'contexts' => ['frontend', 'admin'],
             ],
             'leanpl-editor' => [
                 'file' => '/assets/css/editor.css',
@@ -114,6 +136,21 @@ class Assets_Manager {
             ],
             'leanpl-admin' => [
                 'file' => '/assets/css/admin.css',
+                'deps' => ['leanpl-lex-tokens'],
+                'in_footer' => false,
+                'contexts' => ['admin'],
+            ],
+            'leanpl-custom-preset-builder' => [
+                'file' => '/assets/css/custom-preset-builder.css',
+                'deps' => ['leanpl-lex-tokens'],
+                'in_footer' => false,
+                'contexts' => ['admin'],
+            ],
+            'leanpl-tailwind' => [
+                // Compiled via `npm run tailwind:build` (tailwind.config.js) - prefix
+                // 'tw-', preflight disabled, so utilities are purely additive and never
+                // fight WP admin's own chrome or the lex-settings-new token system.
+                'file' => '/assets/css/tailwind-admin.css',
                 'deps' => ['leanpl-lex-tokens'],
                 'in_footer' => false,
                 'contexts' => ['admin'],
@@ -149,8 +186,18 @@ class Assets_Manager {
         add_filter('admin_body_class', [$this, 'add_scope_body_class']);
         
         // -- Load frontend assets --
-        add_action('wp_enqueue_scripts', [$this, 'common_frontend_enqueue']);
+        // Priority 21: must run after register_all() (20) — common_frontend_enqueue()
+        // calls wp_add_inline_style('leanpl-main', ...), which requires the handle to
+        // already be registered or it fails silently (no error, no output).
+        add_action('wp_enqueue_scripts', [$this, 'common_frontend_enqueue'], 21);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_if_shortcode'], 30);
+
+        // Also run on our own admin screens (live preview panel) - playlist.js's
+        // entire IIFE bails at the top when `leanpl_params` is undefined
+        // (localized here), silently skipping its autoInit('.lpl-playlist', ...)
+        // registration. main.js has no such guard, which is why the player
+        // preview worked without this.
+        add_action('admin_enqueue_scripts', [$this, 'common_frontend_enqueue'], 21);
 
         // -- Load Elementor assets --
         // Note: Widget frontend assets are loaded via widget registration, so we don't need to load them here.
@@ -203,15 +250,14 @@ class Assets_Manager {
         }
 
         $this->load_assets_by_context('admin');
-
-        // Enqueue playlist-admin JS only on lean_playlist post type pages
-        $screen = get_current_screen();
-        if ( $screen && $screen->post_type === 'lean_playlist' ) {
-            wp_enqueue_script( 'leanpl-playlist-admin' );
-        }
+        wp_enqueue_style('wp-color-picker');
     }
 
     public function common_frontend_enqueue() {
+        if ( is_admin() && ! leanpl_is_our_admin_page() ) {
+            return;
+        }
+
         // Output global accent color as a stylesheet rule scoped to .lpl-player-wrap.
         // Weaker than Elementor widget CSS ({{WRAPPER}} .plyr = two classes) and
         // weaker than per-player inline styles, so the cascade works correctly.

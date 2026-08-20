@@ -231,6 +231,17 @@ window.LexSettings.log = window.lexLog;
                 this.activateTab($targetTab, false);
             }
 
+            // Whatever ended up active (server-rendered default, or just-activated
+            // above) gets its vtabs initialized here. Needed when the nav header
+            // doesn't drive activateTab at all - e.g. a real page-link nav header
+            // with no data-tab attribute (see Lean Player's admin-new override) -
+            // in which case activateTab bails out early (targetTab is undefined)
+            // and never reaches its own vtabs init. initLexVtabs is idempotent,
+            // so this is a harmless no-op when activateTab already handled it.
+            $('.lex-settings-tabs__content--active .lex-vtabs').each(function() {
+                initLexVtabs($(this));
+            });
+
             // Initialize color pickers immediately (no delay needed - WordPress color picker is synchronous)
             this.initColorPickers();
             
@@ -975,9 +986,17 @@ window.LexSettings.log = window.lexLog;
                 // Initialize WordPress color picker
                 // - defaultColor: Use field value if valid, otherwise false (no default color)
                 // - disabled: Pass the disabled state from the input element
+                // - change/clear: wpColorPicker's own internal wiring already listens for
+                //   native 'change' on this input - re-triggering 'change' from inside its
+                //   change/clear callbacks re-enters that same listener and recurses
+                //   infinitely (confirmed: RangeError in wp-admin/js/color-picker.js).
+                //   Dispatch a differently-named custom event instead - same pattern as
+                //   this file's own 'lex:sortableReorder' for SortableJS.
                 $el.wpColorPicker({
                     defaultColor: this.value || false, // false = no default color
                     disabled: isDisabled,
+                    change: function () { $(this).trigger('lex:colorPickerChange'); },
+                    clear: function () { $el.trigger('lex:colorPickerChange'); },
                 });
 
                 // Additional safety: Manually disable button if field is disabled
@@ -1259,84 +1278,35 @@ window.LexSettings.log = window.lexLog;
 
         /**
          * Initialize sortable checkbox functionality
-         * Enables drag-and-drop reordering of checkbox items
+         * Enables drag-and-drop reordering of checkbox items via SortableJS
          */
         initSortableCheckboxes() {
             const self = this;
-            let draggedElement = null;
+
+            if (typeof Sortable === 'undefined') {
+                lexLog('SortableJS not loaded - skipping sortable checkbox init');
+                return;
+            }
 
             // Initialize all sortable containers
             $('.lex-sortable-checkbox-container').each(function() {
-                const $container = $(this);
-                const $items = $container.find('.lex-sortable-checkbox-item');
+                const container = this;
+                const $container = $(container);
 
-                $items.each(function() {
-                    const $item = $(this);
-
-                    // Drag start
-                    $item.on('dragstart', function(e) {
-                        draggedElement = this;
-                        $(this).addClass('dragging');
-                        e.originalEvent.dataTransfer.effectAllowed = 'move';
-                        e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
-                    });
-
-                    // Drag end
-                    $item.on('dragend', function() {
-                        $(this).removeClass('dragging');
-                        $(this).closest('.lex-sortable-checkbox-container').find('.lex-sortable-checkbox-item').removeClass('drag-over');
-                        draggedElement = null;
-                    });
-
-                    // Drag over
-                    $item.on('dragover', function(e) {
-                        if (e.preventDefault) {
-                            e.preventDefault();
-                        }
-                        e.originalEvent.dataTransfer.dropEffect = 'move';
-                        return false;
-                    });
-
-                    // Drag enter
-                    $item.on('dragenter', function(e) {
-                        if (draggedElement && draggedElement !== this) {
-                            $(this).addClass('drag-over');
-                        }
-                    });
-
-                    // Drag leave
-                    $item.on('dragleave', function() {
-                        $(this).removeClass('drag-over');
-                    });
-
-                    // Drop
-                    $item.on('drop', function(e) {
-                        if (e.stopPropagation) {
-                            e.stopPropagation();
-                        }
-
-                        if (draggedElement && draggedElement !== this) {
-                            const $dragged = $(draggedElement);
-                            const $target = $(this);
-                            const $container = $target.parent();
-
-                            if ($dragged.index() < $target.index()) {
-                                $target.after($dragged);
-                            } else {
-                                $target.before($dragged);
-                            }
-
-                            // Update hidden order field with current DOM order
-                            self.updateSortableOrder($container);
-                            
-                            lexLog('Checkbox order updated');
-                        }
-
-                        $(this).removeClass('drag-over');
-                        return false;
-                    });
+                Sortable.create(container, {
+                    animation: 150,
+                    draggable: '.lex-sortable-checkbox-item',
+                    ghostClass: 'drag-over',
+                    chosenClass: 'dragging',
+                    onEnd() {
+                        self.updateSortableOrder($container);
+                        lexLog('Checkbox order updated');
+                        // Generic reorder-complete signal for anything reacting
+                        // live to this container's order (e.g. a preview panel).
+                        container.dispatchEvent(new CustomEvent('lex:sortableReorder', { bubbles: true }));
+                    }
                 });
-                
+
                 // Initialize order field on page load
                 self.updateSortableOrder($container);
             });
@@ -1458,15 +1428,30 @@ window.LexSettings.log = window.lexLog;
         try { saved = localStorage.getItem(key); } catch(_) {}
 
         var $target = saved
-            ? $wrapper.find('.lex-vtabs__nav button[data-vtab="' + saved + '"]:visible')
+            ? $wrapper.find('.lex-vtabs__nav button[data-vtab="' + saved + '"]')
             : null;
         if (!$target || !$target.length) {
-            $target = $wrapper.find('.lex-vtabs__nav button:visible').first();
+            $target = $wrapper.find('.lex-vtabs__nav > button:visible, .lex-vtabs__nav > .lex-vtabs__item > button.lex-vtabs__parent:visible').first();
+            // Prefer a real (leaf) tab over a childless parent toggle when picking the default.
+            if ($target.hasClass('lex-vtabs__parent')) {
+                var $firstChild = $target.closest('.lex-vtabs__item').find('.lex-vtabs__children button').first();
+                if ($firstChild.length) { $target = $firstChild; }
+            }
         }
         activateLexVtab($target, false);
     }
 
+    /** Open (or close) a submenu parent item without changing the active vtab. */
+    function toggleLexVtabParent($parentBtn, open) {
+        var $item = $parentBtn.closest('.lex-vtabs__item');
+        var isOpen = typeof open === 'boolean' ? open : !$item.hasClass('is-open');
+        $item.toggleClass('is-open', isOpen);
+        $parentBtn.attr('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
     function activateLexVtab($btn, shouldScroll) {
+        if (!$btn || !$btn.length) { return; }
+
         var vtab     = $btn.data('vtab');
         var $wrapper = $btn.closest('.lex-vtabs');
         var tabId    = $wrapper.data('tab');
@@ -1474,7 +1459,18 @@ window.LexSettings.log = window.lexLog;
         var key      = 'lex_vtab_' + tabId + (suffix ? '_' + suffix : '');
 
         $wrapper.find('.lex-vtabs__nav button').removeClass('lex-vtabs__btn--active');
+        $wrapper.find('.lex-vtabs__item').removeClass('lex-vtabs__item--active-branch');
         $btn.addClass('lex-vtabs__btn--active');
+
+        var $parentItem = $btn.closest('.lex-vtabs__item--has-children');
+        if ($parentItem.length) {
+            $parentItem.addClass('lex-vtabs__item--active-branch');
+            // Expanded items have no chevron/aria-expanded to sync — they're
+            // already open in the server-rendered markup and stay that way.
+            if (!$parentItem.hasClass('lex-vtabs__item--expanded')) {
+                toggleLexVtabParent($parentItem.find('> .lex-vtabs__parent'), true);
+            }
+        }
 
         $wrapper.find('.lex-settings-section--vtab-member').removeClass('is-active-vtab');
         $wrapper.find('.lex-settings-section--vtab-member[data-vtab="' + vtab + '"]').addClass('is-active-vtab');
@@ -1508,9 +1504,34 @@ window.LexSettings.log = window.lexLog;
         return $wrapper.data('layout') !== 'horizontal';
     }
 
-    $('body').on('click', '.lex-vtabs__nav button', function(e) {
+    $('body').on('click', '.lex-vtabs__nav button[data-vtab]', function(e) {
         var $btn = $(e.currentTarget);
         activateLexVtab($btn, lexVtabShouldScroll($btn.closest('.lex-vtabs')));
+    });
+
+    // Parent toggle: expand/collapse the submenu. Activates the first child
+    // whenever the branch opens and no child inside is already the active
+    // vtab. Items rendered with 'expanded' => true (lex-vtabs__item--expanded)
+    // have no chevron and start already open server-side — they can't be
+    // collapsed, so a click there always counts as "open" and only the
+    // first-child activation runs.
+    $('body').on('click', '.lex-vtabs__parent', function(e) {
+        e.preventDefault();
+        var $parentBtn = $(this);
+        var $item      = $parentBtn.closest('.lex-vtabs__item');
+        var isExpanded = $item.hasClass('lex-vtabs__item--expanded');
+        var willOpen   = isExpanded || !$item.hasClass('is-open');
+
+        if (!isExpanded) {
+            toggleLexVtabParent($parentBtn, willOpen);
+        }
+
+        if (willOpen && !$item.find('.lex-vtabs__children button.lex-vtabs__btn--active').length) {
+            var $firstChild = $item.find('.lex-vtabs__children button').first();
+            if ($firstChild.length) {
+                activateLexVtab($firstChild, lexVtabShouldScroll($firstChild.closest('.lex-vtabs')));
+            }
+        }
     });
 
     // Vtabs on inactive tabs (not the active one) — init immediately on ready.

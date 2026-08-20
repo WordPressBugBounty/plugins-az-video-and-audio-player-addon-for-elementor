@@ -1,5 +1,16 @@
 :root {
 	--lpl-player-notice-bg: #1AAFFF;
+	--lpl-video-radius: 12px;
+}
+
+.lpl-player-wrap{
+    /* Initially player loaded as very small but expanded suddenly later */
+    width: 100%; 
+}
+
+/* Minimal audio player has only the play button */
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="minimal"]{
+    width: auto;
 }
 
 /* Reserve the video aspect-ratio before Plyr initializes, so the player does
@@ -12,6 +23,13 @@ video.lpl-player--video,
 	aspect-ratio: var(--lpl-ratio, 16 / 9);
 	width: 100%;
 	height: auto;
+}
+
+/* Rounded corners on the video frame - shared main.css, so admin (live
+   preview) and frontend always render identically, no admin-only override. */
+.lpl-player-wrap.lpl-video {
+	border-radius: var(--lpl-video-radius);
+	overflow: hidden;
 }
 
 /* Plyr colours the volume thumb with --plyr-color-main but leaves the progress thumb white at position 0 — visually inconsistent before playback starts. This ties both thumbs to the same colour. */
@@ -45,25 +63,9 @@ video.lpl-player--video,
 }
 
 /* ─── Audio player: poster card ─────────────────────────────────────────── */
-
-/*
- * Token system mirrors playlist.css:
- *   --lpl-audio-bg        card background
- *   --lpl-audio-text      title + control icon colour
- *   --lpl-audio-border    card border colour
- *   --lpl-audio-radius    card corner radius
- *   --lpl-audio-shadow    card box-shadow
- *   --lpl-audio-backdrop  backdrop-filter (glass only)
- *
- * Skins via data-skin attribute (matches playlist data-skin pattern):
- *   default  →  A: light card
- *   dark     →  C: dark / night
- *   glass    →  F: glassmorphism
- */
-
-.lpl-player-wrap.lpl-audio.has-poster {
+.lpl-player-wrap.lpl-audio{
     /* layout tokens */
-    --lpl-audio-radius:   12px;
+    --lpl-audio-radius:   12px; 
     --lpl-audio-thumb-radius: 6px;
     --lpl-audio-thumb-size:   64px;
     --lpl-audio-gap:      12px;
@@ -79,7 +81,9 @@ video.lpl-player--video,
     --lpl-audio-border:   #e2e4e7;
     --lpl-audio-shadow:   0 1px 4px rgba(0, 0, 0, 0.06);
     --lpl-audio-backdrop: none;
+}
 
+.lpl-player-wrap.lpl-audio.has-poster{
     /* structure */
     display: flex;
     align-items: center;
@@ -91,6 +95,21 @@ video.lpl-player--video,
     box-shadow: var(--lpl-audio-shadow);
     backdrop-filter: var(--lpl-audio-backdrop);
     color: var(--lpl-audio-text);
+}
+
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="classic"],
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="modern"],
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="simple"],
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="floating"],
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="minimal"]{
+    padding: var(--lpl-audio-pad-y) var(--lpl-audio-pad-x);
+    border: 1px solid var(--lpl-audio-border);
+    border-radius: var(--lpl-audio-radius);
+}
+
+/* Supplement css for fixing player layout issue on playlist */
+.lpl-playlist--audio .lpl-player-wrap.lpl-audio[data-lpl-player-layout]{
+    display: grid;
 }
 
 /* skin: dark (C) */
@@ -135,6 +154,19 @@ video.lpl-player--video,
     gap: var(--lpl-audio-info-gap);
 }
 
+/* Card chrome makes the wrapper a row flex container (poster + info side by
+   side). .lpl-audio-info stretches to fill it via that container's own
+   flex-direction: column + default align-items: stretch, so .plyr never
+   needed an explicit width there. But a card with no poster and no title has
+   no .lpl-audio-info at all — .plyr sits directly in the row instead, where
+   the default flex-grow: 0 leaves it sized to content, not the full row
+   (visible as dead space to the right of a short player). Only matches that
+   direct-child case; the nested .lpl-audio-info case is untouched. */
+.lpl-player-wrap.lpl-audio > .plyr {
+    flex: 1;
+    min-width: 0;
+}
+
 /* track title — mirrors .lpl-playlist__item-title sizing */
 .lpl-audio-title {
     font-size: var(--lpl-audio-title-size);
@@ -147,8 +179,18 @@ video.lpl-player--video,
     text-overflow: ellipsis;
 }
 
-/* strip plyr's internal padding so controls sit flush inside info column */
-.lpl-audio-info .plyr--audio .plyr__controls {
+/* Strip Plyr's internal padding so controls sit flush inside the card's own
+   padding. Same trigger set as the card rule above: a poster, or any
+   explicit layout choice, gets card chrome — so the bar inside it must lose
+   Plyr's own default padding either way, whether or not a poster/title/
+   .lpl-audio-info wrapper is actually present in the markup. */
+.lpl-player-wrap.lpl-audio.has-poster .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio.has-title .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="classic"] .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="modern"] .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="simple"] .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="floating"] .plyr--audio .plyr__controls,
+.lpl-player-wrap.lpl-audio[data-lpl-player-layout="minimal"] .plyr--audio .plyr__controls {
     padding: 0;
     background: transparent;
 }
@@ -168,11 +210,6 @@ body.theme-customify .elementor-widget-vapfem_audio_player .plyr__control--overl
 /*astra theme support*/
 body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
     background-color: unset;
-}
-
-/* Preview page playlist - With default WordPress themes the container is too small so player controls are cramped */
-.wp-singular.lean_playlist-template-default .lpl-playlist-wrap{
-    max-width: 80%;
 }
 
 /* silverstorm-theme support */
@@ -240,9 +277,13 @@ body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
  *
  * Written generically (no theme class) because this reset is a common pattern.
  * ─────────────────────────────────────────────────────────────────────────── */
+
+
+/*
+This was causing speed arrow hiddne when clicked on the settings icon
 .plyr .plyr__control {
     padding: calc(var(--plyr-control-spacing, 10px) * 0.7);
-}
+} */
 
 .plyr .plyr__control--overlaid {
     padding: calc(var(--plyr-control-spacing, 10px) * 1.5);
@@ -267,3 +308,127 @@ body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
     margin-bottom: var(--plyr-control-spacing, 10px);
 }
 
+/* ── Player Layouts ("Preset" in the UI) ──────────────────────────────────────
+ *
+ * data-lpl-player-layout on .lpl-player-wrap. `classic` ships zero rules
+ * (stock Plyr). Every other layout sets --plyr-* tokens first, dropping to a
+ * class override only where no token exists (flex reordering, display:none,
+ * absolute positioning) — see CLAUDE.md "Vocabulary: skin vs layout vs
+ * preset". Placed after the theme-compat guards above so a layout's class
+ * overrides win the load-order tiebreak against them.
+ *
+ * One subsection per layout below, in the same order as
+ * leanpl_get_player_layouts(). Each layout also owns a fixed controls array
+ * there — see that registry, not this file, for which buttons render at all.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Audio play button: hover fill always on, non-classic layouts ────────────
+ * Shared across modern/simple/floating/minimal — not layout-specific, so it
+ * lives here rather than duplicated into each layout's own subsection below.
+ * Reuses Plyr's own :hover declaration (plyr.css `.plyr__control:hover`)
+ * unconditionally instead of copying its color values, so a per-player accent
+ * color still overrides it correctly. Classic stays untouched by design.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lpl-audio[data-lpl-player-layout="classic"] .plyr__controls [data-plyr="play"],
+.lpl-audio[data-lpl-player-layout="modern"] .plyr__controls [data-plyr="play"],
+.lpl-audio[data-lpl-player-layout="simple"] .plyr__controls [data-plyr="play"],
+.lpl-audio[data-lpl-player-layout="floating"] .plyr__controls [data-plyr="play"],
+.lpl-audio[data-lpl-player-layout="minimal"] .plyr__controls [data-plyr="play"] {
+    background: var(--plyr-audio-control-background-hover, var(--plyr-color-main, #00b2ff));
+    color: var(--plyr-audio-control-color-hover, #fff);
+}
+
+/* ── Classic ───────────────────────────────────────────────────────────────
+ * Stock Plyr. Zero rules by design — no visual change for existing sites on
+ * update. Do not add anything here; see "Default: classic" in the plan.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Modern ────────────────────────────────────────────────────────────────
+ * Progress onto its own full-width row, both types.
+ *
+ * Stock Plyr splits the bottom row into a left/right group with a single
+ * rule: `.plyr__controls__item:first-child { margin-right: auto }`, relying
+ * on whichever control comes first in the array (normally play) to anchor
+ * the left group while .plyr__progress__container's own flex:1 pushes the
+ * rest right. Pulling progress onto its own row breaks that: rewind becomes
+ * the new first-child, inherits the stock auto-margin, and — with no flex:1
+ * element left in this row — soaks up 100% of the free space instead of a
+ * fair share, stranding everything after it at the right edge. Cancel the
+ * stock rule and move the same trick onto .plyr__time instead, which is
+ * where the mockup wants the left/right split to actually happen.
+ * ─────────────────────────────────────────────────────────────────────────── */
+[data-lpl-player-layout="modern"] .plyr__controls {
+    flex-wrap: wrap;
+    gap: 5px;
+}
+[data-lpl-player-layout="modern"] .plyr__progress__container {
+    order: -1;
+    flex: 0 0 100%;
+    padding-left: 0;
+}
+[data-lpl-player-layout="modern"] .plyr__controls .plyr__controls__item:first-child {
+    margin-right: 0;
+}
+[data-lpl-player-layout="modern"] .plyr__controls .plyr__controls__item.plyr__time {
+    margin-right: auto;
+}
+
+/* ── Simple ────────────────────────────────────────────────────────────────
+ * Stock row. Secondary buttons and time are subtracted via a fixed controls
+ * array in leanpl_get_player_layouts() (Player_Renderer), not CSS — Plyr
+ * never builds those DOM nodes, so no display:none is needed here.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lpl-audio[data-lpl-player-layout="simple"] {
+    --plyr-control-spacing: 8px;
+}
+
+/* ── Floating ──────────────────────────────────────────────────────────────
+ * Rounded pill inset from the frame edges with a blurred backdrop. Video
+ * only for now — audio has no rules here, so an audio player on Floating
+ * currently renders identically to Classic. There's no video canvas for a
+ * poster-less audio card to float an overlay above; a poster-card treatment
+ * is still an open question, not yet decided.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lpl-video[data-lpl-player-layout="floating"] .plyr__controls {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(20, 20, 25, 0.55);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 5px;
+    padding: 6px 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* ── Minimal ───────────────────────────────────────────────────────────────
+ * Video: bar gone entirely; Plyr's own .plyr__control--overlaid is a sibling
+ * of .plyr__controls, so the large play button survives untouched.
+ *
+ * Audio: Plyr renders no overlaid button for audio, so keep the bar, but the
+ * fixed controls array (leanpl_get_player_layouts()) already strips it to
+ * just the play button; only grow/centre it here via tokens (the main.css
+ * guard above derives its padding from --plyr-control-spacing).
+ * ─────────────────────────────────────────────────────────────────────────── */
+.lpl-video[data-lpl-player-layout="minimal"] .plyr__controls {
+    display: none;
+}
+.lpl-audio[data-lpl-player-layout="minimal"] {
+    --plyr-audio-controls-background: transparent;
+    --plyr-control-icon-size: 28px;
+    --plyr-control-spacing: 18px;
+}
+.lpl-audio[data-lpl-player-layout="minimal"] .plyr__controls {
+    justify-content: center;
+    padding: 0;
+}
+.lpl-audio[data-lpl-player-layout="minimal"] .plyr__controls__item {
+    margin: 0 auto;
+}

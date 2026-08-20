@@ -37,14 +37,29 @@ class Config {
     /**
      * Constructor. Loads and merges config.
      *
-     * @param int   $playlist_id    Playlist post ID (0 = legacy/POC mode).
-     * @param array $attr_overrides Shortcode attribute overrides (final merge layer).
+     * @param int        $playlist_id        Playlist post ID (0 = legacy/POC mode).
+     * @param array      $attr_overrides     Shortcode attribute overrides (final merge layer).
+     * @param array|null $item_id_overrides  Player post IDs to use instead of the post's saved
+     *                                       _playlist_items - null means "use saved state" (every
+     *                                       caller except the admin-new live preview's unsaved
+     *                                       Media Hub staging). An empty array is a real override
+     *                                       (0 items), distinct from null, so it must be checked
+     *                                       with === null, not empty().
+     * @param array      $track_overrides   Per-item field overrides for the admin-new live
+     *                                       preview's staged (unsaved) row edits, keyed by player
+     *                                       post ID: [ player_id => ['title'=>, 'duration'=>,
+     *                                       'meta_text'=>, 'poster_id'=>] ]. Only keys actually
+     *                                       present in a given item's array override that field -
+     *                                       see build_single_item(). Empty for every caller except
+     *                                       the live preview.
      */
-    public function __construct( int $playlist_id = 0, array $attr_overrides = [] ) {
+    public function __construct( int $playlist_id = 0, array $attr_overrides = [], ?array $item_id_overrides = null, array $track_overrides = [] ) {
         $this->merged = $this->get_defaults();
 
         if ( $playlist_id > 0 ) {
-            $this->items = $this->build_items_from_post( $playlist_id );
+            $this->items = ( null !== $item_id_overrides )
+                ? $this->build_items_from_ids( $item_id_overrides, $track_overrides )
+                : $this->build_items_from_post( $playlist_id, $track_overrides );
 
             $raw_type = get_post_meta( $playlist_id, '_playlist_type', true );
             $this->merged['playlist_type'] = in_array( $raw_type, [ 'video', 'audio' ], true ) ? $raw_type : 'video';
@@ -57,7 +72,15 @@ class Config {
                 }
             }
         } else {
-            $this->items                   = get_option( 'playlist_items' ) ?? [];
+            // No real post to read _playlist_items from - an explicit
+            // item_id_overrides (even []) still wins over the legacy
+            // get_option('playlist_items') fallback, same precedence the
+            // playlist_id > 0 branch above already gives it over the post's
+            // saved value. This is what lets the admin-new Add Track
+            // drawer preview a not-yet-saved playlist's staged tracks.
+            $this->items = ( null !== $item_id_overrides )
+                ? $this->build_items_from_ids( $item_id_overrides, $track_overrides )
+                : ( get_option( 'playlist_items' ) ?? [] );
             $this->merged['playlist_type'] = 'video';
         }
 
@@ -110,26 +133,41 @@ class Config {
      * Reads each referenced lean_player post and builds the standard item array
      * with title, meta, duration, type, sources, and poster.
      *
-     * @param int $playlist_id Playlist post ID.
+     * @param int   $playlist_id     Playlist post ID.
+     * @param array $track_overrides See __construct().
      * @return array<int, array<string, mixed>>
      */
-    private function build_items_from_post( int $playlist_id ) {
+    private function build_items_from_post( int $playlist_id, array $track_overrides = [] ) {
         $saved_items = get_post_meta( $playlist_id, '_playlist_items', true );
 
         if ( empty( $saved_items ) || ! is_array( $saved_items ) ) {
             return [];
         }
 
+        return $this->build_items_from_ids( wp_list_pluck( $saved_items, 'id' ), $track_overrides );
+    }
+
+    /**
+     * Build playlist items array from a plain list of lean_player post IDs -
+     * shared by build_items_from_post() (real saved state) and the live
+     * preview's unsaved-item override (see the $item_id_overrides
+     * constructor param), so both paths validate/build items identically.
+     *
+     * @param array<int, mixed> $player_ids      Player post IDs (unsanitized).
+     * @param array              $track_overrides See __construct().
+     * @return array<int, array<string, mixed>>
+     */
+    private function build_items_from_ids( array $player_ids, array $track_overrides = [] ) {
         $items = [];
 
-        foreach ( $saved_items as $entry ) {
-            $player_id = absint( $entry['id'] ?? 0 );
+        foreach ( $player_ids as $raw_id ) {
+            $player_id = absint( $raw_id );
 
             if ( $player_id < 1 || ! in_array( get_post_status( $player_id ), [ 'publish', 'draft' ], true ) ) {
                 continue;
             }
 
-            $item = $this->build_single_item( $player_id );
+            $item = $this->build_single_item( $player_id, $track_overrides[ $player_id ] ?? [] );
 
             if ( $item ) {
                 $items[] = $item;
@@ -142,14 +180,19 @@ class Config {
     /**
      * Build a single playlist item from a lean_player post.
      *
-     * @param int $player_id Player post ID.
+     * @param int   $player_id Player post ID.
+     * @param array $override  Staged field overrides for this item - see __construct().
+     *                         Only keys actually present override the saved value; a key
+     *                         present with an empty value is a real "staged as cleared",
+     *                         distinct from the key being absent, so array_key_exists() is
+     *                         used throughout rather than isset()/empty().
      * @return array<string, mixed>|null Item array or null if no valid source.
      */
-    private function build_single_item( int $player_id ) {
+    private function build_single_item( int $player_id, array $override = [] ) {
         $player_type = get_post_meta( $player_id, '_player_type', true ) ?: 'video';
-        $title       = get_the_title( $player_id );
-        $duration    = get_post_meta( $player_id, '_duration', true ) ?: '';
-        $meta_text   = get_post_meta( $player_id, '_meta_text', true ) ?: '';
+        $title       = array_key_exists( 'title', $override ) ? $override['title'] : get_the_title( $player_id );
+        $duration    = array_key_exists( 'duration', $override ) ? $override['duration'] : ( get_post_meta( $player_id, '_duration', true ) ?: '' );
+        $meta_text   = array_key_exists( 'meta_text', $override ) ? $override['meta_text'] : ( get_post_meta( $player_id, '_meta_text', true ) ?: '' );
 
         // Build sources array
         $sources = $this->build_sources( $player_id, $player_type );
@@ -159,7 +202,7 @@ class Config {
         }
 
         // Build poster URL
-        $poster_id  = get_post_meta( $player_id, '_poster', true );
+        $poster_id  = array_key_exists( 'poster_id', $override ) ? (int) $override['poster_id'] : get_post_meta( $player_id, '_poster', true );
         $poster_url = '';
         if ( $poster_id ) {
             $poster_url = wp_get_attachment_url( (int) $poster_id ) ?: '';
@@ -462,19 +505,78 @@ class Config {
     /**
      * Get merged Plyr config for the playlist player.
      *
-     * Inherits all global settings via Config_Merger. Overrides autoplay, loop,
-     * and reset_on_end. The playlist JS handles track flow itself, and these
+     * Inherits all global settings via Config_Merger, with this playlist's
+     * `player_layout` override (if set) passed through as the instance-level
+     * layer - same precedence a single player's `_player_layout` gets via
+     * class-player-shortcode.php. Overrides autoplay, loop, and
+     * reset_on_end. The playlist JS handles track flow itself, and these
      * three options would either no-op or break autoplay_next.
+     *
+     * `controls` is resolved here rather than left to assets/js/player-utils.js:
+     * the single-player path resolves layout -> controls server-side in
+     * class-player-renderer.php's resolve_layout_controls() and the JS only
+     * ever reads the already-resolved `controls` array (getControls() in
+     * player-utils.js) - the playlist path has to do the same resolution
+     * itself since it never goes through Player_Renderer. A Custom Preset
+     * reference (Lock A11, `preset_...`) is resolved via the same shared
+     * helper Player_Renderer uses (Custom_Preset_Ajax::resolve_layout_ref())
+     * and, if it carries its own controls, wins outright - same precedence
+     * as the single-player path.
      *
      * @return array<string, mixed>
      */
     public function get_plyr_config(): array {
-        $merged = \LeanPL\Config_Merger::get_instance()->merge( [] );
-        return array_merge( $merged, [
+        $layout_override = $this->merged['player_layout'] ?? '';
+        $merged = \LeanPL\Config_Merger::get_instance()->merge(
+            $layout_override !== '' ? [ 'player_layout' => $layout_override ] : []
+        );
+
+        $config = array_merge( $merged, [
             'autoplay'     => false,
             'loop'         => false,
             'reset_on_end' => false,
         ] );
+
+        $raw_layout = $merged['player_layout'] ?? '';
+        $resolved   = \LeanPL\Custom_Preset_Ajax::resolve_layout_ref( $raw_layout );
+        if ( null !== $resolved['controls'] ) {
+            $config['controls'] = $resolved['controls'];
+        } else {
+            $layout = $this->get_player_layout();
+            $effective_layout = $layout === '' ? 'classic' : $layout;
+            $controls = leanpl_get_player_layouts()[ $effective_layout ]['controls'][ $this->get_playlist_type() ] ?? null;
+            if ( is_array( $controls ) ) {
+                $config['controls'] = $controls;
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Resolved `player_layout` value for this playlist's embedded player,
+     * same precedence as get_plyr_config() (per-playlist override, else
+     * global). Empty stays empty when nothing was explicitly chosen at
+     * either level - mirrors class-player-renderer.php's
+     * resolve_player_layout(), which is what the `data-lpl-player-layout`
+     * attribute + `main.css`'s `[data-lpl-player-layout="..."]` rules
+     * expect (an unresolved layout is honestly empty, not silently
+     * promoted to 'classic' - see that method's docblock for why). A Custom
+     * Preset reference (Lock A11) resolves through the same shared helper
+     * get_plyr_config() uses, to its own stored layout.
+     *
+     * @return string A known leanpl_get_player_layouts() key, or ''.
+     */
+    public function get_player_layout(): string {
+        $layout_override = $this->merged['player_layout'] ?? '';
+        $merged = \LeanPL\Config_Merger::get_instance()->merge(
+            $layout_override !== '' ? [ 'player_layout' => $layout_override ] : []
+        );
+
+        $layout = $merged['player_layout'] ?? '';
+        $resolved = \LeanPL\Custom_Preset_Ajax::resolve_layout_ref( $layout );
+        $layout   = $resolved['layout'];
+        return array_key_exists( $layout, leanpl_get_player_layouts() ) ? $layout : '';
     }
 
     /**

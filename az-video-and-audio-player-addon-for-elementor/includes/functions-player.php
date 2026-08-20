@@ -158,6 +158,83 @@ function leanpl_get_speed_registry() {
     ];
 }
 
+/**
+ * Player Layout Registry — SSOT for the control-bar layouts offered under the
+ * "Preset" label in the UI. See CLAUDE.md "Vocabulary: skin vs layout vs preset".
+ *
+ * Keys   : `player_layout` value, validated against by the renderer.
+ * Values : [
+ *   'label'    => Human-readable label for admin UI (this is the user-facing "Preset")
+ *   'image'    => Preview image URL for the image-select field
+ *   'controls' => ['video' => [...], 'audio' => [...]] of Plyr control slugs.
+ *                 Every layout defines this; Player_Renderer uses it as the
+ *                 controls array outright, overriding whatever $config['controls']
+ *                 (the retired standalone Controls picker, Lock A2) resolved to
+ *                 — full override, not a subset. An unresolved/empty
+ *                 `player_layout` (nothing chosen anywhere in the merge chain)
+ *                 resolves to `classic`'s array — see resolve_layout_controls()
+ *                 in class-player-renderer.php.
+ * ]
+ *
+ * Order here = order in the metabox / Settings image-select grid.
+ */
+function leanpl_get_player_layouts() {
+    return [
+        'classic' => [
+            'label' => __( 'Default', 'vapfem' ),
+            'image' => LEANPL_URI . '/assets/img/player-layouts/classic.webp',
+            // Fixed like every other layout below (guarantees play-large on
+            // video) rather than deferring to the retired standalone Controls
+            // picker. Mirrors VIDEO_DEFAULT_CONTROLS / AUDIO_DEFAULT_CONTROLS
+            // in assets/js/player-utils.js.
+            'controls' => [
+                'video' => [ 'play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                'audio' => [ 'play', 'progress', 'mute', 'volume', 'settings' ],
+            ],
+        ],
+        'modern' => [
+            'label' => __( 'Modern', 'vapfem' ),
+            'image' => LEANPL_URI . '/assets/img/player-layouts/modern.webp',
+            // 'progress' must stay in this array even though the CSS reorder
+            // rule below moves it onto its own row — omitting it means Plyr
+            // never builds .plyr__progress__container at all (no scrubber,
+            // and no flex spacer, which left every other control bunched at
+            // the right edge). Its position here doesn't matter, only its
+            // presence; the bottom-row order that does matter is
+            // rewind/play/fast-forward, then mute+volume, then time, then
+            // settings/pip/airplay/fullscreen.
+            'controls' => [
+                'video' => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                'audio' => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
+            ],
+        ],
+        'simple' => [
+            'label' => __( 'Simple', 'vapfem' ),
+            'image' => LEANPL_URI . '/assets/img/player-layouts/simple.webp',
+            'controls' => [
+                'video' => [ 'play-large', 'play', 'progress', 'fullscreen' ],
+                'audio' => [ 'play', 'progress' ],
+            ],
+        ],
+        'floating' => [
+            'label' => __( 'Floating', 'vapfem' ),
+            'image' => LEANPL_URI . '/assets/img/player-layouts/floating.webp',
+            'controls' => [
+                'video' => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                'audio' => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
+            ],
+        ],
+        'minimal' => [
+            'label' => __( 'Minimal', 'vapfem' ),
+            'image' => LEANPL_URI . '/assets/img/player-layouts/minimal.webp',
+            'controls' => [
+                'video' => [ 'play-large' ],
+                'audio' => [ 'play' ],
+            ],
+        ],
+    ];
+}
+
 function leanpl_get_playlist_defaults() {
     return include LEANPL_DIR . '/includes/playlist/playlist-defaults.php';
 }
