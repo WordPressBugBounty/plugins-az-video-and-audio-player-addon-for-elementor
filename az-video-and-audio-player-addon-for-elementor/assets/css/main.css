@@ -215,6 +215,29 @@ body.wp-theme-astra .plyr__menu button[data-plyr="speed"]:focus {
 /* silverstorm-theme support */
 
 
+/* ── Plugin compat: Royal Addons for Elementor ────────────────────────────────
+ *
+ * Royal Addons (wpr-*) ships a global rule hiding SVGs inside its own widgets'
+ * controls, which also catches our audio player's Plyr icons since Elementor
+ * nests our widget markup inside its `.elementor-element[class*="wpr-"]`
+ * wrapper. Restore the icons, then keep Plyr's pressed/not-pressed icon swap
+ * (e.g. mute/unmute, play/pause) working as intended.
+ *
+ * NOTE: Royal Addons also globally sets `svg:not(:root) { overflow: hidden;
+ * display: inline; }`. That rule is not undone here because it also affects
+ * layout (icon sizing/alignment), not just visibility, so a blanket
+ * `display: block` override risks fighting Royal Addons elsewhere. Revisit if
+ * a layout regression traces back to that rule.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.elementor-element[class*="wpr-"] .lpl-audio .plyr__control svg {
+    display: block;
+}
+
+.elementor-element[class*="wpr-"] .lpl-audio .plyr__control.plyr__control--pressed svg.icon--not-pressed,
+.elementor-element[class*="wpr-"] .lpl-audio .plyr__control:not(.plyr__control--pressed) svg.icon--pressed {
+    display: none;
+}
+
 /* ── Theme compat: blanket clearfix pseudo neutralizer ────────────────────────
  *
  * Covers both the single player and the playlist. Lives here rather than in

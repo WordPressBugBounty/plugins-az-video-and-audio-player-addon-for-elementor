@@ -137,6 +137,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
             'quality_default'    => $settings['quality_default'],
             'ratio'              => $this->get_ratio($settings),
             'preload'            => $settings['preload'] ?? 'metadata',
+            'player_layout'      => $settings['player_layout'] ?? '',
             'controls'           => $settings['controls'],
             'debug_mode'         => $settings['debug_mode'] === 'true',
         ];

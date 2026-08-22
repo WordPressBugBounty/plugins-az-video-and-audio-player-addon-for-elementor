@@ -70,6 +70,12 @@ class Assets_Manager {
                 'in_footer' => true,
                 'contexts' => ['elementor-widget'],
             ],
+            'leanpl-elementor-editor' => [
+                'file' => '/assets/js/elementor-editor.js',
+                'deps' => ['jquery'],
+                'in_footer' => true,
+                'contexts' => ['elementor-editor'],
+            ],
             'leanpl-custom-preset-builder' => [
                 'file' => '/assets/js/custom-preset-builder.js',
                 'deps' => ['jquery', 'plyr', 'leanpl-player-utils'],

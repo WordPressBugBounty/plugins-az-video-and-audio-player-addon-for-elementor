@@ -135,6 +135,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
             'keyboard_global'    => $settings['keyboard_global'] === 'true',
             'speed_selected'     => $this->convert_speed($settings),
             'preload'            => $settings['preload'],
+            'player_layout'      => $settings['player_layout'] ?? '',
             'controls'           => $settings['controls'],
             'debug_mode'         => $settings['debug_mode'] === 'true',
             'poster'             => $settings['poster']['url'] ?? '',

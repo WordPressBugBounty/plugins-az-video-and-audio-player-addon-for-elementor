@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,13 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.3.1 =
+* Fixed: A custom Control Options selection (Elementor widget or per-player) was silently discarded and replaced with the full default button set.
+* Added: Player Layout picker in the Elementor Video and Audio widgets, with an Inherit option and a link to the Custom Preset builder.
+* Added: New Elementor widgets now default to a recommended Saved Player + Classic Layout, with the legacy Control Options field hiding itself once a Layout is chosen. Existing widgets are unaffected.
+* Improved: "Saved Player" is now the recommended Player Source option in the Elementor widgets.
+* Fixed: Audio player control icons (play/pause, mute/unmute, etc.) were hidden when used inside a Royal Addons for Elementor widget.
+
 = Version: 3.3.0 =
 * Fixed: Auto-Start accordion in the player metabox missing its collapse arrow.
 * Admin Redesign: New "Media Players" & "Playlists" list screens and Edit Player/Edit Playlist screens

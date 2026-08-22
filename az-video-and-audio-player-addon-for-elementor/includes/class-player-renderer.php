@@ -182,12 +182,26 @@ class Player_Renderer {
                 return $resolved['controls'];
             }
             // Deleted preset, or a preset with no stored controls — fall
-            // through to the classic default below.
+            // through below using whatever $layout resolved to.
         }
 
-        $effective_layout = $layout === '' ? 'classic' : $layout;
-        $fixed = leanpl_get_player_layouts()[ $effective_layout ]['controls'][ $player_type ] ?? null;
-        return is_array( $fixed ) ? $fixed : ( $config['controls'] ?? [] );
+        // An explicitly chosen layout (a real registry key, including an
+        // explicit 'classic', or a resolved Custom Preset's own layout)
+        // always wins outright — its fixed controls array fully replaces
+        // whatever $config['controls'] holds, no intersection.
+        if ( $layout !== '' ) {
+            return leanpl_get_player_layouts()[ $layout ]['controls'][ $player_type ];
+        }
+
+        // Nothing was explicitly chosen at any level. Honor a legacy/
+        // instance `controls` value if present (e.g. the Elementor widgets'
+        // "Control Options (Legacy)" field) — only when that's also empty
+        // does this fall back to Classic's fixed array.
+        if ( ! empty( $config['controls'] ) && is_array( $config['controls'] ) ) {
+            return $config['controls'];
+        }
+
+        return leanpl_get_player_layouts()['classic']['controls'][ $player_type ];
     }
 
     /**

@@ -22,10 +22,10 @@ trait LeanPL_Video_Player_Content_Controls {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'manual',
                 'options' => [
+                    'saved'  => esc_html__( 'Saved Player (Recommended)', 'vapfem' ),
                     'manual' => esc_html__( 'Manual (set source here)', 'vapfem' ),
-                    'saved'  => esc_html__( 'Saved Player', 'vapfem' ),
                 ],
-                'description' => esc_html__( 'Pick a saved player from the Player Manager, or set the source manually below.', 'vapfem' ),
+                'description' => esc_html__( 'We recommend picking a Saved Player from the Player Manager: it can be reused across widgets and pages, and updated in one place. Manual sets the source directly on this widget instead.', 'vapfem' ),
             ]
         );
 
@@ -592,11 +592,52 @@ trait LeanPL_Video_Player_Content_Controls {
         );
 
         $this->add_control(
+            'player_layout',
+            [
+                'label'       => esc_html__( 'Player Layout (Recommended)', 'vapfem' ),
+                'type'        => \Elementor\Controls_Manager::SELECT,
+                'description' => esc_html__( 'Per-widget layout override. Inherit follows the site default (Settings → Layout & Branding).', 'vapfem' ),
+                'default'     => '',
+                'options'     => array_merge(
+                    [ '' => esc_html__( 'Inherit (site-wide default)', 'vapfem' ) ],
+                    wp_list_pluck( leanpl_get_player_layouts(), 'label' )
+                ),
+                'separator'   => 'before',
+                'condition'   => [
+                    'player_source' => 'manual',
+                ],
+            ]
+        );
+
+        // Always visible, not gated — informational pointer to the Custom
+        // Preset builder, which can't be embedded inside Elementor's own
+        // panel (its popup UI is wired to WP admin's field-render hooks,
+        // not portable here). Custom Preset building is free; applying one
+        // is the actual Pro-gated action (Lock A11), regardless of surface.
+        $this->add_control(
+            'player_layout_custom_preset_note',
+            [
+                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'raw'  => sprintf(
+                    '<div class="leanpl-tip-note"><span class="leanpl-tip-note__icon">💡</span><span>%s %s</span></div>',
+                    esc_html__( 'Need a fully custom bar? Build a Custom Preset', 'vapfem' ),
+                    sprintf(
+                        '<a href="%s" target="_blank" rel="noopener">%s</a> (%s).',
+                        esc_url( admin_url( 'admin.php?page=lean-player-settings#settings' ) ),
+                        esc_html__( 'here', 'vapfem' ),
+                        esc_html__( 'Pro to apply', 'vapfem' )
+                    )
+                ),
+                'content_classes' => 'leanpl-tip-note-wrap',
+            ]
+        );
+
+        $this->add_control(
             'controls',
             [
-                'label' => esc_html__( 'Control Options', 'vapfem' ),
+                'label' => esc_html__( 'Control Options (Legacy)', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT2,
-                'description'   =>  esc_html__('Add/Remove your prefered video control options', 'vapfem'),
+                'description'   =>  esc_html__('Legacy control picker; only applies while Layout is Inherit.', 'vapfem'),
                 'multiple' => true,
                 'options' => [
                     'play-large'  => esc_html__( 'Play Large', 'vapfem' ),
@@ -615,6 +656,7 @@ trait LeanPL_Video_Player_Content_Controls {
                 'separator' => 'before',
                 'condition' => [
                     'player_source' => 'manual',
+                    'player_layout' => '',
                 ],
             ]
         );

@@ -1,3 +1,27 @@
+/* Small "tip" callout used for the Custom Preset pointer note under Player
+   Layout — kept visually lighter than a real control so it reads as an
+   optional hint, not a field label. Scoped to its own class rather than
+   reusing .leanpl-pro-note, which has no styling of its own anywhere in
+   this plugin (renders as plain text) and is out of scope here. */
+.leanpl-tip-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--lex-space-1, 6px);
+    background: var(--lex-color-apple-blue-tint, #eef4ff);
+    border-radius: var(--lex-radius-xs, 4px);
+    padding: var(--lex-space-2, 8px) var(--lex-space-2, 10px);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--e-a-color-txt, #4b5259);
+}
+.leanpl-tip-note__icon {
+    flex: none;
+    line-height: 1.5;
+}
+.leanpl-tip-note a {
+    font-weight: 500;
+}
+
 /* Add branding icon for each addon. */
 
 .elementor-element .icon {
