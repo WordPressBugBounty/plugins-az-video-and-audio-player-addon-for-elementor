@@ -1,6 +1,7 @@
 :root {
 	--lpl-player-notice-bg: #1AAFFF;
 	--lpl-video-radius: 12px;
+	--lpl-portrait-max-height: 70vh;
 }
 
 .lpl-player-wrap{
@@ -30,6 +31,24 @@ video.lpl-player--video,
 .lpl-player-wrap.lpl-video {
 	border-radius: var(--lpl-video-radius);
 	overflow: hidden;
+}
+
+/* Vertical (portrait) videos: cap by height instead of letting width drive an
+   unbounded height. --lpl-ratio-num is the W/H decimal emitted per-player by
+   the renderer, so max-width resolves to the width that produces the capped
+   height. Landscape players never get .is-portrait and are unaffected. */
+.lpl-player-wrap.lpl-video.is-portrait {
+    max-width: calc(var(--lpl-portrait-max-height, 70vh) * var(--lpl-ratio-num, 0.5625));
+    margin-inline: auto;
+}
+
+/* Plyr's own poster CSS uses background-size: contain, which is correct for a
+   widescreen poster in a widescreen frame but letterboxes a landscape poster
+   (the common case: YouTube/Vimeo thumbnails, or a poster reused from a
+   16:9 source) inside a portrait frame. Cropping to fill reads as an
+   intentional reel, matching how vertical video looks everywhere else. */
+.lpl-player-wrap.lpl-video.is-portrait .plyr__poster {
+    background-size: cover;
 }
 
 /* Plyr colours the volume thumb with --plyr-color-main but leaves the progress thumb white at position 0 — visually inconsistent before playback starts. This ties both thumbs to the same colour. */

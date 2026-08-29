@@ -40,7 +40,7 @@ include LEANPL_DIR . '/includes/admin-new/partials/shared/field-switch.php';
     <input type="text" name="_playlist_header_text"
       value="<?php echo esc_attr(leanpl_admin_new_playlist_value('_playlist_header_text', $post_id)); ?>"
       placeholder="<?php esc_attr_e('e.g. Playlist, Up Next, Episodes...', 'vapfem'); ?>"
-      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-ink-soft [appearance:none] [-webkit-appearance:none]" />
+      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary [appearance:none] [-webkit-appearance:none]" />
   </div>
 </div>
 
@@ -61,6 +61,6 @@ include LEANPL_DIR . '/includes/admin-new/partials/shared/field-switch.php';
     <input type="text" name="_playlist_count_label"
       value="<?php echo esc_attr(leanpl_admin_new_playlist_value('_playlist_count_label', $post_id)); ?>"
       placeholder="<?php esc_attr_e('e.g. Videos, Tracks, Episodes...', 'vapfem'); ?>"
-      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-ink-soft [appearance:none] [-webkit-appearance:none]" />
+      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary [appearance:none] [-webkit-appearance:none]" />
   </div>
 </div>

@@ -160,14 +160,26 @@ class Player_Renderer {
      * (nothing chosen at any level — resolve_player_layout() stays '' in
      * that case, deliberately, for the data-lpl-player-layout attribute)
      * resolves to 'classic' here: Classic is the practical default, so an
-     * unset layout gets Classic's controls, not whatever stale value
-     * $config['controls'] happens to hold from the retired standalone
-     * Controls picker.
+     * unset layout falls back to Classic's controls — unless a real
+     * selection survives in $config['controls'] from the retired standalone
+     * Controls picker, which still wins (see is_default_controls() for how
+     * a real selection is told apart from the merger's own default).
      *
      * A Custom Preset reference (Lock A11) is resolved first and, if found,
      * wins outright too — its own controls array *is* the whole point of
      * applying a preset. A deleted preset falls through to the classic
-     * default below.
+     * default below. A preset's stored array has no portrait-specific
+     * variant (it's a single user-picked list, not a registry entry) so it
+     * is deliberately never trimmed here — the user's explicit choice wins
+     * even on a portrait video. The same goes for a legacy $config['controls']
+     * selection below, for the same reason.
+     *
+     * A registry layout, on the other hand, may define a 'video_portrait'
+     * list alongside 'video' (see leanpl_get_player_layouts()) for a video
+     * that's in the narrow 9:16 (Shorts) shape, where the full 'video' list
+     * is too crowded. Used in place of 'video' whenever present; layouts
+     * that aren't crowded to begin with (Simple/Minimal) don't define one,
+     * so they fall back to their normal 'video' list unchanged.
      *
      * @param array  $config      Merged player config.
      * @param string $layout      Validated layout value (see resolve_player_layout()).
@@ -190,18 +202,99 @@ class Player_Renderer {
         // always wins outright — its fixed controls array fully replaces
         // whatever $config['controls'] holds, no intersection.
         if ( $layout !== '' ) {
-            return leanpl_get_player_layouts()[ $layout ]['controls'][ $player_type ];
+            return $this->pick_registry_controls( $layout, $player_type, $config );
         }
 
-        // Nothing was explicitly chosen at any level. Honor a legacy/
-        // instance `controls` value if present (e.g. the Elementor widgets'
-        // "Control Options (Legacy)" field) — only when that's also empty
-        // does this fall back to Classic's fixed array.
-        if ( ! empty( $config['controls'] ) && is_array( $config['controls'] ) ) {
+        // Nothing was explicitly chosen at any level. What's left is the
+        // legacy/instance `controls` value (e.g. the Elementor widgets'
+        // "Control Options (Legacy)" field, or per-player `_controls`).
+        $has_controls = ! empty( $config['controls'] ) && is_array( $config['controls'] );
+
+        // A selection the user actually made wins outright, portrait or not
+        // — same contract as a Custom Preset's stored array above, and the
+        // whole point of the 3.3.1 fix ("a custom Control Options selection
+        // was silently discarded"). Trimming it for portrait would discard
+        // it all over again, just on a narrower set of players.
+        if ( $has_controls && ! $this->is_default_controls( $config['controls'] ) ) {
             return $config['controls'];
         }
 
-        return leanpl_get_player_layouts()['classic']['controls'][ $player_type ];
+        // No layout and no real selection. '' behaves identically to
+        // explicitly choosing Classic everywhere else in this feature (see
+        // resolve_player_layout()'s docblock), so a portrait video gets
+        // Classic's registry entry here too — same as the $layout !== ''
+        // branch above, portrait-aware.
+        if ( $player_type === 'video' && leanpl_get_portrait_ratio_num( $config['ratio'] ?? '' ) !== '' ) {
+            return $this->pick_registry_controls( 'classic', $player_type, $config );
+        }
+
+        // Landscape video, or audio (no portrait concept). Returning the
+        // merged value rather than the registry array is deliberate: for
+        // video the two are identical, but for audio $config['controls']
+        // holds the shared default (which carries video-only slugs Plyr
+        // simply ignores) and that is the shipped behaviour.
+        if ( $has_controls ) {
+            return $config['controls'];
+        }
+
+        return $this->pick_registry_controls( 'classic', $player_type, $config );
+    }
+
+    /**
+     * Whether a `controls` array is indistinguishable from the baked-in
+     * default in player-defaults.php.
+     *
+     * Config_Merger fills `controls` in for every player from that default
+     * whether or not anyone ever touched the retired Controls picker, so a
+     * non-empty value on its own proves nothing about user intent — this is
+     * what separates "the merger filled it in" from "someone chose this".
+     *
+     * Order matters and is compared: reordering the same slugs reorders the
+     * rendered control bar, so it counts as a real choice. Only the keys are
+     * normalised, since an array_filter() upstream can leave gaps.
+     *
+     * A user who explicitly picks exactly the default set, in the default
+     * order, is treated as not having chosen — the two are the same bar, so
+     * there is nothing to preserve.
+     *
+     * @param array $controls Merged `controls` value.
+     * @return bool True when it matches the default set exactly.
+     */
+    private function is_default_controls( array $controls ): bool {
+        // Cached per request: leanpl_get_player_defaults() re-includes
+        // player-defaults.php on every call, which rebuilds the controls
+        // registry (and its __() calls) each time. This runs per rendered
+        // player, so a page with several of them would pay for it repeatedly.
+        static $default_controls = null;
+
+        if ( null === $default_controls ) {
+            $defaults = leanpl_get_player_defaults();
+            $default_controls = array_values( $defaults['shared']['controls'] ?? [] );
+        }
+
+        return array_values( $controls ) === $default_controls;
+    }
+
+    /**
+     * Read a registry layout's controls array, preferring its
+     * 'video_portrait' list over 'video' when the video is in the narrow
+     * 9:16 (Shorts) shape and the layout defines one. Shared by both the
+     * explicit-layout branch and the "nothing chosen, defaults to Classic"
+     * fallback in resolve_layout_controls(), so the two always resolve the
+     * same trimmed set the same way.
+     *
+     * @param string $layout      A known registry key (see leanpl_get_player_layouts()).
+     * @param string $player_type 'video' or 'audio'.
+     * @param array  $config      Merged player config, for the video's ratio.
+     * @return array Controls slugs to send to Plyr.
+     */
+    private function pick_registry_controls( string $layout, string $player_type, array $config ): array {
+        $layout_controls = leanpl_get_player_layouts()[ $layout ]['controls'];
+        $is_portrait     = $player_type === 'video' && leanpl_get_portrait_ratio_num( $config['ratio'] ?? '' ) !== '';
+        if ( $is_portrait && isset( $layout_controls['video_portrait'] ) ) {
+            return $layout_controls['video_portrait'];
+        }
+        return $layout_controls[ $player_type ];
     }
 
     /**
@@ -287,7 +380,24 @@ class Player_Renderer {
       $post_id = absint( $post_id );
       $wrap_attrs = $post_id > 0 ? ' id="lpl-player-' . esc_attr( $post_id ) . '"' : '';
       $wrap_attrs .= ' data-lpl-player-layout="' . esc_attr( $layout ) . '"';
-      $wrap_classes = 'lpl-player-wrap lpl-video' . ( ! empty( $config['poster'] ) ? ' has-poster' : '' );
+
+      $portrait_num = leanpl_get_portrait_ratio_num( $config['ratio'] ?? '' );
+
+      $wrap_classes = 'lpl-player-wrap lpl-video'
+          . ( ! empty( $config['poster'] ) ? ' has-poster' : '' )
+          . ( $portrait_num !== '' ? ' is-portrait' : '' );
+
+      if ( $portrait_num !== '' ) {
+          $wrap_style = '--lpl-ratio-num: ' . $portrait_num;
+
+          $max_height = leanpl_sanitize_css_length( $config['portrait_max_height'] ?? '' );
+          if ( $max_height !== '' ) {
+              $wrap_style .= '; --lpl-portrait-max-height: ' . $max_height;
+          }
+
+          $wrap_attrs .= ' style="' . esc_attr( $wrap_style ) . '"';
+      }
+
       echo '<div class="' . esc_attr( $wrap_classes ) . '"' . $wrap_attrs . '>';
 
       if ($config['video_type'] == 'html5') {

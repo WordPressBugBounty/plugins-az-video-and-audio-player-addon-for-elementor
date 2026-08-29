@@ -8,7 +8,7 @@
  * live preview instead (admin-new.js, data-lpl-edit-surface).
  *
  * @var array  $edit_source_tabs           Tab configs from config/player-edit-source-tabs.php:
- *                                          [['key','label','show_url_field','url_label'?,'url_placeholder'?,'help_text'?], ...]
+ *                                          [['key','label','show_url_field','url_label'?,'url_placeholder'?,'help_text'?,'default_value'?], ...]
  * @var string $edit_source_active_tab     Key of the visually-selected tab, '' for none.
  * @var bool   $edit_source_show_url_field Whether the active tab's URL section is visible.
  * @var string $edit_source_url_label      e.g. "PASTE A MEDIA URL".
@@ -36,6 +36,7 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
           data-lpl-source-show-url="<?php echo !empty($edit_tab['show_url_field']) ? '1' : '0'; ?>"
           data-lpl-source-url-label="<?php echo esc_attr($edit_tab['url_label'] ?? ''); ?>"
           data-lpl-source-placeholder="<?php echo esc_attr($edit_tab['url_placeholder'] ?? ''); ?>"
+          data-lpl-source-default-value="<?php echo esc_attr($edit_tab['default_value'] ?? ''); ?>"
           data-lpl-source-help="<?php echo esc_attr($edit_tab['help_text'] ?? ''); ?>"
           role="tab" tabindex="0" aria-selected="<?php echo $edit_tab_active ? 'true' : 'false'; ?>"
           class="lpl-group lpl-cursor-pointer lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-[36px] lpl-flex lpl-flex-row lpl-gap-[6px] lpl-p-[0px_14px] lpl-justify-center lpl-items-center lpl-bg-[#FFFFFF] [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] aria-selected:lpl-bg-ink aria-selected:[outline:1px_solid_var(--lpl-ink)] lpl-rounded-[6px]">

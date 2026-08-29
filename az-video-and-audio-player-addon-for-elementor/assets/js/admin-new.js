@@ -1176,11 +1176,23 @@
         // renders: the player one (default) builds a config out of the
         // posted source fields, the lean_playlist one renders a real saved
         // playlist by post_ID with the posted _playlist_* keys as overrides.
+        // formValues() is merged in as a base layer, under payload: a caller
+        // that picks a brand-new source (initAddMedia(), the Media Library
+        // frame's 'select' handler) only builds the bare source keys, but the
+        // rest of the settings form (Aspect Ratio, Player Layout, Accent
+        // Color, etc.) already has real values sitting in the DOM the moment
+        // Add Media is clicked - e.g. the YouTube Shorts tab (initSourceTabs())
+        // sets Aspect Ratio to 9:16 before a source is even picked. Without
+        // this, that first render used to come back at server defaults
+        // (16:9, not capped/centred) until some other field's 'change' event
+        // fired requestFormPreview() and pulled the form in. Callers that
+        // already merge formValues() into their own payload (requestFormPreview()
+        // and friends) are unaffected - payload's own keys still win here.
         var data = $.extend( {
             action: 'leanpl_live_preview',
             nonce: settings.nonce,
             live_preview_post_type: settings.postType || 'lean_player'
-        }, payload, posterPayload );
+        }, formValues( $( '[data-lpl-edit-form]' ) ), payload, posterPayload );
 
         // Swapping $target's innerHTML tears down the old Plyr instance and
         // drops in a raw, unstyled <video>/<audio> for the instant before
@@ -2988,12 +3000,21 @@
     // ── Edit-screen source picker tabs ───────────────────────────────────────
     // data-lpl-source-tab="KEY" - single-select via aria-selected, same
     // pattern as the sort menu. Each tab carries its own URL-field copy as
-    // data attrs (data-lpl-source-show-url/-url-label/-placeholder/-help,
-    // written by config/player-edit-source-tabs.php), so a click swaps the
-    // label/placeholder/help text and shows or hides the URL field to match
-    // the picked source - Media Library has none, the rest each have their
-    // own. No source is actually fetched; this only ever moves text and
-    // toggles lpl-hidden, same as every other control in this file.
+    // data attrs (data-lpl-source-show-url/-url-label/-placeholder/-help/
+    // -default-value, written by config/player-edit-source-tabs.php), so a
+    // click swaps the label/placeholder/help text, fills the field with the
+    // tab's default value (or clears it, when the tab has none), and shows
+    // or hides the URL field to match the picked source - Media Library has
+    // none, the rest each have their own. No source is actually fetched;
+    // this only ever moves text and toggles lpl-hidden, same as every other
+    // control in this file.
+    //
+    // The "YouTube Shorts" tab additionally forces Aspect Ratio (Video) to
+    // 9:16: a Short is vertical by definition, and leanpl_get_portrait_ratio_num()
+    // (functions-player.php) only caps/centres the player when ratio is
+    // explicitly a portrait shape, so picking Shorts without also picking
+    // 9:16 would render it in the default (wrong) 16:9 box. Only fires for
+    // Shorts - other tabs leave whatever ratio the user already chose alone.
     function initSourceTabs() {
         var $tabs = $( '[data-lpl-source-tab]' );
         if ( ! $tabs.length ) { return; }
@@ -3003,6 +3024,7 @@
         var $placeholder = $( '[data-lpl-source-placeholder-target]' );
         var $help = $( '[data-lpl-source-help-target]' );
         var $or = $( '[data-lpl-source-or]' );
+        var $ratio = $( 'select[name="_ratio"]' );
 
         function select( $tab ) {
             $tabs.attr( 'aria-selected', 'false' );
@@ -3015,8 +3037,14 @@
 
             if ( showUrl ) {
                 $urlLabel.text( $tab.attr( 'data-lpl-source-url-label' ) || '' );
-                $placeholder.attr( 'placeholder', $tab.attr( 'data-lpl-source-placeholder' ) || '' ).val( '' );
+                $placeholder
+                    .attr( 'placeholder', $tab.attr( 'data-lpl-source-placeholder' ) || '' )
+                    .val( $tab.attr( 'data-lpl-source-default-value' ) || '' );
                 $help.text( $tab.attr( 'data-lpl-source-help' ) || '' );
+            }
+
+            if ( $tab.attr( 'data-lpl-source-tab' ) === 'youtube-shorts' && $ratio.length ) {
+                $ratio.val( '9:16' ).trigger( 'change' );
             }
         }
 

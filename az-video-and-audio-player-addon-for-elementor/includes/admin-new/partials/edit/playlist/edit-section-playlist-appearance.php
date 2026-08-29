@@ -126,7 +126,7 @@ $edit_shows_gradient_css   = leanpl_admin_new_playlist_value('_playlist_bg_style
       rows="2"
       placeholder="linear-gradient(135deg, #1a1a2e, #16213e)"
       <?php if ($edit_gradient_locked) : ?>disabled<?php endif; ?>
-      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-ink-soft lpl-resize-none"
+      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary lpl-resize-none"
     ><?php echo esc_textarea(leanpl_admin_new_playlist_value('_playlist_gradient_css', $post_id)); ?></textarea>
   </div>
 </div>

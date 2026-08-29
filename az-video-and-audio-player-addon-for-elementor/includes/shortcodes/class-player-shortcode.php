@@ -123,11 +123,28 @@ class Player_Shortcode {
         $config['preload'] = Metaboxes::get_field_value($post_id, '_preload');
 
         // Per-player video aspect ratio (empty = automatic). Plyr "W:H" form.
+        // A shape outside leanpl_get_ratio_options() is treated as automatic:
+        // '_ratio' was free text through 3.3.1, so a player can still hold
+        // something the picker does not offer ('21:9', '2.35:1'), and the
+        // picker already falls back to Automatic for it. Applying it anyway
+        // would leave the edit screen saying one thing and the rendered player
+        // doing another.
+        //
+        // Deliberately here and not in Player_Renderer: the Elementor widgets
+        // and [lean_video] both expose a free-text ratio ("e.g. 16:9 or 4:3 or
+        // other") and must keep accepting any shape. This is the only path that
+        // reads the '_ratio' post meta, so it is the only one to gate.
         $per_player_ratio = Metaboxes::get_field_value($post_id, '_ratio');
-        if (!empty($per_player_ratio)) {
+        if (!empty($per_player_ratio) && isset(leanpl_get_ratio_options()[$per_player_ratio])) {
             $config['ratio'] = $per_player_ratio;
         }
-        
+
+        // Per-player max height for portrait (9:16-style) videos (empty = use global default).
+        $per_player_max_h = Metaboxes::get_field_value($post_id, '_portrait_max_height');
+        if (!empty($per_player_max_h)) {
+            $config['portrait_max_height'] = $per_player_max_h;
+        }
+
         // Per-player controls (empty array means inherit from global)
         // If empty array or not set, controls will inherit from global/defaults via Config_Merger
         $per_player_controls = Metaboxes::get_field_value($post_id, '_controls');

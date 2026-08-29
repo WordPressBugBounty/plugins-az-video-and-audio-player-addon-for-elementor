@@ -4,13 +4,29 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Video and audio player with playlist for WordPress. Plays YouTube, Vimeo, HTML5 video, and audio. Works with Elementor, Gutenberg, and Classic Editor.
+A lightweight WordPress plugin for YouTube, YouTube Shorts, Vimeo, HTML5 video and audio, playlists, and brand-matched colors.
 
 == Description ==
+
+Lean Player handles it all, in one lightweight plugin:
+
+* **YouTube Video**
+* **YouTube Shorts Video**
+* **Vertical video** - fits the screen automatically, no stretching or distortion (YouTube Shorts or HTML5 upload)
+* **Vimeo**
+* **HTML5 video** - MP4, WebM, OGG
+* **Audio** - MP3, OGG, WAV, M4A, AAC, FLAC
+* **Video playlist**
+* **Audio playlist**
+* **Brand color matching** so the player looks like part of your site, not a plugin
+* Never slows your site down
+* Works with any theme
+* **Embed anywhere** - shortcode or the Elementor widget
+
 🎬 [See Players in Action](https://demo.leanplugins.com/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
 🎵 [See Playlist Demo](https://demo.leanplugins.com/video-and-audio-player/playlist-demo/?utm_source=wordpress.org&utm_medium=desc)
 🌐 [Visit Official Website](https://leanplugins.com/wordpress-plugins/video-and-audio-player/?utm_source=wordpress.org&utm_medium=desc)
@@ -47,6 +63,7 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 
 **Video Sources:**
 * YouTube video support
+* YouTube Shorts support - vertical video fits the screen automatically, no stretching or distortion
 * Vimeo video support
 * HTML5 video (upload or URL/CDN)
 
@@ -140,6 +157,14 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.3.2 =
+* Added: 9:16 (Vertical / Reel) videos now render at a sensible, capped, centred size instead of stretching to fill the page. New per-player "Vertical Video Max Height" setting.
+* Added: YouTube Shorts links (youtube.com/shorts/...) are now recognized as a valid YouTube video source.
+* Added: "YouTube Shorts" quick-pick button in Edit Player's Add Media panel, which also switches Aspect Ratio to 9:16 automatically.
+* Changed: Video Shape (Aspect Ratio) is now a dropdown offering Automatic, 16:9, 4:3, 1:1 and 9:16. A player previously set to a custom shape outside that list is treated as Automatic. The Elementor widgets and the [lean_video] shortcode still accept any shape.
+* Fixed: A landscape poster/thumbnail on a vertical (9:16) video was letterboxed instead of filling the frame.
+* Fixed: Picking a new source in Edit Player didn't reflect the rest of the settings panel (Aspect Ratio, Layout, etc.) in the live preview until another field was changed.
+
 = Version: 3.3.1 =
 * Fixed: A custom Control Options selection (Elementor widget or per-player) was silently discarded and replaced with the full default button set.
 * Added: Player Layout picker in the Elementor Video and Audio widgets, with an Inherit option and a link to the Custom Preset builder.

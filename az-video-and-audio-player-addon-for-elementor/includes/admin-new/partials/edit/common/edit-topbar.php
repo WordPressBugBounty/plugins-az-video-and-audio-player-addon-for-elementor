@@ -75,6 +75,9 @@ if (!defined('ABSPATH')) {
     </div>
   </div>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[12px] lpl-justify-start lpl-items-center">
+    <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-semibold lpl-text-left [white-space:nowrap]">
+      <?php esc_html_e('Shortcode:', 'vapfem'); ?>
+    </div>
     <?php $field = ['value' => $edit_shortcode, 'variant' => 'chip']; ?>
     <?php include LEANPL_DIR . '/includes/admin-new/partials/edit/common/edit-field-code.php'; ?>
     <?php unset($field); ?>

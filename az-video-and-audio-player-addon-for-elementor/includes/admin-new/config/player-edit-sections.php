@@ -116,7 +116,8 @@ return [
   'fields' => [
     '_poster'      => [ 'type' => 'media' ],
     '_audio_title' => [ 'type' => 'text' ],
-    '_ratio'       => [ 'type' => 'text' ],
+    '_ratio'       => [ 'type' => 'select', 'options' => leanpl_get_ratio_options() ],
+    '_portrait_max_height' => [ 'type' => 'text' ],
 
     '_autoplay'           => [ 'type' => 'select', 'options' => $yes_no_inherit ],
     '_muted'              => [ 'type' => 'select', 'options' => $yes_no_inherit ],

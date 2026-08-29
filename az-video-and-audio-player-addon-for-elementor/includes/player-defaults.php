@@ -136,7 +136,17 @@ return [
         'quality_default' => '576', // options: 4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240
 
         // Aspect ratio
-        'ratio' => ''
+        'ratio' => '',
+
+        // Maximum height for portrait (9:16-style) videos, so a tall video
+        // caps at a sensible size instead of growing without limit as its
+        // container gets wider. Presentation only — never reaches Plyr, so
+        // it is deliberately absent from the renderer's *_SETTINGS_KEYS
+        // constants and from player-utils.js, same as 'preload',
+        // 'primary_color' and 'player_layout'. Only takes effect on shapes
+        // leanpl_get_portrait_ratio_num() (functions-player.php) recognises
+        // as taller than wide.
+        'portrait_max_height' => '70vh',
         // Video specific controls (intentionally not using)
     ],
 

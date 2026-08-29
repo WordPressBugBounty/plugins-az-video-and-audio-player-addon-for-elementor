@@ -21,7 +21,9 @@ $edit_poster_filename = $edit_poster_url !== '' ? wp_basename(parse_url($edit_po
 $has_poster           = $edit_poster_url !== '';
 
 $edit_audio_title_value = ($post_id > 0) ? get_post_meta($post_id, '_audio_title', true) : '';
-$edit_ratio_value       = ($post_id > 0) ? get_post_meta($post_id, '_ratio', true) : '';
+
+$edit_ratio_value               = ($post_id > 0) ? get_post_meta($post_id, '_ratio', true) : '';
+$edit_portrait_max_height_value = ($post_id > 0) ? get_post_meta($post_id, '_portrait_max_height', true) : '';
 ?>
 <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start">
   <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center">
@@ -83,21 +85,34 @@ $edit_ratio_value       = ($post_id > 0) ? get_post_meta($post_id, '_ratio', tru
   <div class="lpl-box-border lpl-w-full lpl-h-[36px] lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_12px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[8px]">
     <input type="text" name="_audio_title" value="<?php echo esc_attr($edit_audio_title_value); ?>"
       placeholder="<?php esc_attr_e('Defaults to the post title', 'vapfem'); ?>"
-      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-ink-soft [appearance:none] [-webkit-appearance:none]" />
+      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary [appearance:none] [-webkit-appearance:none]" />
   </div>
 </div>
 
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start">
-  <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center">
-    <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
-      <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
-        <?php esc_html_e('Aspect Ratio (Video)', 'vapfem'); ?>
-      </div>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[12px] lpl-justify-between lpl-items-center">
+  <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
+    <?php esc_html_e('Aspect Ratio (Video)', 'vapfem'); ?>
+  </div>
+  <select name="_ratio" class="lpl-h-[36px] lpl-w-[200px] lpl-shrink-0">
+    <?php leanpl_admin_new_options('_ratio', $post_id); ?>
+  </select>
+</div>
+
+<div
+  data-lpl-show-if="_ratio:9:16"
+  class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[4px] lpl-justify-start lpl-items-start<?php echo $edit_ratio_value !== '9:16' ? ' lpl-hidden' : ''; ?>"
+>
+  <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[12px] lpl-justify-between lpl-items-center">
+    <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
+      <?php esc_html_e('Max Height', 'vapfem'); ?>
+    </div>
+    <div class="lpl-box-border lpl-w-[200px] lpl-h-[36px] lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_12px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[8px]">
+      <input type="text" name="_portrait_max_height" value="<?php echo esc_attr($edit_portrait_max_height_value); ?>"
+        placeholder="70vh"
+        class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary [appearance:none] [-webkit-appearance:none]" />
     </div>
   </div>
-  <div class="lpl-box-border lpl-w-full lpl-h-[36px] lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_12px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[8px]">
-    <input type="text" name="_ratio" value="<?php echo esc_attr($edit_ratio_value); ?>"
-      placeholder="<?php esc_attr_e('Empty = Automatic (16:9, 4:3, 1:1, 9:16)', 'vapfem'); ?>"
-      class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-ink-soft [appearance:none] [-webkit-appearance:none]" />
+  <div class="lpl-text-[11px]/[normal] lpl-box-border lpl-text-label-secondary lpl-font-normal lpl-text-left">
+    <?php esc_html_e("Controls the video's height on screen. The width resizes itself to match. Accepts values like 70vh or 500px.", 'vapfem'); ?>
   </div>
 </div>

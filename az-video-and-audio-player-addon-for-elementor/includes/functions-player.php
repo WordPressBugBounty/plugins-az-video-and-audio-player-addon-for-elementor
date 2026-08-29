@@ -159,6 +159,33 @@ function leanpl_get_speed_registry() {
 }
 
 /**
+ * Aspect Ratio Registry — SSOT for the shapes the "Video Shape (Aspect Ratio)"
+ * picker offers, and the allowlist the per-player path validates against.
+ *
+ * Keys   : `ratio` value in Plyr's "W:H" form; '' means automatic (16:9).
+ * Values : Human-readable label for admin UI.
+ *
+ * `_ratio` was a free-text input through 3.3.1 and became a <select> in 3.3.2.
+ * These five entries are exactly what that text field's tooltip and placeholder
+ * ever suggested, so upgrading loses nothing anyone was told to type. A player
+ * still holding something else (a self-invented '21:9', '2.35:1') is treated as
+ * automatic — see Player_Shortcode::build_config_from_post().
+ *
+ * Scope note: this gates the per-player picker only. The Elementor widgets and
+ * the [lean_video] shortcode keep a free-text ratio ("e.g. 16:9 or 4:3 or
+ * other") and accept any shape, so they never consult this list.
+ */
+function leanpl_get_ratio_options() {
+    return [
+        ''     => __( 'Automatic (16:9)',      'vapfem' ),
+        '16:9' => __( '16:9 (Widescreen)',     'vapfem' ),
+        '4:3'  => __( '4:3 (Standard)',        'vapfem' ),
+        '1:1'  => __( '1:1 (Square)',          'vapfem' ),
+        '9:16' => __( '9:16 (Vertical / Reel)', 'vapfem' ),
+    ];
+}
+
+/**
  * Player Layout Registry — SSOT for the control-bar layouts offered under the
  * "Preset" label in the UI. See CLAUDE.md "Vocabulary: skin vs layout vs preset".
  *
@@ -166,14 +193,24 @@ function leanpl_get_speed_registry() {
  * Values : [
  *   'label'    => Human-readable label for admin UI (this is the user-facing "Preset")
  *   'image'    => Preview image URL for the image-select field
- *   'controls' => ['video' => [...], 'audio' => [...]] of Plyr control slugs.
- *                 Every layout defines this; Player_Renderer uses it as the
- *                 controls array outright, overriding whatever $config['controls']
- *                 (the retired standalone Controls picker, Lock A2) resolved to
- *                 — full override, not a subset. An unresolved/empty
- *                 `player_layout` (nothing chosen anywhere in the merge chain)
- *                 resolves to `classic`'s array — see resolve_layout_controls()
- *                 in class-player-renderer.php.
+ *   'controls' => ['video' => [...], 'video_portrait' => [...], 'audio' => [...]]
+ *                 of Plyr control slugs. Every layout defines 'video'/'audio';
+ *                 Player_Renderer uses it as the controls array outright,
+ *                 overriding whatever $config['controls'] (the retired
+ *                 standalone Controls picker, Lock A2) resolved to — full
+ *                 override, not a subset. An unresolved/empty `player_layout`
+ *                 (nothing chosen anywhere in the merge chain) resolves to
+ *                 `classic`'s array — see resolve_layout_controls() in
+ *                 class-player-renderer.php.
+ *                 'video_portrait' is optional — only present on layouts
+ *                 whose full 'video' set is too crowded for a narrow 9:16
+ *                 (Shorts) frame. resolve_layout_controls() uses it in place
+ *                 of 'video' whenever the video is portrait, falling back to
+ *                 'video' when the layout has no portrait-specific list
+ *                 (Simple/Minimal aren't crowded to begin with). Everything
+ *                 dropped for portrait stays reachable another way — e.g.
+ *                 captions/quality/speed are still in the settings menu, they
+ *                 just lose their standalone control-bar button.
  * ]
  *
  * Order here = order in the metabox / Settings image-select grid.
@@ -188,8 +225,9 @@ function leanpl_get_player_layouts() {
             // picker. Mirrors VIDEO_DEFAULT_CONTROLS / AUDIO_DEFAULT_CONTROLS
             // in assets/js/player-utils.js.
             'controls' => [
-                'video' => [ 'play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
-                'audio' => [ 'play', 'progress', 'mute', 'volume', 'settings' ],
+                'video'          => [ 'play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                'video_portrait' => [ 'play-large', 'play', 'progress', 'current-time', 'mute', 'settings', 'fullscreen' ],
+                'audio'          => [ 'play', 'progress', 'mute', 'volume', 'settings' ],
             ],
         ],
         'modern' => [
@@ -204,8 +242,9 @@ function leanpl_get_player_layouts() {
             // rewind/play/fast-forward, then mute+volume, then time, then
             // settings/pip/airplay/fullscreen.
             'controls' => [
-                'video' => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
-                'audio' => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
+                'video'          => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                'video_portrait' => [ 'play-large', 'play', 'progress', 'current-time', 'mute', 'settings', 'fullscreen' ],
+                'audio'          => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
             ],
         ],
         'simple' => [
@@ -220,8 +259,13 @@ function leanpl_get_player_layouts() {
             'label' => __( 'Floating', 'vapfem' ),
             'image' => LEANPL_URI . '/assets/img/player-layouts/floating.webp',
             'controls' => [
-                'video' => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
-                'audio' => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
+                'video'          => [ 'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'captions', 'settings', 'pip', 'airplay', 'fullscreen' ],
+                // No 'mute' in the bottom bar on Floating specifically -
+                // 'play-large' (the big centre button) plus the small bar
+                // 'play' cover play/pause, mute is judged skippable for a
+                // portrait clip. Landscape ('video' above) is untouched.
+                'video_portrait' => [ 'play-large', 'play', 'progress', 'current-time', 'settings', 'fullscreen' ],
+                'audio'          => [ 'rewind', 'play', 'fast-forward', 'progress', 'mute', 'volume', 'current-time', 'settings', 'airplay', 'download' ],
             ],
         ],
         'minimal' => [
@@ -267,7 +311,7 @@ function leanpl_parse_video_url($url) {
     $url = trim(wp_strip_all_tags(wp_unslash($url)));
 
     // YouTube patterns
-    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
         return [
             'type' => 'youtube',
             'id' => $matches[1],
@@ -650,6 +694,79 @@ function leanpl_get_url_extension( $url ) {
     $path = (string) wp_parse_url( $url, PHP_URL_PATH );
 
     return strtolower( (string) pathinfo( $path, PATHINFO_EXTENSION ) );
+}
+
+/**
+ * Work out whether a video shape is "tall" (portrait), and if so, how wide it
+ * is compared to its height.
+ *
+ * Examples:
+ *   "9:16"  ->  "0.5625"   (9 divided by 16 — taller than it is wide)
+ *   "3:4"   ->  "0.75"     (also taller than wide)
+ *   "16:9"  ->  ""         (wider than tall — not portrait, nothing to do)
+ *   "1:1"   ->  ""         (square — not portrait)
+ *   "oops"  ->  ""         (not a shape we understand)
+ *
+ * main.css multiplies this number by the maximum height to work out how wide a
+ * vertical player is allowed to be.
+ *
+ * @param string $ratio Shape written as "width:height", e.g. "9:16". May be empty.
+ * @return string Width divided by height as text, or '' when it is not portrait.
+ */
+function leanpl_get_portrait_ratio_num( $ratio ) {
+    $ratio = trim( (string) $ratio );
+
+    // It has to look exactly like "number:number", for example "9:16".
+    // Anything else (empty, "16-9", "banana") is not something we can use.
+    if ( ! preg_match( '/^(\d+)\s*:\s*(\d+)$/', $ratio, $matches ) ) {
+        return '';
+    }
+
+    $width  = (int) $matches[1];
+    $height = (int) $matches[2];
+
+    // Stop nonsense like "0:16" or "9:0" before we divide by zero.
+    if ( $width < 1 || $height < 1 ) {
+        return '';
+    }
+
+    // Only tall videos get the special treatment. If the height is not bigger
+    // than the width, this is a square or widescreen video: leave it alone.
+    if ( $height <= $width ) {
+        return '';
+    }
+
+    // Turn 9 / 16 into "0.5625".
+    $decimal = number_format( $width / $height, 4, '.', '' );
+
+    // Tidy the tail so 1:2 reads as "0.5" and not "0.5000".
+    $decimal = rtrim( $decimal, '0' );
+    $decimal = rtrim( $decimal, '.' );
+
+    return $decimal;
+}
+
+/**
+ * Let through only a safe CSS size, because whatever this returns gets printed
+ * straight into a style="..." attribute on the page.
+ *
+ * Allowed:  "70vh", "600px", "50%", "2.5rem"
+ * Blocked:  "red", "70" (no unit), "-10px", and anything trying to smuggle in
+ *           extra styling such as "70vh; background: url(something-nasty)".
+ *
+ * @param string $value Whatever the user typed into the setting box.
+ * @return string The value when it is a real size, or '' when it is not.
+ */
+function leanpl_sanitize_css_length( $value ) {
+    $value = trim( (string) $value );
+
+    // A number, optionally with decimals, followed by a unit we recognise.
+    // Nothing else is allowed anywhere in the string.
+    if ( preg_match( '/^\d+(\.\d+)?(vh|vw|px|rem|em|%)$/', $value ) ) {
+        return $value;
+    }
+
+    return '';
 }
 
 /**

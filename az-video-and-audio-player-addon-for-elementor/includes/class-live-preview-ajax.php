@@ -348,6 +348,11 @@ class Live_Preview_Ajax {
             $config['ratio'] = $ratio;
         }
 
+        $portrait_max_height = $this->post_str( '_portrait_max_height' );
+        if ( $portrait_max_height !== '' ) {
+            $config['portrait_max_height'] = $portrait_max_height;
+        }
+
         $primary_color = $this->post_str( '_primary_color' );
         if ( $primary_color !== '' ) {
             $config['per_player_primary_color'] = $primary_color;

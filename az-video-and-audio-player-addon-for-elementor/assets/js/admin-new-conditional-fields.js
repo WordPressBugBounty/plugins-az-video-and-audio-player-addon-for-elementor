@@ -30,9 +30,12 @@
 
   function conditionMet(spec) {
     return spec.split(';').every(function (clause) {
-      var parts = clause.split(':');
-      var field = parts[0];
-      var allowed = parts[1].split(',');
+      // First colon only - a value can itself contain one (e.g. an aspect
+      // ratio like "9:16"), so a naive split(':') would misparse it as an
+      // extra segment instead of part of the value.
+      var sep = clause.indexOf(':');
+      var field = clause.slice(0, sep);
+      var allowed = clause.slice(sep + 1).split(',');
       var current = fieldValue(field);
       return current !== null && allowed.indexOf(current) !== -1;
     });
