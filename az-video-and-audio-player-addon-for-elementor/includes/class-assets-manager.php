@@ -280,12 +280,16 @@ class Assets_Manager {
 
         // Enqueue jQuery first, other plugins may remove it from the queue
         wp_enqueue_script('jquery');
-
-        // Localization
+        
         wp_localize_script('jquery', 'leanpl_params', [
             'version' => $this->version,
             'debugMode' => leanpl_is_test_mode() || leanpl_is_debug_mode(),
             'ajaxUrl' => admin_url('admin-ajax.php'),
+            'i18n' => [
+                'unavailable' => __( 'This audio could not be loaded. May be the station  is offline.', 'vapfem' ),
+                'dropped'     => __( 'The connection was lost. This can happen with live streams.', 'vapfem' ),
+                'retry'       => __( 'Try again', 'vapfem' ),
+            ],
         ]);
     }
 

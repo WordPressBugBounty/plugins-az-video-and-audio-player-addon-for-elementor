@@ -428,6 +428,60 @@ function leanpl_admin_new_save_player() {
 add_action( 'wp_ajax_leanpl_admin_new_save_player', __NAMESPACE__ . '\\leanpl_admin_new_save_player' );
 
 /**
+ * Ask a media URL what kind of thing it actually is, for the Edit Player
+ * screen's Add Media button. A browser can't ask another site's server this
+ * question itself, so it asks ours instead.
+ *
+ * Only called client-side (initAddMedia() in admin-new.js) when the
+ * instant, no-network checks already there - YouTube/Vimeo by name, a known
+ * file extension - come back empty. That is almost always just a live
+ * stream, whose address has no file ending to read
+ * (e.g. ".../groovesalad-128-mp3" - a hyphen, not a dot). See
+ * leanpl_probe_media_kind() (functions-player.php) for the HEAD-request
+ * mechanics, its caching, and its SSRF protection.
+ *
+ * While already asking, this also flags two problems worth catching before
+ * the player is saved rather than after a visitor hits them: a dead link
+ * (the address answered "not found"), and an insecure stream on a secure
+ * site (browsers silently block http:// media on an https:// page - this is
+ * a plain scheme comparison, not something the probe's own response can
+ * see, since the station answers our server just fine either way).
+ *
+ * @return void Sends JSON and exits.
+ */
+function leanpl_admin_new_detect_media() {
+    check_ajax_referer( 'leanpl_detect_media', 'nonce' );
+
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( [ 'message' => __( 'Permission denied.', 'vapfem' ) ], 403 );
+    }
+
+    $url = isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '';
+
+    if ( '' === $url || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+        wp_send_json_success( [
+            'kind'    => 'unknown',
+            'warning' => null,
+        ] );
+    }
+
+    $probed  = leanpl_probe_media_kind( $url );
+    $warning = null;
+
+    if ( $probed['dead'] ) {
+        $warning = 'dead';
+    } elseif ( leanpl_is_insecure_media_url( $url ) ) {
+        $warning = 'insecure';
+    }
+
+    wp_send_json_success( [
+        'kind'    => $probed['kind'],
+        'warning' => $warning,
+    ] );
+}
+add_action( 'wp_ajax_leanpl_admin_new_detect_media', __NAMESPACE__ . '\\leanpl_admin_new_detect_media' );
+
+/**
  * Publish/Update for the Edit Playlist (New) screen
  * (Settings_Page::render_playlist_edit_new_page()). Creates or updates a
  * lean_playlist post's title and persists every _playlist_* registry key the
@@ -645,6 +699,7 @@ function leanpl_admin_new_save_playlist() {
                     'duration'      => array_key_exists( 'duration', $edit_patch ) ? sanitize_text_field( (string) $edit_patch['duration'] ) : $current['duration'],
                     'meta_text'     => array_key_exists( 'meta_text', $edit_patch ) ? sanitize_text_field( (string) $edit_patch['meta_text'] ) : $current['meta_text'],
                     'playlist_type' => $edit_playlist_type,
+                    'probe'         => true,
                 ] );
             }
         }

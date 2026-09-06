@@ -105,6 +105,12 @@
         var player = new Plyr( $playerEl[0], plyrConfig );
         leanplUtils.playerRegistry.register(player);
 
+        var failureWatcher = null;
+        if (leanplUtils.watchPlaybackFailure) {
+            failureWatcher = leanplUtils.watchPlaybackFailure(player, $playerEl[0]);
+            $playlist[0].__leanplFailureWatcher = failureWatcher;
+        }
+
         var emitDetail = function (extra) {
             return Object.assign({ source: 'playlist', playerType: isAudio ? 'audio' : 'video', player: player, el: $playlist[0] }, extra || {});
         };
@@ -194,6 +200,12 @@
             log('select', 'toggle play');
             player.togglePlay();
             return;
+        }
+
+        // New track: a notice from a dead track must not linger over the next one.
+        var failureWatcher = $playlist[0].__leanplFailureWatcher;
+        if (failureWatcher && typeof failureWatcher.reset === 'function') {
+            failureWatcher.reset();
         }
 
         var source = $item.data('lpl-source');

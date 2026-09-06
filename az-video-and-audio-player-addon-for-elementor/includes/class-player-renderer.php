@@ -355,7 +355,7 @@ class Player_Renderer {
       }
 
         if (!$this->is_valid_video_type($config['video_type'])) {
-            $this->render_error('Invalid video type provided.');
+            $this->render_error( __( 'Invalid video type provided.', 'vapfem' ) );
             return;
         }
 
@@ -442,7 +442,7 @@ class Player_Renderer {
         }
 
         if (empty($config['url'])) {
-            $this->render_error('No audio source provided.');
+            $this->render_error( __( 'No audio source provided.', 'vapfem' ) );
             return;
         }
 
@@ -576,7 +576,7 @@ class Player_Renderer {
      */
     private function render_html5_markup($config, $data_settings) {
         if (empty($config['sources'])) {
-            $this->render_error('No video sources provided for HTML5 player.');
+            $this->render_error( __( 'No video sources provided for HTML5 player.', 'vapfem' ) );
             return;
         }
 
@@ -636,7 +636,7 @@ class Player_Renderer {
      */
     private function render_youtube_markup($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
-            $this->render_error('YouTube video ID is required.');
+            $this->render_error( __( 'YouTube video ID is required.', 'vapfem' ) );
             return;
         }
 
@@ -666,7 +666,7 @@ class Player_Renderer {
      */
     private function render_vimeo_player($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
-            $this->render_error('Vimeo video ID is required.');
+            $this->render_error( __( 'Vimeo video ID is required.', 'vapfem' ) );
             return;
         }
 
@@ -800,14 +800,19 @@ class Player_Renderer {
     }
 
     /**
-     * Render error message
-     * 
+     * Render error message.
+     *
+     * Shares the .lpl-player-notice look with the JS playback-failure notice
+     * (see assets/js/player-utils.js) so the two error states read as one.
+     * No inline styles — all presentation lives in main.css and stays
+     * themeable. Callers pass already-translated strings.
+     *
      * @param string $message Error message
      * @return void
      */
     private function render_error($message) {
         printf(
-            '<div class="lpl-player__error" style="padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 4px;">%s</div>',
+            '<div class="lpl-player__error lpl-player-notice" role="status"><p class="lpl-player-notice__text">%s</p></div>',
             esc_html($message)
         );
     }

@@ -120,6 +120,9 @@
         if (wrapper) {
             wrapper.__leanplPlayer = player;
         }
+        if (leanplUtils.watchPlaybackFailure) {
+            leanplUtils.watchPlaybackFailure(player, element);
+        }
 
         player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'video', playerType: 'video', player: player, el: element }); });
         player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'video', playerType: 'video', player: player, el: element }); });
@@ -152,6 +155,9 @@
         element.__leanplPlayer = player;
         if (wrapper) {
             wrapper.__leanplPlayer = player;
+        }
+        if (leanplUtils.watchPlaybackFailure) {
+            leanplUtils.watchPlaybackFailure(player, element);
         }
 
         player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'audio', playerType: 'audio', player: player, el: element }); });

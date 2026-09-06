@@ -161,6 +161,10 @@ class Base {
         require_once LEANPL_DIR . '/includes/class-live-preview-ajax.php';
         Live_Preview_Ajax::get_instance();
 
+        // REST endpoints (separate from the wp_ajax_* handlers above).
+        // Self-instantiates at the bottom of its own file.
+        require_once LEANPL_DIR . '/includes/class-rest-api.php';
+
         // Load admin files
         if (is_admin()) {
             // Deactivation feedback now rides the Freemius dialog (see diagnostic-data.php),

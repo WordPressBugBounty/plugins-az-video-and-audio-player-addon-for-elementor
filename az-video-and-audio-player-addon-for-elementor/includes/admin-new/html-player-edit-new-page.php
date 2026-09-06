@@ -67,13 +67,21 @@ $edit_sections = $edit_config['sections'];
 // driven by the user picking a source.
 // See docs/admin-redesign-pencil-porting-process.md.
 $edit_has_saved_source = ($post_id > 0 && !empty($edit_saved_source['_player_type']));
+
+// The Source card (edit-section-source.php) only makes sense once there's
+// a real source to show/edit - a brand-new player gets the picker instead,
+// same condition as $edit_has_saved_source above.
+if (!$edit_has_saved_source) {
+  unset($edit_sections['source']);
+}
+
 $edit_source_tabs           = include LEANPL_DIR . '/includes/admin-new/config/player-edit-source-tabs.php';
 $edit_source_active_tab     = '';
 $edit_source_show_url_field = true;
 $edit_source_show_or        = true;
 $edit_source_url_label      = __('PASTE A MEDIA URL', 'vapfem');
 $edit_source_url_placeholder = 'https://example.com/video.mp4';
-$edit_source_help_text      = __("Paste a YouTube, Vimeo, or direct video/audio link, we'll detect the source automatically.", 'vapfem');
+$edit_source_help_text      = __("Paste a YouTube, Vimeo, direct video/audio link, or audio stream URL, we'll detect the source automatically.", 'vapfem');
 
 ?>
 <div class="lpl-admin lpl-player-edit-new-page lpl-box-border lpl-w-full lpl-h-fit lpl-flex lpl-flex-col lpl-gap-0 lpl-justify-start lpl-items-start lpl-bg-canvas lpl-overflow-hidden">

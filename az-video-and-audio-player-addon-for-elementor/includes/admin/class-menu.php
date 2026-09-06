@@ -605,7 +605,7 @@ JS
      * Add plugin action links
      */
     public function add_plugin_action_links($links) {
-        $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=lean-player-settings#settings')) . '">' . esc_html__('Settings', 'vapfem') . '</a>';
+        $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=lean-player')) . '">' . esc_html__('Settings', 'vapfem') . '</a>';
         $links[] = $settings_link;
         return $links;
     }

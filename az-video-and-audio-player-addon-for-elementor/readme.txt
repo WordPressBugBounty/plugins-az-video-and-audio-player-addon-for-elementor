@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.2
+Stable tag: 3.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,7 @@ Lean Player handles it all, in one lightweight plugin:
 * **Vimeo**
 * **HTML5 video** - MP4, WebM, OGG
 * **Audio** - MP3, OGG, WAV, M4A, AAC, FLAC
+* **Audio - Live Stream** (Icecast, Shoutcast and other radio streams)
 * **Video playlist**
 * **Audio playlist**
 * **Brand color matching** so the player looks like part of your site, not a plugin
@@ -69,7 +70,7 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 
 **Audio Sources:**
 * Supported formats: MP3, OGG, WAV, M4A, AAC, FLAC
-* Audio streaming support (MP3, AAC streams)
+* Live radio stream support (MP3, AAC), works with Icecast, Shoutcast and any other server that serves a direct stream URL
 * Media library upload or direct URL/streaming URL
 
 **Playback Options:**
@@ -157,6 +158,19 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.3.3 =
+* Added: Plain-English notice with a "Try again" button when audio/video fails to play.
+* Added: A stream that connects but never plays is given up on after 7 seconds instead of hanging silently.
+* Added: "Source" section on the Edit Player screen for a player that already has a source - update its URL (YouTube/Vimeo/CDN/Audio) or swap its uploaded file without changing whether it's a video or audio player.
+* Improved: Player error messages are now translatable and match the new playback notice's look.
+* Improved: Clearer docs on live radio stream support (Icecast/Shoutcast, HTTPS requirement).
+* Improved: Edit screen polish - Shortcode label, stronger Copy button, aligned placeholder colors.
+* Fixed: Live stream URLs with no file extension were misdetected as video and refused in playlists.
+* Improved: Add Media source tabs now have their own soft colors; "Audio Live Stream" renamed to "Audio Stream".
+* Fixed: Adding a playlist track while a live stream was loading could reset it repeatedly and never let it play.
+* Fixed: Player Accent Color picker needed two clicks before the live preview updated.
+* Fixed: Playlist Items panel's "No tracks yet" message didn't reappear after removing every track from a playlist that started with items.
+
 = Version: 3.3.2 =
 * Added: 9:16 (Vertical / Reel) videos now render at a sensible, capped, centred size instead of stretching to fill the page. New per-player "Vertical Video Max Height" setting.
 * Added: YouTube Shorts links (youtube.com/shorts/...) are now recognized as a valid YouTube video source.
@@ -375,9 +389,9 @@ Replace "123" with your player's ID. You can find the shortcode for each player 
 **Audio Sources:**
 * Supported formats: MP3, OGG, WAV, M4A, AAC, FLAC
 * OPUS is supported via a direct URL/CDN link. WordPress does not allow .opus files in the media library, so it cannot be uploaded.
-* Audio streaming support for live streams (MP3, AAC streams)
+* Live radio stream support (MP3, AAC), works with Icecast, Shoutcast and any other server that serves a direct stream URL
 
-You can upload files through the WordPress media library, use direct URLs/CDN links, or stream live audio from streaming URLs.
+You can upload files through the WordPress media library, use direct URLs/CDN links, or stream live audio from streaming URLs. Any server works, Icecast, Shoutcast or anything else, as long as it gives you a direct stream URL. Note that on an HTTPS site the stream URL must be HTTPS too, since browsers block plain HTTP audio on a secure page. Older stations that only offer HTTP cannot play there, which is a limit of the station rather than the plugin.
 
 = Does this work with Elementor? =
 

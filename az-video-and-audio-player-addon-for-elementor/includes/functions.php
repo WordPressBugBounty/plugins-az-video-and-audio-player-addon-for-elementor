@@ -23,7 +23,7 @@ function leanpl_is_debug_mode() {
  * @return bool True if lpl_debug=1 is in the query string
  */
 function leanpl_is_test_mode() {
-	if ( isset( $_GET['lean_debug'] ) ) {
+	if ( isset( $_GET['lpl_test'] ) ) {
 		return true;
 	}
 	

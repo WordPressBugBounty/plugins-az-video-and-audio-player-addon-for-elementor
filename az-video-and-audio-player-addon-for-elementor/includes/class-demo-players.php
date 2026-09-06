@@ -61,26 +61,6 @@ class Demo_Players {
                     '_html5_source_type' => 'link',
                     '_html5_video_url' => 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
                 ]
-            ],
-            [
-                'title' => __('Demo: YouTube Video Player - Auto Play (Muted)', 'vapfem'),
-                'meta' => [
-                    '_player_type' => 'video',
-                    '_video_type' => 'youtube',
-                    '_youtube_url' => 'https://www.youtube.com/watch?v=bTqVqk7FSmY',
-                    '_autoplay' => '1',
-                    '_muted' => '1',
-                ]
-            ],
-            [
-                'title' => __('Demo: Audio / Podcast Player - Speed 1.25', 'vapfem'),
-                'meta' => [
-                    '_player_type' => 'audio',
-                    '_audio_source_type' => 'link',
-                    '_html5_audio_url' => 'https://download.samplelib.com/mp3/sample-15s.mp3',
-                    '_speed_selected' => '1.25',
-                    '_volume' => 80,
-                ]
             ]
         ];
     }

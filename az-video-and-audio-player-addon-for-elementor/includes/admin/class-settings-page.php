@@ -257,6 +257,10 @@ class Settings_Page {
             'ajaxUrl'     => admin_url('admin-ajax.php'),
             'nonce'       => wp_create_nonce('leanpl_live_preview'),
             'saveNonce'   => wp_create_nonce('leanpl_admin_new_save_player'),
+            // For leanpl_admin_new_detect_media - the Add Media button's
+            // fallback probe when a pasted URL is otherwise unrecognised
+            // (chiefly a live stream address).
+            'detectNonce' => wp_create_nonce('leanpl_detect_media'),
             'postId'      => $post_id,
             'savedSource' => $edit_saved_source,
             'savedPoster' => $edit_poster_id,

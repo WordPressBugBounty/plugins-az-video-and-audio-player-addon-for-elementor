@@ -100,6 +100,12 @@ $edit_layout_locked = ! empty( $edit_layout_field_filtered['pro'] );
 
 return [
   'sections' => [
+    // Only rendered for a player that already has a saved source -
+    // html-player-edit-new-page.php unsets this key entirely for a
+    // brand-new/sourceless player, which still gets the source picker
+    // instead. See edit-section-source.php for why editing through it can
+    // never change _player_type.
+    'source'          => [ 'label' => __('Source', 'vapfem'),             'icon' => 'link',                'open' => false ],
     'general'         => [ 'label' => __('General', 'vapfem'),           'icon' => 'play-outline',       'open' => true ],
     'layout-branding' => [
       'label'         => __('Layout & Branding', 'vapfem'),

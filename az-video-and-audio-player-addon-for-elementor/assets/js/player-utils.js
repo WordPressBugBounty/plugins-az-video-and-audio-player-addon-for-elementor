@@ -420,6 +420,246 @@ window.leanplUtils = (function () {
         }
     }
 
+    function getFailureMessages() {
+        var fallback = {
+            unavailable: 'This audio could not be loaded. May be the station  is offline.',
+            dropped:     'The connection was lost. This can happen with live streams.',
+            retry:       'Try again'
+        };
+        var bundle = (typeof leanpl_params !== 'undefined' && leanpl_params.i18n) || {};
+        var out = {};
+        for (var key in fallback) {
+            if (fallback.hasOwnProperty(key)) {
+                out[key] = (bundle[key] !== undefined && bundle[key] !== '') ? bundle[key] : fallback[key];
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Pick the real cause of a load failure.
+     *
+     * The browser collapses every failure reason (blocked insecure address,
+     * unsupported format, wrong link, offline station, silent hang) into one
+     * vague error code, so there is only one meaningful distinction left to
+     * make ourselves: did it ever actually play? A mid-stream disconnect is
+     * a different, more specific story worth telling apart from every other
+     * "never loaded" case.
+     *
+     * @param {HTMLElement} media      The <audio>/<video> element. Unused; kept
+     *                                 for API stability.
+     * @param {boolean}     hadSuccess True when playback succeeded before dying.
+     * @return {string} One of unavailable|dropped.
+     */
+    function classifyPlaybackFailure(media, hadSuccess) {
+        return hadSuccess ? 'dropped' : 'unavailable';
+    }
+
+    /**
+     * Watch an HTML5 Plyr instance and explain load failures to the visitor.
+     *
+     * Record-then-reveal: with preload="metadata" the error usually fires
+     * long before any click, so the failure is remembered whenever it
+     * happens and only revealed on the first play attempt. A 10 second
+     * timer catches the silent hang where the server accepts the connection
+     * and then sends nothing at all (no error event ever fires).
+     *
+     * YouTube/Vimeo are left alone (guard on player.isHTML5): embeds render
+     * their own failure state inside their iframe.
+     *
+     * @param {Object}      player  Plyr instance.
+     * @param {HTMLElement} element The original <audio>/<video> element.
+     * @return {Object} { reset, destroy } — reset clears state + notice.
+     */
+    function watchPlaybackFailure(player, element) {
+        var noop = { reset: function () {}, destroy: function () {} };
+
+        if (!player || typeof player.on !== 'function') {
+            return noop;
+        }
+        try {
+            if (!player.isHTML5) {
+                return noop;
+            }
+        } catch (e) {
+            return noop;
+        }
+
+        var playAttempted = false;
+        var hadSuccess = false;
+        var recordedKind = null;
+        var timer = null;
+        var notice = null;
+        var destroyed = false;
+
+        function getWrap() {
+            var base = element || player.media || (player.elements && player.elements.container);
+            if (base && base.closest) {
+                var wrap = base.closest('.lpl-player-wrap');
+                if (wrap) {
+                    return wrap;
+                }
+            }
+            if (player.elements && player.elements.container && player.elements.container.closest) {
+                return player.elements.container.closest('.lpl-player-wrap');
+            }
+            return null;
+        }
+
+        function removeNotice() {
+            if (notice && notice.parentNode) {
+                notice.parentNode.removeChild(notice);
+            }
+            notice = null;
+        }
+
+        function showNotice(kind) {
+            if (destroyed) {
+                return;
+            }
+            var messages = getFailureMessages();
+            var text = messages[kind] || messages.unavailable;
+            var wrap = getWrap();
+            if (!wrap || !wrap.parentNode) {
+                return;
+            }
+            if (!notice) {
+                notice = document.createElement('div');
+                notice.className = 'lpl-player-notice';
+                notice.setAttribute('role', 'status');
+                notice.setAttribute('aria-live', 'polite');
+
+                var p = document.createElement('p');
+                p.className = 'lpl-player-notice__text';
+                notice.appendChild(p);
+
+                var btn = document.createElement('button');
+                btn.setAttribute('type', 'button');
+                btn.className = 'lpl-player-notice__retry';
+                btn.textContent = messages.retry;
+                btn.addEventListener('click', handleRetry);
+                notice.appendChild(btn);
+            }
+            var textEl = notice.querySelector('.lpl-player-notice__text');
+            if (textEl) {
+                textEl.textContent = text;
+            }
+            var retryBtn = notice.querySelector('.lpl-player-notice__retry');
+            if (retryBtn) {
+                retryBtn.textContent = messages.retry;
+            }
+            if (!notice.parentNode) {
+                wrap.insertAdjacentElement('afterend', notice);
+            }
+        }
+
+        function clearTimer() {
+            if (timer) {
+                clearTimeout(timer);
+                timer = null;
+            }
+        }
+
+        function startTimer() {
+            clearTimer();
+            timer = setTimeout(function () {
+                timer = null;
+                if (destroyed || hadSuccess || recordedKind) {
+                    return;
+                }
+                recordedKind = 'unavailable';
+                if (playAttempted) {
+                    showNotice(recordedKind);
+                }
+            }, 7000);
+        }
+
+        function handleRetry() {
+            recordedKind = null;
+            removeNotice();
+            try {
+                // load() re-runs the browser's own resource-selection algorithm
+                // against the current <source> children and starts a fresh
+                // fetch, independent of Plyr entirely. Plyr's own `source`
+                // setter is not usable here: its getter returns media.currentSrc
+                // (a plain string) but the setter requires a { sources, type }
+                // object, so reassigning the getter's output back into it is
+                // rejected as an invalid source and does nothing.
+                if (player.media && typeof player.media.load === 'function') {
+                    player.media.load();
+                }
+            } catch (e) {}
+            playAttempted = true;
+            startTimer();
+            try {
+                var p = player.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(function () {});
+                }
+            } catch (e) {}
+        }
+
+        player.on('error', function () {
+            try {
+                if (!player.isHTML5) {
+                    return;
+                }
+            } catch (e) {
+                return;
+            }
+            var media = player.media;
+            if (media && media.error && typeof console !== 'undefined' && console.debug) {
+                try {
+                    var params = (typeof leanpl_params !== 'undefined' && leanpl_params.debugMode);
+                    if (params) {
+                        console.debug('[LeanPL] playback error code: ' + media.error.code);
+                    }
+                } catch (e) {}
+            }
+            recordedKind = classifyPlaybackFailure(media, hadSuccess);
+            if (playAttempted) {
+                showNotice(recordedKind);
+            }
+        });
+
+        player.on('play', function () {
+            playAttempted = true;
+            // Only a kind already recorded from a genuine earlier 'error'
+            // (see preload="metadata" note above) is revealed here; a fresh
+            // play attempt starts the timer instead of guessing a failure.
+            if (recordedKind) {
+                showNotice(recordedKind);
+                clearTimer();
+            } else {
+                startTimer();
+            }
+        });
+
+        player.on('playing', function () {
+            hadSuccess = true;
+            clearTimer();
+            recordedKind = null;
+            removeNotice();
+        });
+
+        function reset() {
+            playAttempted = false;
+            hadSuccess = false;
+            recordedKind = null;
+            clearTimer();
+            removeNotice();
+        }
+
+        return {
+            reset: reset,
+            destroy: function () {
+                destroyed = true;
+                clearTimer();
+                removeNotice();
+            }
+        };
+    }
+
     function emit(el, name, detail) {
         el.dispatchEvent(new CustomEvent('leanpl:' + name, { bubbles: true, detail: detail }));
     }
@@ -438,7 +678,9 @@ window.leanplUtils = (function () {
         buildAudioConfig:   buildAudioConfig,
         playerRegistry:     playerRegistry,
         autoInit:           autoInit,
-        emit:               emit
+        emit:               emit,
+        watchPlaybackFailure:    watchPlaybackFailure,
+        classifyPlaybackFailure: classifyPlaybackFailure
     };
 
 })();

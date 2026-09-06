@@ -8,7 +8,7 @@
  * live preview instead (admin-new.js, data-lpl-edit-surface).
  *
  * @var array  $edit_source_tabs           Tab configs from config/player-edit-source-tabs.php:
- *                                          [['key','label','show_url_field','url_label'?,'url_placeholder'?,'help_text'?,'default_value'?], ...]
+ *                                          [['key','label','show_url_field','tab_bg','tab_line','tab_text','url_label'?,'url_placeholder'?,'help_text'?,'default_value'?], ...]
  * @var string $edit_source_active_tab     Key of the visually-selected tab, '' for none.
  * @var bool   $edit_source_show_url_field Whether the active tab's URL section is visible.
  * @var string $edit_source_url_label      e.g. "PASTE A MEDIA URL".
@@ -29,7 +29,10 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
     <div class="lpl-text-[15px]/[normal] lpl-box-border lpl-text-ink lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Add media from different sources', 'vapfem'); ?>
     </div>
-    <div class="lpl-box-border lpl-w-fit lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[8px] lpl-justify-start lpl-items-center">
+    <?php // flex-wrap + justify-center: the six tabs no longer fit on one 520px
+    // row, and the card above clips overflow, so without wrapping the last tab
+    // would be silently cut off rather than pushed onto a second line. ?>
+    <div class="lpl-box-border lpl-w-fit lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-flex-wrap lpl-gap-[8px] lpl-justify-center lpl-items-center">
       <?php foreach ($edit_source_tabs as $edit_tab) : ?>
         <?php $edit_tab_active = ($edit_tab['key'] === $edit_source_active_tab); ?>
         <div data-lpl-source-tab="<?php echo esc_attr($edit_tab['key']); ?>"
@@ -39,8 +42,9 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
           data-lpl-source-default-value="<?php echo esc_attr($edit_tab['default_value'] ?? ''); ?>"
           data-lpl-source-help="<?php echo esc_attr($edit_tab['help_text'] ?? ''); ?>"
           role="tab" tabindex="0" aria-selected="<?php echo $edit_tab_active ? 'true' : 'false'; ?>"
-          class="lpl-group lpl-cursor-pointer lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-[36px] lpl-flex lpl-flex-row lpl-gap-[6px] lpl-p-[0px_14px] lpl-justify-center lpl-items-center lpl-bg-[#FFFFFF] [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] aria-selected:lpl-bg-ink aria-selected:[outline:1px_solid_var(--lpl-ink)] lpl-rounded-[6px]">
-          <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#1A1A1A] lpl-font-semibold lpl-text-left [white-space:nowrap] group-aria-selected:lpl-text-[#FFFFFF]">
+          style="--lpl-tab-bg:<?php echo esc_attr($edit_tab['tab_bg']); ?>;--lpl-tab-line:<?php echo esc_attr($edit_tab['tab_line']); ?>;--lpl-tab-text:<?php echo esc_attr($edit_tab['tab_text']); ?>;"
+          class="lpl-group lpl-cursor-pointer lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-[36px] lpl-flex lpl-flex-row lpl-gap-[6px] lpl-p-[0px_14px] lpl-justify-center lpl-items-center lpl-rounded-[6px]">
+          <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-font-semibold lpl-text-left [white-space:nowrap]">
             <?php echo esc_html($edit_tab['label']); ?>
           </div>
         </div>
@@ -48,11 +52,11 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
     </div>
     <?php if ($edit_source_show_or) : ?>
       <div data-lpl-source-or class="lpl-box-border lpl-w-[520px] lpl-max-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[12px] lpl-justify-start lpl-items-center">
-        <div class="lpl-box-border [flex:1_1_0] lpl-h-[1px] lpl-bg-line"></div>
-        <div class="lpl-text-[11px]/[normal] lpl-box-border lpl-text-ink-soft lpl-font-semibold lpl-tracking-[1px] lpl-text-left [white-space:nowrap]">
+        <div class="lpl-box-border [flex:1_1_0] lpl-h-[1px] lpl-bg-ink"></div>
+        <div class="lpl-text-[11px]/[normal] lpl-box-border lpl-text-ink lpl-font-semibold lpl-tracking-[1px] lpl-text-left [white-space:nowrap]">
           <?php esc_html_e('OR', 'vapfem'); ?>
         </div>
-        <div class="lpl-box-border [flex:1_1_0] lpl-h-[1px] lpl-bg-line"></div>
+        <div class="lpl-box-border [flex:1_1_0] lpl-h-[1px] lpl-bg-ink"></div>
       </div>
     <?php endif; ?>
     <div data-lpl-source-url-field class="lpl-box-border lpl-w-[520px] lpl-max-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[8px] lpl-justify-start lpl-items-start<?php echo $edit_source_show_url_field ? '' : ' lpl-hidden'; ?>">

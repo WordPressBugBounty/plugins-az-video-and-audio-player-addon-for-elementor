@@ -954,6 +954,103 @@ function leanpl_get_player_source_meta_keys() {
 }
 
 /**
+ * Probe a URL's actual content-type via a HEAD request, for the cases the
+ * extension-based rules in leanpl_detect_player_source() cannot resolve -
+ * chiefly a live radio/video stream, whose address has no file ending to
+ * read at all (e.g. ".../groovesalad-128-mp3", a hyphen not a dot).
+ *
+ * A clean HTTP response is cached, keyed by the URL, so re-pasting the same
+ * address is free the second time: a real answer for a few hours, a
+ * confirmed 404 for a shorter spell in case the link comes back. A network
+ * failure (timeout, DNS, connection refused) is never cached and never
+ * treated as an error by the caller - it just means "unknown", so a
+ * station having a bad moment isn't remembered as broken for hours and
+ * never blocks the person who pasted the link.
+ *
+ * @param string $url Media URL to probe. Caller is expected to have already
+ *                     validated it as a well-formed URL.
+ * @return array{kind: string, dead: bool} kind is 'audio', 'video', or
+ *         'unknown' (any other/missing content-type, or the request
+ *         failed). dead is true only for a confirmed 404.
+ */
+function leanpl_probe_media_kind( $url ) {
+    $url = trim( (string) $url );
+    if ( $url === '' ) {
+        return [ 'kind' => 'unknown', 'dead' => false ];
+    }
+
+    $test_mode = function_exists( 'leanpl_is_test_mode' ) && leanpl_is_test_mode();
+    $cache_key = 'leanpl_probe_' . md5( $url );
+
+    if ( ! $test_mode ) {
+        $cached = get_transient( $cache_key );
+        if ( is_array( $cached ) ) {
+            return $cached;
+        }
+    }
+
+    // wp_safe_remote_head(), not wp_remote_head(): it applies
+    // wp_http_validate_url(), which rejects loopback and private-network
+    // addresses. This is the SSRF protection for fetching a URL a person
+    // typed into a text box, and it is the single most important line here.
+    // Redirects are followed (some stations 302 through a redirect whose
+    // pre-redirect Content-Type is text/html), and 8 seconds is deliberate -
+    // real stations measured during development took as long as 5.5s.
+    $response = wp_safe_remote_head( $url, [
+        'timeout'     => 8,
+        'redirection' => 5,
+    ] );
+
+    if ( is_wp_error( $response ) ) {
+        return [ 'kind' => 'unknown', 'dead' => false ];
+    }
+
+    if ( wp_remote_retrieve_response_code( $response ) === 404 ) {
+        $result = [ 'kind' => 'unknown', 'dead' => true ];
+        if ( ! $test_mode ) {
+            set_transient( $cache_key, $result, 15 * MINUTE_IN_SECONDS );
+        }
+        return $result;
+    }
+
+    $content_type = (string) wp_remote_retrieve_header( $response, 'content-type' );
+    $kind         = 'unknown';
+    if ( stripos( $content_type, 'audio/' ) === 0 ) {
+        $kind = 'audio';
+    } elseif ( stripos( $content_type, 'video/' ) === 0 ) {
+        $kind = 'video';
+    }
+
+    $result = [ 'kind' => $kind, 'dead' => false ];
+
+    if ( ! $test_mode ) {
+        set_transient( $cache_key, $result, 6 * HOUR_IN_SECONDS );
+    }
+
+    return $result;
+}
+
+/**
+ * Whether a media URL will be silently blocked by the visitor's browser:
+ * the site itself is served over https but the URL is a plain http://
+ * address. Browsers block that "mixed content" combination with no error a
+ * visitor can act on, so it is worth flagging while the link is still being
+ * edited.
+ *
+ * This has to be a plain scheme comparison, not something read off the
+ * probe's HEAD response - the station itself answers our server's request
+ * perfectly well (this is exactly the Radio Caroline case). Only the
+ * visitor's own browser refuses it, so relying on the probe's answer would
+ * never catch the problem.
+ *
+ * @param string $url Media URL.
+ * @return bool
+ */
+function leanpl_is_insecure_media_url( $url ) {
+    return is_ssl() && stripos( trim( (string) $url ), 'http://' ) === 0;
+}
+
+/**
  * Detect what kind of media source a URL or attachment is, for a given
  * playlist type.
  *
@@ -963,6 +1060,8 @@ function leanpl_get_player_source_meta_keys() {
  *   - .mp3/.m4a/.aac/.wav URL → audio via link
  *   - .ogg URL → resolved by playlist type (valid for both media kinds)
  *   - attachment_id → decided by attachment MIME type
+ *   - still unclear, and $probe is true → leanpl_probe_media_kind() asks
+ *     the address directly (live streams: no file ending to read)
  *
  * The detected player type must match $playlist_type, otherwise a
  * type_mismatch error is returned. This is the single shared rule set used
@@ -972,12 +1071,16 @@ function leanpl_get_player_source_meta_keys() {
  * @param string $url           Media URL. Mutually exclusive with $attachment_id.
  * @param int    $attachment_id Media library attachment ID.
  * @param string $playlist_type 'video' or 'audio'.
+ * @param bool   $probe         Opt-in: when the URL is otherwise unrecognised,
+ *                               probe it with a HEAD request before giving up.
+ *                               Defaults false so every existing caller keeps
+ *                               today's exact behaviour unless it opts in.
  * @return array|WP_Error {
  *     @type string $type Detected player type, 'video' or 'audio'.
  *     @type array  $meta Post meta keys/values to write for this source.
  * }
  */
-function leanpl_detect_player_source( $url, $attachment_id, $playlist_type ) {
+function leanpl_detect_player_source( $url, $attachment_id, $playlist_type, $probe = false ) {
     $url           = trim( (string) $url );
     $attachment_id = absint( $attachment_id );
 
@@ -1063,6 +1166,28 @@ function leanpl_detect_player_source( $url, $attachment_id, $playlist_type ) {
                     '_html5_source_type' => 'link',
                     '_html5_video_url'   => esc_url_raw( $url ),
                 ];
+            } elseif ( $probe ) {
+                // Layer 3, opt-in only: the extension told us nothing, which
+                // is what a live stream address looks like. Ask the address
+                // directly instead of guessing "video" by default.
+                $probed = leanpl_probe_media_kind( $url );
+
+                if ( $probed['kind'] === 'audio' ) {
+                    $detected_type = 'audio';
+                    $source_meta   = [
+                        '_audio_source_type' => 'link',
+                        '_html5_audio_url'   => esc_url_raw( $url ),
+                    ];
+                } elseif ( $probed['kind'] === 'video' ) {
+                    $detected_type = 'video';
+                    $source_meta   = [
+                        '_video_type'        => 'html5',
+                        '_html5_source_type' => 'link',
+                        '_html5_video_url'   => esc_url_raw( $url ),
+                    ];
+                } else {
+                    return new WP_Error( 'unsupported_url', __( 'Unsupported media URL. Use a YouTube, Vimeo, or direct media file link.', 'vapfem' ) );
+                }
             } else {
                 // leanpl_parse_video_url falls back to html5 for anything,
                 // so gate on known media extensions to reject junk URLs.
@@ -1106,7 +1231,7 @@ function leanpl_create_player_from_url( $args ) {
     $url           = isset( $args['url'] ) ? trim( (string) $args['url'] ) : '';
     $attachment_id = isset( $args['attachment_id'] ) ? absint( $args['attachment_id'] ) : 0;
 
-    $detected = leanpl_detect_player_source( $url, $attachment_id, $playlist_type );
+    $detected = leanpl_detect_player_source( $url, $attachment_id, $playlist_type, ! empty( $args['probe'] ) );
     if ( is_wp_error( $detected ) ) {
         return $detected;
     }
@@ -1196,7 +1321,7 @@ function leanpl_update_player_from_url( $player_id, $args ) {
     $url           = isset( $args['url'] ) ? trim( (string) $args['url'] ) : '';
     $attachment_id = isset( $args['attachment_id'] ) ? absint( $args['attachment_id'] ) : 0;
 
-    $detected = leanpl_detect_player_source( $url, $attachment_id, $playlist_type );
+    $detected = leanpl_detect_player_source( $url, $attachment_id, $playlist_type, ! empty( $args['probe'] ) );
     if ( is_wp_error( $detected ) ) {
         return $detected;
     }

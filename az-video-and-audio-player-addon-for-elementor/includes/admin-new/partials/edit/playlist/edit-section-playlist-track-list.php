@@ -201,9 +201,15 @@ $track_list_url_placeholder = ('audio' === $edit_playlist_type)
     </div>
   <?php endif; ?>
 
-  <?php if (0 === $track_list_count) : ?>
-    <div data-lpl-track-list-empty class="lpl-box-border lpl-w-full lpl-p-[24px_0px] lpl-text-[13px]/[normal] lpl-text-ink-soft lpl-text-center">
-      <?php esc_html_e('No tracks yet. Use Add Track below the preview to get started.', 'vapfem'); ?>
-    </div>
-  <?php endif; ?>
+  <?php
+  // Always rendered, regardless of $track_list_count - the JS remove
+  // handler (initTrackList() in admin-new.js) can empty the list purely
+  // client-side without a page reload, and only ever toggles this block's
+  // lpl-hidden class rather than inserting it fresh, so it has to already
+  // be in the DOM on page load or removing the last track down to 0 would
+  // have nothing to un-hide.
+  ?>
+  <div data-lpl-track-list-empty class="lpl-box-border lpl-w-full lpl-p-[24px_0px] lpl-text-[13px]/[normal] lpl-text-ink-soft lpl-text-center<?php echo (0 === $track_list_count) ? '' : ' lpl-hidden'; ?>">
+    <?php esc_html_e('No tracks yet.', 'vapfem'); ?>
+  </div>
 </div>

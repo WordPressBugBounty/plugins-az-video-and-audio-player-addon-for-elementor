@@ -265,6 +265,32 @@ SVG;
               ></path>
             </svg>
 SVG;
+            case 'link':
+                // Section-header icon for the Source card (edit-section-
+                // source.php) - a generic link glyph rather than 'film'
+                // (video-only, and its baked-in 40px sizing didn't match
+                // every other section icon's 16px). Fits both video and
+                // audio sources, upload or URL alike. Stroke-based (unlike
+                // this file's other hand-traced fill paths) since it's
+                // Lucide's own "link" icon, reused as-is at its native 24x24
+                // viewBox/2px stroke rather than re-traced into a filled
+                // path - scales cleanly at the same 16px box either way.
+                return <<<'SVG'
+<svg
+                  viewBox="0 0 24 24"
+                  preserveAspectRatio="xMidYMid meet"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#767D86"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lpl-box-border lpl-w-[16px] lpl-shrink-0 lpl-h-[16px]"
+                >
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+SVG;
             case 'film':
                 return <<<'SVG'
 <svg

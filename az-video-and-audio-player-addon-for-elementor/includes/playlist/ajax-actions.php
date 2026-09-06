@@ -47,6 +47,10 @@ function leanpl_playlist_ajax_quick_add() {
         'duration'      => isset( $_POST['duration'] ) ? sanitize_text_field( wp_unslash( $_POST['duration'] ) ) : '',
         'meta_text'     => isset( $_POST['meta_text'] ) ? sanitize_text_field( wp_unslash( $_POST['meta_text'] ) ) : '',
         'playlist_type' => isset( $_POST['playlist_type'] ) ? sanitize_text_field( wp_unslash( $_POST['playlist_type'] ) ) : 'video',
+        // Opt in to the live-stream probe: a station's address rarely ends
+        // in a recognisable file extension, and refusing it outright was the
+        // whole reason a radio stream couldn't be added to a playlist.
+        'probe'         => true,
     ] );
 
     if ( is_wp_error( $result ) ) {
@@ -114,6 +118,7 @@ function leanpl_playlist_ajax_batch_add() {
             // the filename in that case.
             'title'         => leanpl_fetch_oembed_title( $url ),
             'playlist_type' => $playlist_type,
+            'probe'         => true,
         ] );
 
         if ( is_wp_error( $result ) ) {
@@ -188,6 +193,7 @@ function leanpl_playlist_ajax_update_player() {
         'duration'      => isset( $_POST['duration'] ) ? sanitize_text_field( wp_unslash( $_POST['duration'] ) ) : '',
         'meta_text'     => isset( $_POST['meta_text'] ) ? sanitize_text_field( wp_unslash( $_POST['meta_text'] ) ) : '',
         'playlist_type' => isset( $_POST['playlist_type'] ) ? sanitize_text_field( wp_unslash( $_POST['playlist_type'] ) ) : 'video',
+        'probe'         => true,
     ] );
 
     if ( is_wp_error( $result ) ) {

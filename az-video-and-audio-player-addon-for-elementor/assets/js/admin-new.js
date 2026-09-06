@@ -1153,7 +1153,85 @@
     // living inside whichever payload a source pick last built.
     var posterPayload = {};
 
-    function requestPreview( payload ) {
+    // Every preview request in this file funnels through requestPreview(),
+    // so this is the one place that owns "when does a request actually go
+    // out" and "is this response still the current answer". Several call
+    // sites (the Media Hub row click, Quick Add, Bulk Add) each trigger TWO
+    // preview requests for one user action - one immediately, one a moment
+    // later once a track's staged row lands in the Playlist Items card.
+    // Without coalescing, both requests hit the server and each response
+    // replaces $target's innerHTML, which tears down and recreates the live
+    // Plyr instance (and its <audio>/<video> element) twice per click. For a
+    // fast-loading source that's invisible; for a live stream that needs
+    // real time to buffer, the second teardown restarts the connection from
+    // zero before the first has a chance to finish - see the playlist.js
+    // playback-failure investigation this fixes. Coalescing collapses those
+    // two into one dispatch (the later, more complete payload wins, same as
+    // it already does today since it lands second and overwrites the first).
+    var PREVIEW_COALESCE_MS  = 150;
+    var previewDispatchTimer = null;
+    var pendingPreviewData   = null;
+    var previewGeneration    = 0;
+
+    // Replaces (not merges) the pending payload - every caller already
+    // builds a complete request body, so merging two would risk carrying a
+    // stale item_ids from the loser.
+    function schedulePreviewDispatch( data, delay ) {
+        pendingPreviewData = data;
+        window.clearTimeout( previewDispatchTimer );
+        previewDispatchTimer = window.setTimeout(
+            dispatchPreview,
+            ( typeof delay === 'number' ) ? delay : PREVIEW_COALESCE_MS
+        );
+    }
+
+    function dispatchPreview() {
+        var data = pendingPreviewData;
+        if ( ! data ) { return; }
+        pendingPreviewData = null;
+
+        var settings = window.leanplAdminNewPreview;
+        var $target  = $( '[data-lpl-preview-target]' );
+
+        // Only the most recently dispatched request may touch the DOM - an
+        // older in-flight response landing late (out of order) is dropped
+        // instead of overwriting the newer preview it would otherwise clobber.
+        var gen = ++previewGeneration;
+        function isCurrent() { return gen === previewGeneration; }
+
+        $.post( settings.ajaxUrl, data )
+            .done( function( response ) {
+                if ( ! isCurrent() ) { return; }
+                if ( response && response.success && response.data && response.data.html ) {
+                    // The min-height only exists to hold the "Loading preview…"
+                    // placeholder's spot before this first response lands - once
+                    // real markup is in, let the container size to its content
+                    // instead of leaving dead space below a shorter playlist panel.
+                    $target.removeClass( 'lpl-min-h-[460px]' ).html( response.data.html );
+                    // Playlist screen only (no-op selector elsewhere) - stays
+                    // hidden until the real preview replaces the placeholder,
+                    // so it never sits under a 460px "Loading preview…" box
+                    // then jumps up once the shorter real markup lands. Also
+                    // stays hidden for an empty playlist (response.data.empty,
+                    // class-live-preview-ajax.php) - that mockup has its own
+                    // Add Track button inside the panel, so showing this one
+                    // too would be redundant.
+                    $( '[data-lpl-add-track-row]' ).toggleClass( 'lpl-hidden', !! response.data.empty );
+                } else {
+                    $target.text( 'Could not load preview.' );
+                }
+            } )
+            .fail( function() {
+                if ( ! isCurrent() ) { return; }
+                $target.text( 'Could not load preview.' );
+            } )
+            .always( function() {
+                if ( ! isCurrent() ) { return; }
+                $target.removeClass( 'lpl-opacity-40' );
+            } );
+    }
+
+    function requestPreview( payload, delay ) {
         var settings = window.leanplAdminNewPreview;
         if ( ! settings || ! settings.ajaxUrl ) { return; }
 
@@ -1199,36 +1277,12 @@
         // player-utils.js's autoInit MutationObserver rebuilds Plyr on it -
         // dimming across the swap (CSS transition on the target, set in
         // edit-player-surface.php) papers over that flash instead of a
-        // jarring instant cut.
+        // jarring instant cut. Dimming happens immediately here, even though
+        // the actual request is coalesced/delayed below, so the click still
+        // feels instant.
         $target.addClass( 'lpl-opacity-40' );
 
-        $.post( settings.ajaxUrl, data )
-            .done( function( response ) {
-                if ( response && response.success && response.data && response.data.html ) {
-                    // The min-height only exists to hold the "Loading preview…"
-                    // placeholder's spot before this first response lands - once
-                    // real markup is in, let the container size to its content
-                    // instead of leaving dead space below a shorter playlist panel.
-                    $target.removeClass( 'lpl-min-h-[460px]' ).html( response.data.html );
-                    // Playlist screen only (no-op selector elsewhere) - stays
-                    // hidden until the real preview replaces the placeholder,
-                    // so it never sits under a 460px "Loading preview…" box
-                    // then jumps up once the shorter real markup lands. Also
-                    // stays hidden for an empty playlist (response.data.empty,
-                    // class-live-preview-ajax.php) - that mockup has its own
-                    // Add Track button inside the panel, so showing this one
-                    // too would be redundant.
-                    $( '[data-lpl-add-track-row]' ).toggleClass( 'lpl-hidden', !! response.data.empty );
-                } else {
-                    $target.text( 'Could not load preview.' );
-                }
-            } )
-            .fail( function() {
-                $target.text( 'Could not load preview.' );
-            } )
-            .always( function() {
-                $target.removeClass( 'lpl-opacity-40' );
-            } );
+        schedulePreviewDispatch( data, delay );
     }
 
     // On load, if ?post= named an existing player with a saved source
@@ -1266,7 +1320,8 @@
         // touched a field and requestFormPreview() sent the full form.
         if ( settings.postType === 'lean_playlist' ) {
             if ( settings.postId > 0 ) {
-                requestPreview( $.extend( { post_ID: settings.postId }, formValues( $( '[data-lpl-edit-form]' ) ) ) );
+                // delay 0: first paint, nothing to coalesce with yet.
+                requestPreview( $.extend( { post_ID: settings.postId }, formValues( $( '[data-lpl-edit-form]' ) ) ), 0 );
             }
             return;
         }
@@ -1277,7 +1332,7 @@
 
         if ( ! settings.savedSource || ! settings.savedSource._player_type ) { return; }
 
-        requestPreview( $.extend( {}, settings.savedSource, formValues( $( '[data-lpl-edit-form]' ) ) ) );
+        requestPreview( $.extend( {}, settings.savedSource, formValues( $( '[data-lpl-edit-form]' ) ) ), 0 );
     }
 
     // ── Edit-screen Publish/Update ───────────────────────────────────────────
@@ -1313,15 +1368,10 @@
     // the player without writing post meta. Only fires once a source exists
     // (lastSourcePayload set): before that the picker is still showing, not
     // the player surface, so there's nothing to re-render.
-    var formPreviewTimer = null;
-
     function requestFormPreview() {
         if ( ! lastSourcePayload ) { return; }
 
-        window.clearTimeout( formPreviewTimer );
-        formPreviewTimer = window.setTimeout( function() {
-            requestPreview( $.extend( {}, lastSourcePayload, formValues( $( '[data-lpl-edit-form]' ) ) ) );
-        }, 300 );
+        requestPreview( $.extend( {}, lastSourcePayload, formValues( $( '[data-lpl-edit-form]' ) ) ), 300 );
     }
 
     function initFormLivePreview() {
@@ -1583,6 +1633,50 @@
         } );
     }
 
+    // ── Edit-screen Source card: uploaded-file "Change" (existing player) ────
+    // edit-section-source.php only renders [data-lpl-source-media-picker] for
+    // an already-uploaded source, with the attribute value pinned to this
+    // player's own current type ('video' or 'audio') server-side - so the
+    // wp.media frame here is scoped to that one library type and can never
+    // offer the other kind, unlike initMediaLibraryPicker() above (which
+    // exists only for a brand-new/sourceless player and deliberately offers
+    // both). Every other source key in the payload below is a fixed literal
+    // matching that same type, never re-derived from the picked file, so a
+    // pick here can only replace the file - _player_type/_video_type/
+    // _audio_source_type never change. The plain-URL source cards need no JS
+    // at all: see edit-section-source.php's docblock for why.
+    function initSourceMediaPicker() {
+        var $trigger = $( '[data-lpl-source-media-picker]' );
+        if ( ! $trigger.length || ! window.wp || ! window.wp.media ) { return; }
+
+        var playerType = $trigger.attr( 'data-lpl-source-media-picker' );
+        var frame = null;
+
+        $trigger.on( 'click', function() {
+            if ( ! frame ) {
+                frame = window.wp.media( {
+                    title: ( playerType === 'audio' ) ? 'Select an audio file' : 'Select a video file',
+                    library: { type: [ playerType ] },
+                    button: { text: 'Use this file' },
+                    multiple: false
+                } );
+
+                frame.on( 'select', function() {
+                    var attachment = frame.state().get( 'selection' ).first().toJSON();
+
+                    var payload = ( playerType === 'audio' )
+                        ? { _player_type: 'audio', _audio_source_type: 'upload', _audio_source: attachment.id }
+                        : { _player_type: 'video', _video_type: 'html5', _html5_source_type: 'upload', _video_source: attachment.id };
+
+                    requestPreview( payload );
+                    $trigger.find( '[data-lpl-source-media-filename]' ).text( attachment.filename || '' );
+                } );
+            }
+
+            frame.open();
+        } );
+    }
+
     // ── Edit-screen Poster/Thumbnail picker ──────────────────────────────────
     // edit-section-general.php renders both states up front - data-lpl-poster-empty
     // (upload zone) and data-lpl-poster-set (thumb + filename + Change/Remove
@@ -1674,13 +1768,69 @@
         return 'html5';
     }
 
+    // Every tab that means "this URL is audio". A live stream is saved exactly
+    // like a plain audio file (a direct URL into _html5_audio_url) - the tabs
+    // differ only in the example URL they prefill and their help text, because
+    // a stream is just an audio URL that happens to have no duration. Anything
+    // not listed here falls through to the video branch below, so a new audio
+    // tab added to config/player-edit-source-tabs.php must be added here too.
+    var AUDIO_SOURCE_TABS = [ 'audio', 'audio-live-stream' ];
+
+    // Mirrors $audio_exts in leanpl_detect_player_source() (functions-player.php),
+    // which is the rule set the playlist track flow already uses - same four
+    // extensions, deliberately not a second opinion. '.ogg' is left out for the
+    // same reason it is special-cased there: it is valid for both video and
+    // audio, and this screen has no playlist type to resolve it with, so it
+    // keeps its existing video behavior rather than silently changing kind.
+    var AUDIO_FILE_EXTENSIONS = [ 'mp3', 'm4a', 'aac', 'wav' ];
+
+    // The JS half of leanpl_get_url_extension(): extension of the URL's path
+    // only, lowercased, with the query and fragment dropped first. The host is
+    // stripped up front so the dot in "ice1.somafm.com" is never mistaken for
+    // a file extension.
+    function urlFileExtension( url ) {
+        var path = String( url ).split( '#' )[ 0 ].split( '?' )[ 0 ];
+        path = path.replace( /^[a-z][a-z0-9+.-]*:\/\/[^\/]*/i, '' );
+
+        var name = path.slice( path.lastIndexOf( '/' ) + 1 );
+        var dot = name.lastIndexOf( '.' );
+
+        return dot === -1 ? '' : name.slice( dot + 1 ).toLowerCase();
+    }
+
     function initAddMedia() {
         var $addMedia = $( '[data-lpl-add-media]' );
         var $urlInput = $( '[data-lpl-source-placeholder-target]' );
         if ( ! $addMedia.length ) { return; }
 
+        var $addMediaLabel = $addMedia.find( 'div' ).last();
+        var addMediaDefaultLabel = $addMediaLabel.text();
+
+        function setAddMediaBusy( busy ) {
+            $addMedia.attr( 'aria-disabled', busy ? 'true' : 'false' )
+                .toggleClass( 'lpl-opacity-50 lpl-cursor-not-allowed', busy );
+            $addMediaLabel.text( busy ? 'Checking…' : addMediaDefaultLabel );
+        }
+
+        function buildAudioPayload( url ) {
+            return { _player_type: 'audio', _audio_source_type: 'link', _html5_audio_url: url };
+        }
+
+        function buildVideoPayload( url, videoType ) {
+            var payload = { _player_type: 'video', _video_type: videoType };
+            if ( videoType === 'youtube' ) {
+                payload._youtube_url = url;
+            } else if ( videoType === 'vimeo' ) {
+                payload._vimeo_url = url;
+            } else {
+                payload._html5_source_type = 'link';
+                payload._html5_video_url = url;
+            }
+            return payload;
+        }
+
         $addMedia.on( 'click', function() {
-            if ( currentSourceTab() === 'media-library' ) { return; }
+            if ( currentSourceTab() === 'media-library' || $addMedia.attr( 'aria-disabled' ) === 'true' ) { return; }
 
             var url = ( $urlInput.val() || '' ).trim();
             if ( ! url ) {
@@ -1688,24 +1838,63 @@
                 return;
             }
 
-            var payload;
+            // A picked tab is a statement of intent and always wins. Only the
+            // generic, no-tab-selected field promises to work the kind out on
+            // its own ("we'll detect the source automatically"), so only it
+            // falls back to sniffing the extension. Note this still cannot
+            // catch a live stream, whose URL usually ends in "-mp3" with no
+            // dot at all - that is what the Audio Live Stream tab is for.
+            var sourceTab = currentSourceTab();
+            var isAudioSource = AUDIO_SOURCE_TABS.indexOf( sourceTab ) !== -1 ||
+                ( sourceTab === '' && AUDIO_FILE_EXTENSIONS.indexOf( urlFileExtension( url ) ) !== -1 );
 
-            if ( currentSourceTab() === 'audio' ) {
-                payload = { _player_type: 'audio', _audio_source_type: 'link', _html5_audio_url: url };
-            } else {
-                var videoType = detectVideoUrlType( url );
-                payload = { _player_type: 'video', _video_type: videoType };
-                if ( videoType === 'youtube' ) {
-                    payload._youtube_url = url;
-                } else if ( videoType === 'vimeo' ) {
-                    payload._vimeo_url = url;
-                } else {
-                    payload._html5_source_type = 'link';
-                    payload._html5_video_url = url;
-                }
+            if ( isAudioSource ) {
+                requestPreview( buildAudioPayload( url ) );
+                return;
             }
 
-            requestPreview( payload );
+            var videoType = detectVideoUrlType( url );
+            var settings  = window.leanplAdminNewPreview;
+
+            // Still ambiguous: a generic-field URL that isn't YouTube/Vimeo
+            // and has no extension at all. That is what a live stream address
+            // looks like, and no amount of cleverer guessing fixes it - ask
+            // the server (leanpl_admin_new_detect_media) instead. A picked
+            // tab already returned above, so this only ever fires for the
+            // generic field's real promise to detect automatically.
+            var isAmbiguous = sourceTab === '' && videoType === 'html5' && urlFileExtension( url ) === '';
+
+            if ( ! isAmbiguous || ! settings || ! settings.detectNonce ) {
+                requestPreview( buildVideoPayload( url, videoType ) );
+                return;
+            }
+
+            setAddMediaBusy( true );
+
+            $.post( settings.ajaxUrl, {
+                action: 'leanpl_admin_new_detect_media',
+                nonce: settings.detectNonce,
+                url: url
+            } ).done( function( response ) {
+                var data = ( response && response.success && response.data ) || {};
+
+                if ( data.warning === 'dead' ) {
+                    showToast( 'error', 'That link appears to be dead: nothing answered at that address.' );
+                } else if ( data.warning === 'insecure' ) {
+                    showToast( 'error', 'That link is not secure (http). Browsers will block it on this secure (https) site.' );
+                }
+
+                if ( data.kind === 'audio' ) {
+                    requestPreview( buildAudioPayload( url ) );
+                } else {
+                    requestPreview( buildVideoPayload( url, videoType ) );
+                }
+            } ).fail( function() {
+                // Never let a failed check block you - fall back to today's guess.
+                requestPreview( buildVideoPayload( url, videoType ) );
+            } ).always( function() {
+                setAddMediaBusy( false );
+            } );
         } );
     }
 
@@ -2269,11 +2458,23 @@
         // already handles) also needs to mirror into the Playlist Items
         // card, same reasoning as that gap - otherwise a track picked here
         // shows as staged in the preview but never actually appears in the
-        // card until a reload. Media Hub's own markup has no duration/meta_text
-        // (see edit-playlist-track-drawer.php's row loop), so those are
-        // fetched via the existing leanpl_playlist_get_player endpoint - same
-        // reuse-not-duplicate approach the card's own inline edit panel
-        // already uses for prefill.
+        // card until a reload.
+        //
+        // Everything below (including the Playlist Items card insert and its
+        // notifyTrackListChanged()) runs synchronously in this same click
+        // handler, deliberately - refreshTrackDrawerPreview() above and
+        // notifyTrackListChanged() below both end up calling requestPreview(),
+        // and requestPreview()'s coalescing only merges calls that land close
+        // together. This used to fetch duration/meta_text via
+        // leanpl_playlist_get_player first and insert the row only once that
+        // landed, which put an unbounded network round trip between the two
+        // calls - long enough that they'd fire as two separate preview
+        // requests, each tearing down and rebuilding the live player. That
+        // fetch's result was never actually used (trackListInsertRow() reads
+        // title/source_type/source_label/id/type only, and the inserted row's
+        // edit panel always lazy-fetches its own fresh copy on first open
+        // regardless - see trackListInsertRow()'s docblock), so it's dropped
+        // rather than worked around.
         $( document ).on( 'click', '[data-lpl-track-drawer-media-row]', function() {
             var $row = $( this );
             var nowSelected = $row.attr( 'aria-selected' ) !== 'true';
@@ -2299,7 +2500,7 @@
             // source_type/source_label come straight off this row's own DOM
             // (title/badge in the 2nd/3rd child, same 3-child structure both
             // the PHP loop and trackDrawerInsertRow() build) rather than a
-            // second fetch - only duration/meta_text need the AJAX round trip.
+            // fetch.
             var source = $row.attr( 'data-lpl-track-drawer-source' ) || 'external';
             var rowData = {
                 id:           playerId,
@@ -2312,34 +2513,8 @@
                 type:         trackDrawerPlaylistType()
             };
 
-            var settings = window.leanplAdminNewPreview;
-            if ( ! settings || ! settings.ajaxUrl ) {
-                trackListInsertRow( rowData );
-                notifyTrackListChanged();
-                return;
-            }
-
-            $.post( settings.ajaxUrl, {
-                action:    'leanpl_playlist_get_player',
-                nonce:     settings.trackDrawerNonce,
-                player_id: playerId
-            } ).done( function( response ) {
-                // Row may have been unchecked again before this landed -
-                // trust the row's current state, not the click that started
-                // the request.
-                if ( $row.attr( 'aria-selected' ) !== 'true' ) { return; }
-
-                if ( response && response.success ) {
-                    rowData.duration  = response.data.duration;
-                    rowData.meta_text = response.data.meta_text;
-                }
-                trackListInsertRow( rowData );
-                notifyTrackListChanged();
-            } ).fail( function() {
-                if ( $row.attr( 'aria-selected' ) !== 'true' ) { return; }
-                trackListInsertRow( rowData );
-                notifyTrackListChanged();
-            } );
+            trackListInsertRow( rowData );
+            notifyTrackListChanged();
         } );
 
         // Source filter pills: single-select, "All" and the four source
@@ -3235,6 +3410,15 @@
     // callback), so live preview is wired directly through the change/clear
     // options instead of relying on initFormLivePreview()'s delegated
     // listener - same reasoning as lex-settings-core.js's colorPickerChange.
+    //
+    // change fires a tick too early: Iris's internal _change() (iris.min.js)
+    // calls _trigger('change', ...) - which is what runs this callback -
+    // BEFORE it writes the new value onto the input with .val(). Calling
+    // requestFormPreview() straight from change reads formValues() off the
+    // still-stale input, so the preview always trails one pick behind (fixed
+    // by clicking a swatch twice). Deferring the read with setTimeout lets
+    // Iris finish setting .val() first. Clear doesn't need this - color-
+    // picker.js's own Clear button sets .val('') before calling clear.
     function initColorPicker() {
         var $field = $( '.lex-color-picker' );
         if ( ! $field.length || ! $.fn.wpColorPicker ) { return; }
@@ -3242,7 +3426,7 @@
         $field.wpColorPicker( {
             defaultColor: false,
             disabled: $field.prop( 'disabled' ),
-            change: requestFormPreview,
+            change: function() { setTimeout( requestFormPreview, 0 ); },
             clear: requestFormPreview
         } );
     }
@@ -3263,6 +3447,7 @@
         initAccordions();
         initSourceTabs();
         initMediaLibraryPicker();
+        initSourceMediaPicker();
         initPosterPicker();
         initAddMedia();
         initTrackDrawer();
