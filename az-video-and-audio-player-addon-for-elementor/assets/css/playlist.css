@@ -1042,6 +1042,13 @@
   .lpl-playlist--audio.lpl--now-playing-compact.lpl--position-left .lpl-playlist__player-wrap {
     margin: 0;
   }
+
+  /* Side-by-side divider has no side to divide once stacked; left in, it
+     draws a stray vertical line through player and items. */
+  .lpl-playlist--audio.lpl--position-right::after,
+  .lpl-playlist--audio.lpl--position-left::after {
+    display: none;
+  }
 }
 
 @container (max-width: 640px) {

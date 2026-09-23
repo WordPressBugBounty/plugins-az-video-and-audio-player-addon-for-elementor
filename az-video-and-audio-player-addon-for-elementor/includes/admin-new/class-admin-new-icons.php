@@ -291,6 +291,28 @@ SVG;
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
 SVG;
+            case 'info':
+                // Inline "more info" tooltip trigger (edit-button-link-box.php).
+                // Same Lucide-as-is convention as 'link' above rather than a
+                // hand-traced fill path - Lucide's "info" icon, native 24x24
+                // viewBox/2px stroke.
+                return <<<'SVG'
+<svg
+                  viewBox="0 0 24 24"
+                  preserveAspectRatio="xMidYMid meet"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="#9AA1AE"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lpl-box-border lpl-w-[14px] lpl-shrink-0 lpl-h-[14px]"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16v-4"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
+SVG;
             case 'film':
                 return <<<'SVG'
 <svg

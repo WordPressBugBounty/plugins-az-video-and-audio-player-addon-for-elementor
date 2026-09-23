@@ -142,6 +142,24 @@ $settings->fieldRenderer->render('checkbox', 'tooltips_controls', [
 ]);
 
 $sr->endSection();
+
+$sr->startSection('behavior_button_links', esc_html__('Button Links', 'vapfem'), [
+    'accordion' => true,
+    'exclusive' => 'player-settings',
+    'meta'      => esc_html__('- Open players from any button', 'vapfem'),
+]);
+
+// Button Links
+$settings->fieldRenderer->render('checkbox', 'button_links.enabled', [
+    'label'          => esc_html__('Enable Button Links', 'vapfem'),
+    'checkbox_label' => esc_html__('Yes', 'vapfem'),
+    'desc'           => esc_html__('Let any button link (#lpl-open-player-ID) open a player or playlist in a popup. Turn this on before pasting button links, off by default to avoid loading player files on every page until you need them.', 'vapfem'),
+    'default'        => false,
+    'disabled'       => true,
+    'pro'            => ['onclick' => 'openUpgradeModal'],
+]);
+
+$sr->endSection();
 $sr->endVtab();
 
 // ============================================

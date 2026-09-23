@@ -802,10 +802,9 @@ class Player_Renderer {
     /**
      * Render error message.
      *
-     * Shares the .lpl-player-notice look with the JS playback-failure notice
-     * (see assets/js/player-utils.js) so the two error states read as one.
-     * No inline styles — all presentation lives in main.css and stays
-     * themeable. Callers pass already-translated strings.
+     * No inline styles: all presentation lives in main.css
+     * (.lpl-player-notice) and stays themeable. Callers pass
+     * already-translated strings.
      *
      * @param string $message Error message
      * @return void

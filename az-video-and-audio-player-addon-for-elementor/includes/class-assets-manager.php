@@ -285,11 +285,6 @@ class Assets_Manager {
             'version' => $this->version,
             'debugMode' => leanpl_is_test_mode() || leanpl_is_debug_mode(),
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'i18n' => [
-                'unavailable' => __( 'This audio could not be loaded. May be the station  is offline.', 'vapfem' ),
-                'dropped'     => __( 'The connection was lost. This can happen with live streams.', 'vapfem' ),
-                'retry'       => __( 'Try again', 'vapfem' ),
-            ],
         ]);
     }
 
@@ -330,6 +325,14 @@ class Assets_Manager {
      */
     public function enqueue_if_shortcode() {
         if ($this->assets_loaded || is_admin()) {
+            return;
+        }
+
+        // A caller (e.g. Button Links, which can be triggered from a button
+        // anywhere on the page, not just where a shortcode sits) can ask for
+        // the player files on every frontend page.
+        if (apply_filters('leanpl/assets/load_frontend_everywhere', false)) {
+            $this->load_assets_by_context('frontend');
             return;
         }
 

@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.3
+Stable tag: 3.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,10 @@ Embed any saved playlist on an Elementor page without a shortcode. All playlist 
 * Select Playlist - pick from your saved playlists by name
 
 == Changelog ==
+= Version: 3.3.4 =
+* Fixed: A stray divider line on stacked audio playlists.
+* Removed: The playback notice added in 3.3.3. It could show an error on working videos and audio over slower connections.
+
 = Version: 3.3.3 =
 * Added: Plain-English notice with a "Try again" button when audio/video fails to play.
 * Added: A stream that connects but never plays is given up on after 7 seconds instead of hanging silently.
@@ -433,6 +437,10 @@ You can preview your player in two ways:
 * **From the Edit Screen**: Use the "Preview Player" button in the publish box when editing a player
 
 The preview opens in a new tab, showing only the player without your site's header, footer, or sidebar for a clean preview experience.
+
+= Can I open a player from a button? =
+
+Yes (Pro). Each player and playlist has a Button Link like #lpl-open-player-123 on its Edit screen. Paste it into any button's link field: click it and, if the player is on the page, it scrolls to it and plays; otherwise it opens in a popup and plays. You can also share the full link - visitors land right on that player or playlist, ready to press play.
 
 = Does this plugin use any third-party services? =
 

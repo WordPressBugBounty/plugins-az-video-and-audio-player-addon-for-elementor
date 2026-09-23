@@ -1097,11 +1097,14 @@
 
         $buttons.on( 'click', function() {
             var text = $( this ).siblings( '[data-lpl-shortcode-text]' ).first().text().trim();
+            // Optional per-box wording (e.g. Button Link boxes); shortcode
+            // boxes carry no attribute and keep the original message.
+            var successMsg = $( this ).attr( 'data-lpl-copy-success' ) || 'Shortcode copied!';
 
             if ( ! text ) { return; }
 
             function onCopied() {
-                showToast( 'success', 'Shortcode copied!' );
+                showToast( 'success', successMsg );
             }
 
             if ( navigator.clipboard && navigator.clipboard.writeText ) {
@@ -3137,6 +3140,41 @@
         } );
     }
 
+    // ── Button Link card info tooltip ────────────────────────────────────────
+    // data-lpl-bl-tooltip-trigger / data-lpl-bl-tooltip (edit-button-link-box.php).
+    // The tooltip is `position: fixed` so it can render outside the accordion
+    // card's `overflow: hidden` box (needed for the card's rounded corners and
+    // collapse behavior) instead of being clipped by it - CSS alone can't do
+    // that from inside a clipped ancestor, so its coordinates are computed
+    // here from the trigger's on-screen position. Visibility itself still
+    // stays pure CSS (:hover / :focus-within in the markup); this only ever
+    // moves the box, never shows or hides it.
+    function initButtonLinkTooltip() {
+        var $trigger = $( '[data-lpl-bl-tooltip-trigger]' );
+        var $tooltip = $( '[data-lpl-bl-tooltip]' );
+        if ( ! $trigger.length || ! $tooltip.length ) { return; }
+
+        function position() {
+            var rect   = $trigger[ 0 ].getBoundingClientRect();
+            var width  = $tooltip.outerWidth();
+            var height = $tooltip.outerHeight();
+            var left   = Math.min( rect.left, window.innerWidth - width - 16 );
+            // Not enough room below in the viewport (e.g. the card sits near
+            // the bottom of the screen) - flip above the trigger instead.
+            var top = ( rect.bottom + 8 + height > window.innerHeight )
+                ? rect.top - 8 - height
+                : rect.bottom + 8;
+
+            $tooltip.css( {
+                top:  top,
+                left: Math.max( 16, left )
+            } );
+        }
+
+        $trigger.on( 'mouseenter focus', position );
+        $( window ).on( 'scroll resize', position );
+    }
+
     // ── Edit-screen accordion cards ──────────────────────────────────────────
     // data-lpl-accordion-trigger="KEY" / data-lpl-accordion="KEY". aria-expanded
     // on the trigger drives both the chevron rotation and body visibility via
@@ -3443,6 +3481,7 @@
         initRowActions();
         initRowClickNavigation();
         initCopyShortcode();
+        initButtonLinkTooltip();
         initTitleField();
         initAccordions();
         initSourceTabs();

@@ -146,6 +146,7 @@ return [
     // context (see Admin_New_Icons::get() docblock on that case).
     'playlist-audio'      => ['label' => __('Audio', 'vapfem'),       'icon' => 'audio',                'open' => false],
     'playlist-behavior'   => ['label' => __('Behavior', 'vapfem'),    'icon' => 'cog',                   'open' => false],
+    'playlist-button-link' => ['label' => __('Button Link', 'vapfem'), 'icon' => 'link',                 'open' => false],
   ],
 
   'fields' => [

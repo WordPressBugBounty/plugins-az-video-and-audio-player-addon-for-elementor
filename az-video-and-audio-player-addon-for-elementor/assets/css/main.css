@@ -475,13 +475,11 @@ This was causing speed arrow hiddne when clicked on the settings icon
     margin: 0 auto;
 }
 
-/* ── Playback failure notice + config error box ──────────────────────────
- * One shared look for the JS runtime notice (player-utils.js
- * watchPlaybackFailure()) and the PHP render_error() box. Colours live in
+/* ── Config error box ────────────────────────────────────────────────────
+ * The PHP render_error() box (class-player-renderer.php), shown when a
+ * player is missing its source or has an invalid type. Colours live in
  * vars with the old inline values as fallbacks, so themes can override
- * them. The notice is inserted as a sibling directly after
- * .lpl-player-wrap, which keeps it below poster cards (flex row) and out
- * of the playlist's overflow:hidden player box. */
+ * them. */
 .lpl-player-notice,
 .lpl-player__error {
     padding: 12px 16px;
@@ -496,21 +494,221 @@ This was causing speed arrow hiddne when clicked on the settings icon
 .lpl-player-notice__text {
     margin: 0;
 }
-.lpl-player-notice .lpl-player-notice__text {
-    margin-bottom: 8px;
+
+/* ── Button Links popup ────────────────────────────────────────────────
+ * Prefix .lpl-bl-. Styles only - no functionality here, so this is safe
+ * to ship free (the popup only ever appears via pro/assets/js/button-links.js).
+ * lex-tokens variables with hard fallbacks, same pattern as the config error
+ * box above; the tokens themselves are admin-only, so the fallback is what
+ * actually renders on the frontend.
+ *
+ * Native <dialog>: Esc key, focus handling, and sitting above sticky
+ * headers all come from the browser. This is only the open/close
+ * fade+scale, the loading spinner, and sizing the box for its content kind
+ * before it's ever shown (no resize-in-front-of-the-visitor).
+ */
+html.lpl-bl-open {
+    overflow: hidden;
+    scrollbar-gutter: stable;
 }
-.lpl-player-notice__retry {
-    display: inline-block;
-    padding: 6px 14px;
-    border: 1px solid currentColor;
-    border-radius: 4px;
+
+.lpl-bl-dialog {
+    padding: 0;
+    border: 0;
+    max-width: none;
+    max-height: none;
     background: transparent;
-    color: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.4;
-    cursor: pointer;
+    overflow: visible;
 }
-.lpl-player-notice__retry:hover {
-    background: rgba(0, 0, 0, 0.06);
+
+/* Full-viewport overlay, centered with grid rather than the browser's own
+ * dialog auto-margin centering - that alone isn't reliable everywhere (it
+ * can end up pinned near the top depending on the page's own layout), grid
+ * always centers regardless. The spinner and box share the same grid cell
+ * so they sit at the exact same point on screen as one swaps for the
+ * other. */
+.lpl-bl-dialog[open] {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.lpl-bl-spinner,
+.lpl-bl-box {
+    grid-area: 1 / 1;
+}
+
+.lpl-bl-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.6);
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+}
+
+.lpl-bl-dialog[open]::backdrop {
+    opacity: 1;
+}
+
+.lpl-bl-dialog.is-closing::backdrop {
+    opacity: 0;
+}
+
+.lpl-bl-spinner {
+    display: none;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: lpl-bl-spin 0.8s linear infinite;
+}
+
+.lpl-bl-dialog.is-loading .lpl-bl-spinner {
+    display: block;
+}
+
+@keyframes lpl-bl-spin {
+    to { transform: rotate(360deg); }
+}
+
+.lpl-bl-box {
+    position: relative;
+    width: min(960px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--lpl-line, #e3e6eb);
+    border-radius: var(--lex-radius-lg, 12px);
+    background: var(--lpl-surface, #ffffff);
+    color: var(--lpl-ink, #1b2233);
+    overflow: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.97);
+    transition: opacity 200ms ease-out, transform 200ms ease-out, visibility 0s linear 200ms;
+}
+
+.lpl-bl-dialog.is-ready .lpl-bl-box {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.lpl-bl-dialog.is-closing .lpl-bl-box {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+.lpl-bl-dialog[data-lpl-bl-kind="video"] .lpl-bl-box {
+    width: min(960px, calc(100vw - 32px));
+}
+
+.lpl-bl-dialog[data-lpl-bl-kind="audio"] .lpl-bl-box {
+    width: min(480px, calc(100vw - 32px));
+}
+
+.lpl-bl-dialog[data-lpl-bl-kind="playlist"] .lpl-bl-box {
+    width: min(1100px, calc(100vw - 32px));
+}
+
+/* Top padding = close button (32px) + 12px above + 12px below, so the
+   button sits in its own strip and never overlaps the player. */
+.lpl-bl-body {
+    padding: 56px 16px 16px;
+}
+
+.lpl-bl-body .lpl-player-wrap,
+.lpl-bl-body .lpl-playlist-wrap {
+    margin: 0;
+}
+
+/* Close button. Outlined ghost button, shown in its strong (dark) colors
+ * by default with a light hover fill. Full state reset (every theme
+ * styles bare <button>) so a theme's :hover/:focus rules can't win. */
+.lpl-bl-box .lpl-bl-close,
+.lpl-bl-box .lpl-bl-close:hover,
+.lpl-bl-box .lpl-bl-close:focus,
+.lpl-bl-box .lpl-bl-close:active {
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    z-index: 2;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--lex-space-8, 32px);
+    height: var(--lex-space-8, 32px);
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    background-image: none;
+    border: 1px solid var(--lpl-line-strong, #c4c9d2);
+    border-radius: var(--lex-radius-sm, 4px);
+    box-shadow: none;
+    color: var(--lpl-ink, #1b2233);
+    font: inherit;
+    font-size: 0;
+    line-height: 1;
+    text-decoration: none;
+    opacity: 1;
+    transform: none;
+    cursor: pointer;
+    transition: background-color var(--lex-transition-fast, 0.15s ease);
+}
+
+.lpl-bl-box .lpl-bl-close:hover {
+    background-color: var(--lpl-surface-hover, #f3f4f7);
+}
+
+.lpl-bl-box .lpl-bl-close:focus {
+    outline: none;
+}
+
+.lpl-bl-box .lpl-bl-close:focus-visible {
+    outline: 2px solid var(--lex-color-brand-primary, #3858e9);
+    outline-offset: 2px;
+}
+
+.lpl-bl-box .lpl-bl-close svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    fill: none;
+    stroke: currentColor;
+    pointer-events: none;
+}
+
+.lpl-bl-error {
+    margin: 0;
+    padding: 32px 16px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .lpl-bl-dialog[data-lpl-bl-kind="video"] .lpl-bl-box,
+    .lpl-bl-dialog[data-lpl-bl-kind="audio"] .lpl-bl-box,
+    .lpl-bl-dialog[data-lpl-bl-kind="playlist"] .lpl-bl-box {
+        width: calc(100vw - 16px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lpl-bl-dialog::backdrop,
+    .lpl-bl-box,
+    .lpl-bl-dialog.is-ready .lpl-bl-box {
+        transition: none;
+    }
 }

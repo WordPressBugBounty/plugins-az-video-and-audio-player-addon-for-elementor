@@ -67,8 +67,10 @@ class Player_Shortcode {
     public function render_player_shortcode($atts, $content = null) {
         global $wp_scripts;
         
-        if (is_admin() && !leanpl_is_elementor_editor()) {
-            // Don't render in admin area except in Elementor editor
+        if (is_admin() && !leanpl_is_elementor_editor() && !apply_filters('leanpl/shortcode/render_in_admin', false)) {
+            // Don't render in admin area except in Elementor editor, or when
+            // a caller (e.g. a background request rendering a single embed)
+            // explicitly allows it via the filter.
             return '';
         }
 
