@@ -160,6 +160,7 @@ $settings->fieldRenderer->render('checkbox', 'button_links.enabled', [
 ]);
 
 $sr->endSection();
+
 $sr->endVtab();
 
 // ============================================
@@ -395,6 +396,292 @@ $settings->fieldRenderer->render('checkbox', 'playlist.auto_thumbnail', [
     'disabled'       => true,
     'pro'            => ['onclick' => 'openUpgradeModal'],
 ]);
+
+$sr->endSection();
+$sr->endVtab();
+
+// ============================================
+// VTAB: Labels & Messages
+// ============================================
+// Every visitor-facing wording in one place. A section is free or pro to
+// match the feature it words: player controls and the Now Playing label
+// are free; locked content, password form and popup messages belong to
+// locked features. Locked sections carry one badge
+// on the section header ('is_pro'); their fields stay locked but hide their
+// own badge ('badge_position' => false) so the badge isn't repeated per row.
+$sr->startVtab('texts', esc_html__('Labels & Messages', 'vapfem'), [
+    'icon' => leanpl_ssot( 'icons', 'texts_svg' ),
+]);
+
+// Intro sits in its own untitled block so it stays visible while every
+// section below starts collapsed.
+$sr->startSection('texts_intro', '', [
+    'no_title'            => true,
+    'disable_save_button' => true,
+]);
+
+$settings->fieldRenderer->render('info', 'texts_info', [
+    'content' => __('Change the words visitors see. Works for rewording or translating into your language. Leave a field empty to keep the built-in text.', 'vapfem'),
+]);
+
+$sr->endSection();
+
+$sr->startSection('texts_player', esc_html__('Player Controls', 'vapfem'), [
+    'collapsed' => true,
+    'accordion' => true,
+    'exclusive' => 'texts',
+    'meta'      => esc_html__('- Button labels and tooltips on every player', 'vapfem'),
+]);
+
+// Player control labels: keys are Plyr's own i18n keys, see
+// leanpl_get_player_label_defaults(). Blank keeps Plyr's built-in English.
+$leanpl_player_label_names = [
+    'play'            => esc_html__('Play', 'vapfem'),
+    'pause'           => esc_html__('Pause', 'vapfem'),
+    'restart'         => esc_html__('Restart', 'vapfem'),
+    'rewind'          => esc_html__('Rewind', 'vapfem'),
+    'fastForward'     => esc_html__('Forward', 'vapfem'),
+    'mute'            => esc_html__('Mute', 'vapfem'),
+    'unmute'          => esc_html__('Unmute', 'vapfem'),
+    'volume'          => esc_html__('Volume', 'vapfem'),
+    'currentTime'     => esc_html__('Current Time', 'vapfem'),
+    'duration'        => esc_html__('Duration', 'vapfem'),
+    'settings'        => esc_html__('Settings', 'vapfem'),
+    'menuBack'        => esc_html__('Settings Menu: Back', 'vapfem'),
+    'speed'           => esc_html__('Speed', 'vapfem'),
+    'normal'          => esc_html__('Speed: Normal', 'vapfem'),
+    'quality'         => esc_html__('Quality', 'vapfem'),
+    'captions'        => esc_html__('Captions', 'vapfem'),
+    'enableCaptions'  => esc_html__('Captions: Turn On', 'vapfem'),
+    'disableCaptions' => esc_html__('Captions: Turn Off', 'vapfem'),
+    'pip'             => esc_html__('Picture-in-Picture', 'vapfem'),
+    'enterFullscreen' => esc_html__('Enter Fullscreen', 'vapfem'),
+    'exitFullscreen'  => esc_html__('Exit Fullscreen', 'vapfem'),
+    'download'        => esc_html__('Download', 'vapfem'),
+];
+
+// When a label only shows in some setups, say so - otherwise a site owner
+// changes it, sees nothing, and assumes the field is broken.
+$leanpl_player_label_notes = [
+    'rewind'          => esc_html__('{seektime} becomes the skip amount in seconds. Shown on layouts with a rewind button.', 'vapfem'),
+    'fastForward'     => esc_html__('{seektime} becomes the skip amount in seconds. Shown on layouts with a forward button.', 'vapfem'),
+    'restart'         => esc_html__('Shown when the Restart button is added to the control bar.', 'vapfem'),
+    'duration'        => esc_html__('Shown when the Duration display is added to the control bar.', 'vapfem'),
+    'download'        => esc_html__('Shown when the Download button is added to the control bar.', 'vapfem'),
+    'quality'         => esc_html__('Shown in the settings menu only when a video offers several quality sizes.', 'vapfem'),
+    'captions'        => esc_html__('Shown only on videos that have captions.', 'vapfem'),
+    'enableCaptions'  => esc_html__('Shown only on videos that have captions.', 'vapfem'),
+    'disableCaptions' => esc_html__('Shown only on videos that have captions.', 'vapfem'),
+];
+
+foreach (leanpl_get_player_label_defaults() as $leanpl_label_key => $leanpl_label_default) {
+    $settings->fieldRenderer->render('text', 'texts.player.' . $leanpl_label_key, [
+        'label'       => $leanpl_player_label_names[$leanpl_label_key] ?? $leanpl_label_key,
+        'placeholder' => $leanpl_label_default,
+        'desc'        => $leanpl_player_label_notes[$leanpl_label_key] ?? '',
+        'default'     => '',
+    ]);
+}
+
+$sr->endSection();
+
+$sr->startSection('texts_playlist', esc_html__('Playlist', 'vapfem'), [
+    'collapsed' => true,
+    'accordion' => true,
+    'exclusive' => 'texts',
+    'meta'      => esc_html__('- Wording around playlists', 'vapfem'),
+]);
+
+$settings->fieldRenderer->render('text', 'texts.now_playing', [
+    'label'       => esc_html__('Now Playing Label', 'vapfem'),
+    'desc'        => esc_html__('Shown above the current track on audio playlists with the Large now-playing style. The header and item count wording are set on each playlist.', 'vapfem'),
+    'placeholder' => esc_html__('Now Playing', 'vapfem'),
+    'default'     => '',
+]);
+
+$sr->endSection();
+
+$sr->startSection('texts_locked_content', esc_html__('Locked Content', 'vapfem'), [
+    'is_pro'    => true,
+    'collapsed' => true,
+    'accordion' => true,
+    'exclusive' => 'texts',
+    'meta'      => esc_html__('- What visitors see when they can\'t watch', 'vapfem'),
+]);
+
+// Locked Content: wording for every player or playlist whose Access
+// setting ("Who can watch") locks it for the current visitor.
+$settings->fieldRenderer->render('textarea', 'access.locked_message', [
+    'label'       => esc_html__('Message', 'vapfem'),
+    'desc'        => esc_html__('Shown in place of a locked player, playlist, or a locked video or track inside a playlist.', 'vapfem'),
+    'placeholder' => esc_html__('This content is for members only.', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('textarea', 'access.guest_message', [
+    'label'       => esc_html__('Guests-Only Message', 'vapfem'),
+    'desc'        => esc_html__('Shown to logged-in visitors on content set to "Logged-out users".', 'vapfem'),
+    'placeholder' => esc_html__('This content is only for visitors who are not logged in.', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.button_text', [
+    'label'       => esc_html__('Button Text', 'vapfem'),
+    'placeholder' => esc_html__('Join to watch', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.button_url', [
+    'label'       => esc_html__('Button Link', 'vapfem'),
+    'input_type'  => 'url',
+    'desc'        => esc_html__('Leave empty to use the signup page of Paid Memberships Pro or MemberPress for members-only content, or the registration page (when open) for logged-in-only content. Using another membership plugin? Paste its signup page here.', 'vapfem'),
+    'placeholder' => 'https://',
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.login_text', [
+    'label'       => esc_html__('Login Text', 'vapfem'),
+    'desc'        => esc_html__('Shown to logged-out visitors under the button. Clear it to hide the line.', 'vapfem'),
+    'default'     => esc_html__('Already a member? Log in', 'vapfem'),
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.login_url', [
+    'label'       => esc_html__('Login Link', 'vapfem'),
+    'input_type'  => 'url',
+    'desc'        => esc_html__('Leave empty to use the WordPress login page, which brings the visitor back to the same page.', 'vapfem'),
+    'placeholder' => 'https://',
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$sr->endSection();
+
+$sr->startSection('texts_password_form', esc_html__('Password Form', 'vapfem'), [
+    'is_pro'    => true,
+    'collapsed' => true,
+    'accordion' => true,
+    'exclusive' => 'texts',
+    'meta'      => esc_html__('- For password-protected players and playlists', 'vapfem'),
+]);
+
+$settings->fieldRenderer->render('text', 'access.password_prompt', [
+    'label'       => esc_html__('Password Prompt', 'vapfem'),
+    'placeholder' => esc_html__('This content is password protected. Enter the password to watch.', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.password_button', [
+    'label'       => esc_html__('Password Button', 'vapfem'),
+    'placeholder' => esc_html__('Unlock', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$settings->fieldRenderer->render('text', 'access.password_error', [
+    'label'       => esc_html__('Wrong Password Message', 'vapfem'),
+    'placeholder' => esc_html__('That password is not correct.', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$sr->endSection();
+
+$sr->startSection('texts_popup', esc_html__('Popup', 'vapfem'), [
+    'is_pro'    => true,
+    'collapsed' => true,
+    'accordion' => true,
+    'exclusive' => 'texts',
+    'meta'      => esc_html__('- Button Links and the popup shortcode', 'vapfem'),
+]);
+
+$settings->fieldRenderer->render('text', 'texts.popup_unavailable', [
+    'label'       => esc_html__('Unavailable Message', 'vapfem'),
+    'desc'        => esc_html__('Shown in the popup when the player or playlist was deleted, unpublished or can\'t be loaded.', 'vapfem'),
+    'placeholder' => esc_html__('This media is no longer available.', 'vapfem'),
+    'default'     => '',
+    'disabled'    => true,
+    'pro'         => ['onclick' => 'openUpgradeModal', 'badge_position' => false],
+]);
+
+$sr->endSection();
+$sr->endVtab();
+
+// ============================================
+// VTAB: Integrations
+// ============================================
+$sr->startVtab('integrations', esc_html__('Integrations', 'vapfem'), [
+    'icon' => leanpl_ssot( 'icons', 'integrations_svg' ),
+]);
+
+// Each card saves itself: the keys live in their own option, so they never
+// travel with the main settings (page HTML, Export, debug output).
+$sr->startSection('integrations', esc_html__('Integrations', 'vapfem'), [
+    'is_pro'              => true,
+    'disable_save_button' => true,
+    'meta'                => esc_html__('- Connect an outside video service', 'vapfem'),
+]);
+
+if (has_action('leanpl/settings/integrations_panel')) {
+    /**
+     * Draws one card per connected service (inside the section's <table>).
+     */
+    do_action('leanpl/settings/integrations_panel');
+} else {
+    $leanpl_locked_cards = [
+        [
+            'title'  => esc_html__('Bunny Stream', 'vapfem'),
+            'desc'   => esc_html__('Videos you uploaded to a Bunny Stream library. Browse them and play them inside your own player.', 'vapfem'),
+            'fields' => [
+                esc_html__('Account API key', 'vapfem'),
+                esc_html__('Link lifetime', 'vapfem'),
+            ],
+        ],
+        [
+            'title'  => esc_html__('Bunny Storage', 'vapfem'),
+            'desc'   => esc_html__('Video and audio files kept in a Bunny storage zone. Browse the folders and play them straight from your own CDN address.', 'vapfem'),
+            'fields' => [
+                esc_html__('Storage zone name', 'vapfem'),
+                esc_html__('Storage region', 'vapfem'),
+                esc_html__('Storage zone password', 'vapfem'),
+                esc_html__('CDN address', 'vapfem'),
+                esc_html__('CDN security key', 'vapfem'),
+                esc_html__('Link lifetime', 'vapfem'),
+            ],
+        ],
+    ];
+    ?>
+    <tr class="lex-field lex-field--integrations-locked">
+        <td colspan="2">
+            <?php foreach ($leanpl_locked_cards as $leanpl_locked_card) : ?>
+                <div style="opacity:.55;pointer-events:none;border:1px solid #dcdcde;border-radius:8px;padding:14px 16px;margin-bottom:12px;max-width:760px;" aria-hidden="true">
+                    <p style="margin:0 0 4px;font-size:14px;font-weight:600;"><?php echo esc_html($leanpl_locked_card['title']); ?></p>
+                    <p style="margin:0 0 10px;color:#646970;font-size:12px;"><?php echo esc_html($leanpl_locked_card['desc']); ?></p>
+                    <?php foreach ($leanpl_locked_card['fields'] as $leanpl_locked_field) : ?>
+                        <p style="margin:0 0 6px;font-size:12px;color:#646970;"><strong><?php echo esc_html($leanpl_locked_field); ?></strong></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+            <p class="description"><?php esc_html_e('Plain file links from Bunny Storage (for example https://mysite.b-cdn.net/video.mp4) keep playing in the free version.', 'vapfem'); ?></p>
+            <p><button type="button" class="lex-btn lex-btn--primary" onclick="if (typeof window.openUpgradeModal === 'function') { window.openUpgradeModal(); }"><?php esc_html_e('Upgrade to unlock', 'vapfem'); ?></button></p>
+        </td>
+    </tr>
+    <?php
+}
 
 $sr->endSection();
 $sr->endVtab();

@@ -23,6 +23,9 @@ class Player_Shortcode {
      */
     private static $instance = null;
 
+    /** Source keys swapped in by render_with_source(), for one render only. */
+    private $source_override = [];
+
     /**
      * Get instance
      */
@@ -52,6 +55,24 @@ class Player_Shortcode {
      */
     public function register_shortcode() {
         add_shortcode('lean_player', [$this, 'render_player_shortcode']);
+    }
+
+    /**
+     * Render a saved player with its media swapped for another one. Every
+     * other setting still comes from the saved player.
+     *
+     * @param int   $post_id Player post ID.
+     * @param array $source  Keys from leanpl_source_override_from_value(),
+     *                       plus 'poster' and, for audio, 'audio_title'.
+     * @return string
+     */
+    public function render_with_source($post_id, array $source) {
+        $this->source_override = $source;
+        try {
+            return $this->render_player_shortcode(['id' => $post_id]);
+        } finally {
+            $this->source_override = [];
+        }
     }
 
     /**
@@ -95,6 +116,13 @@ class Player_Shortcode {
 
         if ( ! in_array( $post->post_status, [ 'publish', 'draft' ], true ) ) {
             return $this->render_error( __( 'Player not found.', 'vapfem' ) );
+        }
+
+        // Lets other code replace this player's output entirely (a string
+        // return wins; null renders the player as usual).
+        $pre = apply_filters( 'leanpl/player/pre_render', null, $post_id );
+        if ( is_string( $pre ) ) {
+            return $pre;
         }
 
         // Player type must be set
@@ -192,6 +220,15 @@ class Player_Shortcode {
                 $config['audio_title'] = $custom_title;
             }
             $config['audio_title_enabled'] = Metaboxes::get_field_value($post_id, '_audio_title_enabled') !== '0';
+        }
+
+        // A widget swapped this player's media (render_with_source()): the new
+        // source, poster and title replace the saved ones, nothing else does.
+        if ($this->source_override) {
+            $config = array_merge($config, $this->source_override);
+            if (isset($config['audio_title']) && '' === $config['audio_title']) {
+                unset($config['audio_title']);
+            }
         }
 
         $renderer = Player_Renderer::get_instance();

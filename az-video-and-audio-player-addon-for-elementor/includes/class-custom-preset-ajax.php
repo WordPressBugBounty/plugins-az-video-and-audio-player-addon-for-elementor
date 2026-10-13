@@ -152,7 +152,7 @@ class Custom_Preset_Ajax {
     }
 
     /**
-     * "Seed, then decouple" (PLAYER-FREE-VS-PRO.md / Lock A11): Modern/Simple/
+     * "Seed, then decouple" (docs/PLAYER-FREE-VS-PRO.md / Lock A11): Modern/Simple/
      * Minimal's controls array is a full-override contract in
      * Player_Renderer::resolve_layout_controls(), not a starting point. A
      * preset can only claim one of those layouts if picking it changes nothing

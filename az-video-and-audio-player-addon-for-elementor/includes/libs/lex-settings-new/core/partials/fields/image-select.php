@@ -98,7 +98,7 @@ $tr_class = $fieldRenderer->classnames($tr_classes);
 // RENDER HTML
 // ============================================
 ?>
-<tr class="<?php echo esc_attr($tr_class); ?>"<?php echo ($field['pro'] && isset($field['pro']['onclick'])) ? ' onclick="' . esc_attr($field['pro']['onclick']) . '()"' : ''; ?>>
+<tr class="<?php echo esc_attr($tr_class); ?>"<?php echo ($field['pro'] && isset($field['pro']['onclick'])) ? ' onclick="' . esc_attr($field['pro']['onclick']) . '()"' : ''; ?><?php echo ! empty($field['pro']) ? ' data-upgrade-source="' . esc_attr($field['key']) . '"' : ''; ?>>
     <th scope="row">
         <?php $fieldRenderer->renderLabel($field); ?>
         <?php if ($has_tooltip): ?>
@@ -150,6 +150,7 @@ $tr_class = $fieldRenderer->classnames($tr_classes);
                     <div class="<?php echo esc_attr($card_class); ?>"<?php
                         if ($is_locked) {
                             echo ' onclick="openUpgradeModal(); return false;"';
+                            echo ' data-upgrade-source="' . esc_attr($field['key'] . '-' . $opt_value) . '"';
                         } elseif ($has_launcher) {
                             echo ' onclick="' . esc_attr($opt_launcher) . '(this); return false;"';
                         }

@@ -230,6 +230,37 @@ if (!defined('ABSPATH')) {
 
   <?php // ── Bulk Add panel ──────────────────────────────────────────────────── ?>
   <div data-lpl-track-drawer-panel="bulk" class="lpl-hidden lpl-box-border lpl-w-full [flex:1_1_0] lpl-flex lpl-flex-col lpl-gap-[8px] lpl-p-[12px_24px] lpl-justify-start lpl-items-start">
+    <?php
+    /**
+     * A connected media service adds its own "pick several" button here, above
+     * the paste box, because picking from the service is the main road and
+     * pasting the side one. Nothing is printed when no service is connected.
+     *
+     * @param string $playlist_type 'video' or 'audio'.
+     */
+    do_action('leanpl/admin_new/track_drawer_bulk_top', $edit_playlist_type);
+
+    // Without the service, the same buttons still show, with the gem, and
+    // open the upgrade popup (initUpsellButtons() in admin-new.js), the same
+    // way the Bunny tabs on the player edit screen do. Bunny Stream is video
+    // only, so an audio playlist never offers it.
+    if (!leanpl_is_pro_active()) :
+      $track_drawer_locked_services = ('audio' === $edit_playlist_type)
+        ? [__('Bunny Storage', 'vapfem')]
+        : [__('Bunny Stream', 'vapfem'), __('Bunny Storage', 'vapfem')];
+    ?>
+    <div class="lpl-box-border lpl-w-full lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[8px] lpl-flex-wrap lpl-justify-start lpl-items-center lpl-mb-[8px]">
+      <?php foreach ($track_drawer_locked_services as $track_drawer_locked_service) : ?>
+        <button type="button" data-lpl-upsell-button data-upgrade-source="drawer-<?php echo esc_attr(sanitize_title($track_drawer_locked_service)); ?>" class="lpl-btn lpl-btn--outline lpl-cursor-pointer lpl-h-[36px] lpl-p-[0px_12px] lpl-rounded-[8px] lpl-text-[13px]/[normal] lpl-border-0 lpl-gap-[6px]">
+          <?php
+          /* translators: %s: media service name, e.g. Bunny Stream */
+          echo esc_html(sprintf(__('Add from %s', 'vapfem'), $track_drawer_locked_service));
+          ?>
+          <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?>
+        </button>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
     <label class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Paste Media URLs', 'vapfem'); ?>
     </label>
@@ -237,8 +268,8 @@ if (!defined('ABSPATH')) {
     // Same audio-has-no-youtube/vimeo reasoning as the Quick Add url field
     // above - bulk examples swap to direct audio-file URLs for audio.
     $track_drawer_bulk_placeholder = ( 'audio' === $edit_playlist_type )
-      ? "https://example.com/podcast-ep12.mp3\nhttps://example.com/podcast-ep13.mp3\n\n" . __( 'Paste one URL per line', 'vapfem' )
-      : "https://youtube.com/watch?v=dQw4w9WgXcQ\nhttps://vimeo.com/76979871\nhttps://example.com/media.mp4\n\n" . __( 'Paste one URL per line', 'vapfem' );
+      ? "https://example.com/podcast-ep12.mp3\nhttps://example.com/podcast-ep13.mp3\nhttps://yourzone.b-cdn.net/podcast/ep14.mp3 " . __( '(Bunny Storage)', 'vapfem' ) . "\n\n" . __( 'Paste one URL per line', 'vapfem' )
+      : "https://youtube.com/watch?v=dQw4w9WgXcQ\nhttps://vimeo.com/76979871\nhttps://example.com/media.mp4\nhttps://iframe.mediadelivery.net/play/123456/video-id " . __( '(Bunny Stream, Pro)', 'vapfem' ) . "\nhttps://yourzone.b-cdn.net/videos/intro.mp4 " . __( '(Bunny Storage)', 'vapfem' ) . "\n\n" . __( 'Paste one URL per line', 'vapfem' );
     ?>
     <textarea rows="10" data-lpl-track-drawer-bulk-urls placeholder="<?php echo esc_attr( $track_drawer_bulk_placeholder ); ?>"
       class="lpl-text-[13px]/[21px] lpl-box-border lpl-text-[#2D2D2D] lpl-font-normal lpl-w-full lpl-h-[280px] lpl-p-[12px] lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[8px] lpl-border-0 lpl-resize-none focus:lpl-outline-none"></textarea>

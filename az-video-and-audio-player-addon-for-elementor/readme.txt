@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.4
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,9 @@ Lean Player handles it all, in one lightweight plugin:
 * **Audio - Live Stream** (Icecast, Shoutcast and other radio streams)
 * **Video playlist**
 * **Audio playlist**
+* **Bunny Storage & Stream (Pro)**
 * **Brand color matching** so the player looks like part of your site, not a plugin
+* **Members-only videos and podcasts** [PRO] - lock any player, playlist or single episode to logged-in users, roles, Paid Memberships Pro or MemberPress levels, or a password. Works with any membership plugin that uses roles.
 * Never slows your site down
 * Works with any theme
 * **Embed anywhere** - shortcode or the Elementor widget
@@ -49,6 +51,10 @@ Lean Player also helps keep media-heavy pages fast. With Media Preload, you choo
 
 Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lean_timestamp time="1:30"]Jump to intro[/lean_timestamp]` anywhere in your post content, and clicking it seeks the player to that time and starts playback, no page reload. Great for podcast show notes, course sections, and video reviews.
 
+Rename the player's buttons and messages in Settings > Labels & Messages. Change Play, Mute, Settings, Fullscreen and the playlist "Now Playing" label to your own words, no translation plugin needed.
+
+Sell or gate your content with Lean Player Pro. Choose who can watch each player or playlist: everyone, logged-in users (optionally only certain roles), logged-out users, members of a Paid Memberships Pro or MemberPress level, or anyone with a password. Inside a playlist you can keep the first episode free and lock the rest. Visitors without access see a locked message with a login or join button instead of the player, and the media link stays out of the page. Any other membership plugin that gives members a WordPress role works through logged-in users and roles.
+
 == Features ==
 
 **Player Management:**
@@ -61,6 +67,15 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * **Simple Shortcode** - [lean_player id="123"] to embed anywhere
 * **Timestamp Links** - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] to jump a player to a specific moment from your post content
 * **Player Categories** - Group and organize players using categories
+* **Labels & Messages** - Reword the player's button labels and tooltips and the playlist "Now Playing" label from Settings
+* **Locked Content Wording** - Reword the locked message, button, login line, password form and popup message [PRO]
+
+**Access Control:** [PRO]
+* Who Can Watch - set per player and per playlist: Everyone, Logged-in users (with optional roles), Logged-out users, Members of a level, or Anyone with the password [PRO]
+* Lock single episodes inside a playlist - locked episodes show a padlock and their media never reaches visitors without access [PRO]
+* Paid Memberships Pro and MemberPress levels show up in the Access setting automatically, and any membership plugin that gives members a WordPress role works through Logged-in users [PRO]
+* Locked message with a login or join button, shown in place of the player [PRO]
+* Works with page caching - locked content loads after the page does [PRO]
 
 **Video Sources:**
 * YouTube video support
@@ -106,6 +121,7 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * Works with YouTube, Vimeo, HTML5 video, and audio files
 * Shortcode: [lean_playlist id="123"]
 * Search players and add them to a playlist from the admin
+* Edit any playlist item's full player settings in a new tab, right from the playlist's item list
 * Filter players by category and add all from a selected category at once
 * Panel position: left, right, top, or bottom of the player
 * Panel width, max width, and height (synced or fixed)
@@ -123,18 +139,24 @@ Link directly to a moment in a video or podcast with Timestamp Links. Drop `[lea
 * Audio now-playing large card [PRO]
 * Start from a specific item number [PRO]
 * Automatic Thumbnail - auto-fetch thumbnails from YouTube and Vimeo when no custom image is set [PRO]
+* Automatic Duration - track lengths fill themselves for uploads, Vimeo, YouTube and direct file links, plus a one-click "Fill missing durations" [PRO]
+* Members-only episodes - lock single episodes and keep the rest free [PRO]
 
 **Integration:**
 * Elementor widgets (video, audio & playlist)
 * Block Editor (Gutenberg) support
 * Classic Editor support
 * Shortcode support everywhere
+* Paid Memberships Pro and MemberPress (levels built in), plus any membership plugin that assigns roles [PRO]
+* Popup shortcode - [lean_popup] adds a button (or your own image) that opens a player or playlist in a popup [PRO]
 
 == Video Player Elementor Widget ==
 
 All player options are available directly in the Elementor panel - no shortcode needed. Widget-specific additions:
 
-* Saved Player mode - pick an existing saved player by name; its settings apply automatically
+* Saved Player mode - pick an existing saved player by name; its settings apply automatically. An Edit Player button opens it in a new tab
+* Source Override - keep a saved player's look and settings but play another video: a YouTube, Vimeo, Bunny Stream (Pro) or video file link, or an ID. Works with dynamic tags, so one saved player can play each post's own video
+* Video link or ID - paste a full YouTube or Vimeo link, or just the ID. Works with Elementor Pro dynamic tags, so an ACF URL field can supply a different video for each post
 * Player Accent Color - per-widget brand color override
 * Controls Bar Color - per-widget icon and text color
 * Per Element Style (Pro) - granular colors for play button, progress bar, volume slider, settings icon, tooltips, settings menu, and timer
@@ -144,7 +166,8 @@ All player options are available directly in the Elementor panel - no shortcode 
 
 All player options are available directly in the Elementor panel - no shortcode needed. Widget-specific additions:
 
-* Saved Player mode - pick an existing saved player by name; its settings apply automatically
+* Saved Player mode - pick an existing saved player by name; its settings apply automatically. An Edit Player button opens it in a new tab
+* Source Override - keep a saved player's look and settings but play another audio file, with its own poster and track title. Works with dynamic tags
 * Poster Card Style - background, text, border color, padding, radius, and thumbnail radius
 * Player Accent Color - per-widget brand color override
 * Controls Bar Color - per-widget icon and text color
@@ -156,192 +179,237 @@ All player options are available directly in the Elementor panel - no shortcode 
 Embed any saved playlist on an Elementor page without a shortcode. All playlist settings (panel position, layout, colors, auto-advance) are configured in the Playlist Manager, not the widget.
 
 * Select Playlist - pick from your saved playlists by name
+* Edit Playlist - opens the picked playlist in a new tab
+
+== Frequently Asked Questions ==
+
+= Can durations fill in automatically? =
+
+Yes, in Pro. When you add a track to a playlist, its Duration box fills itself for Media Library uploads, Vimeo and YouTube videos, and direct file links (mp3, mp4 and so on). The "Fill missing durations" button on Playlist Items fills every empty one at once, and Bulk Add fills its new tracks right after adding them. You can always change the value, and a length you typed is never replaced. YouTube lengths are read in your browser by YouTube's own player, shown small for a moment while it reads. Live streams have no length, and live or upcoming YouTube videos, private or deleted videos, videos whose owner blocked embedding, password-protected Vimeo videos and links whose host blocks the request stay empty.
+
+= Does Lean Player work with Bunny.net? =
+
+Yes. In Pro, connect Bunny Stream with your account API key, or a Bunny Storage zone with its password, under Settings > Integrations. Then browse your library or folders from Edit Player, or paste a link. Stream videos play in Lean Player with a quality menu, and protected libraries and zones get signed links that renew themselves on cached pages. Your keys stay on your server. In the free version, plain file links from Bunny Storage (for example https://mysite.b-cdn.net/video.mp4) play like any other video or audio link, as long as the zone does not have token authentication switched on. Protected zones need Pro, which signs the links.
+
+= Can I make a video or podcast episode members-only? =
+
+Yes, in Pro. Every saved player and playlist has an Access setting: Everyone, Logged-in users (optionally limited to certain roles), Logged-out users, Members of a level (Paid Memberships Pro or MemberPress), or Anyone with the password. Inside a playlist, each episode follows its own setting, so you can keep the intro free and show a padlock on the rest.
+
+= Which membership plugins work with Lean Player? =
+
+Any membership plugin that gives members a WordPress role: in the Access setting, choose "Logged-in users" and tick that role. Paid Memberships Pro and MemberPress also have built-in level support: when either is active, its levels show up under "Members of a level" with no setup.
+
+= Does locking a player protect the media file itself? =
+
+No. Lean Player keeps the media link out of the page for visitors without access, but it can't protect the file. Anyone who already has the direct file address can still open it. YouTube and Vimeo videos are only as private as their settings on those sites (for example "Unlisted", or Vimeo's domain restriction).
+
+= Which embeds can be locked? =
+
+Saved players and playlists: the [lean_player] and [lean_playlist] shortcodes, the Elementor playlist widget, Button Links and the [lean_popup] shortcode. The Elementor video and audio widgets and the [lean_video] / [lean_audio] shortcodes are set up by hand on each page, so they have no saved Access setting.
+
+= Can one Elementor template play a different video on each post? =
+
+Yes. Store each post's YouTube or Vimeo link in a custom field (for example an ACF URL or Text field). In the Video Player widget, set Player Source to Manual, choose YouTube or Vimeo, and pick that field from the dynamic tags on the link box. The field can hold a full link or just the video ID.
+
+To keep one saved player's look and settings instead, set Player Source to Saved Player, pick the player, open the Source Override section, and choose the field from the dynamic tags on the "Video Source Override" box. That box takes YouTube, Vimeo, Bunny Stream (Pro) and video file links, or an ID for the saved player's own service. Posts with an empty field play the saved player's own video. Members-only saved players always play their own video.
 
 == Changelog ==
+= Version: 3.5.0 =
+* Added: Source Override in the Elementor Video and Audio widgets.
+* Added: Labels & Messages settings tab.
+* Added: Integrations settings tab.
+* Added: Edit link on playlist items.
+* Improved: Elementor Vimeo and YouTube boxes accept full links.
+* Improved: Edit buttons in the Elementor widgets open in a new tab.
+* Improved: Audio widget Player Source dropdown layout.
+* Improved: Updated Freemius SDK to the latest version.
+* Fixed: Vimeo embed links in saved players.
+
 = Version: 3.3.4 =
-* Fixed: A stray divider line on stacked audio playlists.
-* Removed: The playback notice added in 3.3.3. It could show an error on working videos and audio over slower connections.
+* Fixed: Stray divider on stacked audio playlists.
+* Removed: Playback notice from 3.3.3.
 
 = Version: 3.3.3 =
-* Added: Plain-English notice with a "Try again" button when audio/video fails to play.
-* Added: A stream that connects but never plays is given up on after 7 seconds instead of hanging silently.
-* Added: "Source" section on the Edit Player screen for a player that already has a source - update its URL (YouTube/Vimeo/CDN/Audio) or swap its uploaded file without changing whether it's a video or audio player.
-* Improved: Player error messages are now translatable and match the new playback notice's look.
-* Improved: Clearer docs on live radio stream support (Icecast/Shoutcast, HTTPS requirement).
-* Improved: Edit screen polish - Shortcode label, stronger Copy button, aligned placeholder colors.
-* Fixed: Live stream URLs with no file extension were misdetected as video and refused in playlists.
-* Improved: Add Media source tabs now have their own soft colors; "Audio Live Stream" renamed to "Audio Stream".
-* Fixed: Adding a playlist track while a live stream was loading could reset it repeatedly and never let it play.
-* Fixed: Player Accent Color picker needed two clicks before the live preview updated.
-* Fixed: Playlist Items panel's "No tracks yet" message didn't reappear after removing every track from a playlist that started with items.
+* Added: "Try again" notice when playback fails.
+* Added: Stalled streams time out after 7 seconds.
+* Added: Source section on Edit Player.
+* Improved: Translatable player error messages.
+* Improved: Live radio stream docs.
+* Improved: Edit screen polish.
+* Improved: Colored Add Media source tabs.
+* Changed: "Audio Live Stream" renamed to "Audio Stream".
+* Fixed: Extensionless stream URLs detected as video.
+* Fixed: Stream resetting when adding a playlist track.
+* Fixed: Accent Color picker needed two clicks.
+* Fixed: "No tracks yet" message not reappearing.
 
 = Version: 3.3.2 =
-* Added: 9:16 (Vertical / Reel) videos now render at a sensible, capped, centred size instead of stretching to fill the page. New per-player "Vertical Video Max Height" setting.
-* Added: YouTube Shorts links (youtube.com/shorts/...) are now recognized as a valid YouTube video source.
-* Added: "YouTube Shorts" quick-pick button in Edit Player's Add Media panel, which also switches Aspect Ratio to 9:16 automatically.
-* Changed: Video Shape (Aspect Ratio) is now a dropdown offering Automatic, 16:9, 4:3, 1:1 and 9:16. A player previously set to a custom shape outside that list is treated as Automatic. The Elementor widgets and the [lean_video] shortcode still accept any shape.
-* Fixed: A landscape poster/thumbnail on a vertical (9:16) video was letterboxed instead of filling the frame.
-* Fixed: Picking a new source in Edit Player didn't reflect the rest of the settings panel (Aspect Ratio, Layout, etc.) in the live preview until another field was changed.
+* Added: Capped, centered vertical (9:16) videos.
+* Added: Vertical Video Max Height setting.
+* Added: YouTube Shorts link support.
+* Added: YouTube Shorts quick-pick button.
+* Changed: Video Shape is now a dropdown.
+* Fixed: Letterboxed poster on vertical videos.
+* Fixed: Live preview not updating after a new source.
 
 = Version: 3.3.1 =
-* Fixed: A custom Control Options selection (Elementor widget or per-player) was silently discarded and replaced with the full default button set.
-* Added: Player Layout picker in the Elementor Video and Audio widgets, with an Inherit option and a link to the Custom Preset builder.
-* Added: New Elementor widgets now default to a recommended Saved Player + Classic Layout, with the legacy Control Options field hiding itself once a Layout is chosen. Existing widgets are unaffected.
-* Improved: "Saved Player" is now the recommended Player Source option in the Elementor widgets.
-* Fixed: Audio player control icons (play/pause, mute/unmute, etc.) were hidden when used inside a Royal Addons for Elementor widget.
+* Added: Player Layout picker in Elementor widgets.
+* Added: New Elementor widgets default to Saved Player + Classic.
+* Improved: Saved Player is the recommended widget source.
+* Fixed: Custom Control Options being discarded.
+* Fixed: Hidden audio icons inside Royal Addons widgets.
 
 = Version: 3.3.0 =
-* Fixed: Auto-Start accordion in the player metabox missing its collapse arrow.
-* Admin Redesign: New "Media Players" & "Playlists" list screens and Edit Player/Edit Playlist screens
-* Added: Inline live preview panel added to both Player and Playlist edit screens, reflecting field changes in real time
-* Added: Layout picker + full Custom Preset builder (pro) (create, edit, delete presets)
-* Updated: Lex Settings framework
+* Added: Redesigned admin screens.
+* Added: Live preview on edit screens.
+* Added: Layout picker.
+* Added (Pro): Custom Preset builder.
+* Updated: Lex Settings framework.
+* Fixed: Missing Auto-Start accordion arrow.
 
 = Version: 3.2.2 =
-* Fixed: Player controls ran together on themes that reset margins and padding.
-* Fixed: Playlist titles truncated and rows too tall on themes with a global clearfix.
-* Fixed: Signed CDN links with a `?` in them (S3, CloudFront) never played.
-* Fixed: .opus audio never played.
-* Fixed: .ogv, .mkv, .mov, .3gp and .m4v used the wrong file type.
-* Improved: Plugin styles now load after the theme's styles.
+* Fixed: Cramped controls on themes that reset spacing.
+* Fixed: Truncated playlist titles with theme clearfix.
+* Fixed: Signed CDN links (S3, CloudFront) not playing.
+* Fixed: .opus audio not playing.
+* Fixed: Wrong file type for .ogv, .mkv, .mov, .3gp, .m4v.
+* Improved: Plugin styles load after the theme.
 
 = Version: 3.2.1 =
-* Added: Freemius for improving the plugin usage
-* Added: Example links under the playlist Quick Add box, so you can see what a valid URL looks like.
-* Fixed: Playlist preview page was too narrow on default WordPress themes, cramping the player controls.
-* Updated: Minimum requirements declared in the plugin header, so incompatible sites are stopped before activation.
-* Updated: Language translation template (.pot) regenerated with the latest strings and a few other minor things
+* Added: Freemius integration.
+* Added: Example links under playlist Quick Add.
+* Fixed: Narrow playlist preview page.
+* Updated: Minimum requirements in plugin header.
+* Updated: Translation template (.pot).
 
 = Version: 3.2.0 =
-* Added: Playlist Quick Add - add a playlist item by pasting a URL, with instant append to the list (no page reload). Titles for YouTube and Vimeo links are fetched automatically.
-* Added: Bulk Add - create many playlist items at once by pasting one URL per line (up to 50).
-* Added: Edit a playlist track without leaving the page - the Edit button now opens a side panel instead of a new browser tab.
-* Improved: Playlist builder rebuilt around the item list, with the secondary add paths (details, bulk, existing players, upload) moved into a side panel.
-* Added: Available Playback Speeds - choose which speeds appear in the player's settings menu, so you can trim options like 4x that most sites never need.
-* Fixed: Playback speed could not be changed in audio playlists. The settings menu was taller than the player area and got clipped, making every speed option unclickable.
+* Added: Playlist Quick Add by URL.
+* Added: Bulk Add (up to 50 URLs).
+* Added: Edit playlist tracks in a side panel.
+* Added: Available Playback Speeds setting.
+* Improved: Rebuilt playlist builder.
+* Fixed: Speed menu clipped in audio playlists.
 
 = Version: 3.1.10 =
-* Fixed: Video URLs with percent-encoded characters (e.g. %20 for spaces) were corrupted when rendering, breaking playback even after the URL saved correctly. The read/parse path no longer strips encoding.
+* Fixed: Percent-encoded video URLs broken on render.
 
 = Version: 3.1.9 =
-* Fixed: Audio/Video URL field stripped percent-encoded characters (e.g. %20) on save, corrupting URLs with spaces or special characters and breaking playback.
-* Fixed: Custom Thumbnail was ignored on YouTube/Vimeo video players — the provider's own default thumbnail showed instead.
+* Fixed: Percent-encoded URLs broken on save.
+* Fixed: Custom Thumbnail ignored on YouTube/Vimeo.
 
 = Version: 3.1.8 =
-* Added: Timestamp links - [lean_timestamp time="1:30"]Jump to intro[/lean_timestamp] jumps a player to a specific moment from your post content.
-* Improved: Elementor's saved-player dropdown now shows the player ID alongside its title.
+* Added: Timestamp Links shortcode.
+* Improved: Player ID shown in Elementor saved-player dropdown.
 
 = Version: 3.1.7 =
-* Fixed: Out-of-range volume values no longer overflow the player's valid range.
+* Fixed: Out-of-range volume values.
 
 = Version: 3.1.6 =
-* Added: Live playlist preview in the Elementor editor.
+* Added: Live playlist preview in Elementor editor.
 
 = Version: 3.1.5 =
-* Fixed: Fatal error on pages with an Elementor Playlist widget when the Playlist feature was disabled.
+* Fixed: Fatal error with Playlist feature disabled.
 
 = Version: 3.1.4 =
-* Improved: Regenerated POT language file to include all current translatable strings.
+* Updated: Translation template (.pot).
 
 = Version: 3.1.3 =
-* Added: Saved-player mode in the Elementor Video Player widget. Select an existing saved player by name instead of re-entering the URL and settings.
-* Added: Saved-player mode in the Elementor Audio Player widget. Same as video: pick a saved player and embed it directly from the widget.
-* Fixed: Accent color now applies consistently to the progress track and handle across all player types.
-* Fixed: Media library now filters to audio or video files when selecting a source file.
-* Fixed: Volume range thumb colour now matches the player accent colour.
-* Fixed: Switching from a Vimeo track back to an HTML5 track in a playlist left the video stopped instead of playing.
-* Fixed: YouTube and Vimeo players sharing a page all showed the same poster image. The inline poster style is now scoped to each player's ID.
-* Improved: Playlist track item shows a loading spinner between click and playback, replacing the static play icon during the load gap.
-* Fixed: Plain Vimeo video ID (e.g. 76979871) now accepted in the Vimeo URL field.
-* Fixed: Plain YouTube video ID (e.g. bTqVqk7FSmY) now accepted in the YouTube URL field.
-* Fixed: Visibility icon in the Preview Player metabox now vertically centered.
-* Fixed: Astra theme overriding background on focused speed button in player controls.
+* Added: Saved-player mode in Elementor Video widget.
+* Added: Saved-player mode in Elementor Audio widget.
+* Improved: Loading spinner on playlist tracks.
+* Fixed: Accent color on progress track and handle.
+* Fixed: Media library filters by audio or video.
+* Fixed: Volume thumb color.
+* Fixed: Vimeo to HTML5 track switch not playing.
+* Fixed: Same poster on multiple YouTube/Vimeo players.
+* Fixed: Plain Vimeo IDs not accepted.
+* Fixed: Plain YouTube IDs not accepted.
+* Fixed: Preview Player icon alignment.
+* Fixed: Astra speed button background.
 
 = Version: 3.1.2 =
-* Fixed: Switching playlist tracks could log a JavaScript console error ("Cannot read properties of undefined") on YouTube and Vimeo items. Playback was unaffected; the error is now suppressed.
+* Fixed: Console error when switching YouTube/Vimeo tracks.
 
 = Version: 3.1.1 =
-* Added: Video Shape (Aspect Ratio) option per player. Set a player to 16:9, 4:3, 1:1, 9:16, or any width:height in the Video-Only settings; leave it empty for automatic. Available in the player editor, shortcode, and Elementor widget.
-* Improved: Video players no longer cause the page to jump while they load. Each player reserves its aspect-ratio space up front, removing layout shift for better Core Web Vitals.
-* Added: Stable target ids on rendered output. Post-backed players now render inside <div class="lpl-player-wrap" id="lpl-player-{ID}">, and playlists render inside <div class="lpl-playlist-wrap" id="lpl-playlist-{ID}">. Makes per-instance CSS and JS targeting straightforward.
-* Updated: Plyr player engine to 3.8.4 (upstream fixes, hides default Vimeo captions).
-* Improved: Player Defaults and the per-player settings now share the same tab and section layout (Behavior, Controls, Video-Only) for a consistent editing experience.
-* Improved: Each settings section now shows its media scope ("Applies to all players" or "Applies to video players only"), so it is clear what each option affects.
-* Fixed: Opening the settings page without a tab in the URL left the panel blank; it now opens the first tab.
+* Added: Video Shape (Aspect Ratio) setting.
+* Added: Stable wrapper IDs for players and playlists.
+* Improved: No layout shift while players load.
+* Improved: Matching layout for global and per-player settings.
+* Improved: Scope label on each settings section.
+* Updated: Plyr 3.8.4.
+* Fixed: Blank settings page without a tab in the URL.
 
 = Version: 3.1.0 =
-* Added: Automatic Thumbnail (Pro) - playlist items without a custom poster now auto-fetch the thumbnail from YouTube or Vimeo. Enable once in Settings > Playlist. YouTube is zero-cost; Vimeo uses a cached API call.
-* Added: Playlist feature - video and audio playlists with panel position (left/right/top/bottom), list/grid layout, thumbnails, duration badge, item numbers, dark skin, and shortcode [lean_playlist id="123"]
-* Added: Pause Other Players (Autopause) - when one player starts, all others pause automatically. Configurable site-wide via Global Player Settings.
-* Added: HTML5 Media Preload - control when video/audio loads (Metadata, None, or Auto). Useful for pages with multiple players.
-* Added: Keyboard Shortcuts - site-wide and per-player control, with Elementor widget and shortcode override support.
-* Added: Player type selection modal - choose Video or Audio when creating a new player.
-* Added: Accordion sections in player metabox - Playback tab reorganized into collapsible groups.
-* Added: Vertical tab navigation in player and playlist metaboxes.
-* Improved: Admin UI consistency - unified design tokens across settings pages and metaboxes.
+* Added: Video and audio playlists.
+* Added (Pro): Automatic Thumbnail.
+* Added: Pause Other Players.
+* Added: Media Preload setting.
+* Added: Keyboard Shortcuts.
+* Added: Video or Audio picker for new players.
+* Added: Accordion sections in player settings.
+* Added: Vertical tabs in player and playlist settings.
+* Improved: Consistent admin styling.
 
 = Version: 3.0.8 =
-Added: Download button styling option to the audio player elementor widget
+* Added: Download button styling in Elementor Audio widget.
 
 = Version: 3.0.7 =
-Fixed: Play Large button were not showing for very newly created video player
+* Fixed: Missing large play button on new video players.
 
 = Version: 3.0.6 =
-Added: Support for AAC(p) audio streaming URLs
+* Added: AAC(p) audio stream support.
 
 = Version: 3.0.5 =
-Fixed: Widget does not load in the elementor planel
-Improved: Assets management, Assets were loading on all pages
-- Added: Preview Player feature - Preview players directly from the players list or edit page
+* Added: Preview Player.
+* Improved: Assets load only where needed.
+* Fixed: Widget not loading in the Elementor panel.
 
 = Version: 3.0.4 =
-- Added: A new filter hook leanpl/metabox/field_config
-- Added: Support for M4A and AAC audio files
-- Enhancement: On Elementor editor mode shortcode does not render
+* Added: leanpl/metabox/field_config filter.
+* Added: M4A and AAC audio support.
+* Improved: Shortcodes in Elementor editor mode.
 
 = Version: 3.0.3 =
-- Fixed: Installed time overwrite on activation issue
-- Added: FAQs
+* Added: FAQs.
+* Fixed: Install time overwritten on activation.
 
 = Version: 3.0.2 =
-- Fixed: Dual plugin activation issue
+* Fixed: Dual plugin activation.
 
 = Version: 3.0.0 =
-* Major: Rebranded plugin under LeanPlugins brand
-* Major: Renamed from "AZ Video & Audio Player" to "Lean Player - Video & Audio Player for WordPress"
-* Added: Global Player Settings - Set default behavior for all players across your site
-* Added: Player Manager - Create and manage players through intuitive admin interface
-* Added: Simple shortcode system - [lean_player id="123"]
-* Improved: Performance optimizations and code restructuring
-* Improved: Aligned with LeanPlugins brand philosophy
-* Note: All existing shortcodes remain backward compatible
+* Changed: Rebranded as Lean Player by LeanPlugins.
+* Added: Global Player Settings.
+* Added: Player Manager.
+* Added: [lean_player id="123"] shortcode.
+* Improved: Performance and code structure.
+* Note: Existing shortcodes still work.
 
 = Version: 2.1.5 =
-* Added: Dynamic tags support for both audio and video player
+* Added: Dynamic tags for audio and video players.
 
 = Version: 2.1.4 =
-* Fixed: Flush of Unstyled Content (FOUC) issue on admin pages
+* Fixed: Unstyled flash on admin pages.
 
 = Version: 2.1.3 =
-* Security: Improved output escaping in admin notices
+* Security: Escaped output in admin notices.
 
 = Version: 2.1.2 =
-* Improved: Cross browser compatibility
-* Updated: Language translation file
+* Improved: Cross-browser compatibility.
+* Updated: Translation file.
 
 = Version: 2.1.1 =
-* Improved: Cache busting mechanism for assets
+* Improved: Asset cache busting.
 
 = Version: 2.1.0 =
-* Added: Shortcode support for Audio & Video Player
-* Improved: Code optimization and minor improvements
-* Updated: Language translation file
+* Added: Audio and video player shortcodes.
+* Improved: Code optimization.
+* Updated: Translation file.
 
 = Version: 2.0.3 =
-* Updated the plyr library to latest version
+* Updated: Plyr library.
 
 = Version: 1.0.0 =
-* Initial Release
+* Initial release.
 
 == Installation ==
 This section describes how to install the "Lean Player - Video and Audio Player for WordPress" plugin and get it working.

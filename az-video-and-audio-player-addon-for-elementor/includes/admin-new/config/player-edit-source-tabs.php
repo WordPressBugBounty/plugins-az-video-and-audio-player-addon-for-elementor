@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
  * selected tab ignores all three and always renders the same dark/white
  * look regardless of source - only the resting color varies.
  */
-return [
+$leanpl_source_tabs = [
   [
     'key'            => 'media-library',
     'label'          => __('Media Library', 'vapfem'),
@@ -97,4 +97,46 @@ return [
     'tab_line'        => '#B7A7E8',
     'tab_text'        => '#6D28D9',
   ],
+  // The two tabs below lean on a service the owner connects under
+  // Settings > Integrations. They ship in both editions so the locked state
+  // is visible either way; whatever provides the service adds the working
+  // Browse button (and the "is it switched on?" answer) through the filter
+  // at the bottom of this file. 'browse_label' is what turns the Browse
+  // button on in edit-source-picker.php.
+  [
+    'key'             => 'bunny-stream',
+    'label'           => __('Bunny Stream', 'vapfem'),
+    'show_url_field'  => true,
+    'url_label'       => __('Bunny Stream link', 'vapfem'),
+    'url_placeholder' => 'https://iframe.mediadelivery.net/play/123456/00000000-1111-2222-3333-444444444444',
+    'help_text'       => __('Paste a Bunny Stream link, or press Browse to pick a video.', 'vapfem'),
+    'browse_label'    => __('Browse', 'vapfem'),
+    'locked'          => !leanpl_is_pro_active(),
+    'tab_bg'          => '#FFF7ED',
+    'tab_line'        => '#F5B98A',
+    'tab_text'        => '#C2410C',
+  ],
+  [
+    'key'             => 'bunny-storage',
+    'label'           => __('Bunny Storage', 'vapfem'),
+    'show_url_field'  => true,
+    'url_label'       => __('Bunny Storage file link', 'vapfem'),
+    'url_placeholder' => 'https://files.b-cdn.net/lessons/lesson-1.mp4',
+    'help_text'       => __('Paste a link to a file on your Bunny CDN address, or press Browse to pick one.', 'vapfem'),
+    'browse_label'    => __('Browse', 'vapfem'),
+    'locked'          => !leanpl_is_pro_active(),
+    // Same three values as 'bunny-stream' above - one soft color per source
+    // family, and both Bunny tabs are the same family.
+    'tab_bg'          => '#FFF7ED',
+    'tab_line'        => '#F5B98A',
+    'tab_text'        => '#C2410C',
+  ],
 ];
+
+/**
+ * Lets a connected service unlock its own tab and say where its Browse
+ * button should lead.
+ *
+ * @param array[] $leanpl_source_tabs Tab configs.
+ */
+return apply_filters('leanpl/admin_new/source_tabs', $leanpl_source_tabs);

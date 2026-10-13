@@ -495,6 +495,39 @@ This was causing speed arrow hiddne when clicked on the settings icon
     margin: 0;
 }
 
+/* "Can't play yet" box (render_unavailable()): a calm dark video-shaped
+ * panel instead of the red error box, with the poster dimmed behind it when
+ * one is known. The second line is only printed for editors. */
+.lpl-player__unavailable {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    aspect-ratio: 16 / 9;
+    padding: 24px;
+    background: #111 var(--lpl-unavailable-poster, none) center / cover no-repeat;
+    border: 0;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+.lpl-player__unavailable.has-poster::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+.lpl-player__unavailable > * {
+    position: relative;
+}
+.lpl-player-notice__detail {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.85;
+}
+
 /* ── Button Links popup ────────────────────────────────────────────────
  * Prefix .lpl-bl-. Styles only - no functionality here, so this is safe
  * to ship free (the popup only ever appears via pro/assets/js/button-links.js).
@@ -604,12 +637,9 @@ html.lpl-bl-open {
     transform: scale(0.97);
 }
 
-.lpl-bl-dialog[data-lpl-bl-kind="video"] .lpl-bl-box {
-    width: min(960px, calc(100vw - 32px));
-}
-
+.lpl-bl-dialog[data-lpl-bl-kind="video"] .lpl-bl-box,
 .lpl-bl-dialog[data-lpl-bl-kind="audio"] .lpl-bl-box {
-    width: min(480px, calc(100vw - 32px));
+    width: min(720px, calc(100vw - 32px));
 }
 
 .lpl-bl-dialog[data-lpl-bl-kind="playlist"] .lpl-bl-box {

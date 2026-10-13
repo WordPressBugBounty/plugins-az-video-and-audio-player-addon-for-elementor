@@ -81,7 +81,7 @@ $edit_source_show_url_field = true;
 $edit_source_show_or        = true;
 $edit_source_url_label      = __('PASTE A MEDIA URL', 'vapfem');
 $edit_source_url_placeholder = 'https://example.com/video.mp4';
-$edit_source_help_text      = __("Paste a YouTube, Vimeo, direct video/audio link, or audio stream URL, we'll detect the source automatically.", 'vapfem');
+$edit_source_help_text      = __("Paste a YouTube or Vimeo link, a link to a video or audio file, an audio stream URL, or a Bunny Stream link (Pro). We'll detect the source automatically.", 'vapfem');
 
 ?>
 <div class="lpl-admin lpl-player-edit-new-page lpl-box-border lpl-w-full lpl-h-fit lpl-flex lpl-flex-col lpl-gap-0 lpl-justify-start lpl-items-start lpl-bg-canvas lpl-overflow-hidden">

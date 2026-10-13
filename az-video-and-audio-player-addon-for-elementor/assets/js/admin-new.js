@@ -1377,6 +1377,50 @@
         requestPreview( $.extend( {}, lastSourcePayload, formValues( $( '[data-lpl-edit-form]' ) ) ), 300 );
     }
 
+    // ── Checkbox list -> one comma-separated hidden input ───────────────────
+    // A checkbox list (data-lpl-csv-for="<name>") has no name of its own:
+    // formValues() keeps one value per name, so the ticked values are joined
+    // into the hidden input it belongs to (data-lpl-csv-input="<name>").
+    // Used by the Access card's roles and levels lists.
+    function initCsvCheckboxGroups() {
+        $( document ).on( 'change', '[data-lpl-csv-for]', function() {
+            var name   = $( this ).attr( 'data-lpl-csv-for' );
+            var values = $( '[data-lpl-csv-for="' + name + '"]:checked' ).map( function() {
+                return this.value;
+            } ).get();
+            $( '[data-lpl-csv-input="' + name + '"]' ).val( values.join( ',' ) );
+        } );
+    }
+
+    // ── Access card, locked edition ────────────────────────────────────────
+    // The "Who can watch" select is browsable, but every choice past
+    // Everyone is locked: picking one opens the upgrade popup and snaps back,
+    // so nothing looks set that isn't. The select has no name, so a save
+    // never sends it either way.
+    function initAccessUpsell() {
+        $( document ).on( 'change', '[data-lpl-access-upsell]', function() {
+            if ( this.value === 'everyone' ) { return; }
+            var upgradeSource = 'access-' + this.value;
+            this.value = 'everyone';
+            if ( typeof window.openUpgradeModal === 'function' ) {
+                window.openUpgradeModal( undefined, upgradeSource );
+            }
+        } );
+    }
+
+    // ── Locked buttons ──────────────────────────────────────────────────────
+    // A locked button (data-lpl-upsell-button) stays visible with its PRO
+    // badge, and clicking it opens the upgrade popup instead of acting.
+    function initUpsellButtons() {
+        $( document ).on( 'click keydown', '[data-lpl-upsell-button]', function( e ) {
+            if ( e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ' ) { return; }
+            e.preventDefault();
+            if ( typeof window.openUpgradeModal === 'function' ) {
+                window.openUpgradeModal( undefined, $( this ).attr( 'data-upgrade-source' ) );
+            }
+        } );
+    }
+
     function initFormLivePreview() {
         var $form = $( '[data-lpl-edit-form]' );
         if ( ! $form.length ) { return; }
@@ -1758,17 +1802,33 @@
     // routes it to the live-preview payload. _video_type isn't just a hint -
     // class-live-preview-ajax.php's process_video_source() uses it to decide
     // between a YouTube/Vimeo embed and a plain HTML5 <video><source>; a
-    // YouTube URL submitted as _video_type=html5 renders "No video sources
-    // provided" because the html5 branch never promotes a detected YouTube
+    // YouTube URL submitted as _video_type=html5 renders "Add a video file
+    // link" because the html5 branch never promotes a detected YouTube
     // ID into an embed. So the type has to be detected client-side before
     // building the payload, same patterns leanpl_parse_video_url() (PHP)
     // matches - this is what makes "detected automatically" (the help text's
     // promise) actually true for the no-tab-selected generic field, not only
     // for the dedicated YouTube/Vimeo tabs.
     function detectVideoUrlType( url ) {
+        if ( parseStreamServiceUrl( url ) ) { return 'bunny'; }
         if ( /(?:youtube\.com\/|youtu\.be\/)/i.test( url ) ) { return 'youtube'; }
         if ( /vimeo\.com\//i.test( url ) ) { return 'vimeo'; }
         return 'html5';
+    }
+
+    // The JS half of leanpl_parse_bunny_stream_url() (functions-player.php):
+    // same link shapes, same "a bare ID is not enough" rule, so the screen
+    // and the server agree on what a stream link is before anything is saved.
+    var STREAM_GUID     = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+    var STREAM_PAGE_RE  = new RegExp( '^https?://(?:(?:player|iframe)\\.mediadelivery\\.net|video\\.bunnycdn\\.com)/(?:embed|play)/(\\d+)/(' + STREAM_GUID + ')(?:[/?#]|$)', 'i' );
+    var STREAM_FILE_RE  = new RegExp( '^https?://([a-z0-9.-]+)/(' + STREAM_GUID + ')/playlist\\.m3u8(?:[?#]|$)', 'i' );
+
+    function parseStreamServiceUrl( url ) {
+        var m = STREAM_PAGE_RE.exec( String( url || '' ).trim() );
+        if ( m ) { return { libraryId: m[ 1 ], guid: m[ 2 ].toLowerCase(), host: '' }; }
+        m = STREAM_FILE_RE.exec( String( url || '' ).trim() );
+        if ( m ) { return { libraryId: '', guid: m[ 2 ].toLowerCase(), host: m[ 1 ].toLowerCase() }; }
+        return null;
     }
 
     // Every tab that means "this URL is audio". A live stream is saved exactly
@@ -1825,6 +1885,8 @@
                 payload._youtube_url = url;
             } else if ( videoType === 'vimeo' ) {
                 payload._vimeo_url = url;
+            } else if ( videoType === 'bunny' ) {
+                payload._bunny_url = url;
             } else {
                 payload._html5_source_type = 'link';
                 payload._html5_video_url = url;
@@ -1858,6 +1920,14 @@
 
             var videoType = detectVideoUrlType( url );
             var settings  = window.leanplAdminNewPreview;
+
+            // The stream tab is a statement of intent: a link that isn't a
+            // stream link would quietly save as a plain file player, which is
+            // not what the person asked for.
+            if ( sourceTab === 'bunny-stream' && videoType !== 'bunny' ) {
+                showToast( 'error', 'That isn\'t a Bunny Stream link. Pick a video with Browse, or paste a play, embed or stream link from your Bunny dashboard.' );
+                return;
+            }
 
             // Still ambiguous: a generic-field URL that isn't YouTube/Vimeo
             // and has no extension at all. That is what a live stream address
@@ -2130,6 +2200,10 @@
         $( '[data-lpl-track-drawer-poster-filename]' ).text( '' );
         $( '[data-lpl-track-drawer-poster-set]' ).addClass( 'lpl-hidden' );
         $( '[data-lpl-track-drawer-poster-empty]' ).removeClass( 'lpl-hidden' );
+
+        // Fields were cleared without input events, so anything decorating
+        // them (hint lines under a box) is told separately.
+        $( document ).trigger( 'leanpl:track-drawer:reset' );
     }
 
     // ── Add Track drawer: Quick Add's two wp.media pickers ──────────────────
@@ -2164,6 +2238,7 @@
                         // Mutually exclusive with the URL field, same as the
                         // classic metabox's onQaMediaChange().
                         $( '[data-lpl-track-drawer-url]' ).val( '' );
+                        $( document ).trigger( 'leanpl:track-drawer:upload-changed', [ String( attachment.id ) ] );
                     } );
                 }
 
@@ -2173,6 +2248,7 @@
             $( document ).on( 'click', '[data-lpl-track-drawer-upload-remove]', function() {
                 $uploadWrap.attr( 'data-attachment-id', '' );
                 $uploadPreview.text( 'No media selected' ).addClass( 'lpl-text-ink-soft' );
+                $( document ).trigger( 'leanpl:track-drawer:upload-changed', [ '' ] );
             } );
         }
 
@@ -2284,6 +2360,7 @@
 
                 resetTrackDrawerQuickAddForm();
                 showToast( 'success', 'Track added. Click Update to save.' );
+                $( document ).trigger( 'leanpl:track-list:rows-added', [ [ response.data.id ], { source: 'quick' } ] );
 
                 if ( ! $( '[data-lpl-track-drawer-footer="quick"] [data-lpl-track-drawer-add-another]' ).is( ':checked' ) ) {
                     closeTrackDrawer();
@@ -2365,7 +2442,8 @@
                 // retry without re-adding what already succeeded.
                 $textarea.val( $.map( failed, function( f ) { return f.url; } ).join( '\n' ) );
 
-                var summary = added.length + ( added.length === 1 ? ' track added' : ' tracks added' );
+                var summary   = added.length + ( added.length === 1 ? ' track added' : ' tracks added' );
+                var toastType = failed.length ? 'info' : 'success';
                 if ( failed.length ) {
                     summary += ', ' + failed.length + ' failed';
 
@@ -2380,15 +2458,26 @@
                         if ( f.reason && $.inArray( f.reason, reasons ) === -1 ) { reasons.push( f.reason ); }
                     } );
                     if ( reasons.length === 1 ) {
-                        showToast( 'info', summary + ': ' + reasons[ 0 ] );
-                        return;
+                        summary += ': ' + reasons[ 0 ];
+                    } else if ( reasons.length > 1 ) {
+                        summary += ': ' + reasons[ 0 ] + ' (+' + ( reasons.length - 1 ) + ' more)';
+                    } else {
+                        summary += '.';
                     }
-                    if ( reasons.length > 1 ) {
-                        showToast( 'info', summary + ': ' + reasons[ 0 ] + ' (+' + ( reasons.length - 1 ) + ' more)' );
-                        return;
-                    }
+                } else {
+                    summary += '.';
                 }
-                showToast( failed.length ? 'info' : 'success', summary + '.' );
+                showToast( toastType, summary );
+
+                // Anything that follows up on the new tracks (e.g. filling
+                // their durations) gets the ids and the message on screen,
+                // so its own toast can extend it rather than erase it.
+                if ( added.length ) {
+                    $( document ).trigger( 'leanpl:track-list:rows-added', [
+                        $.map( added, function( a ) { return a.id; } ),
+                        { source: 'bulk', summary: summary, toastType: toastType }
+                    ] );
+                }
 
                 if ( ! failed.length && ! $( '[data-lpl-track-drawer-footer="bulk"] [data-lpl-track-drawer-add-another]' ).is( ':checked' ) ) {
                     closeTrackDrawer();
@@ -2742,6 +2831,56 @@
         return overrides;
     }
 
+    // Panel inputs for the TrackEdits text keys. Poster is left out: its
+    // preview needs an image URL a staged id alone doesn't carry.
+    var TRACK_EDIT_INPUTS = {
+        url:       '[data-lpl-track-edit-url]',
+        title:     '[data-lpl-track-edit-title]',
+        duration:  '[data-lpl-track-edit-duration]',
+        meta_text: '[data-lpl-track-edit-meta-text]'
+    };
+
+    // A row opened after something was staged for it (a patch from outside
+    // the panel, or a duplicate's fresh panel) must show the staged values,
+    // not the server's saved ones. Otherwise the next keystroke in that
+    // panel would stage the stale saved values right over them.
+    function applyStagedTrackEdit( $panel, playerId ) {
+        var staged = TrackEdits[ playerId ];
+        if ( ! staged ) { return; }
+        $.each( TRACK_EDIT_INPUTS, function( key, selector ) {
+            if ( staged[ key ] !== undefined ) {
+                $panel.find( selector ).val( staged[ key ] );
+            }
+        } );
+    }
+
+    // Stages a partial patch for one track without its panel being open,
+    // e.g. { duration: '3:05' }. Merged onto whatever is already staged;
+    // the save handler merges the rest from the saved track. Panels already
+    // loaded for that track (duplicates included) show the new value too.
+    function initTrackEditStagePatch() {
+        $( document ).on( 'leanpl:track-edit:stage-patch', function( e, playerId, patch ) {
+            playerId = String( playerId );
+            if ( ! playerId || ! patch ) { return; }
+
+            TrackEdits[ playerId ] = $.extend( {}, TrackEdits[ playerId ] || {}, patch );
+
+            $( '[data-lpl-track-row][data-lpl-track-player-id="' + playerId + '"]' ).each( function() {
+                var $panel = $( this ).find( '[data-lpl-track-edit-panel][data-lpl-track-edit-loaded="true"]' ).first();
+                if ( $panel.length ) { applyStagedTrackEdit( $panel, playerId ); }
+                // The row header shows the title, so a staged one shows there too.
+                if ( patch.title !== undefined ) { trackListApplyRowData( $( this ), { title: patch.title } ); }
+            } );
+
+            // Same debounce stageTrackEdit() uses: a batch of patches
+            // refreshes the preview once.
+            window.clearTimeout( trackEditPreviewTimer );
+            trackEditPreviewTimer = window.setTimeout( function() {
+                notifyTrackListChanged();
+            }, 400 );
+        } );
+    }
+
     // Static twin of edit-section-playlist-track-list.php's inline edit
     // panel markup (lines 139-219 there) - every field starts blank/closed,
     // same as a fresh page-load row before initTrackList()'s toggle handler
@@ -2849,12 +2988,19 @@
         var $handle = $( '<div data-lpl-track-drag-handle class="lpl-cursor-grab lpl-box-border lpl-w-[16px] lpl-shrink-0 lpl-h-[16px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-line-strong"></div>' )
             .html( icons[ 'grip-vertical' ] || '' );
 
+        // Same markup as edit-section-playlist-track-list.php's edit link.
+        var $editTooltip = $( '<span role="tooltip" class="lpl-pointer-events-none lpl-opacity-0 group-hover/edit:lpl-opacity-100 group-focus-visible/edit:lpl-opacity-100 lpl-transition-opacity lpl-absolute lpl-bottom-full lpl-left-1/2 -lpl-translate-x-1/2 lpl-mb-[6px] lpl-z-[100] lpl-p-[5px_8px] lpl-bg-ink lpl-text-[#FFFFFF] lpl-text-[11px]/[1.4] lpl-font-normal lpl-rounded-[6px] lpl-shadow-lg [white-space:nowrap]"></span>' )
+            .text( 'Edit full details' );
+        var $editLink = $( '<a data-lpl-track-edit-link target="_blank" rel="noopener" aria-label="Edit full details (opens in a new tab)" class="lpl-group/edit lpl-relative lpl-box-border lpl-w-[26px] lpl-shrink-0 lpl-h-[26px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-[#1B2233] hover:lpl-bg-surface lpl-rounded-[6px] focus:lpl-outline-none [&_path]:[fill:currentColor]"></a>' )
+            .attr( 'href', ( settings.playerEditUrl || '' ) + encodeURIComponent( data.id ) )
+            .html( icons.pencil || '' )
+            .append( $editTooltip );
         var $duplicateBtn = $( '<div data-lpl-track-duplicate role="button" tabindex="0" aria-label="Duplicate" class="lpl-cursor-pointer lpl-box-border lpl-w-[26px] lpl-shrink-0 lpl-h-[26px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-ink-soft hover:lpl-bg-surface lpl-rounded-[6px]"></div>' )
             .html( icons.copy || '' );
         var $removeBtn = $( '<div data-lpl-track-remove role="button" tabindex="0" aria-label="Remove" class="lpl-cursor-pointer lpl-box-border lpl-w-[26px] lpl-shrink-0 lpl-h-[26px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-ink-soft hover:lpl-bg-surface lpl-rounded-[6px]"></div>' )
             .html( icons.x || '' );
         var $actions = $( '<div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[2px] lpl-justify-start lpl-items-center"></div>' )
-            .append( $duplicateBtn, $removeBtn );
+            .append( $editLink, $duplicateBtn, $removeBtn );
 
         var $head = $( '<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[10px] lpl-p-[8px_0px] lpl-justify-start lpl-items-center"></div>' )
             .append( $handle, $toggle, $actions );
@@ -2887,6 +3033,7 @@
         $( document ).on( 'leanpl:track-list:changed', function() {
             refreshTrackListPreview();
             syncTrackDrawerMediaSelection();
+            $( '[data-lpl-track-list-toolbar]' ).toggleClass( 'lpl-hidden', $( '[data-lpl-track-row]' ).length === 0 );
         } );
 
         // handle scopes drag-start to the grip icon only, so clicks on the
@@ -2944,7 +3091,9 @@
                     return;
                 }
                 trackEditFieldsFromData( $panel, response.data );
+                applyStagedTrackEdit( $panel, playerId );
                 $panel.attr( 'data-lpl-track-edit-loaded', 'true' );
+                $( document ).trigger( 'leanpl:track-edit:loaded', [ playerId, $panel ] );
             } ).fail( function() {
                 showToast( 'error', 'Request failed. Please try again.' );
             } );
@@ -3238,6 +3387,48 @@
         var $help = $( '[data-lpl-source-help-target]' );
         var $or = $( '[data-lpl-source-or]' );
         var $ratio = $( 'select[name="_ratio"]' );
+        var $browse = $( '[data-lpl-source-browse]' );
+        var $browseButton = $( '[data-lpl-source-browse-button]' );
+        var $browseLabel = $( '[data-lpl-source-browse-button-label]' );
+        var $browseHint = $( '[data-lpl-source-browse-hint-target]' );
+
+        // A tab whose source is browsable (Bunny Stream, Bunny Storage) shows
+        // a Browse button beside the link field. The button only does
+        // something once that service is connected under Settings; until
+        // then it is replaced by a line saying where to connect it.
+        function showBrowse( $tab ) {
+            var label = $tab.attr( 'data-lpl-source-browse-label' ) || '';
+            if ( ! label ) {
+                $browse.addClass( 'lpl-hidden' );
+                $browseHint.addClass( 'lpl-hidden' ).empty();
+                return;
+            }
+
+            var ready = $tab.attr( 'data-lpl-source-browse-ready' ) === '1';
+            var hint = $tab.attr( 'data-lpl-source-browse-hint' ) || '';
+            var hintUrl = $tab.attr( 'data-lpl-source-browse-hint-url' ) || '';
+
+            $browse.toggleClass( 'lpl-hidden', ! ready );
+            $browseLabel.text( label );
+            $browseButton
+                .attr( 'data-lpl-source-browse-action', $tab.attr( 'data-lpl-source-browse-action' ) || '' );
+
+            if ( ready || ! hint ) {
+                $browseHint.addClass( 'lpl-hidden' ).empty();
+                return;
+            }
+
+            $browseHint.removeClass( 'lpl-hidden' ).empty();
+            if ( hintUrl ) {
+                $browseHint.append(
+                    $( '<a>' ).attr( { href: hintUrl, target: '_blank', rel: 'noopener' } )
+                        .addClass( 'lpl-underline' )
+                        .text( hint )
+                );
+                return;
+            }
+            $browseHint.text( hint );
+        }
 
         function select( $tab ) {
             $tabs.attr( 'aria-selected', 'false' );
@@ -3247,6 +3438,7 @@
 
             $or.addClass( 'lpl-hidden' );
             $urlField.toggleClass( 'lpl-hidden', ! showUrl );
+            showBrowse( $tab );
 
             if ( showUrl ) {
                 $urlLabel.text( $tab.attr( 'data-lpl-source-url-label' ) || '' );
@@ -3268,14 +3460,28 @@
             return $tab.attr( 'data-lpl-source-tab' ) !== 'media-library';
         }
 
+        // A locked tab shows the upgrade popup instead of switching to a
+        // source the site cannot use.
+        function isLocked( $tab ) {
+            return $tab.attr( 'data-lpl-source-locked' ) === '1';
+        }
+
+        function activate( $tab ) {
+            if ( isLocked( $tab ) ) {
+                if ( typeof window.openUpgradeModal === 'function' ) { window.openUpgradeModal( undefined, 'source-' + $tab.attr( 'data-lpl-source-tab' ) ); }
+                return;
+            }
+            if ( isSelectable( $tab ) ) { select( $tab ); }
+        }
+
         $tabs.on( 'click', function() {
-            if ( isSelectable( $( this ) ) ) { select( $( this ) ); }
+            activate( $( this ) );
         } );
 
         $tabs.on( 'keydown', function( e ) {
-            if ( ( e.key === 'Enter' || e.key === ' ' ) && isSelectable( $( this ) ) ) {
+            if ( e.key === 'Enter' || e.key === ' ' ) {
                 e.preventDefault();
-                select( $( this ) );
+                activate( $( this ) );
             }
         } );
     }
@@ -3390,7 +3596,7 @@
     // aria-pressed on the option divs, which the admin CSS already styles
     // via the aria-pressed variant patterns used elsewhere in this file.
     //
-    // Dark is pro-locked (PLAYLIST-FREE-VS-PRO.md Lock 17): the option div
+    // Dark is pro-locked (docs/PLAYLIST-FREE-VS-PRO.md Lock 17): the option div
     // carries data-lpl-skin-toggle-option-locked when free, same as the
     // <option disabled> in the Appearance card's select. Clicking it opens
     // the upgrade modal instead of switching skin.
@@ -3426,7 +3632,7 @@
         $options.on( 'click', function() {
             if ( $( this ).is( '[data-lpl-skin-toggle-option-locked]' ) ) {
                 if ( 'function' === typeof window.openUpgradeModal ) {
-                    window.openUpgradeModal();
+                    window.openUpgradeModal( undefined, 'playlist-skin' );
                 }
                 return;
             }
@@ -3493,6 +3699,7 @@
         initTrackDrawerMediaPickers();
         initTrackDrawerQuickAdd();
         initTrackList();
+        initTrackEditStagePatch();
         initTrackDrawerBulkAdd();
         initSavedSourcePreview();
         initPreviewButton();
@@ -3503,6 +3710,9 @@
         initColorPicker();
         initSkinToggle();
         initFormLivePreview();
+        initCsvCheckboxGroups();
+        initAccessUpsell();
+        initUpsellButtons();
 
         // Seed the controls from the URL first, then apply the initial
         // filter/page slice so the footer counter and pager match the real row

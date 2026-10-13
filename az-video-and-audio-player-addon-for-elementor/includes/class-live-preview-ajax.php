@@ -418,6 +418,12 @@ class Live_Preview_Ajax {
             return;
         }
 
+        if ( $video_type === 'bunny' ) {
+            $config['bunny_url'] = $this->post_raw( '_bunny_url' );
+            $config['sources']   = [];
+            return;
+        }
+
         // html5
         $html5_source_type = $this->post_str( '_html5_source_type', 'link' );
         $video_url = '';

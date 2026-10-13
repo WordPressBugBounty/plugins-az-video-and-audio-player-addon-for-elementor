@@ -174,7 +174,7 @@ trait LeanPL_Video_Player_Style_Controls {
             return;
         }
 
-        $url = leanpl_get_upgrade_url( [ 'utm_medium' => 'elementor-style' ] );
+        $url = leanpl_get_upgrade_url( [ 'utm_medium' => 'elementor-style', 'utm_content' => 'video-widget' ] );
 
         $this->add_control(
             $section_id . '_pro_note',

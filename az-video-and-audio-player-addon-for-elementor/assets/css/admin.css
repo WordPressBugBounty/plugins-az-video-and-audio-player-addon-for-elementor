@@ -1675,6 +1675,12 @@ Table of contents:
     margin-top: 0;
 }
 
+/* Labels & Messages intro: an untitled block above accordion cards, so it
+   needs the same gap the cards keep between each other. */
+.lex-settings-section.lex-settings-section--texts_intro {
+    margin-bottom: var(--lpl-admin-space-compact);
+}
+
 .lex-settings-section--accordion .form-table {
     border-collapse: collapse;
 }
@@ -1686,6 +1692,16 @@ Table of contents:
 
 .lex-settings-section--accordion .lex-settings-section__summary {
     display: none;
+}
+
+/* No chevron on accordion title bars: the whole bar already opens and closes
+   the section. Save keeps the far end on its own, with or without a summary. */
+.lex-settings-section--accordion > .lex-settings-section__title .lex-settings-section__chevron {
+    display: none;
+}
+
+.lex-settings-section--accordion > .lex-settings-section__title > button:last-child {
+    margin-inline-start: auto;
 }
 
 .lex-settings-section--accordion.lex-settings-section--collapsed .lex-settings-section__summary {
@@ -1715,6 +1731,14 @@ Table of contents:
     /* Keep the meta tight beside the title; push only the trailing controls
        (e.g. Save button) to the far end of the space-between flex row. */
     margin-inline-end: auto;
+}
+
+/* Integrations and Import/Export have their own buttons. The tab-wide Save
+   Changes / Reset Settings footer acts on the other side tabs' settings, not
+   on anything shown there, so it is hidden while either one is open. */
+.lex-settings-tabs__content:has(.lex-vtabs__nav button.lex-vtabs__btn--active[data-vtab="integrations"]) > p.submit,
+.lex-settings-tabs__content:has(.lex-vtabs__nav button.lex-vtabs__btn--active[data-vtab="import-export"]) > p.submit {
+    display: none;
 }
 
 /* Hide conditional sections by default - JavaScript will show them */

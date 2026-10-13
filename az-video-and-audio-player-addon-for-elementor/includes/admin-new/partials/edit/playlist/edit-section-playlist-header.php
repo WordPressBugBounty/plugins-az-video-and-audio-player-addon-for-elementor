@@ -2,7 +2,7 @@
 /**
  * Playlist Header card: whether to show the header row, its title text,
  * and the same pair for the item-count line. No locks - see
- * PLAYLIST-FREE-VS-PRO.md.
+ * docs/PLAYLIST-FREE-VS-PRO.md.
  *
  * show_header/show_count are switches, not selects - the classic metabox
  * renders them as plain checkboxes (no Inherit state), so this matches that

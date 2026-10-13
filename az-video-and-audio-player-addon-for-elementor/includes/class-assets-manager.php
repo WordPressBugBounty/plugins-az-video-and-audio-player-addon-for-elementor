@@ -285,6 +285,11 @@ class Assets_Manager {
             'version' => $this->version,
             'debugMode' => leanpl_is_test_mode() || leanpl_is_debug_mode(),
             'ajaxUrl' => admin_url('admin-ajax.php'),
+            // Site-wide player labels from Settings -> Labels & Messages. Sent once per
+            // page instead of on every player's data-settings: they never
+            // vary per player, so the per-player config path would only
+            // repeat the same list on each embed.
+            'i18n' => (object) leanpl_get_player_i18n(),
         ]);
     }
 
@@ -359,6 +364,13 @@ class Assets_Manager {
 
         // Load assets for Elementor editor
         $this->load_assets_by_context('elementor-editor');
+
+        // Where the widgets' Edit Player / Edit Playlist buttons go; the
+        // picked ID is appended in elementor-editor.js.
+        wp_localize_script('leanpl-elementor-editor', 'leanplElementorEditor', [
+            'playerEditUrl'   => admin_url('admin.php?page=lean-player-edit&post='),
+            'playlistEditUrl' => admin_url('admin.php?page=lean-playlist-edit&post='),
+        ]);
     }
 }
 

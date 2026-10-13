@@ -216,7 +216,7 @@ class Custom_Preset_Injector {
                         <?php if ( ! $is_pro ) : ?>
                             <div class="lpl-cpm__notice">
                                 <p><?php esc_html_e( "You're exploring the Custom Preset builder for demonstration purposes. Assigning to a player: PRO only.", 'vapfem' ); ?></p>
-                                <button type="button" class="button button-primary lpl-cpm__notice-cta" onclick="openUpgradeModal(); return false;">
+                                <button type="button" class="button button-primary lpl-cpm__notice-cta" onclick="openUpgradeModal(); return false;" data-upgrade-source="custom-preset">
                                     <?php esc_html_e( 'Upgrade to PRO', 'vapfem' ); ?>
                                 </button>
                             </div>

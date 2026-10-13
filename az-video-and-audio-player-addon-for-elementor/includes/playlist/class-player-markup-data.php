@@ -99,6 +99,15 @@ class Player_Markup_Data {
     }
 
     /**
+     * Whether the item is locked for the current visitor (no sources).
+     *
+     * @return bool
+     */
+    public function is_locked() {
+        return ! empty( $this->item['locked'] );
+    }
+
+    /**
      * Whether item has valid source.
      *
      * @return bool

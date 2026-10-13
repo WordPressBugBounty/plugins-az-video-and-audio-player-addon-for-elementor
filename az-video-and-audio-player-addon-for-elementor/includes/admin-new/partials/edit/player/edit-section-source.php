@@ -49,6 +49,9 @@ if ($edit_source_is_upload) {
   if ('audio' === $edit_source_player_type) {
     $edit_source_field_name  = '_html5_audio_url';
     $edit_source_field_label = __('Audio URL', 'vapfem');
+  } elseif ('bunny' === $edit_source_video_type) {
+    $edit_source_field_name  = '_bunny_url';
+    $edit_source_field_label = __('Bunny Stream link', 'vapfem');
   } elseif ('vimeo' === $edit_source_video_type) {
     $edit_source_field_name  = '_vimeo_url';
     $edit_source_field_label = __('Vimeo URL', 'vapfem');
@@ -60,6 +63,9 @@ if ($edit_source_is_upload) {
     $edit_source_field_label = __('YouTube URL', 'vapfem');
   }
   $edit_source_field_value = get_post_meta($post_id, $edit_source_field_name, true);
+  // Nothing saves a Bunny link when the Bunny integration isn't loaded, so
+  // the box only shows the link instead of taking an edit that would vanish.
+  $edit_source_field_readonly = ('_bunny_url' === $edit_source_field_name && !leanpl_is_pro_active());
 }
 ?>
 <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start">
@@ -85,7 +91,7 @@ if ($edit_source_is_upload) {
       <?php echo esc_html($edit_source_field_label); ?>
     </div>
     <div class="lpl-box-border lpl-w-full lpl-h-[36px] lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_12px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[8px]">
-      <input type="text" name="<?php echo esc_attr($edit_source_field_name); ?>" value="<?php echo esc_attr($edit_source_field_value); ?>"
+      <input type="text" name="<?php echo esc_attr($edit_source_field_name); ?>" value="<?php echo esc_attr($edit_source_field_value); ?>"<?php echo $edit_source_field_readonly ? ' readonly' : ''; ?>
         class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-ink lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none placeholder:lpl-text-label-secondary [appearance:none] [-webkit-appearance:none]" />
     </div>
   <?php endif; ?>

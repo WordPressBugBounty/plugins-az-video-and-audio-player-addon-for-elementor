@@ -295,6 +295,52 @@ function leanpl_resolve_playlist_custom_config() {
 }
 
 /**
+ * Recognise a Bunny Stream video link.
+ *
+ * Accepted shapes (the video ID is always a 36-character GUID):
+ *   https://player.mediadelivery.net/play/{library}/{guid}
+ *   https://player.mediadelivery.net/embed/{library}/{guid}
+ *   https://iframe.mediadelivery.net/embed/{library}/{guid}   (older)
+ *   https://video.bunnycdn.com/play/{library}/{guid}          (older)
+ *   https://{cdn host}/{guid}/playlist.m3u8                   (direct stream)
+ *
+ * The direct stream form carries no library number, only the host it lives
+ * on, so 'library_id' is '' and 'host' is set. The other forms are the
+ * reverse. A bare GUID on its own is not accepted: nothing in it says which
+ * library it belongs to.
+ *
+ * @param string $url Pasted link.
+ * @return array{library_id: string, guid: string, host: string}|null
+ */
+function leanpl_parse_bunny_stream_url( $url ) {
+    $url = trim( (string) $url );
+    if ( $url === '' ) {
+        return null;
+    }
+
+    $guid = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+
+    if ( preg_match( '~^https?://(?:player|iframe)\.mediadelivery\.net/(?:embed|play)/(\d+)/(' . $guid . ')(?:[/?#]|$)~i', $url, $m )
+        || preg_match( '~^https?://video\.bunnycdn\.com/(?:embed|play)/(\d+)/(' . $guid . ')(?:[/?#]|$)~i', $url, $m ) ) {
+        return [
+            'library_id' => $m[1],
+            'guid'       => strtolower( $m[2] ),
+            'host'       => '',
+        ];
+    }
+
+    if ( preg_match( '~^https?://([a-z0-9.-]+)/(' . $guid . ')/playlist\.m3u8(?:[?#]|$)~i', $url, $m ) ) {
+        return [
+            'library_id' => '',
+            'guid'       => strtolower( $m[2] ),
+            'host'       => strtolower( $m[1] ),
+        ];
+    }
+
+    return null;
+}
+
+/**
  * Parse video URL to extract type, ID, and create HTML5 sources if needed
  * 
  * Shared utility function for video URL parsing
@@ -309,6 +355,25 @@ function leanpl_parse_video_url($url) {
     // extracted via strict regex below, and html5 URLs are esc_url()'d on output,
     // so tag-stripping + trim is sufficient and safe while preserving encoding.
     $url = trim(wp_strip_all_tags(wp_unslash($url)));
+
+    // Bunny Stream links. Checked first so a library number in the path is
+    // never read as a Vimeo ID. 'sources' keeps the pasted address so
+    // callers that only read sources behave exactly as for any other link.
+    $bunny = leanpl_parse_bunny_stream_url($url);
+    if ($bunny) {
+        return [
+            'type'       => 'bunny',
+            'id'         => $bunny['guid'],
+            'library_id' => $bunny['library_id'],
+            'host'       => $bunny['host'],
+            'sources'    => [
+                [
+                    'url'  => esc_url($url),
+                    'size' => '',
+                ],
+            ],
+        ];
+    }
 
     // YouTube patterns
     if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches)) {
@@ -328,11 +393,20 @@ function leanpl_parse_video_url($url) {
         ];
     }
 
-    // Vimeo patterns
-    if (preg_match('/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|)(\d+)(?:|\/\?))/', $url, $matches)) {
+    // Vimeo patterns. 'video/' covers the embed form, player.vimeo.com/video/ID.
+    // 'hash' is the unlisted-video code, from vimeo.com/ID/HASH or ?h=HASH.
+    // Vimeo only describes an unlisted video when it is asked with it.
+    if (preg_match('/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?))/', $url, $matches)) {
+        $hash = '';
+        if (preg_match('/vimeo\.com\/(?:video\/)?\d+\/([0-9a-f]+)(?:[\/?#&]|$)/i', $url, $hash_match)
+            || preg_match('/[?&]h=([0-9a-f]+)(?:[&#]|$)/i', $url, $hash_match)) {
+            $hash = strtolower($hash_match[1]);
+        }
+
         return [
             'type' => 'vimeo',
             'id' => $matches[1],
+            'hash' => $hash,
             'sources' => []
         ];
     }
@@ -342,6 +416,7 @@ function leanpl_parse_video_url($url) {
         return [
             'type' => 'vimeo',
             'id' => $url,
+            'hash' => '',
             'sources' => []
         ];
     }
@@ -371,6 +446,86 @@ function leanpl_parse_video_url($url) {
             ]
         ]
     ];
+}
+
+/**
+ * The video ID from a box that takes either an ID or a full link.
+ *
+ * Used by the Elementor Video Player widget's YouTube and Vimeo boxes, which
+ * often get a full link (typed, or from an ACF URL field). A plain ID is
+ * returned as is, without parsing, so an 11-digit Vimeo number is never
+ * mistaken for a YouTube ID. A link is only read when it belongs to the
+ * box's own service; anything else comes back unchanged.
+ *
+ * @param string $value Box value: an ID or a link.
+ * @param string $type  'youtube' or 'vimeo'.
+ * @return string The video ID, or the trimmed value when it can't be read.
+ */
+function leanpl_embed_id_from_value($value, $type) {
+    $value = trim((string) $value);
+    if ('' === $value) {
+        return '';
+    }
+
+    $is_plain_id = 'vimeo' === $type
+        ? ctype_digit($value)
+        : (bool) preg_match('/^[A-Za-z0-9_-]{11}$/', $value);
+    if ($is_plain_id) {
+        return $value;
+    }
+
+    $info = leanpl_parse_video_url($value);
+    return ($type === $info['type'] && '' !== $info['id']) ? $info['id'] : $value;
+}
+
+/**
+ * The source keys for a saved player whose media is swapped for another one.
+ *
+ * Used by the Elementor Video and Audio widgets' "Video/Audio Source Override" box.
+ * A bare ID belongs to the saved player's own service, since an ID alone
+ * can't tell YouTube from Vimeo. Anything else must be a recognised link.
+ *
+ * @param string $value            Box value: a link or an ID.
+ * @param string $player_type      'video' or 'audio'.
+ * @param string $saved_video_type The saved player's _video_type.
+ * @return array|null Config keys to merge, or null when it can't be read.
+ */
+function leanpl_source_override_from_value($value, $player_type, $saved_video_type = '') {
+    $value = trim((string) $value);
+    if ('' === $value) {
+        return null;
+    }
+
+    $is_link = (bool) preg_match('#^https?://#i', $value);
+
+    if ('audio' === $player_type) {
+        return $is_link ? ['url' => esc_url_raw($value)] : null;
+    }
+
+    // Bare ID: no slash or dot, read with the saved player's service.
+    if (!preg_match('#[/.]#', $value)) {
+        if ('vimeo' === $saved_video_type && ctype_digit($value)) {
+            return ['video_type' => 'vimeo', 'video_id' => $value, 'sources' => [], 'bunny_url' => ''];
+        }
+        if ('youtube' === $saved_video_type && preg_match('/^[A-Za-z0-9_-]{11}$/', $value)) {
+            return ['video_type' => 'youtube', 'video_id' => $value, 'sources' => [], 'bunny_url' => ''];
+        }
+        return null;
+    }
+
+    $info = leanpl_parse_video_url($value);
+    switch ($info['type']) {
+        case 'youtube':
+        case 'vimeo':
+            return ['video_type' => $info['type'], 'video_id' => $info['id'], 'sources' => [], 'bunny_url' => ''];
+        case 'bunny':
+            return ['video_type' => 'bunny', 'video_id' => '', 'sources' => [], 'bunny_url' => esc_url_raw($value)];
+        default:
+            // parse_video_url() calls anything else html5; only trust real links.
+            return $is_link
+                ? ['video_type' => 'html5', 'video_id' => '', 'sources' => $info['sources'], 'bunny_url' => '']
+                : null;
+    }
 }
 
 /**
@@ -436,6 +591,8 @@ function leanpl_get_source_type_label($post_id) {
             return __('YouTube', 'vapfem');
         case 'vimeo':
             return __('Vimeo', 'vapfem');
+        case 'bunny':
+            return __('Bunny', 'vapfem');
         case 'html5':
             // Check if uploaded or external
             $html5_source_type = \LeanPL\Metaboxes::get_field_value($post_id, '_html5_source_type');
@@ -517,9 +674,21 @@ function leanpl_derive_thumbnail_from_url( string $video_url ): string {
         return leanpl_get_youtube_video_thumbnail_url( $info['id'] );
     }
 
+    if ( $info['type'] === 'bunny' ) {
+        /**
+         * Thumbnail for a Bunny Stream link. Its address depends on the
+         * library's web address, so nothing is known here by default.
+         *
+         * @param string $thumbnail Thumbnail URL, '' when unknown.
+         * @param array  $info      Parsed link (see leanpl_parse_video_url()).
+         */
+        return (string) apply_filters( 'leanpl/bunny/thumbnail_url', '', $info );
+    }
+
     if ( $info['type'] === 'vimeo' ) {
         $test_mode = function_exists( 'leanpl_is_test_mode' ) && leanpl_is_test_mode();
-        $cache_key = 'leanpl_vimeo_thumb_' . $info['id'];
+        $hash      = $info['hash'] ?? '';
+        $cache_key = 'leanpl_vimeo_thumb_' . $info['id'] . ( '' !== $hash ? '_' . $hash : '' );
 
         if ( ! $test_mode ) {
             $cached = get_transient( $cache_key );
@@ -529,10 +698,15 @@ function leanpl_derive_thumbnail_from_url( string $video_url ): string {
         }
 
         // Always use canonical URL for oEmbed — raw input may be bare ID or variant URL.
-        $canonical = 'https://vimeo.com/' . $info['id'];
+        // An unlisted video is only described when asked with its hash, and a
+        // site-only video only when the request names the site (Referer).
+        $canonical = 'https://vimeo.com/' . $info['id'] . ( '' !== $hash ? '/' . $hash : '' );
         $response  = wp_remote_get(
             'https://vimeo.com/api/oembed.json?url=' . rawurlencode( $canonical ),
-            [ 'timeout' => 5 ]
+            [
+                'timeout' => 5,
+                'headers' => [ 'Referer' => home_url( '/' ) ],
+            ]
         );
 
         if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
@@ -556,15 +730,90 @@ function leanpl_derive_thumbnail_from_url( string $video_url ): string {
 }
 
 /**
+ * Fetch a YouTube or Vimeo video's oEmbed details: title and length.
+ *
+ * One request serves both fields, so the Batch Add title lookup and the
+ * duration lookup share a single cached answer instead of asking twice.
+ * Vimeo's oEmbed includes "duration" (seconds); YouTube's never does, so a
+ * YouTube result always carries 0.
+ *
+ * Results cache by video ID for 7 days, mirroring
+ * leanpl_derive_thumbnail_from_url(). Failures cache for a day so a dead link
+ * in a re-pasted batch does not pay the timeout on every retry. The cache
+ * key prefix is new (it used to hold the title string alone), so an old
+ * title-only entry is ignored rather than misread.
+ *
+ * @param string $video_url Full video URL.
+ * @return array{title: string, duration: int} Empty title and 0 duration
+ *         when the URL is not YouTube/Vimeo or the request failed.
+ */
+function leanpl_fetch_oembed_data( string $video_url ): array {
+    $empty = [ 'title' => '', 'duration' => 0 ];
+
+    if ( empty( $video_url ) ) {
+        return $empty;
+    }
+
+    $info = leanpl_parse_video_url( $video_url );
+
+    if ( empty( $info['id'] ) || ! in_array( $info['type'], [ 'youtube', 'vimeo' ], true ) ) {
+        return $empty;
+    }
+
+    $is_youtube = $info['type'] === 'youtube';
+    $test_mode  = function_exists( 'leanpl_is_test_mode' ) && leanpl_is_test_mode();
+    $hash       = $info['hash'] ?? '';
+    $cache_key  = 'leanpl_oembed_data_' . $info['type'] . '_' . $info['id'] . ( '' !== $hash ? '_' . $hash : '' );
+
+    if ( ! $test_mode ) {
+        $cached = get_transient( $cache_key );
+        if ( is_array( $cached ) ) {
+            return array_merge( $empty, $cached );
+        }
+    }
+
+    // Canonical URL for oEmbed — raw input may be a variant (youtu.be, /embed/, ?t=).
+    $args = [ 'timeout' => 5 ];
+    if ( $is_youtube ) {
+        $canonical = 'https://www.youtube.com/watch?v=' . $info['id'];
+        $endpoint  = 'https://www.youtube.com/oembed?format=json&url=' . rawurlencode( $canonical );
+    } else {
+        // An unlisted video is only described when asked with its hash, and a
+        // site-only video only when the request names the site (Referer).
+        $canonical       = 'https://vimeo.com/' . $info['id'] . ( '' !== $hash ? '/' . $hash : '' );
+        $endpoint        = 'https://vimeo.com/api/oembed.json?url=' . rawurlencode( $canonical );
+        $args['headers'] = [ 'Referer' => home_url( '/' ) ];
+    }
+
+    $response = wp_remote_get( $endpoint, $args );
+
+    if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+        if ( ! $test_mode ) {
+            set_transient( $cache_key, $empty, DAY_IN_SECONDS );
+        }
+        return $empty;
+    }
+
+    $body = json_decode( wp_remote_retrieve_body( $response ), true );
+    $data = [
+        'title'    => isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '',
+        'duration' => isset( $body['duration'] ) ? max( 0, (int) $body['duration'] ) : 0,
+    ];
+
+    if ( ! $test_mode ) {
+        set_transient( $cache_key, $data, 7 * DAY_IN_SECONDS );
+    }
+
+    return $data;
+}
+
+/**
  * Resolve a display title for a YouTube or Vimeo URL via oEmbed.
  *
  * Batch Add creates players from bare URLs with no user-entered title, so a
  * fetch failure must never block creation: every failure path returns the
  * "YouTube Video (ID)" / "Vimeo Video (ID)" fallback instead of an error.
- *
- * Titles cache by video ID for 7 days, mirroring
- * leanpl_derive_thumbnail_from_url(). Failures cache for a day so a dead link
- * in a re-pasted batch does not pay the timeout on every retry.
+ * The fetch and its caching live in leanpl_fetch_oembed_data().
  *
  * @param string $video_url Full video URL.
  * @return string Title, or empty string if the URL is not YouTube/Vimeo.
@@ -580,49 +829,17 @@ function leanpl_fetch_oembed_title( string $video_url ): string {
         return '';
     }
 
-    $is_youtube = $info['type'] === 'youtube';
-    $fallback   = $is_youtube
+    $title = leanpl_fetch_oembed_data( $video_url )['title'];
+
+    if ( '' !== $title ) {
+        return $title;
+    }
+
+    return $info['type'] === 'youtube'
         /* translators: %s: YouTube video ID. */
         ? sprintf( __( 'YouTube Video (%s)', 'vapfem' ), $info['id'] )
         /* translators: %s: Vimeo video ID. */
         : sprintf( __( 'Vimeo Video (%s)', 'vapfem' ), $info['id'] );
-
-    $test_mode = function_exists( 'leanpl_is_test_mode' ) && leanpl_is_test_mode();
-    $cache_key = 'leanpl_oembed_title_' . $info['type'] . '_' . $info['id'];
-
-    if ( ! $test_mode ) {
-        $cached = get_transient( $cache_key );
-        if ( false !== $cached ) {
-            return '' !== $cached ? (string) $cached : $fallback;
-        }
-    }
-
-    // Canonical URL for oEmbed — raw input may be a variant (youtu.be, /embed/, ?t=).
-    if ( $is_youtube ) {
-        $canonical = 'https://www.youtube.com/watch?v=' . $info['id'];
-        $endpoint  = 'https://www.youtube.com/oembed?format=json&url=' . rawurlencode( $canonical );
-    } else {
-        $canonical = 'https://vimeo.com/' . $info['id'];
-        $endpoint  = 'https://vimeo.com/api/oembed.json?url=' . rawurlencode( $canonical );
-    }
-
-    $response = wp_remote_get( $endpoint, [ 'timeout' => 5 ] );
-
-    if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-        if ( ! $test_mode ) {
-            set_transient( $cache_key, '', DAY_IN_SECONDS );
-        }
-        return $fallback;
-    }
-
-    $body  = json_decode( wp_remote_retrieve_body( $response ), true );
-    $title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
-
-    if ( ! $test_mode ) {
-        set_transient( $cache_key, $title, 7 * DAY_IN_SECONDS );
-    }
-
-    return '' !== $title ? $title : $fallback;
 }
 
 /**
@@ -663,6 +880,8 @@ function leanpl_get_video_thumbnail_url($player_id) {
         if(!empty($video_id)) {
             $thumbnail_url = leanpl_get_vimeo_video_thumbnail_url($video_id);
         }
+    } elseif($video_type === 'bunny') {
+        $thumbnail_url = leanpl_derive_thumbnail_from_url((string) get_post_meta($player_id, '_bunny_url', true));
     }
 
     // No matter what video type is if poster image is set, use it
@@ -789,6 +1008,7 @@ function leanpl_get_video_mime_type($file_extension) {
         'mkv'  => 'video/x-matroska',
         'mov'  => 'video/quicktime',
         '3gp'  => 'video/3gpp',
+        'm3u8' => 'application/x-mpegURL',
     ];
     return isset($mime_map[$ext]) ? $mime_map[$ext] : 'video/' . $ext;
 }
@@ -883,6 +1103,13 @@ function leanpl_get_player_source_badge( $player_id ) {
         ];
     }
 
+    if ( $video_type === 'bunny' ) {
+        return [
+            'type'  => 'bunny',
+            'label' => __( 'Bunny', 'vapfem' ),
+        ];
+    }
+
     $html5_source_type = get_post_meta( $player_id, '_html5_source_type', true ) ?: 'upload';
     if ( $html5_source_type === 'link' ) {
         return [
@@ -922,9 +1149,9 @@ function leanpl_get_playlist_source_hints( $playlist_type ) {
     }
 
     return [
-        'omnibox'          => __( 'Paste a YouTube, Vimeo, or direct media link…', 'vapfem' ),
+        'omnibox'          => __( 'Paste a YouTube, Vimeo, Bunny Stream, or direct media link…', 'vapfem' ),
         'omnibox_examples' => __( "e.g. https://www.youtube.com/watch?v=bTqVqk7FSmY, https://vimeo.com/22439234,\nor any direct .mp4 file URL.", 'vapfem' ),
-        'qa_url'           => __( 'YouTube, Vimeo, or direct media file URL', 'vapfem' ),
+        'qa_url'           => __( 'YouTube, Vimeo, Bunny Stream, or direct media file URL', 'vapfem' ),
         'ba_placeholder'   => __( "One URL per line, e.g:\nhttps://www.youtube.com/watch?v=bTqVqk7FSmY\nhttps://vimeo.com/22439234\nhttps://example.com/video.mp4", 'vapfem' ),
         'ba_desc'          => __( 'YouTube, Vimeo, or direct media file links. Titles are fetched automatically. Up to 50 per batch.', 'vapfem' ),
     ];
@@ -944,6 +1171,8 @@ function leanpl_get_player_source_meta_keys() {
         '_video_type',
         '_youtube_url',
         '_vimeo_url',
+        '_bunny_url',
+        '_bunny_video',
         '_html5_source_type',
         '_html5_video_url',
         '_video_source',
@@ -1057,7 +1286,7 @@ function leanpl_is_insecure_media_url( $url ) {
  * Detection rules:
  *   - YouTube / Vimeo URL (via leanpl_parse_video_url) → video player
  *   - .mp4/.webm/.ogv URL → html5 video via link
- *   - .mp3/.m4a/.aac/.wav URL → audio via link
+ *   - .mp3/.m4a/.aac/.wav/.opus/.oga/.flac URL → audio via link
  *   - .ogg URL → resolved by playlist type (valid for both media kinds)
  *   - attachment_id → decided by attachment MIME type
  *   - still unclear, and $probe is true → leanpl_probe_media_kind() asks
@@ -1119,7 +1348,11 @@ function leanpl_detect_player_source( $url, $attachment_id, $playlist_type, $pro
 
         $ext = leanpl_get_url_extension( $url );
 
-        $audio_exts = [ 'mp3', 'm4a', 'aac', 'wav' ];
+        // Same endings leanpl_get_audio_mime_type() maps for playback. Some
+        // hosts serve opus as application/octet-stream, so the probe below
+        // can't rescue it: without the ending here, every save of such a
+        // track was rejected.
+        $audio_exts = [ 'mp3', 'm4a', 'aac', 'wav', 'opus', 'oga', 'flac' ];
         $video_exts = [ 'mp4', 'webm', 'ogv' ];
 
         if ( in_array( $ext, $audio_exts, true ) ) {
@@ -1158,6 +1391,20 @@ function leanpl_detect_player_source( $url, $attachment_id, $playlist_type, $pro
                 $source_meta   = [
                     '_video_type' => 'vimeo',
                     '_vimeo_url'  => esc_url_raw( $url ),
+                ];
+            } elseif ( $info['type'] === 'bunny' ) {
+                if ( ! leanpl_is_pro_active() ) {
+                    return new WP_Error( 'bunny_pro', __( 'Bunny Stream links play with Pro.', 'vapfem' ) );
+                }
+                $detected_type = 'video';
+                $source_meta   = [
+                    '_video_type'  => 'bunny',
+                    '_bunny_url'   => esc_url_raw( $url ),
+                    '_bunny_video' => [
+                        'library_id' => $info['library_id'],
+                        'guid'       => $info['id'],
+                        'host'       => $info['host'],
+                    ],
                 ];
             } elseif ( in_array( $ext, $video_exts, true ) ) {
                 $detected_type = 'video';
@@ -1238,6 +1485,24 @@ function leanpl_create_player_from_url( $args ) {
     $detected_type = $detected['type'];
     $source_meta   = $detected['meta'];
 
+    /**
+     * A connected media service knows its own titles and lengths.
+     *
+     * A link to a hosted service carries an id, not a name, so a track made
+     * from one would otherwise be called after that id. The service fills
+     * both in here; whatever the caller passed always wins.
+     *
+     * @param array  $details       [ 'title' => '', 'duration' => '' ].
+     * @param string $url           The link the player is being made from.
+     * @param string $detected_type 'video' or 'audio'.
+     * @param array  $source_meta   Meta the detection step worked out.
+     */
+    $source_details = apply_filters( 'leanpl/player/source_details', [ 'title' => '', 'duration' => '' ], $url, $detected_type, $source_meta );
+
+    if ( $title === '' && ! empty( $source_details['title'] ) ) {
+        $title = trim( sanitize_text_field( $source_details['title'] ) );
+    }
+
     // Title is optional: fall back to the attachment title, or a title
     // derived from the URL's filename, or a generic placeholder.
     if ( $title === '' ) {
@@ -1274,6 +1539,9 @@ function leanpl_create_player_from_url( $args ) {
     }
 
     $duration  = isset( $args['duration'] ) ? sanitize_text_field( $args['duration'] ) : '';
+    if ( $duration === '' && ! empty( $source_details['duration'] ) ) {
+        $duration = sanitize_text_field( $source_details['duration'] );
+    }
     $meta_text = isset( $args['meta_text'] ) ? sanitize_text_field( $args['meta_text'] ) : '';
     if ( $duration !== '' ) {
         update_post_meta( $post_id, '_duration', $duration );
@@ -1431,6 +1699,8 @@ function leanpl_get_player_edit_data( $player_id ) {
             $url = (string) get_post_meta( $player_id, '_youtube_url', true );
         } elseif ( $video_type === 'vimeo' ) {
             $url = (string) get_post_meta( $player_id, '_vimeo_url', true );
+        } elseif ( $video_type === 'bunny' ) {
+            $url = (string) get_post_meta( $player_id, '_bunny_url', true );
         } else {
             $source_type = get_post_meta( $player_id, '_html5_source_type', true ) ?: 'upload';
             if ( $source_type === 'link' ) {

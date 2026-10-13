@@ -1070,3 +1070,50 @@
     transform: rotate(360deg);
   }
 }
+/* ─── Locked items ──────────────────────────────────────────────────────────
+   An item arrives locked (class + no media) when the visitor can't play it.
+   The padlock is hidden on every other item; the overlay is filled by
+   playlist.js when a locked item is picked. Presentation only. */
+
+.lpl-playlist__item-lock {
+  display: none;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  opacity: 0.7;
+}
+
+.lpl-playlist__item--locked .lpl-playlist__item-lock {
+  display: block;
+}
+
+.lpl-playlist__items-wrap--grid .lpl-playlist__item--locked .lpl-playlist__item-lock {
+  margin-left: auto;
+}
+
+.lpl-playlist__locked[hidden] {
+  display: none;
+}
+
+.lpl-playlist__locked {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+}
+
+.lpl-playlist__locked > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Audio: the player bar is too short to hold the message, so the message
+   takes its place in the layout instead of covering it. */
+.lpl-playlist--show-locked .lpl-audio .plyr {
+  display: none;
+}
+
+.lpl-audio > .lpl-playlist__locked {
+  position: static;
+}

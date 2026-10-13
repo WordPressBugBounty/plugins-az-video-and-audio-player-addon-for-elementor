@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
 $edit_color_locked = leanpl_admin_new_is_locked('_primary_color');
 $edit_color_value  = ($post_id > 0) ? get_post_meta($post_id, '_primary_color', true) : '';
 ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start<?php echo $edit_color_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_color_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start<?php echo $edit_color_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_color_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="primary-color"' : ''; ?>>
   <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center">
     <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
       <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">

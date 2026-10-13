@@ -102,7 +102,7 @@ if ('audio' !== $edit_playlist_type) {
       // requestFormPreview() the form fields use, so the preview re-renders
       // with the chosen skin without a full save.
       //
-      // Dark is pro-locked (PLAYLIST-FREE-VS-PRO.md Lock 17) - same
+      // Dark is pro-locked (docs/PLAYLIST-FREE-VS-PRO.md Lock 17) - same
       // pro_options split as the Appearance card's Skin select. Clicking it
       // on free opens the upgrade modal instead of switching (initSkinToggle()
       // in admin-new.js reads data-lpl-skin-toggle-option-locked).

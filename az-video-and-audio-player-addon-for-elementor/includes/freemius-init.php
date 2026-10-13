@@ -102,6 +102,11 @@ if ( ! function_exists( 'leanpl_fs' ) ) {
 	// Sends opt-in/diagnostic data
 	require_once LEANPL_DIR . '/includes/diagnostic-data.php';
 
+	// What deleting the plugin removes. Freemius owns the uninstall hook,
+	// so the clean-up rides on its event rather than an uninstall.php.
+	require_once LEANPL_DIR . '/includes/uninstall.php';
+	leanpl_fs()->add_action( 'after_uninstall', 'leanpl_uninstall_cleanup' );
+
 	// Freemius stores the deactivation reason locally and only ships it if the plugin
 	// is later deleted, so most feedback never arrives. Grab it as it is submitted.
 	// Priority 1 because the SDK handler runs at 10 and ends in exit().

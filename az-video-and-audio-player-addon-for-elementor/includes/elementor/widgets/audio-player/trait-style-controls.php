@@ -256,7 +256,7 @@ trait LeanPL_Audio_Player_Style_Controls {
             return;
         }
 
-        $url = leanpl_get_upgrade_url( [ 'utm_medium' => 'elementor-style' ] );
+        $url = leanpl_get_upgrade_url( [ 'utm_medium' => 'elementor-style', 'utm_content' => 'audio-widget' ] );
 
         $this->add_control(
             $section_id . '_pro_note',

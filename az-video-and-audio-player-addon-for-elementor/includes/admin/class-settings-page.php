@@ -167,9 +167,13 @@ class Settings_Page {
             // edit-section-playlist-track-list.php's row markup uses instead.
             'trackListIcons' => [
                 'grip-vertical' => \LeanPL\Admin_New\Admin_New_Icons::get('grip-vertical'),
+                'pencil'        => \LeanPL\Admin_New\Admin_New_Icons::get('pencil'),
                 'copy'          => \LeanPL\Admin_New\Admin_New_Icons::get('copy'),
                 'x'             => \LeanPL\Admin_New\Admin_New_Icons::get('x'),
             ],
+            // A drawer-added row's edit link: the player ID is appended in
+            // trackListInsertRow() (admin-new.js).
+            'playerEditUrl' => admin_url('admin.php?page=lean-player-edit&post='),
             'postId'   => $post_id,
             'postType' => 'lean_playlist',
             // Existing playlist: its real saved type (fixed at creation).

@@ -42,7 +42,7 @@ include LEANPL_DIR . '/includes/admin-new/partials/shared/field-switch.php';
 </div>
 
 <?php $seek_locked = leanpl_admin_new_is_locked('_seek_time'); ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $seek_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $seek_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $seek_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $seek_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="seek-time"' : ''; ?>>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
     <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Skip Forward/Back Amount', 'vapfem'); ?>
@@ -70,7 +70,7 @@ include LEANPL_DIR . '/includes/admin-new/partials/shared/field-switch.php';
 </div>
 
 <?php $invert_locked = leanpl_admin_new_is_locked('_invert_time'); ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $invert_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $invert_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $invert_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $invert_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="invert-time"' : ''; ?>>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
     <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Time Display Format', 'vapfem'); ?>

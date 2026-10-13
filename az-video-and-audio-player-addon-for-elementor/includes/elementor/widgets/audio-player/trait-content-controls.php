@@ -20,6 +20,7 @@ trait LeanPL_Audio_Player_Content_Controls {
             [
                 'label' => esc_html__( 'Player Source', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT,
+                'label_block' => true,
                 'default' => 'manual',
                 'options' => [
                     'saved'  => esc_html__( 'Saved Player (Recommended)', 'vapfem' ),
@@ -43,6 +44,9 @@ trait LeanPL_Audio_Player_Content_Controls {
                 ],
             ]
         );
+
+        // Edit Player button.
+        $this->register_saved_player_extras( 'audio' );
 
         $this->add_control(
             'src_type',
@@ -370,6 +374,9 @@ trait LeanPL_Audio_Player_Content_Controls {
         );
 
         $this->end_controls_section();
+
+        // "Source Override" section, once a saved player is picked.
+        $this->register_source_override_section( 'audio' );
 
         $this->start_controls_section(
             'debug_section',

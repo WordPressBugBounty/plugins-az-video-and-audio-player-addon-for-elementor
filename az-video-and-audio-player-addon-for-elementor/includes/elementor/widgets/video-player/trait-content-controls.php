@@ -20,6 +20,7 @@ trait LeanPL_Video_Player_Content_Controls {
             [
                 'label' => esc_html__( 'Player Source', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT,
+                'label_block' => true,
                 'default' => 'manual',
                 'options' => [
                     'saved'  => esc_html__( 'Saved Player (Recommended)', 'vapfem' ),
@@ -44,16 +45,21 @@ trait LeanPL_Video_Player_Content_Controls {
             ]
         );
 
+        // Edit Player button.
+        $this->register_saved_player_extras( 'video' );
+
         $this->add_control(
             'video_type',
             [
                 'label' => esc_html__( 'Video Type', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT,
+                'label_block' => true,
                 'default' => 'youtube',
                 'options' => [
                     'youtube'  => esc_html__( 'Youtube', 'vapfem' ),
                     'vimeo' => esc_html__( 'Vimeo', 'vapfem' ),
                     'html5' => esc_html__( 'HTML5', 'vapfem' ),
+                    'bunny' => esc_html__( 'Bunny Stream', 'vapfem' ),
                 ],
                 'condition' => [
                     'player_source' => 'manual',
@@ -64,15 +70,17 @@ trait LeanPL_Video_Player_Content_Controls {
         $this->add_control(
             'youtube_video_id',
             [
-                'label' => esc_html__( 'Youtube Video ID', 'vapfem' ),
+                'label' => esc_html__( 'YouTube Video ID or Link', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::TEXT,
+                'label_block' => true,
                 'default' => esc_html__( 'bTqVqk7FSmY', 'vapfem' ),
-                'placeholder' => esc_html__( 'Put your video id here', 'vapfem' ),
+                'placeholder' => esc_html__( 'Video ID or link, e.g. https://youtu.be/bTqVqk7FSmY', 'vapfem' ),
                 'separator' => 'before',
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
                         TagsModule::TEXT_CATEGORY,
+                        TagsModule::URL_CATEGORY,
                     ],
                 ],
                 'condition' => [
@@ -86,10 +94,34 @@ trait LeanPL_Video_Player_Content_Controls {
         $this->add_control(
             'vimeo_video_id',
             [
-                'label' => esc_html__( 'Vimeo Video ID', 'vapfem' ),
+                'label' => esc_html__( 'Vimeo Video ID or Link', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::TEXT,
+                'label_block' => true,
                 'default' => esc_html__( '76979871', 'vapfem' ),
-                'placeholder' => esc_html__( 'Put your video id here', 'vapfem' ),
+                'placeholder' => esc_html__( 'Video ID or link, e.g. https://vimeo.com/22439234', 'vapfem' ),
+                'separator' => 'before',
+                'dynamic' => [
+                    'active' => true,
+                    'categories' => [
+                        TagsModule::TEXT_CATEGORY,
+                        TagsModule::URL_CATEGORY,
+                    ],
+                ],
+                'condition' => [
+                    'player_source' => 'manual',
+                    'video_type'    =>  'vimeo',
+                ]
+            ]
+        );
+
+        $this->add_control(
+            'bunny_url',
+            [
+                'label' => esc_html__( 'Bunny Stream link', 'vapfem' ),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'label_block' => true,
+                'placeholder' => 'https://iframe.mediadelivery.net/play/…',
+                'description' => esc_html__( 'Paste a play, embed or stream link from your Bunny dashboard.', 'vapfem' ),
                 'separator' => 'before',
                 'dynamic' => [
                     'active' => true,
@@ -99,7 +131,7 @@ trait LeanPL_Video_Player_Content_Controls {
                 ],
                 'condition' => [
                     'player_source' => 'manual',
-                    'video_type'    =>  'vimeo',
+                    'video_type'    =>  'bunny',
                 ]
             ]
         );
@@ -596,6 +628,7 @@ trait LeanPL_Video_Player_Content_Controls {
             [
                 'label'       => esc_html__( 'Player Layout (Recommended)', 'vapfem' ),
                 'type'        => \Elementor\Controls_Manager::SELECT,
+                'label_block' => true,
                 'description' => esc_html__( 'Per-widget layout override. Inherit follows the site default (Settings → Layout & Branding).', 'vapfem' ),
                 'default'     => '',
                 'options'     => array_merge(
@@ -637,6 +670,7 @@ trait LeanPL_Video_Player_Content_Controls {
             [
                 'label' => esc_html__( 'Control Options (Legacy)', 'vapfem' ),
                 'type' => \Elementor\Controls_Manager::SELECT2,
+                'label_block' => true,
                 'description'   =>  esc_html__('Legacy control picker; only applies while Layout is Inherit.', 'vapfem'),
                 'multiple' => true,
                 'options' => [
@@ -663,6 +697,9 @@ trait LeanPL_Video_Player_Content_Controls {
 
 
         $this->end_controls_section();
+
+        // "Source Override" section, once a saved player is picked.
+        $this->register_source_override_section( 'video' );
 
         $this->start_controls_section(
             'debug_section',

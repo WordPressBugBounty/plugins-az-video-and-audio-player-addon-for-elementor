@@ -1427,9 +1427,17 @@ window.LexSettings.log = window.lexLog;
         var saved   = null;
         try { saved = localStorage.getItem(key); } catch(_) {}
 
-        var $target = saved
-            ? $wrapper.find('.lex-vtabs__nav button[data-vtab="' + saved + '"]')
+        // A ?vtab= link (e.g. "Settings → Integrations" from another screen)
+        // wins over the last-used tab. Ignored when this wrapper has no such tab.
+        var linked = null;
+        try { linked = new URLSearchParams(window.location.search).get('vtab'); } catch(_) {}
+
+        var $target = linked
+            ? $wrapper.find('.lex-vtabs__nav button[data-vtab="' + linked.replace(/[^a-z0-9_-]/gi, '') + '"]')
             : null;
+        if ((!$target || !$target.length) && saved) {
+            $target = $wrapper.find('.lex-vtabs__nav button[data-vtab="' + saved + '"]');
+        }
         if (!$target || !$target.length) {
             $target = $wrapper.find('.lex-vtabs__nav > button:visible, .lex-vtabs__nav > .lex-vtabs__item > button.lex-vtabs__parent:visible').first();
             // Prefer a real (leaf) tab over a childless parent toggle when picking the default.

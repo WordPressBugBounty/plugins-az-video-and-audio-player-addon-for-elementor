@@ -59,8 +59,30 @@ $track_list_source_colors = [
 $track_list_url_placeholder = ('audio' === $edit_playlist_type)
   ? __('https://example.com/podcast-ep12.mp3', 'vapfem')
   : __('https://youtube.com/watch?v=dQw4w9WgXcQ', 'vapfem');
+
+// "Fill missing durations": fills every empty Duration in one click, staged
+// until Update like every other edit on this card. Locked, it opens the
+// upgrade popup instead (initUpsellButtons() in admin-new.js). Hidden while
+// the list is empty, nothing to fill; initTrackList() re-toggles it as
+// tracks are added or removed.
+$track_list_fill_locked = !leanpl_is_pro_active();
 ?>
 <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-0 lpl-justify-start lpl-items-start" data-lpl-track-list>
+
+  <div data-lpl-track-list-toolbar class="lpl-box-border lpl-w-full lpl-shrink-0 lpl-flex lpl-flex-row lpl-justify-end lpl-items-center lpl-p-[0px_0px_8px_0px]<?php echo (0 === $track_list_count) ? ' lpl-hidden' : ''; ?>">
+    <div
+      role="button" tabindex="0"
+      <?php echo $track_list_fill_locked ? 'data-lpl-upsell-button data-upgrade-source="fill-durations"' : 'data-lpl-fill-durations'; ?>
+      class="lpl-btn lpl-btn--xs lpl-btn--outline-lt lpl-gap-[6px] aria-disabled:lpl-opacity-60 aria-disabled:lpl-cursor-not-allowed"
+    >
+      <span data-lpl-fill-durations-label><?php esc_html_e('Fill missing durations', 'vapfem'); ?></span>
+      <?php if ($track_list_fill_locked) : ?>
+        <span class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[2px_7px] lpl-justify-center lpl-items-center lpl-bg-[#6C5CE7] lpl-rounded-[4px]">
+          <span class="lpl-text-[9px]/[normal] lpl-box-border lpl-text-[#FFFFFF] lpl-font-bold lpl-text-left [white-space:nowrap]"><?php esc_html_e('PRO', 'vapfem'); ?></span>
+        </span>
+      <?php endif; ?>
+    </div>
+  </div>
 
   <div data-lpl-track-list-rows class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-0 lpl-justify-start lpl-items-start">
     <?php foreach ($track_list_items as $track_list_index => $track_list_player_id) :
@@ -68,6 +90,9 @@ $track_list_url_placeholder = ('audio' === $edit_playlist_type)
       $track_list_badge      = leanpl_get_player_source_badge($track_list_player_id);
       $track_list_source_label = $track_list_source_labels[$track_list_badge['type']] ?? $track_list_badge['label'];
       $track_list_source_color = $track_list_source_colors[$track_list_badge['type']] ?? '#767D86';
+      // Non-empty when this episode is locked for some visitors: a short
+      // description of who can watch it, shown as the padlock's tooltip.
+      $track_list_access_note = (string) apply_filters('leanpl/access/item_note', '', $track_list_player_id);
       // Rows beyond the first 5 start collapsed - "Show N more" below reveals them.
       $track_list_overflow = ($track_list_index >= 5);
     ?>
@@ -98,11 +123,29 @@ $track_list_url_placeholder = ('audio' === $edit_playlist_type)
                   <?php echo esc_html($track_list_source_label); ?>
                 </div>
               </div>
+              <?php if ($track_list_access_note !== '') : ?>
+                <span data-lpl-track-lock title="<?php echo esc_attr($track_list_access_note); ?>" aria-label="<?php echo esc_attr($track_list_access_note); ?>" class="lpl-inline-flex lpl-items-center">
+                  <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('lock'); ?>
+                </span>
+              <?php endif; ?>
             </div>
           </div>
         </div>
 
         <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[2px] lpl-justify-start lpl-items-center">
+          <?php // Opens the player's own Edit Player screen in a new tab, so unsaved changes on this playlist aren't lost. ?>
+          <a
+            data-lpl-track-edit-link
+            href="<?php echo esc_url(admin_url('admin.php?page=lean-player-edit&post=' . $track_list_player_id)); ?>"
+            target="_blank" rel="noopener"
+            aria-label="<?php esc_attr_e('Edit full details (opens in a new tab)', 'vapfem'); ?>"
+            class="lpl-group/edit lpl-relative lpl-box-border lpl-w-[26px] lpl-shrink-0 lpl-h-[26px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-[#1B2233] hover:lpl-bg-surface lpl-rounded-[6px] focus:lpl-outline-none [&_path]:[fill:currentColor]"
+          >
+            <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('pencil'); ?>
+            <span role="tooltip" class="lpl-pointer-events-none lpl-opacity-0 group-hover/edit:lpl-opacity-100 group-focus-visible/edit:lpl-opacity-100 lpl-transition-opacity lpl-absolute lpl-bottom-full lpl-left-1/2 -lpl-translate-x-1/2 lpl-mb-[6px] lpl-z-[100] lpl-p-[5px_8px] lpl-bg-ink lpl-text-[#FFFFFF] lpl-text-[11px]/[1.4] lpl-font-normal lpl-rounded-[6px] lpl-shadow-lg [white-space:nowrap]">
+              <?php esc_html_e('Edit full details', 'vapfem'); ?>
+            </span>
+          </a>
           <div data-lpl-track-duplicate role="button" tabindex="0" aria-label="<?php esc_attr_e('Duplicate', 'vapfem'); ?>" class="lpl-cursor-pointer lpl-box-border lpl-w-[26px] lpl-shrink-0 lpl-h-[26px] lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-center lpl-items-center lpl-text-ink-soft hover:lpl-bg-surface lpl-rounded-[6px]">
             <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('copy'); ?>
           </div>

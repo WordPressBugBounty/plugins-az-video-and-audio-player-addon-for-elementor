@@ -20,7 +20,7 @@ include LEANPL_DIR . '/includes/admin-new/partials/shared/field-switch.php';
 ?>
 
 <?php $edit_start_item_locked = leanpl_admin_new_playlist_is_locked('_playlist_start_item'); ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $edit_start_item_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_start_item_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $edit_start_item_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_start_item_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="playlist-start-item"' : ''; ?>>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
     <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Start On Item', 'vapfem'); ?>

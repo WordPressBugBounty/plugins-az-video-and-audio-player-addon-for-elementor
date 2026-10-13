@@ -102,6 +102,13 @@
             ? leanplUtils.buildAudioConfig( rawPlayerConfig, commonCfg )
             : leanplUtils.buildVideoConfig( rawPlayerConfig, commonCfg );
 
+        // Hooks may prepare the media element first (e.g. attach a stream).
+        leanplUtils.hooks.runBeforeInit( $playerEl[0], plyrConfig, 'playlist', function ( finalConfig ) {
+            startPlaylist( $playlist, $playerEl, config, finalConfig, $loading, isAudio );
+        } );
+    }
+
+    function startPlaylist( $playlist, $playerEl, config, plyrConfig, $loading, isAudio ) {
         var player = new Plyr( $playerEl[0], plyrConfig );
         leanplUtils.playerRegistry.register(player);
 
@@ -112,6 +119,14 @@
         player.on('play',  function () { leanplUtils.emit($playlist[0], 'playlist:play',  emitDetail()); });
         player.on('pause', function () { leanplUtils.emit($playlist[0], 'playlist:pause', emitDetail()); });
         player.on('ended', function () { leanplUtils.emit($playlist[0], 'playlist:ended', emitDetail()); });
+
+        // A locked start item has no media: show its locked message right
+        // away instead of waiting on a player that has nothing to load.
+        var startSource = getActiveItem($playlist).data('lpl-source');
+        if (startSource && startSource.locked) {
+            showLocked($playlist, player, startSource);
+            hideLoading($loading);
+        }
 
         if (player.ready) {
             hideLoading($loading);
@@ -190,18 +205,34 @@
     }
 
     function selectItem($item, $playlist, player, $loading) {
+        var source = $item.data('lpl-source');
+
         if ($item.hasClass('lpl-playlist__item--active')) {
+            if (source && source.locked) {
+                return;
+            }
             log('select', 'toggle play');
             player.togglePlay();
             return;
         }
 
-        var source = $item.data('lpl-source');
-
         if (!source) {
             warn('select', 'no source');
             return;
         }
+
+        // Locked item: no media to load. Stop whatever was playing and show
+        // its locked message over the player area instead.
+        if (source.locked) {
+            log('select', 'locked item');
+            setActiveItem($item, $playlist);
+            $item.removeClass('lpl-playlist__item--loading');
+            syncNowPlaying($playlist, source);
+            showLocked($playlist, player, source);
+            return;
+        }
+
+        hideLocked($playlist);
 
         log('select', 'load new source', source);
 
@@ -223,6 +254,7 @@
         });
 
         player.source = source;
+        leanplUtils.hooks.run( 'sourceChange', player, source, $playlist[0] );
 
         var trackSrc = source.sources && source.sources[0] && source.sources[0].src;
         if ( trackSrc ) {
@@ -264,6 +296,23 @@
             hideLoading($loading);
             getActiveItem($playlist).removeClass('lpl-playlist__item--loading');
         });
+    }
+
+    // ─── Locked items ───────────────────────────────────────────────────────────
+
+    function showLocked($playlist, player, source) {
+        if (player && typeof player.pause === 'function') {
+            player.pause();
+        }
+
+        var $locked = $playlist.find('.lpl-playlist__locked');
+        $locked.html(source.locked_html || '').prop('hidden', false);
+        $playlist.addClass('lpl-playlist--show-locked');
+    }
+
+    function hideLocked($playlist) {
+        $playlist.removeClass('lpl-playlist--show-locked');
+        $playlist.find('.lpl-playlist__locked').prop('hidden', true).empty();
     }
 
     function markItemPlaying($playlist) {

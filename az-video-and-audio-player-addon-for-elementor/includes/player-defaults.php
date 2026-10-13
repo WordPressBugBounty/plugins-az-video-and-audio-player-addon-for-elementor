@@ -121,8 +121,9 @@ return [
     // 📺 VIDEO: Video-specific settings only
     'video' => [
         // Video source & type
-        'video_type' => '', // Options: youtube, vimeo, html5
+        'video_type' => '', // Options: youtube, vimeo, html5, bunny
         'video_id' => '', // See example links above
+        'bunny_url' => '', // Bunny Stream link (video_type 'bunny'). A source, like video_id: never sent to JS.
         'poster' => '',
 
         // Video-specific behavior

@@ -19,7 +19,7 @@ if ( $is_audio_playlist ) :
 ?>
 <div class="lpl-playlist__now-playing">
     <?php if ( ( $now_playing_style ?? 'compact' ) === 'large' ) : ?>
-    <span class="lpl-playlist__now-playing-label">Now Playing</span>
+    <span class="lpl-playlist__now-playing-label"><?php echo esc_html( leanpl_get_text( 'now_playing', __( 'Now Playing', 'vapfem' ) ) ); ?></span>
     <?php endif; ?>
     <?php if ( $first_poster ) : ?>
     <div class="lpl-playlist__now-playing-thumb">
@@ -34,7 +34,12 @@ if ( $is_audio_playlist ) :
     </div>
 </div>
 <?php endif; ?>
-<?php if ( ! $player_markup_data->has_valid_source() ) : ?>
+<?php if ( $player_markup_data->is_locked() && $is_audio_playlist ) : ?>
+    <?php // Locked start item: an empty media element, so the player still builds and can take the next unlocked item's source. ?>
+    <audio class="lpl-playlist__player" id="lpl-player" preload="none"></audio>
+<?php elseif ( $player_markup_data->is_locked() ) : ?>
+    <video class="lpl-playlist__player" id="lpl-player" preload="none"<?php echo $player_markup_data->get_poster() ? ' poster="' . esc_url( $player_markup_data->get_poster() ) . '"' : ''; ?>></video>
+<?php elseif ( ! $player_markup_data->has_valid_source() ) : ?>
     <div class="lpl-playlist__player" id="lpl-player"></div>
 <?php elseif ( $player_markup_data->is_embed() && $player_markup_data->get_provider() === 'youtube' ) : ?>
     <div

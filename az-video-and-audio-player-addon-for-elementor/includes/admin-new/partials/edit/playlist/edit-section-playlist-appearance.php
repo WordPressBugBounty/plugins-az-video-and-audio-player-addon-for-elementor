@@ -36,7 +36,7 @@ $edit_skin_stored   = leanpl_admin_new_playlist_value('_playlist_skin', $post_id
       <?php esc_html_e('Skin', 'vapfem'); ?>
     </div>
     <?php if ($edit_skin_pro_opts) : ?>
-      <span class="lpl-cursor-pointer" onclick="openUpgradeModal()"><?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?></span>
+      <span class="lpl-cursor-pointer" onclick="openUpgradeModal()" data-upgrade-source="playlist-skin"><?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?></span>
     <?php endif; ?>
   </div>
   <select name="_playlist_skin" class="lpl-w-[140px] lpl-h-[36px]">
@@ -55,7 +55,7 @@ $edit_skin_stored   = leanpl_admin_new_playlist_value('_playlist_skin', $post_id
 </div>
 
 <?php $edit_accent_locked = leanpl_admin_new_playlist_is_locked('_playlist_accent_color'); ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $edit_accent_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_accent_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $edit_accent_locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $edit_accent_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="playlist-accent-color"' : ''; ?>>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
     <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Accent Color', 'vapfem'); ?>
@@ -87,7 +87,7 @@ $edit_bg_style_stored   = leanpl_admin_new_playlist_value('_playlist_bg_style', 
       <?php esc_html_e('Background Style', 'vapfem'); ?>
     </div>
     <?php if ($edit_bg_style_pro_opts) : ?>
-      <span class="lpl-cursor-pointer" onclick="openUpgradeModal()"><?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?></span>
+      <span class="lpl-cursor-pointer" onclick="openUpgradeModal()" data-upgrade-source="playlist-bg-style"><?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?></span>
     <?php endif; ?>
   </div>
   <select name="_playlist_bg_style" class="lpl-w-[140px] lpl-h-[36px]">
@@ -109,7 +109,7 @@ $edit_bg_style_stored   = leanpl_admin_new_playlist_value('_playlist_bg_style', 
 $edit_gradient_locked      = leanpl_admin_new_playlist_is_locked('_playlist_gradient_css');
 $edit_shows_gradient_css   = leanpl_admin_new_playlist_value('_playlist_bg_style', $post_id) === 'gradient';
 ?>
-<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start<?php echo $edit_gradient_locked ? ' lpl-cursor-pointer' : ''; ?><?php echo $edit_shows_gradient_css ? '' : ' lpl-hidden'; ?>" data-lpl-show-if="_playlist_bg_style:gradient"<?php echo $edit_gradient_locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-col lpl-gap-[6px] lpl-justify-start lpl-items-start<?php echo $edit_gradient_locked ? ' lpl-cursor-pointer' : ''; ?><?php echo $edit_shows_gradient_css ? '' : ' lpl-hidden'; ?>" data-lpl-show-if="_playlist_bg_style:gradient"<?php echo $edit_gradient_locked ? ' onclick="openUpgradeModal()" data-upgrade-source="playlist-gradient-css"' : ''; ?>>
   <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center">
     <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
       <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">

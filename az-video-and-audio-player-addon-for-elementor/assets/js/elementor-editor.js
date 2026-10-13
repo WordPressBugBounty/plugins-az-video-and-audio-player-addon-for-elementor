@@ -81,7 +81,27 @@
         model.setSetting('controls', []);
     }
 
+    // Elementor's BUTTON control fires its `event` on the editor channel with
+    // the control's view. Read the pick at click time: the panel was built
+    // once, the pick may have changed since.
+    function openEdit(view, key, baseUrl) {
+        var settings = (view && view.container && view.container.settings)
+            || (view && view.elementSettingsModel);
+        var id = parseInt(settings && settings.get(key), 10);
+        if (id > 0 && baseUrl) {
+            window.open(baseUrl + id, '_blank');
+        }
+    }
+
     $(window).on('elementor:init', function () {
+        var urls = window.leanplElementorEditor || {};
+        elementor.channels.editor.on('leanpl:editSavedPlayer', function (view) {
+            openEdit(view, 'saved_player_id', urls.playerEditUrl);
+        });
+        elementor.channels.editor.on('leanpl:editPlaylist', function (view) {
+            openEdit(view, 'playlist_id', urls.playlistEditUrl);
+        });
+
         // Elementor's legacy `elementor.channels.data` "element:after:add"
         // Backbone event (the documented pattern in most third-party
         // tutorials) does not fire in this Elementor version (4.x) for

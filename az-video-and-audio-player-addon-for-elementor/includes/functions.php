@@ -256,7 +256,7 @@ function leanpl_get_our_page_identifiers() {
      * @param array $identifiers Array with keys: 'post_types', 'page_slugs', 'hooks', 'screen_ids'
      * @return array Modified identifiers array
      */
-    return apply_filters('leanpl/admin/page_identifiers', $identifiers);
+    return apply_filters('leanpl/admin_new/page_identifiers', $identifiers);
 }
 
 /**
@@ -379,9 +379,113 @@ function leanpl_get_upgrade_url($args = []) {
 
     $url = $base_url . '?utm_source=' . esc_attr($args['utm_source']) . '&utm_medium=' . esc_attr($args['utm_medium']) . '&utm_campaign=' . esc_attr($args['utm_campaign']);
 
+    // Optional: which spot the link sits in, so analytics can tell them apart.
+    if (!empty($args['utm_content'])) {
+        $url .= '&utm_content=' . esc_attr($args['utm_content']);
+    }
+
     if(!empty($args['scroll_to'])){
         $url .= $args['scroll_to'];
     }
 
     return $url;
+}
+/**
+ * "Who can watch" choices for the Access card on the Edit Player and Edit
+ * Playlist screens. Values are what _access_who stores.
+ *
+ * @return array<string,string> Value => label.
+ */
+function leanpl_admin_new_access_who_options() {
+    return [
+        'everyone'   => __( 'Everyone', 'vapfem' ),
+        'logged_in'  => __( 'Logged-in users', 'vapfem' ),
+        'logged_out' => __( 'Logged-out users', 'vapfem' ),
+        'level'      => __( 'Members of a level', 'vapfem' ),
+        'password'   => __( 'Anyone with the password', 'vapfem' ),
+    ];
+}
+
+/**
+ * Membership level groups for the Access card, one per active membership
+ * plugin: [ [ 'label' => 'PMPro levels', 'levels' => [ 'pmpro:1' => 'Gold' ] ] ].
+ * Empty unless something fills it.
+ *
+ * @return array<int,array{label:string,levels:array<string,string>}>
+ */
+function leanpl_get_access_level_groups() {
+    $groups = apply_filters( 'leanpl/access/level_groups', [] );
+    return is_array( $groups ) ? $groups : [];
+}
+
+/**
+ * Player control labels a site owner can reword in Settings -> Labels & Messages.
+ * Keys are Plyr's own i18n keys (passed through unchanged, so no remap
+ * layer); values are Plyr's built-in English, shown as placeholders.
+ * {seektime} is replaced by Plyr with the skip amount. Plyr's 'loop' key
+ * is left out on purpose: Plyr never builds its loop menu, so the label
+ * would never show.
+ *
+ * @return array<string,string> Plyr i18n key => default label.
+ */
+function leanpl_get_player_label_defaults() {
+    return [
+        'play'            => 'Play',
+        'pause'           => 'Pause',
+        'restart'         => 'Restart',
+        'rewind'          => 'Rewind {seektime}s',
+        'fastForward'     => 'Forward {seektime}s',
+        'mute'            => 'Mute',
+        'unmute'          => 'Unmute',
+        'volume'          => 'Volume',
+        'currentTime'     => 'Current time',
+        'duration'        => 'Duration',
+        'settings'        => 'Settings',
+        'menuBack'        => 'Go back to previous menu',
+        'speed'           => 'Speed',
+        'normal'          => 'Normal',
+        'quality'         => 'Quality',
+        'captions'        => 'Captions',
+        'enableCaptions'  => 'Enable captions',
+        'disableCaptions' => 'Disable captions',
+        'pip'             => 'PIP',
+        'enterFullscreen' => 'Enter fullscreen',
+        'exitFullscreen'  => 'Exit fullscreen',
+        'download'        => 'Download',
+    ];
+}
+
+/**
+ * The player labels the site owner actually changed, ready for Plyr's
+ * `i18n` option. Empty fields are left out so Plyr keeps its default.
+ *
+ * @return array<string,string>
+ */
+function leanpl_get_player_i18n() {
+    $saved  = leanpl_get_option( 'texts.player', [] );
+    $labels = [];
+
+    if ( ! is_array( $saved ) ) {
+        return $labels;
+    }
+
+    foreach ( array_keys( leanpl_get_player_label_defaults() ) as $key ) {
+        if ( isset( $saved[ $key ] ) && is_string( $saved[ $key ] ) && trim( $saved[ $key ] ) !== '' ) {
+            $labels[ $key ] = sanitize_text_field( $saved[ $key ] );
+        }
+    }
+
+    return $labels;
+}
+
+/**
+ * A wording from Settings -> Labels & Messages, or the built-in fallback when blank.
+ *
+ * @param string $key      Key under 'texts.', e.g. 'now_playing'.
+ * @param string $fallback Built-in (translatable) wording.
+ * @return string
+ */
+function leanpl_get_text( $key, $fallback ) {
+    $value = leanpl_get_option( 'texts.' . $key, '' );
+    return ( is_string( $value ) && trim( $value ) !== '' ) ? $value : $fallback;
 }

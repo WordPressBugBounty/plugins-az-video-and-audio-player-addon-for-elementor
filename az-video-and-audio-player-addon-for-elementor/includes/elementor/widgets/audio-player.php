@@ -1,8 +1,8 @@
 <?php
 use LeanPL\Player_Renderer;
-use LeanPL\Shortcodes\Player_Shortcode;
 use Elementor\Modules\DynamicTags\Module as TagsModule;
 
+require_once __DIR__ . '/trait-saved-player-extras.php';
 require_once __DIR__ . '/audio-player/trait-content-controls.php';
 require_once __DIR__ . '/audio-player/trait-style-controls.php';
 
@@ -10,6 +10,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
 
     use LeanPL_Audio_Player_Content_Controls;
     use LeanPL_Audio_Player_Style_Controls;
+    use LeanPL_Saved_Player_Extras;
 
     public function get_name() {
         return "vapfem_audio_player";
@@ -57,26 +58,7 @@ class LeanPL_Audio_Player extends Elementor\Widget_Base {
         // Saved Player mode: delegate entirely to the shortcode renderer.
         // The widget owns all validation so render_error() never reaches the frontend.
         if ( ( $settings['player_source'] ?? 'manual' ) === 'saved' ) {
-            $post_id = absint( $settings['saved_player_id'] ?? 0 );
-
-            if ( ! $post_id ) {
-                if ( leanpl_is_elementor_editor() ) {
-                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
-                        . esc_html__( 'Select a saved player.', 'vapfem' ) . '</div>';
-                }
-                return;
-            }
-
-            $post = get_post( $post_id );
-            if ( ! $post || $post->post_type !== 'lean_player' ) {
-                if ( leanpl_is_elementor_editor() ) {
-                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
-                        . esc_html__( 'Player not found.', 'vapfem' ) . '</div>';
-                }
-                return;
-            }
-
-            echo Player_Shortcode::get_instance()->render_player_shortcode( [ 'id' => $post_id ], null );
+            $this->render_saved_player( $settings, 'audio' );
             return;
         }
 

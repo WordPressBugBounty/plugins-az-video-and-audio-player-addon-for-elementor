@@ -410,6 +410,14 @@ function leanpl_admin_new_save_player() {
     // pro-locked keys are ignored server-side - see Metabox_Save.
     Metabox_Save::get_instance()->save( $saved_post_id );
 
+    /**
+     * Fires after the Edit Player screen saved its fields, so other code can
+     * persist fields of its own from the same request.
+     *
+     * @param int $saved_post_id Player post ID.
+     */
+    do_action( 'leanpl/admin_new/player_saved', $saved_post_id );
+
     wp_send_json_success( [
         'postId'     => $saved_post_id,
         'message'    => $message,
@@ -612,6 +620,14 @@ function leanpl_admin_new_save_playlist() {
     // Metabox_Save::save_playlist(). _playlist_type is deliberately not in
     // the registry, so this screen never wipes it.
     Metabox_Save::get_instance()->save_playlist( $saved_post_id );
+
+    /**
+     * Fires after the Edit Playlist screen saved its fields, so other code
+     * can persist fields of its own from the same request.
+     *
+     * @param int $saved_post_id Playlist post ID.
+     */
+    do_action( 'leanpl/admin_new/playlist_saved', $saved_post_id );
 
     // _playlist_items: DOM-only staging, never written until this save runs
     // - same "nothing persists until Update/Save Draft" contract every other

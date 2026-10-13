@@ -174,6 +174,12 @@ class Video_Shortcode {
             'sources'    => $video_info['sources'],
         ];
 
+        // A Bunny Stream link is resolved at render time from the link itself,
+        // the same way a saved player hands over its stored link.
+        if ('bunny' === $video_info['type']) {
+            $config['bunny_url'] = $video_url;
+        }
+
         // Only add attributes that user actually provided (not empty strings)
         // Empty defaults from shortcode_atts() mean user didn't provide them
         foreach ($this->attribute_map as $attr => $converter) {

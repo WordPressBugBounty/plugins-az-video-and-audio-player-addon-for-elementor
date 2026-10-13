@@ -53,6 +53,15 @@ window.leanplUtils = (function () {
         return playerDebugMode || envDebugMode;
     }
 
+    /**
+     * Player labels reworded in Settings -> Labels & Messages (Plyr's own i18n keys),
+     * or undefined so Plyr keeps its built-in English.
+     */
+    function getPlayerLabels() {
+        var labels = (typeof leanpl_params !== 'undefined' && leanpl_params.i18n) || null;
+        return (labels && typeof labels === 'object' && Object.keys(labels).length) ? labels : undefined;
+    }
+
     function buildCommonConfig(settings) {
         var debugMode = isDebugModeEnabled(settings);
         var storageEnabled = getBooleanSetting(settings, 'storage_enabled', true);
@@ -82,6 +91,7 @@ window.leanplUtils = (function () {
                 key: 'plyr'
             },
             autopause: getBooleanSetting(settings, 'autopause', true),
+            i18n: getPlayerLabels(),
             debug: debugMode
         };
     }
@@ -428,7 +438,59 @@ window.leanplUtils = (function () {
     window.LeanPL = window.LeanPL || {};
     window.LeanPL.players = playerRegistry;
 
+    /**
+     * Player hooks. Lets an integration prepare a media element before
+     * Plyr takes it over, or react when a playlist swaps tracks.
+     *
+     *   leanplUtils.hooks.add('beforeInit', function (el, config, ctx, next) { ... next(config); });
+     *   leanplUtils.hooks.add('sourceChange', function (player, source, el) { ... });
+     *
+     * 'beforeInit' hooks run in order and each must call next(config) once,
+     * now or later (e.g. after a stream's quality list is known). ctx is
+     * 'video', 'audio' or 'playlist'. With no hooks, init happens at once,
+     * exactly as before.
+     */
+    var hookStore = { beforeInit: [], sourceChange: [] };
+
+    var hooks = {
+        add: function (name, fn) {
+            if (hookStore[name] && typeof fn === 'function') {
+                hookStore[name].push(fn);
+            }
+        },
+        runBeforeInit: function (el, config, ctx, done) {
+            var list = hookStore.beforeInit.slice();
+            var step = function (index, cfg) {
+                if (index >= list.length) {
+                    done(cfg);
+                    return;
+                }
+                var called = false;
+                try {
+                    list[index](el, cfg, ctx, function (nextCfg) {
+                        if (called) { return; }
+                        called = true;
+                        step(index + 1, nextCfg || cfg);
+                    });
+                } catch (e) {
+                    if (!called) {
+                        called = true;
+                        step(index + 1, cfg);
+                    }
+                }
+            };
+            step(0, config);
+        },
+        run: function (name) {
+            var args = [].slice.call(arguments, 1);
+            (hookStore[name] || []).forEach(function (fn) {
+                try { fn.apply(null, args); } catch (e) { /* one hook never breaks the player */ }
+            });
+        }
+    };
+
     return {
+        hooks:              hooks,
         getBooleanSetting:  getBooleanSetting,
         getNumberSetting:   getNumberSetting,
         getIntegerSetting:  getIntegerSetting,

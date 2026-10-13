@@ -114,17 +114,19 @@
 
         logConfigIfDebug('video', videoConfig);
 
-        var player = new Plyr(element, videoConfig);
-        playerRegistry.register(player);
-        element.__leanplPlayer = player;
-        if (wrapper) {
-            wrapper.__leanplPlayer = player;
-        }
+        leanplUtils.hooks.runBeforeInit(element, videoConfig, 'video', function (finalConfig) {
+            var player = new Plyr(element, finalConfig);
+            playerRegistry.register(player);
+            element.__leanplPlayer = player;
+            if (wrapper) {
+                wrapper.__leanplPlayer = player;
+            }
 
-        player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'video', playerType: 'video', player: player, el: element }); });
-        player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'video', playerType: 'video', player: player, el: element }); });
-        player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'video', playerType: 'video', player: player, el: element }); });
-        player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'video', playerType: 'video', player: player, el: element }); });
+            player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'video', playerType: 'video', player: player, el: element }); });
+            player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'video', playerType: 'video', player: player, el: element }); });
+            player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'video', playerType: 'video', player: player, el: element }); });
+            player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'video', playerType: 'video', player: player, el: element }); });
+        });
     }
 
     /**
@@ -147,17 +149,19 @@
 
         logConfigIfDebug('audio', audioConfig);
 
-        var player = new Plyr(element, audioConfig);
-        playerRegistry.register(player);
-        element.__leanplPlayer = player;
-        if (wrapper) {
-            wrapper.__leanplPlayer = player;
-        }
+        leanplUtils.hooks.runBeforeInit(element, audioConfig, 'audio', function (finalConfig) {
+            var player = new Plyr(element, finalConfig);
+            playerRegistry.register(player);
+            element.__leanplPlayer = player;
+            if (wrapper) {
+                wrapper.__leanplPlayer = player;
+            }
 
-        player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'audio', playerType: 'audio', player: player, el: element }); });
-        player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'audio', playerType: 'audio', player: player, el: element }); });
-        player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'audio', playerType: 'audio', player: player, el: element }); });
-        player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+            player.on('ready', function () { leanplUtils.emit(element, 'player:ready', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+            player.on('play',  function () { leanplUtils.emit(element, 'player:play',  { source: 'audio', playerType: 'audio', player: player, el: element }); });
+            player.on('pause', function () { leanplUtils.emit(element, 'player:pause', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+            player.on('ended', function () { leanplUtils.emit(element, 'player:ended', { source: 'audio', playerType: 'audio', player: player, el: element }); });
+        });
     }
 
 })(jQuery);

@@ -88,7 +88,7 @@ if ($is_image_field && $media_id) {
 // RENDER HTML
 // ============================================
 ?>
-<tr class="<?php echo $tr_class; ?>"<?php echo ($field['pro'] && isset($field['pro']['onclick'])) ? ' onclick="' . $field['pro']['onclick'] . '()"' : ''; ?>>
+<tr class="<?php echo $tr_class; ?>"<?php echo ($field['pro'] && isset($field['pro']['onclick'])) ? ' onclick="' . $field['pro']['onclick'] . '()"' : ''; ?><?php echo ! empty($field['pro']) ? ' data-upgrade-source="' . esc_attr($field['key']) . '"' : ''; ?>>
     <th scope="row">
         <?php $fieldRenderer->renderLabel($field); ?>
         <?php if ($has_tooltip): ?>

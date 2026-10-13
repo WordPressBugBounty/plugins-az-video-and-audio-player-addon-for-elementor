@@ -116,8 +116,9 @@ return [
     ],
     'behavior'        => [ 'label' => __('Behavior', 'vapfem'),          'icon' => 'sliders-horizontal', 'open' => false ],
     'advanced'        => [ 'label' => __('Advanced', 'vapfem'),          'icon' => 'cog',                'open' => false ],
+    'access'          => [ 'label' => __('Access', 'vapfem'),            'icon' => 'lock',               'open' => false ],
+    'button-link'     => [ 'label' => __('Button Link & Popup', 'vapfem'), 'icon' => 'link', 'open' => false ],
     'timestamp'       => [ 'label' => __('Timestamp Link Shortcode', 'vapfem'), 'icon' => 'braces',      'open' => false ],
-    'button-link'     => [ 'label' => __('Button Link', 'vapfem'), 'icon' => 'link', 'open' => false ],
   ],
 
   'fields' => [

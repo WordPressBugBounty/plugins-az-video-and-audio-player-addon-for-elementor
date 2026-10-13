@@ -542,7 +542,7 @@
 
             if (!data.isPro) {
                 if (typeof window.openUpgradeModal === 'function') {
-                    window.openUpgradeModal();
+                    window.openUpgradeModal(undefined, 'custom-preset');
                 }
                 return;
             }

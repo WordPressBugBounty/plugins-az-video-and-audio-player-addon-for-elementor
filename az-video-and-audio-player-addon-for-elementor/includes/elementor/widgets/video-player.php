@@ -1,7 +1,7 @@
 <?php
 use LeanPL\Player_Renderer;
-use LeanPL\Shortcodes\Player_Shortcode;
 
+require_once __DIR__ . '/trait-saved-player-extras.php';
 require_once __DIR__ . '/video-player/trait-content-controls.php';
 require_once __DIR__ . '/video-player/trait-style-controls.php';
 
@@ -44,6 +44,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
 
     use LeanPL_Video_Player_Content_Controls;
     use LeanPL_Video_Player_Style_Controls;
+    use LeanPL_Saved_Player_Extras;
 
     protected function _register_controls() {
         $this->register_content_controls();
@@ -54,26 +55,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
         $settings = $this->get_settings_for_display();
 
         if ( ( $settings['player_source'] ?? 'manual' ) === 'saved' ) {
-            $post_id = absint( $settings['saved_player_id'] ?? 0 );
-
-            if ( ! $post_id ) {
-                if ( leanpl_is_elementor_editor() ) {
-                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
-                        . esc_html__( 'Select a saved player.', 'vapfem' ) . '</div>';
-                }
-                return;
-            }
-
-            $post = get_post( $post_id );
-            if ( ! $post || $post->post_type !== 'lean_player' ) {
-                if ( leanpl_is_elementor_editor() ) {
-                    echo '<div class="lpl-error" style="padding:10px;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;border-radius:4px;">'
-                        . esc_html__( 'Player not found.', 'vapfem' ) . '</div>';
-                }
-                return;
-            }
-
-            echo Player_Shortcode::get_instance()->render_player_shortcode( [ 'id' => $post_id ], null );
+            $this->render_saved_player( $settings, 'video' );
             return;
         }
 
@@ -119,6 +101,7 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
             'video_id'           => $this->get_video_id($settings),
             'poster'         => $this->get_poster_url($settings),
             'sources'            => $this->convert_video_list($settings),
+            'bunny_url'          => 'bunny' === $settings['video_type'] ? trim((string) ($settings['bunny_url'] ?? '')) : '',
             'autoplay'           => $settings['autoplay'] === 'true',
             'muted'              => $settings['muted'] === 'true',
             'loop'               => $settings['loop'] === 'true',
@@ -149,9 +132,9 @@ class LeanPL_Video_Player extends \Elementor\Widget_Base {
     private function get_video_id($settings) {
         switch ($settings['video_type']) {
             case 'youtube':
-                return $settings['youtube_video_id'];
+                return leanpl_embed_id_from_value($settings['youtube_video_id'], 'youtube');
             case 'vimeo':
-                return $settings['vimeo_video_id'];
+                return leanpl_embed_id_from_value($settings['vimeo_video_id'], 'vimeo');
             default:
                 return '';
         }

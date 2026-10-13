@@ -22,7 +22,7 @@
  * meta value resolves straight to the hardcoded default, same as the
  * classic metabox's $val fallback in Playlist_Metaboxes::render_display_options_metabox().
  *
- * POC scope: cards land one at a time - see PLAYLIST-FREE-VS-PRO.md for what
+ * POC scope: cards land one at a time - see docs/PLAYLIST-FREE-VS-PRO.md for what
  * a complete port has to cover.
  *
  * @return array{sections:array<string,array>, fields:array<string,array>}
@@ -146,7 +146,8 @@ return [
     // context (see Admin_New_Icons::get() docblock on that case).
     'playlist-audio'      => ['label' => __('Audio', 'vapfem'),       'icon' => 'audio',                'open' => false],
     'playlist-behavior'   => ['label' => __('Behavior', 'vapfem'),    'icon' => 'cog',                   'open' => false],
-    'playlist-button-link' => ['label' => __('Button Link', 'vapfem'), 'icon' => 'link',                 'open' => false],
+    'playlist-access'     => ['label' => __('Access', 'vapfem'),      'icon' => 'lock',                  'open' => false],
+    'playlist-button-link' => ['label' => __('Button Link & Popup', 'vapfem'), 'icon' => 'link',         'open' => false],
   ],
 
   'fields' => [

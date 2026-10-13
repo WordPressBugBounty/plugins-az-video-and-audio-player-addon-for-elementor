@@ -291,6 +291,19 @@ SVG;
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
 SVG;
+            case 'lock':
+                // Access card header and the Playlist Items padlock. Lucide
+                // "lock", same stroke style as 'link' above.
+                return <<<'SVG'
+<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#767D86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lpl-box-border lpl-w-[16px] lpl-shrink-0 lpl-h-[16px]"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+SVG;
+            case 'folder':
+                // Browse button beside the source link field
+                // (edit-source-picker.php). Lucide "folder", same stroke
+                // style as 'link' above, in the button's own text color.
+                return <<<'SVG'
+<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="lpl-box-border lpl-w-[14px] lpl-shrink-0 lpl-h-[14px]"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg>
+SVG;
             case 'info':
                 // Inline "more info" tooltip trigger (edit-button-link-box.php).
                 // Same Lucide-as-is convention as 'link' above rather than a

@@ -36,6 +36,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             data-lpl-player-layout="<?php echo esc_attr( $player_layout ); ?>"
         >
             <?php include __DIR__ . '/player.php'; ?>
+            <?php // Filled by playlist.js when a locked item is picked. ?>
+            <div class="lpl-playlist__locked" hidden></div>
         </div>
     </div>
     <?php include __DIR__ . '/panel.php'; ?>

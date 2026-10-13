@@ -353,9 +353,37 @@ class Player_Renderer {
       if ( $per_player_color !== '' ) {
           $config['per_player_primary_color'] = $per_player_color;
       }
+      $config['player_id'] = absint( $post_id );
+
+        /**
+         * Filters the merged video config before it is validated and drawn.
+         *
+         * Lets a source type the renderer doesn't draw itself turn into one
+         * it does (for example a stream becoming an HTML5 video with a
+         * stream source), or mark the video unavailable by setting
+         * 'unavailable' => [ 'message' => ..., 'admin_message' => ... ].
+         *
+         * @param array $config  Merged player config.
+         * @param int   $post_id lean_player post ID, 0 when inline.
+         */
+        $config = apply_filters( 'leanpl/player/video_config', $config, absint( $post_id ) );
+
+        if ( ! empty( $config['unavailable'] ) && is_array( $config['unavailable'] ) ) {
+            $this->render_unavailable( $config );
+            return;
+        }
 
         if (!$this->is_valid_video_type($config['video_type'])) {
-            $this->render_error( __( 'Invalid video type provided.', 'vapfem' ) );
+            if ( 'bunny' === $config['video_type'] ) {
+                $this->render_unavailable( array_merge( $config, [
+                    'unavailable' => [
+                        'message'       => __( 'This video isn\'t available.', 'vapfem' ),
+                        'admin_message' => __( 'Bunny Stream videos play with Lean Player Pro.', 'vapfem' ),
+                    ],
+                ] ) );
+                return;
+            }
+            $this->render_error( __( 'This player\'s source type isn\'t recognised. Open the player and choose its source again.', 'vapfem' ) );
             return;
         }
 
@@ -440,9 +468,10 @@ class Player_Renderer {
         if ( $per_player_color !== '' ) {
             $config['per_player_primary_color'] = $per_player_color;
         }
+        $config['player_id'] = absint( $post_id );
 
         if (empty($config['url'])) {
-            $this->render_error( __( 'No audio source provided.', 'vapfem' ) );
+            $this->render_error( __( 'Add an audio link to show this player.', 'vapfem' ) );
             return;
         }
 
@@ -515,6 +544,16 @@ class Player_Renderer {
      * @return void
      */
     private function render_html5_audio_markup($config, $data_settings, $layout = '') {
+        /**
+         * Filters the audio file address just before it is printed, e.g. to
+         * add a time-limited access stamp. The saved address never changes.
+         *
+         * @param string $url    Audio URL.
+         * @param array  $config Merged player config.
+         */
+        $config['url'] = (string) apply_filters( 'leanpl/player/audio_url', $config['url'], $config );
+        $media_attrs   = $this->build_media_attributes( $config, 'audio' );
+
         // Get file extension for type attribute. Extensionless URLs (live
         // streams) fall back to mp3 so the type attribute stays well-formed.
         $file_extension = '';
@@ -552,6 +591,7 @@ class Player_Renderer {
             class="lpl-player lpl-player--audio"
             <?php if ( $brand_style ) : ?>style="<?php echo esc_attr( $brand_style ); ?>"<?php endif; ?>
             data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
+            <?php echo $media_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in build_media_attributes(). ?>
             <?php echo $config['autoplay'] ? 'autoplay allow="autoplay"' : ''; ?>
             <?php echo $config['loop'] ? 'loop' : ''; ?>
             preload="<?php echo esc_attr($config['preload']); ?>"
@@ -576,9 +616,20 @@ class Player_Renderer {
      */
     private function render_html5_markup($config, $data_settings) {
         if (empty($config['sources'])) {
-            $this->render_error( __( 'No video sources provided for HTML5 player.', 'vapfem' ) );
+            $this->render_error( __( 'Add a video file link to show this player.', 'vapfem' ) );
             return;
         }
+
+        /**
+         * Filters the video file addresses just before they are printed,
+         * e.g. to add a time-limited access stamp. Saved addresses never
+         * change.
+         *
+         * @param array $sources List of [ 'url' => ..., 'size' => ... ].
+         * @param array $config  Merged player config.
+         */
+        $config['sources'] = (array) apply_filters( 'leanpl/player/video_sources', $config['sources'], $config );
+        $media_attrs       = $this->build_media_attributes( $config, 'video' );
 
         // Get the first video URL for fallback download link
         $fallback_video_url = '';
@@ -597,6 +648,7 @@ class Player_Renderer {
               <?php echo $config['loop'] ? 'loop' : ''; ?>
               preload="<?php echo esc_attr($config['preload']); ?>"
               data-settings='<?php echo esc_attr( wp_json_encode( $data_settings ) ); ?>'
+              <?php echo $media_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in build_media_attributes(). ?>
           >
               <?php
               foreach($config['sources'] as $html5_video) {
@@ -636,7 +688,7 @@ class Player_Renderer {
      */
     private function render_youtube_markup($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
-            $this->render_error( __( 'YouTube video ID is required.', 'vapfem' ) );
+            $this->render_error( __( 'Add a YouTube link to show this player.', 'vapfem' ) );
             return;
         }
 
@@ -666,7 +718,7 @@ class Player_Renderer {
      */
     private function render_vimeo_player($config, $data_settings, $post_id = 0) {
         if (empty($config['video_id'])) {
-            $this->render_error( __( 'Vimeo video ID is required.', 'vapfem' ) );
+            $this->render_error( __( 'Add a Vimeo link to show this player.', 'vapfem' ) );
             return;
         }
 
@@ -800,19 +852,82 @@ class Player_Renderer {
     }
 
     /**
-     * Render error message.
+     * Extra attributes for the <video>/<audio> element, from the
+     * leanpl/player/media_attributes filter. Only data-* names are accepted;
+     * values are escaped here.
+     *
+     * @param array  $config      Merged player config.
+     * @param string $player_type 'video' or 'audio'.
+     * @return string Attribute string with a leading space, or ''.
+     */
+    private function build_media_attributes( array $config, string $player_type ): string {
+        /**
+         * Filters extra data-* attributes printed on the media element.
+         *
+         * @param array  $attrs       name => value.
+         * @param array  $config      Merged player config.
+         * @param string $player_type 'video' or 'audio'.
+         */
+        $attrs = (array) apply_filters( 'leanpl/player/media_attributes', [], $config, $player_type );
+
+        $out = '';
+        foreach ( $attrs as $name => $value ) {
+            if ( ! is_string( $name ) || ! preg_match( '/^data-[a-z0-9-]+$/', $name ) ) {
+                continue;
+            }
+            $out .= ' ' . $name . '="' . esc_attr( is_scalar( $value ) ? (string) $value : wp_json_encode( $value ) ) . '"';
+        }
+        return $out;
+    }
+
+    /**
+     * Draw a "can't play" box in place of the player.
+     *
+     * Visitors see the general message. People who can edit players also
+     * see the admin detail (why, and what to do), so a broken video gets
+     * noticed without explaining internals to the public.
+     *
+     * @param array $config Config with 'unavailable' => [ 'message'?, 'admin_message'? ].
+     * @return void
+     */
+    private function render_unavailable( array $config ) {
+        $info    = (array) $config['unavailable'];
+        $message = ! empty( $info['message'] ) ? (string) $info['message'] : __( 'This video isn\'t available yet.', 'vapfem' );
+        $detail  = ( ! empty( $info['admin_message'] ) && current_user_can( 'edit_posts' ) ) ? (string) $info['admin_message'] : '';
+        $poster  = ! empty( $config['poster'] ) ? (string) $config['poster'] : '';
+        ?>
+        <div class="lpl-player__unavailable lpl-player-notice<?php echo $poster ? ' has-poster' : ''; ?>" role="status"<?php if ( $poster ) : ?> style="<?php echo esc_attr( '--lpl-unavailable-poster: url(' . esc_url( $poster ) . ')' ); ?>"<?php endif; ?>>
+            <p class="lpl-player-notice__text"><?php echo esc_html( $message ); ?></p>
+            <?php if ( $detail !== '' ) : ?>
+            <p class="lpl-player-notice__detail"><?php echo esc_html( $detail ); ?></p>
+            <?php endif; ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Say what a player is missing, to the people who can add it.
+     *
+     * Only someone who can edit is told. A visitor gets an empty spot
+     * rather than a note about a site they do not run, and the second line
+     * tells the editor that, so they don't worry the public is seeing it.
      *
      * No inline styles: all presentation lives in main.css
      * (.lpl-player-notice) and stays themeable. Callers pass
      * already-translated strings.
      *
-     * @param string $message Error message
+     * @param string $message What to add or fix, in plain words.
      * @return void
      */
     private function render_error($message) {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            return;
+        }
+
         printf(
-            '<div class="lpl-player__error lpl-player-notice" role="status"><p class="lpl-player-notice__text">%s</p></div>',
-            esc_html($message)
+            '<div class="lpl-player__error lpl-player-notice" role="status"><p class="lpl-player-notice__text">%s</p><p class="lpl-player-notice__detail">%s</p></div>',
+            esc_html($message),
+            esc_html__( 'Only people who can edit this site see this message.', 'vapfem' )
         );
     }
 }

@@ -120,6 +120,15 @@ class Playlist {
             Assets_Manager::get_instance()->load_assets_by_context( 'frontend' );
         }
 
+        // Lets other code replace this playlist's output entirely (a string
+        // return wins; null renders the playlist as usual).
+        if ( $playlist_id > 0 ) {
+            $pre = apply_filters( 'leanpl/playlist/pre_render', null, $playlist_id );
+            if ( is_string( $pre ) ) {
+                return $pre;
+            }
+        }
+
         ob_start();
         $renderer = new Renderer( $playlist_id, $attr_overrides );
         $renderer->render();

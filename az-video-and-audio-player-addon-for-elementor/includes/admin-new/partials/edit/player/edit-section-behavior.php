@@ -104,7 +104,7 @@ $edit_behavior_player_type = ($post_id > 0) ? (get_post_meta($post_id, '_player_
 </div>
 
 <?php $locked = leanpl_admin_new_is_locked('_hide_controls'); ?>
-<div data-lpl-show-if="_player_type:video" class="<?php echo $edit_behavior_player_type === 'video' ? '' : 'lpl-hidden '; ?>lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $locked ? ' onclick="openUpgradeModal()"' : ''; ?>>
+<div data-lpl-show-if="_player_type:video" class="<?php echo $edit_behavior_player_type === 'video' ? '' : 'lpl-hidden '; ?>lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-justify-between lpl-items-center<?php echo $locked ? ' lpl-cursor-pointer' : ''; ?>"<?php echo $locked ? ' onclick="openUpgradeModal()" data-upgrade-source="hide-controls"' : ''; ?>>
   <div class="lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-fit lpl-flex lpl-flex-row lpl-gap-[6px] lpl-justify-start lpl-items-center">
     <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-semibold lpl-text-left [white-space:nowrap]">
       <?php esc_html_e('Auto-Hide Controls', 'vapfem'); ?>

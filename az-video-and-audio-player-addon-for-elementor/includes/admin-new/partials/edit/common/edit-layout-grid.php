@@ -83,7 +83,7 @@ foreach ($edit_layouts as $edit_layout_row) {
       ?>
       <div
         <?php if ($edit_layout_locked) : ?>
-        onclick="openUpgradeModal()"
+        onclick="openUpgradeModal()" data-upgrade-source="custom-preset"
         <?php else : ?>
         onclick="LeanPLCustomPreset.open()" data-lpl-custom-preset-tile
         <?php endif; ?>
@@ -103,7 +103,7 @@ foreach ($edit_layouts as $edit_layout_row) {
     <?php else : ?>
       <div
         <?php if ($edit_layout_locked) : ?>
-        onclick="openUpgradeModal()"
+        onclick="openUpgradeModal()" data-upgrade-source="layout-<?php echo esc_attr('' !== (string) $edit_layout['key'] ? $edit_layout['key'] : 'inherit'); ?>"
         <?php else : ?>
         data-lpl-layout-option="<?php echo esc_attr($edit_layout['key']); ?>"
         <?php endif; ?>
@@ -158,7 +158,7 @@ foreach ($edit_layouts as $edit_layout_row) {
     </div>
     <button
       type="button"
-      onclick="openUpgradeModal()"
+      onclick="openUpgradeModal()" data-upgrade-source="layout-notice"
       class="lpl-cursor-pointer lpl-box-border lpl-w-fit lpl-h-fit lpl-mt-[8px] lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[6px_12px] lpl-justify-center lpl-items-center lpl-bg-[#6C5CE7] lpl-border-0 lpl-rounded-[6px]"
     >
       <span class="lpl-text-[12px]/[normal] lpl-box-border lpl-text-[#FFFFFF] lpl-font-semibold lpl-text-left [white-space:nowrap]">

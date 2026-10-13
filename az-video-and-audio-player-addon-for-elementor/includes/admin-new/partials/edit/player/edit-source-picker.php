@@ -41,12 +41,21 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
           data-lpl-source-placeholder="<?php echo esc_attr($edit_tab['url_placeholder'] ?? ''); ?>"
           data-lpl-source-default-value="<?php echo esc_attr($edit_tab['default_value'] ?? ''); ?>"
           data-lpl-source-help="<?php echo esc_attr($edit_tab['help_text'] ?? ''); ?>"
+          data-lpl-source-browse-label="<?php echo esc_attr($edit_tab['browse_label'] ?? ''); ?>"
+          data-lpl-source-browse-action="<?php echo esc_attr($edit_tab['browse_action'] ?? ''); ?>"
+          data-lpl-source-browse-ready="<?php echo !empty($edit_tab['browse_ready']) ? '1' : '0'; ?>"
+          data-lpl-source-browse-hint="<?php echo esc_attr($edit_tab['browse_hint'] ?? ''); ?>"
+          data-lpl-source-browse-hint-url="<?php echo esc_url($edit_tab['browse_hint_url'] ?? ''); ?>"
+          data-lpl-source-locked="<?php echo !empty($edit_tab['locked']) ? '1' : '0'; ?>"
           role="tab" tabindex="0" aria-selected="<?php echo $edit_tab_active ? 'true' : 'false'; ?>"
           style="--lpl-tab-bg:<?php echo esc_attr($edit_tab['tab_bg']); ?>;--lpl-tab-line:<?php echo esc_attr($edit_tab['tab_line']); ?>;--lpl-tab-text:<?php echo esc_attr($edit_tab['tab_text']); ?>;"
           class="lpl-group lpl-cursor-pointer lpl-box-border lpl-w-fit lpl-shrink-0 lpl-h-[36px] lpl-flex lpl-flex-row lpl-gap-[6px] lpl-p-[0px_14px] lpl-justify-center lpl-items-center lpl-rounded-[6px]">
           <div class="lpl-text-[13px]/[normal] lpl-box-border lpl-font-semibold lpl-text-left [white-space:nowrap]">
             <?php echo esc_html($edit_tab['label']); ?>
           </div>
+          <?php if (!empty($edit_tab['locked'])) : ?>
+            <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('gem'); ?>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>
@@ -63,13 +72,26 @@ $edit_source_show_add_media = $edit_source_show_add_media ?? true;
       <div data-lpl-source-url-label-target class="lpl-text-[11px]/[normal] lpl-box-border lpl-text-[#000000] lpl-font-bold lpl-tracking-[0.5px] lpl-text-left [white-space:nowrap]">
         <?php echo esc_html($edit_source_url_label); ?>
       </div>
-      <div class="lpl-box-border lpl-w-full lpl-h-[40px] lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_14px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[9px]">
-        <input type="text" data-lpl-source-placeholder-target placeholder="<?php echo esc_attr($edit_source_url_placeholder); ?>"
-          class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#2D2D2D] lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none [appearance:none] [-webkit-appearance:none]" />
+      <?php // Browse sits on the field's own row, as a white button, so it
+      // reads as a helper of this link field rather than another source tab
+      // or a second Add Media. Hidden until a tab that has a Browse button is
+      // clicked - see initSourceTabs() in admin-new.js. ?>
+      <div class="lpl-box-border lpl-w-full lpl-h-fit lpl-shrink-0 lpl-flex lpl-flex-row lpl-gap-[8px] lpl-justify-start lpl-items-center">
+        <div class="lpl-box-border [flex:1_1_0] lpl-min-w-0 lpl-h-[40px] lpl-flex lpl-flex-row lpl-gap-0 lpl-p-[0px_14px] lpl-justify-start lpl-items-center lpl-bg-surface [outline:1px_solid_var(--lpl-line-strong)] [outline-offset:-0.5px] lpl-rounded-[9px]">
+          <input type="text" data-lpl-source-placeholder-target placeholder="<?php echo esc_attr($edit_source_url_placeholder); ?>"
+            class="lpl-text-[13px]/[normal] lpl-box-border lpl-text-[#2D2D2D] lpl-font-normal lpl-w-full lpl-border-0 lpl-bg-transparent lpl-p-0 focus:lpl-outline-none [appearance:none] [-webkit-appearance:none]" />
+        </div>
+        <div data-lpl-source-browse class="lpl-hidden lpl-box-border lpl-shrink-0">
+          <div data-lpl-source-browse-button class="lpl-btn lpl-btn--md lpl-btn--outline lpl-h-[40px] lpl-rounded-[9px]">
+            <?php echo \LeanPL\Admin_New\Admin_New_Icons::get('folder'); ?>
+            <div data-lpl-source-browse-button-label class="lpl-box-border lpl-text-left [white-space:nowrap]"></div>
+          </div>
+        </div>
       </div>
       <div data-lpl-source-help-target class="lpl-text-[12px]/[18px] lpl-box-border lpl-w-full lpl-text-[#2D2D2D] lpl-font-normal lpl-text-left">
         <?php echo esc_html($edit_source_help_text); ?>
       </div>
+      <div data-lpl-source-browse-hint-target class="lpl-hidden lpl-text-[12px]/[18px] lpl-box-border lpl-w-full lpl-text-[#B45309] lpl-font-normal lpl-text-left"></div>
     </div>
     <?php if ($edit_source_show_add_media) : ?>
       <div data-lpl-add-media class="lpl-btn lpl-btn--md lpl-btn--indigo">

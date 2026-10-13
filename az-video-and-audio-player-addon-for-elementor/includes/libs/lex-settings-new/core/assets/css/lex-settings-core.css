@@ -2277,6 +2277,8 @@ button .dashicons {
     line-height: 1.5;
     color: var(--lex-color-primary-contrast);
     margin: 0;
+    /* A "\n" in the message starts a new line; spaces still collapse. */
+    white-space: pre-line;
 }
 
 .lex-notice-bottom__dismiss {

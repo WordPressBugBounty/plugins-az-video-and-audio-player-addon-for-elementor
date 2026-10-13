@@ -208,7 +208,7 @@ class Config {
             $poster_url = wp_get_attachment_url( (int) $poster_id ) ?: '';
         }
 
-        return [
+        $item = [
             'id'       => $player_id,
             'title'    => $title,
             'meta'     => $meta_text,
@@ -217,6 +217,11 @@ class Config {
             'sources'  => $sources,
             'poster'   => $poster_url,
         ];
+
+        // An item may come back with 'locked' => true and no 'sources':
+        // it then shows in the list but can't be played (see Item_View,
+        // Player_Markup_Data and playlist.js).
+        return apply_filters( 'leanpl/playlist/item', $item, $player_id );
     }
 
     /**
@@ -227,11 +232,22 @@ class Config {
      * @return array<int, array<string, string>>
      */
     private function build_sources( int $player_id, string $player_type ) {
-        if ( $player_type === 'audio' ) {
-            return $this->build_audio_sources( $player_id );
-        }
+        $sources = $player_type === 'audio'
+            ? $this->build_audio_sources( $player_id )
+            : $this->build_video_sources( $player_id );
 
-        return $this->build_video_sources( $player_id );
+        /**
+         * A connected media service fills in the address of its own tracks.
+         *
+         * A track held by a service has no plain file address saved, so this
+         * is where the service hands over the address a visitor plays from.
+         * An empty list leaves the track in the list but unplayable.
+         *
+         * @param array  $sources     List of [ 'src' => ..., ... ].
+         * @param int    $player_id   Player post ID.
+         * @param string $player_type 'video' or 'audio'.
+         */
+        return apply_filters( 'leanpl/playlist/item_sources', $sources, $player_id, $player_type );
     }
 
     /**

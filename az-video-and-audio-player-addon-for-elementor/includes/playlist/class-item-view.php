@@ -67,8 +67,21 @@ class Item_View {
         if ( $is_active ) {
             $classes[] = 'lpl-playlist__item--active';
         }
+        if ( $this->is_locked() ) {
+            $classes[] = 'lpl-playlist__item--locked';
+        }
         $classes[] = 'lpl-playlist__item-' . $this->get_item_id();
         return implode( ' ', array_filter( $classes ) );
+    }
+
+    /**
+     * Whether this item can't be played by the current visitor. Shown with
+     * a padlock; it carries no media sources.
+     *
+     * @return bool
+     */
+    public function is_locked() {
+        return ! empty( $this->item['locked'] );
     }
 
     /**
