@@ -6,7 +6,12 @@
 
 .lpl-player-wrap{
     /* Initially player loaded as very small but expanded suddenly later */
-    width: 100%; 
+    width: 100%;
+    /* The audio card adds padding and a border. Without border-box, themes
+       that don't set a global border-box rule (block themes like the one on
+       aratta.me) add them on top of 100%, so the card spills 34px past its
+       container and drags the progress bar and right-side buttons with it. */
+    box-sizing: border-box;
 }
 
 /* Minimal audio player has only the play button */

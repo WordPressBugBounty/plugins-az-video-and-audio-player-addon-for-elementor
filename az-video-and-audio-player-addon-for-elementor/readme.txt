@@ -4,7 +4,7 @@ Tags: video player, audio player, playlist, elementor, YouTube player
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,9 @@ Yes. Store each post's YouTube or Vimeo link in a custom field (for example an A
 To keep one saved player's look and settings instead, set Player Source to Saved Player, pick the player, open the Source Override section, and choose the field from the dynamic tags on the "Video Source Override" box. That box takes YouTube, Vimeo, Bunny Stream (Pro) and video file links, or an ID for the saved player's own service. Posts with an empty field play the saved player's own video. Members-only saved players always play their own video.
 
 == Changelog ==
+= Version: 3.5.1 =
+* Fixed: Audio player spilling out of its box on some themes.
+
 = Version: 3.5.0 =
 * Added: Source Override in the Elementor Video and Audio widgets.
 * Added: Labels & Messages settings tab.
